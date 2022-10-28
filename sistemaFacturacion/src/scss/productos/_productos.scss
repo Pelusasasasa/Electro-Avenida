@@ -1,0 +1,109 @@
+.productosEmitirComprobante {
+  background-color: lightgreen;
+  padding: 0;
+}
+
+.productos {
+  background-color: lightgreen;
+  display: flex;
+  flex-direction: column;
+
+  .buscador {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    .productos-codigo {
+      display: flex;
+      flex-direction: column;
+      select {
+        padding: 1rem;
+        font-size: 2rem;
+        width: 20rem;
+      }
+    }
+
+    .buscador-producto {
+      display: flex;
+      flex-direction: column;
+      margin-left: 5rem;
+      input {
+        font-size: 3rem;
+        padding: 1rem;
+      }
+    }
+
+    .imagen {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+
+      img {
+        width: 15rem;
+        height: 10rem;
+      }
+    }
+  }
+
+  .listar-productos {
+    margin-top: 2rem;
+    background-color: lightgreen;
+    padding: 1rem;
+    .m-0 {
+      background-color: white;
+      margin: 0;
+      overflow: scroll;
+      height: 60vh;
+      border: 0.1rem solid black;
+    }
+  }
+  .tabla-productos {
+    width: 100%;
+    border-collapse: collapse;
+
+    th,
+    td {
+      border: 0.1rem solid black;
+      font-size: 2rem;
+    }
+    .descripcion{
+      font-size: 2.5rem;
+    }
+    .tbody {
+      tr:nth-child(even){
+        background-color: white;
+      }
+      tr:nth-child(odd){
+        background-color: rgb(230, 230, 230);
+      }
+      tr:hover {
+        cursor: pointer;
+      }
+      .precio,.stock{
+        text-align: end;
+      }
+    }
+  }
+
+  .botones {
+    background-color: lightgreen;
+    display: flex;
+    justify-content: space-around;
+    padding: 2.5rem 0;
+    
+    button{
+      border: none;
+      border-radius: 7.5rem;
+      font-size: 2rem;
+      padding: 1rem;
+      &:hover{
+        cursor: pointer;
+        transform: scale(1.2);
+      }
+
+    }
+  }
+}
+
+.observaciones {
+  display: flex;
+  justify-content: center;
+}

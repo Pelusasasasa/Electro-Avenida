@@ -1,0 +1,39 @@
+.agregarCheque{
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: lightgreen;
+
+
+    main{
+        margin: 1rem 0;
+
+        label{
+            display: inline-block;
+            width: 80px;
+        }
+        input,select{
+            font-size: 2rem;
+            padding: .5rem;
+        }
+    }
+    .botones{
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+
+        button{
+            border: none;
+            border-radius: 7.5rem;
+            font-size: 1.5rem;
+            padding: 1rem;
+            background-color: lightgray;
+            &:hover{
+                cursor: pointer;
+                transform: scale(1.2);
+                background-color: gray;
+            }
+        }
+    }
+}

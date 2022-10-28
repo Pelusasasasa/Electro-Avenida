@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consultar Cuenta Corriente</title>
+    <link rel="stylesheet" href="../../build/css/app.css" />
+  </head>
+  <body class="consultaCtaCte">
+    <section class="buscador">
+
+      <main class="codigoCliente">
+        <label for="">Cod. Cliente</label>
+        <input type="text" autofocus placeholder="Codigo" name="codigoCliente" id="codigoCliente">
+      </main>
+
+     <main class="cliente">
+      <label for="">Buscar Cliente</label>
+      <input
+        autofocus
+        type="text"
+        placeholder="Cliente"
+        id="buscador"
+        name="buscador"
+      />
+     </main>
+      <main>
+        <label for="">Saldo</label>
+        <input type="text" placeholder="Saldo" id="saldo" name="saldo" disabled />
+        <input type="text" class="none" placeholder="Saldo_p" id="saldo_p" name="saldo_p" disabled />
+      </main>
+      <main class="botones">
+        <button class="compensada disable">Compensada</button>
+        <button class="historica ">Historica</button>
+        <button class="actualizar none">Actualizar</button>
+      </main>
+    </section>
+
+    <div class="listarventas">
+      <table>
+        <thead>
+          <th>Fecha</th>
+          <th>Tipo Comp</th>
+          <th>Nro-Comp</th>
+          <th>Importe</th>
+          <th>Pagado</th>
+          <th>Saldo</th>
+          <th>Observaciones</th>
+        </thead>
+
+        <tbody class="listar"></tbody>
+      </table>
+    </div>
+
+    <div class="listarDetalleVenta">
+      <table>
+        <thead>
+          <th>Codigo</th>
+          <th>Descripcion</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+          <th>Total</th>
+          <th>Vendedor</th>
+        </thead>
+        <tbody class="detalle"></tbody>
+      </table>
+    </div>
+
+    <section class="botones">
+      <button class="volver">Volver</button>
+      <button class="facturarVarios none">Facturar Varios</button>
+      <button class="facturar none" id="botonFacturar">Facturacion</button>
+    </section>
+  </body>
+  <script src="./cuentaCorriente.js"></script>
+</html>

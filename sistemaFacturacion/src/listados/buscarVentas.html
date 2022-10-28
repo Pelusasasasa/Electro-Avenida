@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Informe por Comprobante</title>
+    <link rel="stylesheet" href="../../build/css/app.css" />
+  </head>
+  <body class="buscarVentas">
+    <div class="seleccionar">
+      <div class="numero">
+        <label for="porNumero">Por Numero</label>
+        <input type="radio" id="porNumero" checked name="seleccionar" />
+      </div>
+
+      <div class="razon">
+        <label for="razonSocial">Por Razon Social</label>
+        <input type="radio" id="razonSocial" name="seleccionar" />
+      </div>
+    </div>
+
+    <section class="porNumero">
+      <main class="numeros">
+        <label for="">Numero</label>
+        <main>
+          <input type="number" value="0000" id="primerNumero" />
+          <input type="number" name="hasta" id="segundoNumero" value="00000000" />
+        </main>
+      </main>
+  
+      <main class="tipoComp">
+        <label for="tipoComp">Tipo Comprobante</label>
+        <select name="tipoComp" id="tipoComp">
+          <option value="presupuesto">Presupuesto</option>
+          <option value="recibo">Recibo</option>
+          <option value="factura">Factura</option>
+        </select>
+      </main>
+
+
+      <main class="codComp">
+        <label for="codComp">Codigo Comprobante</label>
+        <select name="codComp" id="codComp">
+          <option value="1">Factura A</option>
+          <option value="3">Nota Credito A</option>
+          <option value="6">Factura B</option>
+          <option value="8">Nota Credito B</option>
+        </select>
+      </main>
+    </section>
+
+    <div class="nombre none">
+      <label for="Hasta">Razon social</label>
+      <input type="text" id="razon" name="razon" />
+    </div>
+
+    <div class="buscador">
+      <div class="desde none">
+        <label for="desde">Desde</label>
+        <input type="date" autofocus name="desde" id="desde" />
+      </div>
+
+      <div class="hasta none">
+        <label for="Hasta">Hasta</label>
+        <input type="date" name="hasta" id="hasta" />
+      </div>
+
+      <div>
+        <button class="buscar">Buscar</button>
+      </div>
+    </div>
+
+    <div class="listar">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Codigo</th>
+            <th>Descripcion</th>
+            <th>Nro Comp</th>
+            <th>Cantidad</th>
+            <th>Precio</th>
+            <th>Total</th>
+            <th>Tipo Pago</th>
+          </tr>
+        </thead>
+        <tbody class="tbody"></tbody>
+      </table>
+    </div>
+    <script src="./buscarVentas.js"></script>
+  </body>
+</html>

@@ -1,0 +1,61 @@
+header{
+    border: .1rem solid black;
+    display: flex;
+    justify-content: space-around;
+}
+
+header p{
+    font-weight: bold;
+}
+
+header span{
+    font-weight: 100;
+}
+
+.tipoFactura{
+    display: flex;
+    flex-direction: column;
+}
+
+.tipoFactura div{
+    border: .1rem solid black;
+}
+
+.tipoFactura h2{
+    text-align: center;
+    font-size: 2rem;
+}
+
+.tipoFactura h2,.tipoFactura p{
+    padding: 0;
+    margin: 0;
+}
+
+.cliente{
+    border: .1rem solid black;
+}
+
+.cliente section{
+    display: flex;
+}
+
+.cliente section p{
+    font-weight: bold;
+    margin-left: 1rem;
+    margin-right: 6rem;
+}
+
+.cliente section span{
+    font-weight: 100;
+}
+
+.productos table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+
+.productos table tr td{
+    border: .2rem solid black;
+    text-align: center;
+}

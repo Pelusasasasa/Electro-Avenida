@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rubros</title>
+    <link rel="stylesheet" href="../../build/css/app.css">
+</head>
+<body class="rubros">
+    <section class="agregar">
+        <main>
+            <label for="codigo">Codigo</label>
+            <input type="text" autofocus name="codigo" id="codigo">
+        </main>
+        <main>
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" id="nombre">
+        </main>
+
+        <main class="botones">
+            <button class="guardar">Guardar</button>
+            <button class="modificar none">Modificar</button>
+            <button class="salir">Salir</button>
+        </main>
+    </section>
+    <section class="tabla">
+        <table>
+           <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Nombre</th>
+                </tr>
+           </thead>
+           <tbody></tbody>
+        </table>
+    </section>
+</body>
+    <script src="./rubros.js"></script>
+</html>

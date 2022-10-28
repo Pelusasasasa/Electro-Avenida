@@ -1,0 +1,77 @@
+
+.encabezado{
+    display: flex;
+    justify-content: space-around;
+}
+
+.encabezado main{
+    display: flex;
+    flex-direction: column;
+}
+
+.encabezado label{
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.encabezado input{
+    padding: .5rem;
+    font-size: 1.5rem;
+}
+.tabla{
+    height: 75vh;
+    background-color: white;
+    border: .1rem solid black;
+    overflow: scroll;
+}
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table input{
+    width: 100%;
+    height: 100%;
+    font-size: 1.5rem;
+    padding: .5rem;
+    font-weight: bold;
+    color: black;
+}
+table tr:hover{
+    cursor: pointer;
+}
+
+table tr input:hover{
+    cursor: pointer;
+}
+
+table tbody td{
+    border: .1rem solid black;
+}
+
+thead th{
+    border: .1rem solid black;
+}
+
+.negrita{
+    font-weight: 900;
+}
+
+.agregarTarjeta label{
+    display: inline-block;
+    width: 9rem;
+    font-size: 2rem;
+}
+
+.agregarTarjeta main{
+    padding: 1rem;
+}
+
+.agregarTarjeta input,.agregarTarjeta select{
+    font-size: 2rem;
+}
+
+.agregarTarjeta .inputs #importe{
+    text-align: end;
+}

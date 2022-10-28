@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Agregar Producto</title>
+    <link rel="stylesheet" href="../../build/css/app.css" />
+  </head>
+  <body>
+    <div class="contenedor-agregarProductos">
+      <form action="" id="formularioProducto" class="formularioAgregar">
+        <div class="codigos">
+          <div class="formulario__campo">
+            <label class="" for="codigo">Codigo</label>
+            <input
+              class="formulario_campo"
+              type="text"
+              name="codigo"
+              id="codigo"
+              autofocus
+              placeholder="codigo"
+            />
+          </div>
+
+          <div class="formulario__campo">
+            <label class="" for="cod-fabrica">cod-Fabrica</label>
+            <input
+              class="formulario_campo"
+              type="tel"
+              name="cod-fabrica"
+              id="cod-fabrica"
+              placeholder="cod-fabrica"
+            />
+          </div>
+        </div>
+
+        <div class="descripcion">
+          <div class="formulario__campo">
+            <label class="" for="descripcion">Descripcion</label>
+            <input
+              class="formulario_campo"
+              type="text"
+              name="descripcion"
+              id="descripcion"
+              placeholder="descripcion"
+            />
+          </div>
+        </div>
+
+         <main class="unidad">
+            <div class="unidad formulario__campo">
+              <label for="unidad">Unidad</label>
+              <select name="unidad" id="unidad">
+                <option value="U">Unidad</option>
+                <option value="M">Metro</option>
+              </select>
+            </div>
+
+            <main class="formulario__campo">
+              <label for="imagen">Imagen</label>
+              <input type="file" name="imagen" id="imagen">
+            </main>
+
+            <div class="formulario__campo">
+              <label class="" for="stock">Stock</label>
+              <input
+                class=""
+                type="text"
+                name="stock"
+                id="stock"
+                placeholder="stock"
+                value="0"
+                disabled
+              />
+            </div>
+         </main>
+        
+
+        <div class="marcaProvedor">
+          <div class="formulario__campo">
+            <label class="" for="provedor">Provedor</label>
+            <input
+              class="formulario_campo"
+              type="text"
+              name="provedor"
+              id="provedor"
+              placeholder="provedor"
+            />
+          </div>
+
+          <div class="formulario__campo">
+            <label for="rubros">Rubros</label>
+            <select name="rubros" id="rubros">
+              <option value="">---Seleccionar---</option>
+            </select>
+          </div>
+
+          <div class="formulario__campo">
+            <label class="" for="marca">Marca</label>
+            <input
+              class="formulario_campo"
+              type="text"
+              name="marca"
+              id="marca"
+              placeholder="marca"
+            />
+          </div>
+        </div>
+
+        <div class="precio">
+          <div class="formulario__campo">
+            <label class="" for="tasaIva">Tasa IVA</label>
+            <select name="tasaIva" id="tasaIva">
+              <option value="normal">Normal</option>
+              <option value="reducido">Reducido</option>
+            </select>
+          </div>
+
+          <div class="formulario__campo">
+            <label class="" for="costoPesos">Costo $</label>
+            <input
+              class=""
+              type="text"
+              name="costoPesos"
+              id="costoPesos"
+              placeholder="costoPesos"
+              value="0.00"
+            />
+          </div>
+
+          <div class="formulario__campo">
+            <label class="" for="costoDolares">Costo U$S</label>
+            <input
+              class=""
+              type="text"
+              name="costoDolares"
+              id="costoDolares"
+              placeholder="costoDolares"
+              value="0.00"
+            />
+          </div>
+
+          <div class="formulario__campo">
+            <label class="" for="ivaImp">Iva + Imp</label>
+            <input
+            disabled
+              class=""
+              type="text"
+              name="ivaImp"
+              id="ivaImp"
+              placeholder="iva + Imp"
+            />
+          </div>
+
+          <div class="formulario__campo">
+            <label class="" for="costoTotal">Costo To</label>
+            <input
+              class=""
+              type="text"
+              name="costoTotal"
+              id="costoTotal"
+              placeholder="costo Total"
+              value="0.00"
+            />
+          </div>
+        </div>
+
+        <div class="observaciones">
+          <div class="formulario__campo">
+            <label for="">Oservaciones</label>
+            <input
+              type="text"
+              id="observaciones"
+              name="observaciones"
+              placeholder="Observaciones"
+            />
+          </div>
+        </div>
+
+        <div class="precioFinal">
+          <div class="formulario__campo">
+            <label class="" for="utilidad">Utilidad</label>
+            <input
+              class=""
+              type="text"
+              name="utilidad"
+              id="utilidad"
+              placeholder="Utilidad"
+              value="0.00"
+            />
+          </div>
+
+          <div class="formulario__campo">
+            <label class="" for="precioVenta">Precio venta</label>
+            <input
+              class=""
+              type="text"
+              name="precioVenta"
+              id="precioVenta"
+              placeholder="precioVenta"
+              value="0.00"
+            />
+          </div>
+        </div>
+      </form>
+
+      <div class="botones-productos">
+        <button class="agregar boton-producto">Agregar</button>
+
+        <button class="salir boton-producto">Salir</button>
+      </div>
+    </div>
+    <script src="./agregarproducto.js"></script>
+  </body>
+</html>

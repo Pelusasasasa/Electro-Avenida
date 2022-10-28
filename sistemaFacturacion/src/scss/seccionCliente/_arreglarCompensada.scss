@@ -1,0 +1,28 @@
+.arreglarCompensada{
+
+    .titulo{
+        text-align: center;
+    }
+
+    .tabla{
+        height: 25rem;
+        border: .1rem solid black;
+        overflow: scroll;
+    }
+    table{
+        width: 100%;
+        border-collapse: collapse;
+
+        tr th{
+            border: .1rem solid black;
+        }
+
+        tbody{
+            tr:hover{
+                cursor: pointer;
+                background-color: gray;
+            }
+        }
+    }
+
+}

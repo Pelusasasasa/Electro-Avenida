@@ -1,0 +1,36 @@
+.cargartarjeta{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: lightgreen;
+
+    .inputs{
+        main{
+            margin: 2rem 0;
+            label{
+                font-size: 2rem;
+            }
+            input,select{
+                padding: .5rem;
+                font-size: 1.5rem;
+            }
+        }
+    }
+    .botones{
+        margin-top: 2rem;
+        button{
+            margin-left: 1rem;
+            background-color: lightgrey;
+            border: none;
+            border-radius: 7.5rem;
+            padding: 1rem;
+            font-size: 1.5rem;
+
+            &:hover{
+                cursor: pointer;
+                transform: scale(1.2);
+                background-color: gray;
+            }
+        }
+    }
+}

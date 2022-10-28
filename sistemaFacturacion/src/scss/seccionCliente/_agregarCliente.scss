@@ -1,0 +1,52 @@
+.seccionAgregarCliente {
+  h3 {
+    text-align: center;
+    font-size: 3rem;
+  }
+    padding: 2rem 1rem;
+    background-color: lightgreen;
+    .g-3{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+    }
+    // .nombre{
+    //   width: 100%;
+    // }
+    .formulario__campo {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      margin-bottom: 2rem;
+
+      select {
+        width: 90%;
+      }
+
+      .moroso {
+        display: flex;
+        align-items: center;
+      }
+    }
+  }
+
+  .botones-clientes {
+    background-color: lightgreen;
+    display: flex;
+    justify-content: space-around;
+    .boton-cliente {
+      padding: 1.2rem;
+      border-radius: 7.5rem;
+      margin: 1.5rem auto;
+      background-color: lightgray;
+      border: none;
+
+      button {
+        border: none;
+      }
+
+      &:hover {
+        cursor: pointer;
+        transform: scale(1.2);
+      }
+    }
+}

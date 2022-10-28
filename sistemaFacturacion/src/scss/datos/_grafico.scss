@@ -1,0 +1,51 @@
+.grafico{
+    background-color: lightgreen;
+    .inputs{
+        margin-bottom: 1.5rem;
+        display: flex;
+        justify-content: space-around;
+
+        main{
+            display: flex;
+            flex-direction: column;
+
+            label{
+                font-size: 2rem
+            }
+            input,select{
+                font-size: 2rem;
+            }
+        }
+    }
+    .table{
+        overflow: scroll;
+        height: 50rem;
+        background-color: white;
+        border: .1rem solid black;
+        table{
+            border-collapse: collapse;
+            width: 100%;
+
+            thead{
+                tr{
+                    th{
+                        border: .1rem solid black;
+                    }
+                }
+            }
+        }
+    }
+
+    .total{
+        margin-top: 1rem;
+        
+        display: flex;
+        justify-content: flex-end;
+        label{
+            font-size: 2rem;
+        }
+        input{
+            font-size: 2rem;
+        }
+    }
+}

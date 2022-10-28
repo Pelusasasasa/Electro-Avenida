@@ -1,0 +1,134 @@
+.Cliente {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+
+  .buscador {
+    background-color: lightgreen;
+    padding: 2rem 0rem 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    label {
+      padding-left: 12rem;
+      font-size: 2.6rem;
+      font-weight: bold;
+    }
+
+    input {
+      padding: 1rem;
+      font-size: 4rem;
+      width: 35%;
+    }
+  }
+
+  .contenedor-tabla {
+    overflow: scroll;
+     height: 65vh;
+    .tabla {
+      background-color: white;
+      width: 100%;
+      border-collapse: collapse;
+
+      thead {
+        background-color: lightgreen;
+
+        tr {
+          th {
+            border: 0.1rem solid black;
+            font-size: 2.2rem;
+            padding: 0.5rem 0;
+          }
+        }
+      }
+      th{
+        cursor: pointer;
+      }
+
+      tbody {
+        tr {
+          td,
+          th {
+            white-space: nowrap;
+            font-size: 2.2rem;
+            border: 0.1rem solid black;
+          }
+
+
+        }
+      }
+    }
+  }
+
+  .botones-clientes {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    background-color: lightgreen;
+    
+
+    .boton-cliente {
+      margin: 0;
+      background-color: lightgray;
+      border: none;
+      border-radius: 7.5rem;
+      padding: 1.5rem;
+      &:hover {
+        cursor: pointer;
+        transform: scale(1.2);
+      }
+    }
+  }
+}
+
+/*arreglar Saldo*/
+.arreglarSaldo{
+  background-color: lightgreen;
+  h1{
+    text-align: center;
+  }
+  .none{
+    display: none;
+  }
+
+  .saldos{
+    display: flex;
+    justify-content: space-between;
+    input{
+      text-align: end;
+    }
+  }
+  .inputs{
+    display: flex;
+    flex-direction: column;
+    .codigo{
+      width: 30%;
+      
+    }
+    .nombre{
+      width: 100%;
+    }
+    main{
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .botones{
+    display: flex;
+    justify-content: space-around;
+    button{
+      padding: 1rem;
+      font-size: 2rem;
+      border-radius: 7.5rem;
+      border: none;
+      &:hover{
+        transform: scale(1.2);
+        cursor: pointer;
+      }
+    }
+  }
+
+}

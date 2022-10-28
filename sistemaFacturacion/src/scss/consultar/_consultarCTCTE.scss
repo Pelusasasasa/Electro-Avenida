@@ -1,0 +1,116 @@
+.mostrarNegro{
+  background-color: black !important;
+}
+.consultaCtaCte {
+  display: flex;
+  flex-direction: column;
+  .buscador {
+    display: flex;
+    justify-content: space-around;
+    background-color: lightgreen;
+    padding: 1rem;
+    padding-bottom: 2rem;
+
+    main{
+      display: flex;
+      flex-direction: column;
+      #codigoCliente{
+        width: 40%;
+      }
+      #buscador{
+        width: 150%;
+      }
+    }
+
+    .botones{
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+    }
+
+    label {
+      font-size: 2.4rem;
+      font-weight: bold;
+      &.blanco{
+        color: white;
+      }
+    }
+
+
+
+    button,a {
+      border-radius: 7.5rem;
+      border: none;
+      padding: 1rem;
+
+      &:hover {
+        cursor: pointer;
+        transform: scale(1.25);
+      }
+    }
+  }
+
+  .listarventas {
+    color: black;
+    height: 35vh;
+    overflow: scroll;
+    border: 0.1rem solid black;
+    background-color: white;
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      thead {
+        th {
+          border: 0.2rem solid black;
+          background-color: lightgreen;
+        }
+      }
+      tbody {    
+        tr {
+          td {
+            border: 0.1rem solid black;
+          }
+          .saldo,.importe,.pagado{
+            text-align: end;
+          }
+        }
+        tr:hover {
+          cursor: pointer;
+          background-color: lightgray;
+        }
+
+        input{
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .listarDetalleVenta {
+    color: black;
+    background-color: white;
+    height: 35vh;
+    overflow: scroll;
+    border: 0.1rem solid black;
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      thead {
+        th {
+          border: 0.2rem solid black;
+          background-color: lightgreen;
+        }
+      }
+      tbody {
+        td {
+          border: 0.1rem solid black;
+          text-align: center;
+        }
+      }
+    }
+  }
+  .seleccionadoParaFacturar{
+    background-color: orange !important;
+  }
+}

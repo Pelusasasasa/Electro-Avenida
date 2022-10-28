@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF</title>
+   <!-- <link rel="stylesheet" href="../views/pdf.css"> -->
+    <style>
+        html{
+            zoom: 0.8;
+        }
+        header{
+            border: .2rem solid black;
+            display: -webkit-box;
+            -webkit-box-pack: justify;
+            padding: 1.5rem;
+        }
+
+        header p{
+            font-weight: bold;
+        }
+
+        header span{
+            font-weight: 100;
+        }
+
+        .tipoFactura div{
+            border: .2rem solid black;
+        }
+
+        .tipoFactura h2{
+            text-align: center;
+            font-size: 2rem;
+        }
+
+        .tipoFactura h2,.tipoFactura p{
+            padding: 0;
+            margin: 0;
+        }
+
+        .cliente{
+            border: .2rem solid black;
+        }
+
+        .cliente section{
+            display: -webkit-box;
+        }
+
+        .cliente section p{
+            font-weight: bold;
+            margin-left: 1rem;
+            margin-right: 6rem;
+            margin-top: 0;
+            margin-bottom: 0;
+            padding: .5rem;
+        }
+
+        .cliente section span{
+            font-weight: 100;
+        }
+
+        .productos{
+            height: auto;
+            min-height:30rem;
+        }
+        .productos table{
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .productos table thead tr{
+            background-color: lightgray;
+        }
+
+        .productos table thead td{
+            border: .2rem solid black;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .productos table tbody .izquierda{
+            text-align: end;
+        }
+
+        .totales{
+            border: .2rem solid black;
+            display: -webkit-box;
+            -webkit-box-pack: justify;
+            padding: 2rem;
+        }
+        .totales p{
+            font-weight: bold;
+            padding: 0;
+            margin: 0;
+        }
+
+        .qr{
+            display: -webkit-box;
+            -webkit-box-pack: justify;
+            padding: 2rem;
+        }
+
+        img{
+            width: 60%;
+        }
+        .none{
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="izquierdo">
+            <p>GIANOVI MARINA ISABEL</p>
+            <p>Razon Social:<span> GIANOVI MARINA ISABEL</span></p>
+            <p>Domicilio Comercial:<span> Av. 9 De Julio 3380 - Chajari, Entre Rios</span></p>
+            <p>Condicion Frente al IVA:<span> IVA Responsable Inscripto</span></p>
+        </div>
+        <div class="tipoFactura">
+            <div class="div">
+                <h2>{{tipoCompropobante}}</h2>
+                <p>{{codigoComprobante}}</p>
+            </div>
+        </div>
+        <div class="derecha">
+            <p>{{textoFactura}}</p>
+            <p>Punto de Venta:<span> 0005</span> Comp.Nro: <span>{{numero}}</span></p>
+            <p>Fecha de Emision: <span>{{day}}/{{month}}/{{year}}</span></p>
+            <p>CUIT:<span> 27165767433</span></p>
+            <p>Ingresos brutos:<span> 27165767433</span></p>
+            <p>Fecha de Inicio de Actividades:<span>01/09/2007</span></p>
+        </div>
+    </header>
+    <main class="cliente">
+        <section>
+            <p>Apellido y Nombre / Razon Social:<span>{{cliente}}</span></p>
+            <p>{{dniocuit}}:<span>{{dnicuit}}</span></p>
+        </section>
+        <section>
+            <p>Condicion frente al IVA:<span>{{condIva}}</span></p>
+            <p>Domicilio Comercial:<span>{{direccion}}</span></p>
+        </section>
+        <section class="condicion">
+            <p>Condicion de Venta:<span>{{condVenta}}</span></p>
+        </section>
+    </main>
+    <main class="productos">
+        <table>
+            <thead>
+                <tr>
+                    {{codigo}}
+                    {{productoServicio}}
+                    {{cantidad}} 
+                    {{medida}}
+                    {{precioU}}
+                    {{subtotal}}
+                    {{alicuota}}
+                    {{subtotalIva}}
+                </tr>
+            </thead>
+            <tbody>
+                {{trs}}
+            </tbody>
+        </table>
+    </main> 
+    <main class="totales"> 
+        <div>
+            <img src="{{image}}" alt="" />
+        </div>
+
+        <div class="cae">
+            <p>CAE Nº: <span>{{cae}}</span></p>
+            <p>Fecha de Vto. de CAE: <span>{{vencimientoCae}}</span></p>
+        </div>
+
+        <div>
+            {{importeNeto}}
+            {{iva21}}
+            {{iva105}}
+            {{subtotal}}
+            <p>Descuento:$ <span>{{descuento}}</span></p>
+            <p class='importeTotal'>Importe Total: $      <span>{{precioFinal}}</span></p>
+        </div>
+    </main>
+</body>
+<script src="../views/pdf.js"></script>
+</html>

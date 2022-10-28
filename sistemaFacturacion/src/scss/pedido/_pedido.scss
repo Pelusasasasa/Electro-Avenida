@@ -1,0 +1,136 @@
+.hacerPedido {
+  background-color: lightgreen;
+  h1 {
+    text-align: center;
+    margin: 0;
+  }
+  
+  .formularioPedido {
+    padding-top: 1rem;
+    padding-left: 0rem;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .listaProductos {
+      background-color: white;
+    }
+
+    .cliente {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      div{
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+      }
+
+      label{
+        font-size: 2rem;
+      }
+
+      input {
+        font-size: 2rem;
+        padding: .5rem;
+      }
+
+    }
+
+    fieldset{
+      width: 100%;
+
+      .contenedorPedidos{
+        display: flex;
+        input{
+          margin-right: 10rem;
+        }
+        #descripcion{
+          width: 50rem;
+        }
+        #precio{
+          width: 5rem;
+        }
+      }
+    }
+  }
+
+  .tablaPedidos {
+    margin: 0;
+    overflow: scroll;
+    height: 60vh;
+    border: 0.1rem solid black;
+    background: white;
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+  }
+
+  .botonesPedidos {
+    padding-bottom: 2rem;
+    display: flex;
+    justify-content: space-around;
+    background-color: lightgreen;
+
+    .botonesPedidos-boton {
+      background-color: lightgray;
+      border: none;
+      border-radius: 7.5rem;
+      padding: 2rem;
+
+      &:hover {
+        cursor: pointer;
+        transform: scale(1.2);
+      }
+    }
+  }
+}
+
+//pagina de ver los pedidos
+.contenedor-verPedidos {
+  padding: 1rem;
+  background-color: lightgreen;
+  h1 {
+    text-align: center;
+  }
+  .tablaPedidos {
+    height: 70vh;
+    background-color: white;
+    overflow: scroll;
+    border: 0.1rem solid black;
+
+    .verPedido {
+      width: 100%;
+      border-collapse: collapse;
+
+      thead {
+        th {
+          background-color: rgb(241, 241, 241);
+          padding: 1.2rem;
+          border: 0.1rem solid black;
+        }
+      }
+      .tbody {
+        tr {
+          td {
+            border: 0.1rem solid black;
+            padding: .5rem;
+
+            
+          }
+          .stock,.cantidad{
+            text-align: end;
+          }
+          &:hover {
+            cursor: pointer;
+            background-color: lightgray;
+          }
+        }
+      }
+    }
+  }
+}

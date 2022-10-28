@@ -1,0 +1,55 @@
+.listadoSaldo{
+    display: grid;
+    text-align: center ;
+    width: 100%;
+
+    .botones{
+        margin-bottom: 2rem;
+        button{
+            border: none;
+            border-radius: 7.5rem;
+            padding: 1.5rem;
+
+            &:hover{
+                cursor: pointer;
+                transform: scale(1.2);
+            }
+        }
+    }
+
+    .seccionTabla{
+
+        @media print{
+            tr{
+                td{
+                    font-size: 2rem;
+                }
+            }
+        }
+
+        #tabla{
+            border-collapse: collapse;
+            width: 100%;
+            .tbody{
+                .id{
+                    font-size: 1rem;
+                }
+                tr{
+                    td{
+                            white-space: nowrap;
+                            overflow: auto;
+                            resize: both;
+                            text-overflow: clip;
+                            padding: 0;
+                            border: .1rem solid black;
+                            font-size: 2rem;
+                    }
+                    .inicio{
+                        text-align: start;
+                    }
+                }
+            }
+        }
+    }
+}
+
