@@ -1,0 +1,42 @@
+.ingresoFactura input{
+    font-size: 1.5rem;
+}
+
+.ingresoFactura label{
+    font-size: 1.5rem;
+}
+
+.ingresoFactura .provedor{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.ingresoFactura .informacionComprobante{
+    display: flex;
+    justify-content: space-around;
+}
+.informacionComprobante #puntoVenta{
+    width: 10%;
+}
+.informacionComprobante #numero{
+    width: 20%;
+}
+
+.ingresoFactura .tipoComprobante{
+    text-align: center;
+}
+
+.ingresoFactura .tipoComprobante fieldset{
+    display: flex;
+    justify-content: space-around;
+}
+
+.ingresoFactura .tipoComprobante fieldset input{    
+    transform: scale(1.8);
+}
+
+.ingresoFactura .fechas{
+    display: flex;
+    justify-content: space-around;
+}

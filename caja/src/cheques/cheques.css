@@ -3,7 +3,7 @@
     background-color: white;
     overflow: scroll;
     border: .1rem solid black;
-    height: 80vh;
+    height: 75vh;
 }
 
 table{
@@ -27,8 +27,13 @@ table{
     /* justify-content: space-around; */
 }
 
+.buscador .input{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-.buscador main{
+.buscador .radio{
     display: flex;
     justify-content: space-around;
 
@@ -36,6 +41,7 @@ table{
 .buscador main input[type=text]{
     width: 60rem;
     font-size: 2rem;
+    padding: 0;
 }
 
 .buscador main input[type=radio] {

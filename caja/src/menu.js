@@ -150,3 +150,7 @@ ipcRenderer.on('tarjetas',(e,args)=>{
 ipcRenderer.on('cheques',(e,args)=>{
     location.href = "cheques/cheques.html";
 });
+
+ipcRenderer.on('ingresoFacturas',(e,args)=>{
+    location.href = "compras/ingresoFacturas.html";
+});

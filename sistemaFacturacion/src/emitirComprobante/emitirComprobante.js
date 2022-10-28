@@ -762,7 +762,11 @@ ticketFactura.addEventListener('click',async (e) =>{
     }else if(parseFloat(descuento.value) >= 10 && vendedor!=="ELBIO"){
         await sweet.fire({title:"Descuento No Autorizado"})
     }else if(listaProductos.length===0){
-        await sweet.fire({title:"Ningun producto cargado"})
+        await sweet.fire({title:"Ningun producto cargado"});
+    }else if(dnicuit.value.length === 11 && conIva.value === "Consumidor Final"){
+        await sweet.fire({title:"No se puede Consumidor Final con Cuit"});
+    }else if(dnicuit.value.length === 8 && conIva.value !== "Consumidor Final"){
+        await sweet.fire({title: "No se puede Factura A con DNI, Poner Cuit"})
     }else{  
         await sweet.fire({
             title:"Ticket Factura?",
@@ -932,7 +936,6 @@ async function generarQR(texto) {
 }
 
 //funcion que busca en la afip a una persona
- 
  buscarAfip.addEventListener('click',  async (e)=>{
     let cliente = (await axios.get(`${URL}clientes/cuit/${dnicuit.value}`)).data;
         if (cliente !== "") {
@@ -954,7 +957,7 @@ async function generarQR(texto) {
             }
     cuentaC.classList.add('none');
     observaciones.focus();
- })
+ });
 
  //Funcion para buscar una persona directamente por el cuit
  async function buscarPersonaPorCuit(cuit) {

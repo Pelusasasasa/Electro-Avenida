@@ -199,12 +199,17 @@ const templateMenu = [
           ventanaPrincipal.webContents.send('cheques');
         }
       },
+    ]
+  },
+  {
+    label: "Compras",
+    submenu:[
       {
-        label:"Buscar Cheques",
+        label:"Ingreso Facturas",
         click(){
-          
+          ventanaPrincipal.webContents.send('ingresoFacturas');
         }
-      },
+      }
     ]
   },
   {
