@@ -7,9 +7,13 @@
 }
 
 .ingresoFactura .provedor{
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
     margin-bottom: 1rem;
+}
+
+.ingresoFactura .provedor #provedor{
+    width: 80%;
 }
 
 .ingresoFactura .informacionComprobante{
@@ -39,4 +43,45 @@
 .ingresoFactura .fechas{
     display: flex;
     justify-content: space-around;
+}
+
+.valores{
+    margin: 2rem;
+    border: .1rem solid white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.valores .inputs{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.valores .inputs div{
+    margin: .5rem;
+}
+
+.iva,.descuento{
+    text-align: end;
+}
+
+.valores .inputs input{
+    text-align: end;
+}
+
+.valores .inputs select{
+    width: 100px;
+}
+
+.valores .inputs label{
+    display: inline-block;
+    width: 20rem;
+    font-size: 1.5rem;
+}
+
+.radios{
+    border: .1rem solid white;
+    display: flex;
+    gap: 2rem;
 }

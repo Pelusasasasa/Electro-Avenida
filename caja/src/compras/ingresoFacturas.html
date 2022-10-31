@@ -80,7 +80,78 @@
             <input type="date" name="fechaVencimientoCAI" id="fechaVencimientoCAI">
         </main>
     </section>
-
-
+    <section class="valores">
+        <main class="ayuda">
+            <div>
+                <p> <strong>1</strong>  Fact. Proveedores</p>
+                <p> <strong>2</strong>  Tarj. Credito - Cliente</p>
+                <p> <strong>3</strong>  Fact Proveedores</p>
+                <p> <strong>4</strong>  Tarj. Credito - Cliente</p>
+            </div>
+            <div class="radios">
+                <div>
+                    <label for="contado">Contado</label>
+                    <input type="radio" name="tipo" id="contado">
+                </div>
+                <div>
+                    <label for="cuentaCorriente">Cuenta Corriente</label>
+                    <input type="radio" name="tipo" id="cuentaCorriente">
+                </div>
+            </div>
+        </main>
+        <main class="inputs">
+            <div>
+                <label for="netoNoGravado">Neto No Gravado</label>
+                <input type="number" name="netoNoGravado" id="netoNoGravado" value="0.00">
+            </div>
+            <div>
+                <label for="netoGravado">Neto gravado</label>
+                <input type="number" name="netoGravado" id="netoGravado" value="0.00">
+            </div>
+            <div>
+                <label class="iva" for="iva">I.V.A</label>
+                <select name="iva" id="iva">
+                    <option value="21.00">21.00</option>
+                    <option value="10.50">10.50</option>
+                    <option value="27.00">27.00</option>
+                </select>
+                <input type="number" name="numeroIva" value="0.00" id="numeroIva">
+            </div>
+            <div>
+                <label for="percepcionIVA"><strong>1</strong>  Percepcion IVA Compras</label>
+                <input type="number" name="percepcionIVA" id="percepcionIVA" value="0.00">
+            </div>
+            <div>
+                <label for="retencionDGR"><strong>2</strong> Retencion DGR</label>
+                <input type="number" name="retencionDGR" id="retencionDGR" value="0.00">
+            </div>
+            <div>
+                <label for="percepcionDGR"><strong>3</strong> Percepcion DGR Compras</label>
+                <input type="number" name="percepcionDGR" id="percepcionDGR" value="0.00">
+            </div>
+            <div>
+                <label for="retencionIVA"><strong>4</strong> Retencion IVA</label>
+                <input type="number" name="retencionIVA" id="retencionIVA" value="0.00">
+            </div>
+            <div>
+                <label for="total">Total Factura</label>
+                <input type="number" name="total" id="total" value="0.00">
+            </div>
+            <div>
+                <label class="descuento" for="descuento">Descuento</label>
+                <input type="number" name="descuentoPor" id="descuentoPor" value="0.00">
+                <input type="number" name="descuento" id="descuento" value="0.00">
+            </div>
+            <div>
+                <label for="neto">Neto</label>
+                <input type="number" name="neto" id="neto" value="0.00">
+            </div>
+        </main>
+    </section>
+    <section class="botones">
+        <button class="aceptar">Aceptar</button>
+        <button class="cancelar">Cancelar</button>
+    </section>
+    <script src="./ingresoFacturas.js"></script>
 </body>
 </html>

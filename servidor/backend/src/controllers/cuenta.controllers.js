@@ -5,6 +5,7 @@ const Cuenta = require('../models/Cuenta');
 cuentaCTRL.post = async(req,res)=>{
     const cuenta = new Cuenta(req.body);
     await cuenta.save();
+    console.log(`Cuenta ${req.body.desc} Cargado`)
     res.send(`Cuenta ${req.body.desc} Cargada`);
 };
 

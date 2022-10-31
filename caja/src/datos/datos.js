@@ -22,7 +22,7 @@ const listar = (cuenta)=>{
 
 window.addEventListener('load',async e=>{
     cuentas = (await axios.get(`${URL}cuentas`)).data;
-    listar(cuentas[0]);
+    // listar(cuentas[0]);
 });
 
 
