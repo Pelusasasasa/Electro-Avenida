@@ -34,25 +34,29 @@ const pagado = document.querySelector('.pagado')
 const alerta = document.querySelector('.alerta')
 const todo = document.querySelector('.todo');
 
-
-const codigo = document.querySelector('#codigo')
-const nombre = document.querySelector('#nombre')
-const saldo = document.querySelector('#saldo')
-const saldo_p = document.querySelector('#saldo_p')
-const direccion = document.querySelector('#direccion')
+//cliente
+const codigo = document.querySelector('#codigo');
+const nombre = document.querySelector('#nombre');
+const saldo = document.querySelector('#saldo');
+const saldo_p = document.querySelector('#saldo_p');
+const direccion = document.querySelector('#direccion');
 const localidad = document.querySelector('#localidad');
-const fecha = document.querySelector('#fecha')
-fecha.value = `${anioDeHoy}-${mesDeHoy}-${diaDeHoy}`
-const cond_iva = document.querySelector('#cond_iva')
-const cuit = document.querySelector('#cuit')
+const fecha = document.querySelector('#fecha');
+const cond_iva = document.querySelector('#cond_iva');
+const cuit = document.querySelector('#cuit');
+
 const listar = document.querySelector('.listar')
-const imprimir = document.querySelector('.imprimir')
-const cancelar = document.querySelector('.cancelar')
+
+//botones
+const imprimir = document.querySelector('.imprimir');
+const cancelar = document.querySelector('.cancelar');
+
 const vendedor = document.querySelector('.vendedor');
 const saldoAfavor = document.querySelector('#saldoAFavor');
 const total = document.querySelector('#total');
 
 window.addEventListener('load',e=>{
+    fecha.value = `${anioDeHoy}-${mesDeHoy}-${diaDeHoy}`
     copiar();
 });
 
@@ -171,6 +175,8 @@ const inputsCliente = async (cliente)=>{
     if (trSeleccionado) {
         inputSeleccionado = trSeleccionado.children[5].children[0];  
     }
+
+    codigo.setAttribute('disabled','');
 }   
 
 
