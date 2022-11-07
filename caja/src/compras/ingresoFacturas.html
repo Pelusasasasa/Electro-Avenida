@@ -14,29 +14,31 @@
             <label for="provedor">Provedor</label>
             <input type="text" name="provedor" id="provedor">
         </main>
+
+        <main>
+            <label for="codigo">Codigo</label>
+            <input disabled type="text" name="codigo" id="codigo">
+        </main>
+
         <main>
             <label for="cond_iva">Cond_Iva</label>
-            <input type="text" name="cond_iva" id="cond_iva">
+            <input disabled type="text" name="cond_iva" id="cond_iva">
         </main>
         <main>
             <label for="cuit">Cuit</label>
-            <input type="text" name="cuit" id="cuit">
+            <input disabled type="text" name="cuit" id="cuit">
         </main>
     </section>
     <section class="informacionComprobante">
         <main>
             <label for="nroComp">Nº Comprobante</label>
-            <input type="text" name="puntoVenta" id="puntoVenta">
-            <input type="text" name="numero" id="numero">
-        </main>
-        <main>
-            <label for="imputado">Inputado a:</label>
-            <select name="imputado" id="imputado"></select>
+            <input type="text" value="0000" name="puntoVenta" id="puntoVenta">
+            <input type="text" name="numero" value="00000000" id="numero">
         </main>
         <main>
             <label for="empresa">Empresa</label>
             <select name="empresa" id="empresa">
-                <option value="ElectroAvenida">Electro Avenida</option>
+                <option value="Electro Avenida">Electro Avenida</option>
                 <option value="seguridad">Seguridad</option>
             </select>
         </main>
@@ -46,19 +48,19 @@
         <fieldset>
             <main>
                 <label for="factura">Factura</label>
-                <input type="radio" name="tipoComprobante" id="factura">
+                <input type="radio" name="tipoComprobante" id="Factura">
             </main>
             <main>
                 <label for="notaCredito">Nota Credito</label>
-                <input type="radio" name="tipoComprobante" id="notaCredito">
+                <input type="radio" name="tipoComprobante" id="Nota Credito">
             </main>
             <main>
                 <label for="presupuesto">Presupuesto</label>
-                <input type="radio" name="tipoComprobante" id="presupuesto">
+                <input type="radio" name="tipoComprobante" id="Presupuesto">
             </main>
             <main>
                 <label for="ticketFactura">Ticket Factura</label>
-                <input type="radio" name="tipoComprobante" id="ticketFactura">
+                <input type="radio" name="tipoComprobante" id="Ticket Factura">
             </main>
         </fieldset>
     </section>
@@ -91,7 +93,7 @@
             <div class="radios">
                 <div>
                     <label for="contado">Contado</label>
-                    <input type="radio" name="tipo" id="contado">
+                    <input type="radio" name="tipo" checked id="contado">
                 </div>
                 <div>
                     <label for="cuentaCorriente">Cuenta Corriente</label>

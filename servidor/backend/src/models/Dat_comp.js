@@ -1,25 +1,37 @@
 const {Schema,model} = require('mongoose');
 
 const DatComp = new Schema({
-    f_comp:{
+    fecha_comp:{
         type:Date,
         default: Date.now
     },
-    f_imput:{
+    fecha_imput:{
         type:Date,
         default: Date.now
     },
-    t_comp:String,
-    l_comp:String,
-    n_comp:String,
-    codProv:String,
+    tipo_comp:{
+        type:String,
+        default: ""
+    },
+    nro_comp:{
+        type:String,
+        default: "0000-00000000"
+    },
+    codProv:{
+        type:String,
+        default:""
+    },
+    provedor:{
+        type:String,
+        default:""
+    },
     empresa:String,
     cuit:Number,
-    noGrava:{
+    netoNoGravado:{
         type:Number,
         default:0
     },
-    gravado:{
+    netoGravado:{
         type:Number,
         default:0
     },
@@ -43,7 +55,7 @@ const DatComp = new Schema({
         type:Number,
         default:0
     },
-    p_dgr_c:{
+    r_iva_c:{
         type:Number,
         default:0
     },

@@ -8,12 +8,16 @@
 
 .ingresoFactura .provedor{
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 1fr 0.5fr 1fr 1fr;
     margin-bottom: 1rem;
 }
 
 .ingresoFactura .provedor #provedor{
-    width: 80%;
+    width: 70%;
+}
+
+.ingresoFactura .provedor #codigo{
+    width: 30%;
 }
 
 .ingresoFactura .informacionComprobante{
@@ -25,6 +29,11 @@
 }
 .informacionComprobante #numero{
     width: 20%;
+}
+
+.informacionComprobante select{
+    padding: .5rem;
+    font-size: 2rem;
 }
 
 .ingresoFactura .tipoComprobante{

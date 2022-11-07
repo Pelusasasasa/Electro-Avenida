@@ -81,6 +81,10 @@ if (process.env.NODE_ENV !== 'production') {
   })
 };
 
+ipcMain.on('enviar-info-ventana-principal',(e,args)=>{
+  ventanaPrincipal.webContents.send('recibir-informacion',args);
+});
+
 const templateMenu = [
 
   {

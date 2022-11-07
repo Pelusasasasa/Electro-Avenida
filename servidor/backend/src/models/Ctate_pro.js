@@ -6,7 +6,7 @@ const CtatePro = new Schema({
         default:Date.now
     },
     codProv:String,
-    rSocial:{
+    provedor:{
         type:String,
         default:""
     },
@@ -24,23 +24,15 @@ const CtatePro = new Schema({
         type:Number,
         default:0
     },
-    com_pago:String,
+    com_pago:{
+        type:String,
+        default:""
+    },
     emp:{
         type:String,
         default:""
     },
-    imp_a:{
-        type:Number,
-        default:0
-    },
-    f_venc:{
-        type:Date,
-        default:Date.now
-    },
-    documento:{
-        type:String,
-        default:""
-    }
+
 });
 
 module.exports = model('CtatePro',CtatePro);

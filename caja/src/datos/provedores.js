@@ -14,6 +14,8 @@ const consultar = document.querySelector('.consultar');
 const borrar = document.querySelector('.borrar');
 const salir = document.querySelector('.salir');
 
+let botones = true;
+
 window.addEventListener('load',async e=>{
     const provedores = (await axios.get(`${URL}provedor`)).data;
     await listar(provedores);
@@ -78,7 +80,11 @@ salir.addEventListener('click',e=>{
 
 document.addEventListener('keyup',e=>{
     if (e.key === "Escape") {
-        location.href = '../index.html';
+        if (botones) {
+            location.href = '../index.html';
+        }else{
+            window.close();
+        }
     }
 });
 
@@ -123,7 +129,10 @@ body.addEventListener('click',e=>{
 });
 
 body.addEventListener('keyup',e=>{
-    if (e.keyCode === 40 && seleccionado.nextElementSibling) {
+    if (e.keyCode === 13 && seleccionado && !botones) {
+        ipcRenderer.send('enviar-info-ventana-principal',seleccionado.id);
+        window.close();
+    }else if (e.keyCode === 40 && seleccionado.nextElementSibling) {
         const tds = document.querySelectorAll('.seleccionado td');
         let i = 0;
         let index
@@ -179,5 +188,13 @@ body.addEventListener('keyup',e=>{
                 }
             })
         }
+    }
+})
+
+ipcRenderer.on('recibir-informacion',(e,args)=>{
+    botones = args.botones;
+
+    if (!botones) {
+        borrar.parentNode.classList.add('none');
     }
 })
