@@ -155,6 +155,7 @@ ipcMain.on('imprimir',(e,args)=>{
 })
 
 ipcMain.on('abrir-ventana-emitir-comprobante',(e,args)=>{
+    console.log(args)
     const[vendedor,numeroVenta,empresa] = args
     abrirVentana("emitirComprobante/emitirComprobante.html",1000,1000)
     nuevaVentanaDos.on('ready-to-show',async ()=>{

@@ -371,8 +371,9 @@ botonFacturar.addEventListener('click',() =>{
             confirmButtonText:"Aceptar"
         }).then(async ({isConfirmed,value})=>{
             if (isConfirmed && value !== "") {
-                let vendedor = (await axios.get(`${URL}usuarios/${value}`));
+                let vendedor = (await axios.get(`${URL}usuarios/${value}`)).data;
                 if (vendedor !== "") {
+                    console.log(vendedor)
                     ipcRenderer.send('abrir-ventana-emitir-comprobante',[vendedor.nombre,seleccionado.id,vendedor.empresa]);
                 }
             }
