@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movimiento Caja</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body class="modifcarCompras">
+    <section class="fechas">
+        <main>
+            <label for="desde">Desde</label>
+            <input type="date" name="desde" id="desde">
+        </main>
+        <main>
+            <label for="hasta">Hasta</label>
+            <input type="date" name="hasta" id="hasta">
+        </main>
+    </section>
+    <section class="table">
+        <table>
+            <thead>
+                <tr>
+                    <th>F_Comp</th>
+                    <th>F_Imput</th>
+                    <th>T_Comp</th>
+                    <th>N_Comp</th>
+                    <th>CodProv</th>
+                    <th>Provedor</th>
+                    <th>NoGravado</th>
+                    <th>Gravado</th>
+                    <th>TasaIva</th>
+                    <th>Iva</th>
+                    <th>P_dgr_c</th>
+                    <th>P_iva_c</th>
+                    <th>R_dgr_c</th>
+                    <th>R_iva_c</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+    <section class="botones">
+        <button class="modificar">Modificar</button>
+        <button class="salir">Salir</button>
+    </section>
+    <script src="./modificarCompras.js"></script>
+</body>
+</html>

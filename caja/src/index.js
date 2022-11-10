@@ -213,6 +213,12 @@ const templateMenu = [
         click(){
           ventanaPrincipal.webContents.send('ingresoFacturas');
         }
+      },
+      {
+        label:"Modificar Compras",
+        click(){
+          ventanaPrincipal.webContents.send('modificarCompras');
+        }
       }
     ]
   },

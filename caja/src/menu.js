@@ -154,3 +154,8 @@ ipcRenderer.on('cheques',(e,args)=>{
 ipcRenderer.on('ingresoFacturas',(e,args)=>{
     location.href = "compras/ingresoFacturas.html";
 });
+
+ipcRenderer.on('modificarCompras',(e,args)=>{
+    location.href = "compras/modificarCompras.html";
+});
+

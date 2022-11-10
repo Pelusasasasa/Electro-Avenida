@@ -3,6 +3,16 @@ const { ipcRenderer } = require('electron');
 require('dotenv').config();
 const URL = process.env.URL;
 
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+let numeroParaModifcar = getParameterByName('numero');
+let numeroIvaAnterior = 0;
+
 const sweet = require('sweetalert2');
 
 const {redondear} = require('../assets/js/globales');
@@ -13,7 +23,7 @@ const cond_iva = document.getElementById('cond_iva');
 const cuit = document.getElementById('cuit')
 
 const puntoVenta = document.getElementById('puntoVenta');
-const numero = document.getElementById('numero');
+const numero = document.getElementById('numero');78,5,80
 const empresa = document.getElementById('empresa');
 
 const factura = document.getElementById('Factura');
@@ -43,6 +53,7 @@ const cuentaCorriente = document.getElementById('cuentaCorriente');
 
 
 const aceptar = document.querySelector('.aceptar');
+const modificar = document.querySelector('.modificar');
 const cancelar = document.querySelector('.cancelar');
 
 let aux = 0;
@@ -61,6 +72,12 @@ window.addEventListener('load',async e=>{
     fechaImput.value  = `${year}-${month}-${day}`;
     fechaVencimiento.value = `${year}-${month}-${day}`;
     fechaVencimientoCAI.value = `${year}-${month}-${day}`;
+
+    if (numeroParaModifcar) {
+        const factura = (await axios.get(`${URL}dat_comp/id/${numeroParaModifcar}`)).data;
+        listarFactura(factura)
+    }
+    
 });
 
 provedor.addEventListener('keypress',e=>{
@@ -161,7 +178,8 @@ iva.addEventListener('keypress',e=>{
 numeroIva.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
         percepcionIVA.focus();
-        total.value = redondear(parseFloat(total.value) + parseFloat(numeroIva.value),2)
+        total.value = redondear(parseFloat(total.value) - numeroIvaAnterior + parseFloat(numeroIva.value),2)
+        numeroIvaAnterior = numeroIva.value;
     }
 });
 
@@ -432,6 +450,43 @@ const verTipoComprobante = ()=>{
     }
 }
 
+modificar.addEventListener('click',async e=>{
+    const factura = {};
+
+    factura.provedor =provedor.value;
+    factura.codProv = codigo.value;
+    factura.cuit = cuit.value;
+    factura.nro_comp = `${puntoVenta.value.padStart(4,'0')}-${numero.value.padStart(8,'0')}`;
+    factura.tipo_comp = await verTipoComprobante();
+    factura.empresa = empresa.value;
+
+    factura.fecha_comp = fechaComp.value;
+    factura.fechaImput = fechaImput.value;
+
+    factura.netoNoGravado = redondear(netoNoGravado.value,2);
+    factura.netoGravado = redondear(netoGravado.value,2);
+    factura.tasaIva = redondear(iva.value,2);
+    factura.iva = redondear(numeroIva.value,2);
+    factura.p_iva_c = redondear(percepcionIVA.value, 2);
+    factura.p_dgr_c = redondear(percepcionDGR.value,2);
+    factura.r_dgr_c = redondear(retencionDGR.value,2); 
+    factura.r_iva_c = redondear(retencionIVA.value,2);
+    factura.total = redondear(neto.value,2);
+    try {
+        await axios.put(`${URL}dat_comp/id/${numeroParaModifcar}`,factura);
+        if (aceptar.classList.contains('none')) {
+            location.href = '../compras/modificarCompras.html'
+        }else{
+            location.href = '../index.html'
+        }
+    } catch (error) {
+        console.log(error)
+        await sweet.fire({
+            title:"No se Puedo modificar la factura"
+        })
+    }
+})
+
 cancelar.addEventListener('click',e=>{
     location.href = "../index.html"
 });
@@ -447,3 +502,40 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
 });
 
 
+
+const listarFactura = async(factura)=>{
+    const fecha_comp = factura.fecha_comp.slice(0,10).split('-',3);
+    const fecha_imput = factura.fecha_imput.slice(0,10).split('-',3);
+
+    provedor.value = factura.provedor;
+    codigo.value = factura.codProv;
+    cuit.value = factura.cuit;
+    puntoVenta.value = factura.nro_comp.split('-',2)[0];
+    numero.value = factura.nro_comp.split('-',2)[1];
+    document.getElementById(factura.tipo_comp).checked = true;
+    fechaComp.value = `${fecha_comp[0]}-${fecha_comp[1]}-${fecha_comp[2]}`;
+    fechaImput.value = `${fecha_imput[0]}-${fecha_imput[1]}-${fecha_imput[2]}`;
+
+    netoNoGravado.value = redondear(factura.netoNoGravado,2);
+    netoGravado.value = redondear(factura.netoGravado,2);
+    iva.value = redondear(factura.tasaIva,2);
+    numeroIva.value = redondear(factura.iva,2);
+    numeroIvaAnterior = factura.iva;
+
+    percepcionIVA.value = redondear(factura.p_iva_c,2);
+    percepcionDGR.value = redondear(factura.p_dgr_c,2);
+    retencionDGR.value = redondear(factura.r_dgr_c,2);
+    retencionIVA.value = redondear(factura.r_iva_c,2);
+
+    total.value = redondear(factura.netoNoGravado + factura.netoGravado + factura.iva + factura.p_iva_c + factura.p_dgr_c + factura.r_dgr_c + factura.r_iva_c,2)
+
+    descuentoPor.value =  redondear(100-(factura.total * 100 / parseFloat(total.value)),2);
+    descuento.value = redondear(parseFloat(total.value) - factura.total ,2);
+
+    neto.value = factura.total;
+
+    cuentaCorriente.parentNode.parentNode.classList.add('none')
+
+    modificar.classList.remove('none');
+    aceptar.classList.add('none');
+}

@@ -49,7 +49,7 @@
     transform: scale(1.8);
 }
 
-.ingresoFactura .fechas{
+.fechas{
     display: flex;
     justify-content: space-around;
 }
@@ -93,4 +93,35 @@
     border: .1rem solid white;
     display: flex;
     gap: 2rem;
+}
+
+
+/* Modificar Compras */
+
+.modifcarCompras .fechas{
+    margin: 2rem auto;
+}
+
+.modifcarCompras .fechas input{
+    font-size: 1.8rem;
+}
+
+.table{
+    height: 70vh;
+    background-color: white;
+    overflow: scroll;
+}
+
+.table table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table table th,.table table td{
+    border: .1rem solid black;
+}
+
+tbody tr:hover{
+    cursor: pointer;
+    background-color: grey;
 }
