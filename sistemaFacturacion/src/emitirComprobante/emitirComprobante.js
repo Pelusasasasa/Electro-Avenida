@@ -1110,8 +1110,9 @@ async function ponerInputsClientes(cliente) {
 let ventaAnterior;
 ipcRenderer.once('venta',async (e,args)=>{
     borraNegro = true;
-    const [usuario,numero,empresaS] = JSON.parse(args);
-    inputEmpresa.value = empresaS;
+    const [usuario,numero,empresa] = JSON.parse(args);
+    console.log(JSON.parse(args))
+    inputEmpresa.value = empresa;
     ventaDeCtaCte = numero;
     textoUsuario.innerHTML = usuario;
     ventaAnterior = (await axios.get(`${URL}presupuesto/${numero}`)).data;
