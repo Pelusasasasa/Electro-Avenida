@@ -159,3 +159,7 @@ ipcRenderer.on('modificarCompras',(e,args)=>{
     location.href = "compras/modificarCompras.html";
 });
 
+ipcRenderer.on('deCompras',(e,args)=>{
+    location.href = "compras/deCompras.html";
+});
+

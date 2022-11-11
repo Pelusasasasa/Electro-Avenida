@@ -125,3 +125,17 @@ tbody tr:hover{
     cursor: pointer;
     background-color: grey;
 }
+
+.deCompras{
+    margin: 2rem;
+}
+
+.deCompras header{
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.deCompras p{
+    margin: .5rem;
+}
