@@ -18,6 +18,7 @@ const detalle = document.querySelector('.detalle');
 
 //
 const facturarVarios = document.querySelector('.facturarVarios');
+const botonFacturar = document.querySelector('#botonFacturar');
 const volver = document.querySelector('.volver');
 
 volver.addEventListener('click',e=>{
@@ -56,43 +57,34 @@ compensada.addEventListener('click',e=>{
 
 
 //Pasamos de blanco a negro
-document.addEventListener('keydown',(event) =>{
+document.addEventListener('keydown',async (event) =>{
     if (event.key === "Alt") {
        document.addEventListener('keydown',(e) =>{
            if (e.key === "F9" && situacion === "blanco") {
                mostrarNegro();
                situacion = 'negro';
                tipo === "compensada" ? listarLista(listaCompensada,situacion,tipo) : listarLista(listaHistorica,situacion,tipo);
-           }
+           }else if (e.key === "F8" && situacion === "negro") {
+            ocultarNegro();
+            situacion = 'blanco';
+            tipo === "compensada" ? listarLista(listaCompensada,situacion,tipo) : listarLista(listaHistorica,situacion,tipo);
+        }
        })
    }
+   //Lo que hacemos es ver si se usan las flechas cambiamos el tr en las cuentas y despues mostramos el detalle, en cambio si no esta en cuentas simplemente cambia el td
+   if ((event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 37 || event.keyCode === 40) && !(seleccionado.classList.contains('trDetalle'))) {
+    subSeleccionado =  await recorrerFlechas(event);
+    seleccionado = subSeleccionado &&  subSeleccionado.parentNode;
+    subSeleccionado && mostrarDetalles(seleccionado.id,seleccionado.children[1].innerHTML)
+    subSeleccionado && subSeleccionado.scrollIntoView({
+        block:"center",
+        inline:'center',
+        behavior:"smooth"
+    });
+   }else if((event.keyCode === 38 || event.keyCode === 39 || event.keyCode === 37 || event.keyCode === 40) && (seleccionado.classList.contains('trDetalle'))){
+    subSeleccionado = await recorrerFlechas(event)
+   }
 });
-
-
-//Pasamos de negro a blanco
-document.addEventListener('keydown',async(event) =>{
-   if (event.key === "Alt") {
-      document.addEventListener('keydown',(e) =>{
-          if (e.key === "F8" && situacion === "negro") {
-              ocultarNegro();
-              situacion = 'blanco';
-              tipo === "compensada" ? listarLista(listaCompensada,situacion,tipo) : listarLista(listaHistorica,situacion,tipo);
-          }
-      })
-  }
-
-  
-
-  subSeleccionado =  await recorrerFlechas(event);
-  seleccionado = subSeleccionado &&  subSeleccionado.parentNode;
-  subSeleccionado && mostrarDetalles(seleccionado.id,seleccionado.children[1].innerHTML)
-  subSeleccionado && subSeleccionado.scrollIntoView({
-      block:"center",
-      inline:'center',
-      behavior:"smooth"
-  });
-});
-
 
 const labes = document.querySelectorAll('label')
 //Ocultado lo que tenemos en negro
@@ -112,7 +104,6 @@ const ocultarNegro = ()=>{
     body.classList.remove('mostrarNegro')
     actualizar.classList.add('none')
 }
-
 
 //mostramos lo que tenemos en negro
 const mostrarNegro = ()=>{
@@ -148,14 +139,13 @@ codigoCliente.addEventListener('keypress', async e =>{
             ipcRenderer.send('abrir-ventana',"clientes");
          }
         }
-    });
-
+});
 
 //Recibimos el cliente que nos mandaron desde la otra ventana
 ipcRenderer.on('mando-el-cliente',async(e,args)=>{
     let cliente = (await axios.get(`${URL}clientes/id/${args}`)).data
     ponerDatosCliente(cliente);
-})
+});
 
 //si hacemos click en el tbody vamos a seleccionar una cuenta compensada o historica y pasamos a mostrar los detalles de la cuenta
 listar.addEventListener('click',e=>{
@@ -187,7 +177,7 @@ listar.addEventListener('keyup', async e=>{
     const comp = (await axios.get(`${URL}cuentaComp/id/${id}`)).data[0]; //traemos el la cuenta
     comp.observaciones = observacion.toUpperCase() //modificamos la observacion de la cuenta
     await axios.put(`${URL}cuentaComp/numero/${id}`,comp) //la guardamos
-})
+});
 
 const listarLista = (lista,situacion,tipo)=>{
     let aux
@@ -244,8 +234,7 @@ const listarLista = (lista,situacion,tipo)=>{
             }
         }
     });
-}
-
+};
 
 async function mostrarDetalles(id,tipo,vendedor) {
     detalle.innerHTML = '';
@@ -262,7 +251,7 @@ async function mostrarDetalles(id,tipo,vendedor) {
     productos.forEach((producto) =>{
         let {codProd,descripcion,vendedor,egreso,precio_unitario} = producto;
         detalle.innerHTML += `
-        <tr>
+        <tr id=${id} class=trDetalle>
             <td>${codProd}</td>
             <td>${descripcion}</td>
             <td>${egreso.toFixed(2)}</td>
@@ -273,7 +262,8 @@ async function mostrarDetalles(id,tipo,vendedor) {
         `
         })
     }
-}
+};
+
 actualizar.addEventListener('click',async e=>{
     if (seleccionado) {
         venta = (await axios.get(`${URL}presupuesto/${seleccionado.id}`)).data;
@@ -346,6 +336,20 @@ actualizar.addEventListener('click',async e=>{
                         await axios.put(`${URL}cuentaComp/numero/${cuentaCompensada.nro_comp}`,cuentaCompensada);
                         await axios.put(`${URL}clientes/${cliente._id}`,cliente);
                         const cuentaCompensadaModificada  = (await axios.get(`${URL}cuentaComp/id/${seleccionado.id}`)).data[0];
+                        
+                        
+                        for(let tr of listar.children){
+                            if (tr.id === seleccionado.id) {
+                                seleccionado.classList.remove('seleccionado');
+                                seleccionado = tr;
+                                seleccionado.classList.add('seleccionado');
+
+                                subSeleccionado.classList.remove('subSeleccionado');
+                                subSeleccionado = seleccionado.children[0];
+                                subSeleccionado.classList.add('subSeleccionado');
+                            }
+                        }
+
                         seleccionado.children[3].innerHTML = cuentaCompensadaModificada.importe;
                         seleccionado.children[4].innerHTML = cuentaCompensadaModificada.pagado;
                         seleccionado.children[5].innerHTML = cuentaCompensadaModificada.saldo;
@@ -358,10 +362,8 @@ actualizar.addEventListener('click',async e=>{
         }else{
             sweet.fire({title:"Venta no seleccionada"});
         }
-    })
+});
 
-
-const botonFacturar = document.querySelector('#botonFacturar')
 botonFacturar.addEventListener('click',() =>{
     if (seleccionado) {
         sweet.fire({
@@ -381,12 +383,11 @@ botonFacturar.addEventListener('click',() =>{
     }else{
         sweet.fire({title:'Venta no seleccionada'});
     }
-})
-
+});
 
 document.addEventListener('keydown',e=>{
     if(e.key === "Escape"){
-        window.history.go(-1)
+        location.href === '../index.html';
     }
 });
 
@@ -424,3 +425,13 @@ const ponerDatosCliente = async (Cliente)=>{
 //     ipcRenderer.send('facturarVarios',idFacturas);
 //     location.href = '../emitirComprobante/emitirComprobante.html';
 // })
+
+detalle.addEventListener('click',e=>{
+    seleccionado && seleccionado.classList.remove('seleccionado');
+    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
+    seleccionado.classList.add('seleccionado');
+
+    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
+    subSeleccionado.classList.add('subSeleccionado');
+});
