@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emitir Pago</title>
+</head>
+<body>
+    <section>
+        <main>
+            <select name="provedores" autofocus id="provedores"></select>
+        </main>
+        <main>
+            <label for="saldo">Saldo</label>
+            <input type="number" disabled id="saldo" name="saldo">
+            <input type="text" disabled id="condIva" name="condIva">
+            <input type="text" disabled id="cuit" name="cuit">
+        </main>
+        <main>
+            <label for="numero">Nº</label>
+            <input type="number" disabled name="numero" id="numero">
+        </main>
+    </section>
+    <script src="./emitirPago.js"></script>
+</body>
+</html>

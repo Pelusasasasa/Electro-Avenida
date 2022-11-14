@@ -163,3 +163,8 @@ ipcRenderer.on('deCompras',(e,args)=>{
     location.href = "compras/deCompras.html";
 });
 
+ipcRenderer.on('emitirPago',(e,args)=>{
+    location.href = "provedores/emitirPago.html";
+});
+
+
