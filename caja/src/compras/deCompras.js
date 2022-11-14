@@ -12,6 +12,10 @@ const percepIvaCompras = document.getElementById('percepIvaCompras');
 const retencionBrutosCompras = document.getElementById('retencionBrutosCompras');
 const retencionIvaCompras = document.getElementById('retencionIvaCompras');
 
+const imprimir = document.querySelector('.imprimir');
+const periodo = document.querySelector('.periodo');
+
+
 window.addEventListener('load',async e=>{
     const fecha = new Date();
     let month = fecha.getMonth() + 1;
@@ -22,9 +26,12 @@ window.addEventListener('load',async e=>{
     desde.value = `${year}-${month}`;
     hasta.value = `${year}-${month}`;
 
+    periodo.innerHTML = hasta.value
+
     const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
     listarDatos(datos)
 });
+
 
 desde.addEventListener('change',async e=>{
     const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
@@ -36,7 +43,15 @@ hasta.addEventListener('change',async e=>{
     listarDatos(datos);
 });
 
+imprimir.addEventListener('click',e=>{
+    document.querySelector('.fechas').classList.add('none')
+    document.querySelector('.table').classList.add('table-imprimir');
+    window.print();
+    document.querySelector('.fechas').classList.remove('none');
+})
+
 const listarDatos = (lista)=>{
+    tbody.innerHTML = "";
     let pdgr = 0;
     let rdgr = 0;
     let piva = 0;
