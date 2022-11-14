@@ -5,9 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emitir Pago</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./provedores.css">
 </head>
 <body>
-    <section>
+    <section class="header">
         <main>
             <select name="provedores" autofocus id="provedores"></select>
         </main>
@@ -21,6 +23,34 @@
             <label for="numero">Nº</label>
             <input type="number" disabled name="numero" id="numero">
         </main>
+    </section>
+    <section class="principal">
+        <fieldset>
+            <legend>Ingresar Datos</legend>
+            <main>
+                <label for="nro_comp">Nro Comp</label>
+                <div class="puntoVenta">
+                    <input type="text" name="puntoVenta" id="puntoVenta" value="0000">
+                    <input type="text" name=numero id=numero value="00000000">
+                </div>
+            </main>
+            <main>
+                <label for="tipo">Tipo</label>
+                <select name="tipo" id="tipo">
+                    <option value="Pago Anticipado">Pago Anticipado</option>
+                    <option value="Descuento">Descuento</option>
+                    <option value="Pago A Cuenta">Pago A cuenta</option>
+                </select>
+            </main>
+            <main>
+                <label for="importe">Importe</label>
+                <input type="number" name="descuento" id="descuento" class="none">
+                <input type="number" name="importe" id="importe">
+            </main>
+        </fieldset>
+    </section>
+    <section class="botones">
+        <button>Cancelar</button>
     </section>
     <script src="./emitirPago.js"></script>
 </body>

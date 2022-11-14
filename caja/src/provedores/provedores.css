@@ -1,0 +1,21 @@
+.header{
+    display: flex;
+    justify-content: space-between;
+}
+.header select{
+    font-size: 2rem;
+}
+
+.principal fieldset{
+    display: flex;
+}
+
+.principal fieldset main{
+    display: flex;
+    flex-direction: column;
+    margin-right: 2rem;
+}
+
+.principal fieldset main input{
+    width: 8rem;
+}
