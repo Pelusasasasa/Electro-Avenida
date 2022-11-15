@@ -15,10 +15,9 @@ const compensada = document.querySelector('.compensada');
 const historica = document.querySelector('.historica');
 const actualizar = document.querySelector('.actualizar');
 const detalle = document.querySelector('.detalle');
-
-const botonFacturar = document.querySelector('#botonFacturar')
 //
 const facturarVarios = document.querySelector('.facturarVarios');
+const botonFacturar = document.querySelector('#botonFacturar');
 const volver = document.querySelector('.volver');
 
 volver.addEventListener('click',e=>{
@@ -104,7 +103,6 @@ const ocultarNegro = ()=>{
     actualizar.classList.add('none')
 }
 
-
 //mostramos lo que tenemos en negro
 const mostrarNegro = ()=>{
     labes.forEach(label=>label.classList.add('blanco'));
@@ -139,14 +137,13 @@ codigoCliente.addEventListener('keypress', async e =>{
             ipcRenderer.send('abrir-ventana',"clientes");
          }
         }
-    });
-
+});
 
 //Recibimos el cliente que nos mandaron desde la otra ventana
 ipcRenderer.on('mando-el-cliente',async(e,args)=>{
     let cliente = (await axios.get(`${URL}clientes/id/${args}`)).data
     ponerDatosCliente(cliente);
-})
+});
 
 //si hacemos click en el tbody vamos a seleccionar una cuenta compensada o historica y pasamos a mostrar los detalles de la cuenta
 listar.addEventListener('click',e=>{
@@ -178,7 +175,7 @@ listar.addEventListener('keyup', async e=>{
     const comp = (await axios.get(`${URL}cuentaComp/id/${id}`)).data[0]; //traemos el la cuenta
     comp.observaciones = observacion.toUpperCase() //modificamos la observacion de la cuenta
     await axios.put(`${URL}cuentaComp/numero/${id}`,comp) //la guardamos
-})
+});
 
 const listarLista = (lista,situacion,tipo)=>{
     let aux
@@ -235,7 +232,7 @@ const listarLista = (lista,situacion,tipo)=>{
             }
         }
     });
-}
+};
 
 async function mostrarDetalles(id,tipo,vendedor) {
     detalle.innerHTML = '';
@@ -263,7 +260,7 @@ async function mostrarDetalles(id,tipo,vendedor) {
         `
         })
     }
-}
+};
 
 actualizar.addEventListener('click',async e=>{
     if (seleccionado && !seleccionado.classList.contains('detalle')) {
@@ -334,6 +331,20 @@ actualizar.addEventListener('click',async e=>{
                         await axios.put(`${URL}cuentaComp/numero/${cuentaCompensada.nro_comp}`,cuentaCompensada);
                         await axios.put(`${URL}clientes/${cliente._id}`,cliente);
                         const cuentaCompensadaModificada  = (await axios.get(`${URL}cuentaComp/id/${seleccionado.id}`)).data[0];
+                        
+                        
+                        for(let tr of listar.children){
+                            if (tr.id === seleccionado.id) {
+                                seleccionado.classList.remove('seleccionado');
+                                seleccionado = tr;
+                                seleccionado.classList.add('seleccionado');
+
+                                subSeleccionado.classList.remove('subSeleccionado');
+                                subSeleccionado = seleccionado.children[0];
+                                subSeleccionado.classList.add('subSeleccionado');
+                            }
+                        }
+
                         seleccionado.children[3].innerHTML = cuentaCompensadaModificada.importe;
                         seleccionado.children[4].innerHTML = cuentaCompensadaModificada.pagado;
                         seleccionado.children[5].innerHTML = cuentaCompensadaModificada.saldo;
@@ -371,12 +382,11 @@ botonFacturar.addEventListener('click',() =>{
     }else{
         sweet.fire({title:'Venta no seleccionada'});
     }
-})
-
+});
 
 document.addEventListener('keydown',e=>{
     if(e.key === "Escape"){
-        window.history.go(-1)
+        location.href === '../index.html';
     }
 });
 
@@ -425,3 +435,13 @@ detalle.addEventListener('click',e=>{
 //     ipcRenderer.send('facturarVarios',idFacturas);
 //     location.href = '../emitirComprobante/emitirComprobante.html';
 // })
+
+detalle.addEventListener('click',e=>{
+    seleccionado && seleccionado.classList.remove('seleccionado');
+    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
+    seleccionado.classList.add('seleccionado');
+
+    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
+    subSeleccionado.classList.add('subSeleccionado');
+});
