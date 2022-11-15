@@ -759,7 +759,7 @@ ticketFactura.addEventListener('click',async (e) =>{
     //mostramos alertas
     if(stockNegativo){
         sweet.fire({title:"Ticket Factura no puede ser productos en negativo"});
-    }else if(parseFloat(descuento.value) >= 10 && vendedor!=="ELBIO"){
+    }else if(parseFloat(descuento.value) > 10 && vendedor!=="ELBIO"){
         await sweet.fire({title:"Descuento No Autorizado"})
     }else if(listaProductos.length===0){
         await sweet.fire({title:"Ningun producto cargado"});
