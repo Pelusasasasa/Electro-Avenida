@@ -16,6 +16,7 @@ const historica = document.querySelector('.historica');
 const actualizar = document.querySelector('.actualizar');
 const detalle = document.querySelector('.detalle');
 
+const botonFacturar = document.querySelector('#botonFacturar')
 //
 const facturarVarios = document.querySelector('.facturarVarios');
 const volver = document.querySelector('.volver');
@@ -28,7 +29,7 @@ let listaCompensada=[];
 let listaHistorica=[];
 let clienteTraido = {};
 let listaGlobal=[];
-vendedor = "";
+let vendedor = "";
 let seleccionado = "";
 let subSeleccionado = "";
 let situacion = "blanco";
@@ -55,21 +56,7 @@ compensada.addEventListener('click',e=>{
 });
 
 
-//Pasamos de blanco a negro
-document.addEventListener('keydown',(event) =>{
-    if (event.key === "Alt") {
-       document.addEventListener('keydown',(e) =>{
-           if (e.key === "F9" && situacion === "blanco") {
-               mostrarNegro();
-               situacion = 'negro';
-               tipo === "compensada" ? listarLista(listaCompensada,situacion,tipo) : listarLista(listaHistorica,situacion,tipo);
-           }
-       })
-   }
-});
-
-
-//Pasamos de negro a blanco
+//Pasamos de negro a blanco o vicebersa
 document.addEventListener('keydown',async(event) =>{
    if (event.key === "Alt") {
       document.addEventListener('keydown',(e) =>{
@@ -77,15 +64,19 @@ document.addEventListener('keydown',async(event) =>{
               ocultarNegro();
               situacion = 'blanco';
               tipo === "compensada" ? listarLista(listaCompensada,situacion,tipo) : listarLista(listaHistorica,situacion,tipo);
-          }
+          }else  if (e.key === "F9" && situacion === "blanco") {
+            mostrarNegro();
+            situacion = 'negro';
+            tipo === "compensada" ? listarLista(listaCompensada,situacion,tipo) : listarLista(listaHistorica,situacion,tipo);
+        }
       })
   }
 
-  
-
   subSeleccionado =  await recorrerFlechas(event);
   seleccionado = subSeleccionado &&  subSeleccionado.parentNode;
-  subSeleccionado && mostrarDetalles(seleccionado.id,seleccionado.children[1].innerHTML)
+  if (seleccionado && !seleccionado.classList.contains('detalle')) {
+    subSeleccionado && mostrarDetalles(seleccionado.id,seleccionado.children[1].innerHTML);
+  }
   subSeleccionado && subSeleccionado.scrollIntoView({
       block:"center",
       inline:'center',
@@ -246,13 +237,12 @@ const listarLista = (lista,situacion,tipo)=>{
     });
 }
 
-
 async function mostrarDetalles(id,tipo,vendedor) {
     detalle.innerHTML = '';
     if (tipo === "Recibos_P" || tipo === "Recibos") {
         const vendedor = (await axios.get(`${URL}ventas/venta/ventaUnica/${seleccionado.id}/${tipo}`)).data.vendedor;
         detalle.innerHTML += `
-            <tr><h1>El recibo fue emitido por: ${vendedor}</h1></tr>
+            <tr class="detalle"><h1>El recibo fue emitido por: ${vendedor}</h1></tr>
         `
     }else{
     let productos = (await axios.get(`${URL}movProductos/${id}/${tipo}`)).data;
@@ -262,7 +252,7 @@ async function mostrarDetalles(id,tipo,vendedor) {
     productos.forEach((producto) =>{
         let {codProd,descripcion,vendedor,egreso,precio_unitario} = producto;
         detalle.innerHTML += `
-        <tr>
+        <tr id=${seleccionado.id} class="detalle">
             <td>${codProd}</td>
             <td>${descripcion}</td>
             <td>${egreso.toFixed(2)}</td>
@@ -274,8 +264,9 @@ async function mostrarDetalles(id,tipo,vendedor) {
         })
     }
 }
+
 actualizar.addEventListener('click',async e=>{
-    if (seleccionado) {
+    if (seleccionado && !seleccionado.classList.contains('detalle')) {
         venta = (await axios.get(`${URL}presupuesto/${seleccionado.id}`)).data;
         let cuentaCompensada = (await axios.get(`${URL}cuentaComp/id/${seleccionado.id}`)).data[0];
         let cuentaHistorica = (await axios.get(`${URL}cuentaHisto/id/${seleccionado.id}`)).data[0];
@@ -309,24 +300,21 @@ actualizar.addEventListener('click',async e=>{
 
         //actualizamos el saldo de la cuentaCompensada
         cuentaCompensada.saldo = parseFloat((parseFloat(total) - cuentaCompensada.pagado).toFixed(2));
-
-
-
-                cuentaHistorica.saldo -= cuentaHistorica.debe;
-                cuentaHistorica.debe = cuentaCompensada.importe;
-                //Guardamos la venta con el nuevo precioFinal
-                venta.precioFinal = parseFloat(total.toFixed(2));
-                
-                ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante","valorizado",,true]);
-                sweet.fire({
-                    title: "Grabar Importe",
-                    showCancelButton:true,
-                    confirmButtonText:"Aceptar"
-                }).then(async({isConfirmed})=>{
-                    if (isConfirmed) {
-                        for await (let movProducto of movimientos) {
-                            let producto =(await axios.get(`${URL}productos/${movProducto.codProd}`)).data;
-                            movProducto.precio_unitario = parseFloat(producto.precio_venta);
+        cuentaHistorica.saldo -= cuentaHistorica.debe;
+        cuentaHistorica.debe = cuentaCompensada.importe;
+        //Guardamos la venta con el nuevo precioFinal
+        venta.precioFinal = parseFloat(total.toFixed(2));
+      
+        ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante","valorizado",,true]);
+            sweet.fire({
+                title: "Grabar Importe",
+                showCancelButton:true,
+                confirmButtonText:"Aceptar"
+            }).then(async({isConfirmed})=>{
+                if (isConfirmed) {
+                    for await (let movProducto of movimientos) {
+                        let producto =(await axios.get(`${URL}productos/${movProducto.codProd}`)).data;
+                        movProducto.precio_unitario = parseFloat(producto.precio_venta);
                             movProducto.total = parseFloat((movProducto.egreso*movProducto.precio_unitario).toFixed(2));
                             await axios.put(`${URL}movProductos/${movProducto._id}`,movProducto);
                         };
@@ -355,15 +343,15 @@ actualizar.addEventListener('click',async e=>{
                 })
 
                 
+        }else if(seleccionado && seleccionado.classList.contains('seleccionado')){
+            sweet.fire({title:"Seleccionar una cuenta, no un movimiento"});
         }else{
-            sweet.fire({title:"Venta no seleccionada"});
+            sweet.fire({title:"Cuenta no seleccionada"});
         }
-    })
+});
 
-
-const botonFacturar = document.querySelector('#botonFacturar')
 botonFacturar.addEventListener('click',() =>{
-    if (seleccionado) {
+    if (seleccionado && !seleccionado.classList.contains('detalle')) {
         sweet.fire({
             title:"Contraseña",
             input:"password",
@@ -378,6 +366,8 @@ botonFacturar.addEventListener('click',() =>{
                 }
             }
         })
+    }else if(seleccionado && seleccionado.classList.contains('detalle')){
+        sweet.fire({title:'Seleccionar una cuenta, no un movimiento'});
     }else{
         sweet.fire({title:'Venta no seleccionada'});
     }
@@ -404,6 +394,17 @@ const ponerDatosCliente = async (Cliente)=>{
     listaHistorica = historicas;
     listarLista(compensadas,situacion,tipo)
 };
+
+
+detalle.addEventListener('click',e=>{
+    seleccionado && seleccionado.classList.remove('seleccionado');
+    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
+    seleccionado.classList.add('seleccionado');
+
+    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.parentNode;
+    subSeleccionado.classList.add('subSeleccionado')
+});
 
 // document.addEventListener('keydown',e=>{
 //     if (e.keyCode === 17) {
