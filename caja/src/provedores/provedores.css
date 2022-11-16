@@ -32,16 +32,43 @@
 .tables{
     display: flex;
     border: .1rem solid black;
+    height: 50vh;
 }
 
-.tables table{
+.tables main{
     background-color: white;
-    height: 50vh;
     flex: auto;
+}
+
+.tables main table{
     width: 100%;
     border-collapse: collapse;
 }
 
 thead tr th{
     border: .1rem solid black;
+}
+
+footer{
+    display: flex;
+}
+
+footer .totalComprobante{
+    display: flex;
+    justify-content: space-around;
+}
+
+footer #observaciones{
+    width: 40rem;
+}
+
+footer section{
+    flex:auto;
+}
+
+footer  main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 }

@@ -63,34 +63,56 @@
                 <input type="text" name="fecha" id="fecha">
             </main>
             <main>
-                <label for="importe">Importe</label>
-                <input type="text" name="importe" id="importe">
+                <label for="importeCheque">Importe Cheque</label>
+                <input type="text" name="importeCheque" id="importeCheque">
             </main>
         </fieldset>
     </section>
     <section class="tables">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nº Comprobante</th>
-                        <th>Tipo</th>
-                        <th>Descuento</th>
-                        <th>Importe</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nº Cheque</th>
-                        <th>Banco</th>
-                        <th>Importe</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <main>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nº Comprobante</th>
+                            <th>Tipo</th>
+                            <th>Descuento</th>
+                            <th>Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyComprobante"></tbody>
+                </table>
+            </main>
+            <main>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nº Cheque</th>
+                            <th>Banco</th>
+                            <th>Importe</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </main>
     </section>
+    <footer class="totales">
+        <section class="totalComprobante">
+            <main>
+                <label for="observaciones">Observaciones</label>
+                <input type="text" name="observaciones" id="observaciones">
+            </main>
+            <main>
+                <label for="total">Total</label>
+                <input type="number" value="0.00" name="total" id="total">
+            </main>
+        </section>
+        <section class="totalCheques">
+            <main>
+                <label for="total">Total</label>
+                <input type="number" name="total" id="total">
+            </main>
+        </section>
+    </footer>
     <section class="botones">
         <button>Cancelar</button>
     </section>

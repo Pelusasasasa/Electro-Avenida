@@ -1,4 +1,4 @@
-
+const {redondear} = require('../assets/js/globales')
 
 const axios = require('axios');
 require('dotenv').config();
@@ -15,6 +15,20 @@ const puntoVenta = document.getElementById('puntoVenta');
 const numero = document.getElementById('numero');
 const tipo = document.getElementById('tipo');
 const importe = document.getElementById('importe');
+
+//cheques
+const numeroCheque = document.getElementById('numeroCheque');
+const banco = document.getElementById('banco');
+const fecha = document.getElementById('fecha');
+const importeCheque = document.getElementById('importeCheque');
+
+const tbodyComprobante = document.getElementById('tbodyComprobante');
+
+
+//totales
+const total = document.getElementById('total');
+
+let totalComprobante = 0;
 
 window.addEventListener('load',async e=>{
     let provedores = (await axios.get(`${URL}provedor`)).data;
@@ -52,9 +66,12 @@ puntoVenta.addEventListener('keypress',e=>{
 numero.addEventListener('keypress',async e=>{
     const punto = puntoVenta.value.padStart(4,'0');
     const num = numero.value.padStart(8,'0');
-    const a = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}`)).data;
-    console.log(a)
     if (e.keyCode === 13) {
+        const datoCompras = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}`)).data;
+        if (datoCompras) {
+            const {nro_comp,total} = datoCompras;
+            importe.value = total;
+        }
         tipo.focus();
 
     }
@@ -67,8 +84,13 @@ tipo.addEventListener('keypress',e=>{
     }
 });
 
-importe.addEventListener('keypress',e=>{
-    // const 
+importe.addEventListener('keypress',async e=>{
+    if (e.keyCode === 13) {
+        await agregarComprobante();
+        importe.value = "0.00"
+        puntoVenta.value = "0000";
+        numero.value = "00000000";
+    }
 });
 
 puntoVenta.addEventListener('focus',e=>{
@@ -83,3 +105,34 @@ importe.addEventListener('focus',e=>{
     importe.select();
 });
 
+const agregarComprobante = ()=>{
+    const tr = document.createElement('tr');
+
+    const tdNumero = document.createElement('td');
+    const tdTipo = document.createElement('td');
+    const tdImporte = document.createElement('td');
+
+    tdNumero.innerHTML = puntoVenta.value.padStart(4,'0') + '-' + numero.value.padStart(8,'0');
+    tdTipo.innerHTML = tipo.value;
+    tdImporte.innerHTML = importe.value;
+
+    tr.appendChild(tdNumero);
+    tr.appendChild(tdTipo);
+    tr.appendChild(tdImporte);
+
+    tbodyComprobante.appendChild(tr);
+
+    total.value = redondear(parseFloat(importe.value) + parseFloat(total.value),2);
+}
+
+
+
+//cheques
+numeroCheque.addEventListener('keypress',async e=>{
+    if (e.keycode === 13) {
+
+        const cheque = await axios.get(`${URL}cheques`)
+
+        banco.focus();
+    }
+});
