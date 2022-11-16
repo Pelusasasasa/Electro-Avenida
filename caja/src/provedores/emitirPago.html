@@ -20,8 +20,8 @@
             <input type="text" disabled id="cuit" name="cuit">
         </main>
         <main>
-            <label for="numero">Nº</label>
-            <input type="number" disabled name="numero" id="numero">
+            <label for="numeroVenta">Nº</label>
+            <input type="number" disabled name="numeroVenta" id="numeroVenta">
         </main>
     </section>
     <section class="principal">
@@ -45,9 +45,51 @@
             <main>
                 <label for="importe">Importe</label>
                 <input type="number" name="descuento" id="descuento" class="none">
-                <input type="number" name="importe" id="importe">
+                <input type="number" value="0.00" name="importe" id="importe">
             </main>
         </fieldset>
+        <fieldset class="cheques">
+            <legend>Valores</legend>
+            <main>
+                <label for="numeroCheque">Nº Cheque</label>
+                <input type="text" name="numeroCheque" id="numeroCheque">
+            </main>
+            <main>
+                <label for="banco">Banco</label>
+                <input type="text" name="banco" id="banco">
+            </main>
+            <main>
+                <label for="fecha">Fecha</label>
+                <input type="text" name="fecha" id="fecha">
+            </main>
+            <main>
+                <label for="importe">Importe</label>
+                <input type="text" name="importe" id="importe">
+            </main>
+        </fieldset>
+    </section>
+    <section class="tables">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nº Comprobante</th>
+                        <th>Tipo</th>
+                        <th>Descuento</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nº Cheque</th>
+                        <th>Banco</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
     </section>
     <section class="botones">
         <button>Cancelar</button>

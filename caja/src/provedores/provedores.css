@@ -6,16 +6,42 @@
     font-size: 2rem;
 }
 
-.principal fieldset{
+.principal{
     display: flex;
+    width: 100%;
+    /* justify-content: space-around; */
+}
+
+.principal fieldset{
+    flex: auto;
+    display: flex;
+    justify-content: space-around;
 }
 
 .principal fieldset main{
     display: flex;
     flex-direction: column;
-    margin-right: 2rem;
+    /* margin-right: 2rem; */
 }
 
-.principal fieldset main input{
-    width: 8rem;
+.principal fieldset main input,.principal fieldset main select{
+    width: 15rem;
+    font-size: 1.8rem;
+}
+
+.tables{
+    display: flex;
+    border: .1rem solid black;
+}
+
+.tables table{
+    background-color: white;
+    height: 50vh;
+    flex: auto;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead tr th{
+    border: .1rem solid black;
 }
