@@ -23,10 +23,12 @@ const fecha = document.getElementById('fecha');
 const importeCheque = document.getElementById('importeCheque');
 
 const tbodyComprobante = document.getElementById('tbodyComprobante');
+const tbodyCheque = document.getElementById('tbodyCheque');
 
 
 //totales
 const total = document.getElementById('total');
+const totalCheque = document.getElementById('totalCheque');
 
 let totalComprobante = 0;
 
@@ -115,6 +117,7 @@ const agregarComprobante = ()=>{
     tdNumero.innerHTML = puntoVenta.value.padStart(4,'0') + '-' + numero.value.padStart(8,'0');
     tdTipo.innerHTML = tipo.value;
     tdImporte.innerHTML = importe.value;
+    tdEliminar.appendChild(button)
 
     tr.appendChild(tdNumero);
     tr.appendChild(tdTipo);
@@ -125,14 +128,67 @@ const agregarComprobante = ()=>{
     total.value = redondear(parseFloat(importe.value) + parseFloat(total.value),2);
 }
 
-
-
 //cheques
 numeroCheque.addEventListener('keypress',async e=>{
-    if (e.keycode === 13) {
-
-        const cheque = await axios.get(`${URL}cheques`)
-
+    if (e.keyCode === 13) {
+        const cheque = (await axios.get(`${URL}cheques/numero/${numeroCheque.value}`)).data;
+        console.log(cheque.entreg_a)
+        if (cheque && cheque.entreg_a) {
+            const fechaCheque = cheque.f_cheque.slice(0,10).split('-',3);
+            banco.value = cheque.banco;
+            fecha.value = `${fechaCheque[2]}/${fechaCheque[1]}/${fechaCheque[0]}`;
+            importeCheque.value = redondear(cheque.i_cheque,2);
+        }
         banco.focus();
     }
 });
+
+banco.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        fecha.focus();
+    }
+});
+
+fecha.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        importeCheque.focus();
+    }
+});
+
+importeCheque.addEventListener('keypress',e=>{
+   if (e.keyCode === 13) {
+    agregarCheque();
+   }
+});
+
+const agregarCheque = ()=>{
+    const tr = document.createElement('tr');
+
+    const button = document.createElement('button');
+    button.innerHTML = "Eliminar";
+
+    const tdNumero = document.createElement('td');
+    const tdBanco = document.createElement('td');
+    const tdImporteCheque = document.createElement('td');
+    const tdEliminar = document.createElement('td');
+
+    tdNumero.innerHTML = numeroCheque.value;
+    tdBanco.innerHTML = banco.value;
+    tdImporteCheque.innerHTML = importeCheque.value;
+    tdEliminar.appendChild(button)
+
+    tr.appendChild(tdNumero);
+    tr.appendChild(tdBanco);
+    tr.appendChild(tdImporteCheque);
+    tr.appendChild(tdEliminar);
+
+    tbodyCheque.appendChild(tr);
+    totalCheque.value = redondear(parseFloat(totalCheque.value) + parseFloat(importeCheque.value),2);
+
+    numeroCheque.value = "";
+    banco.value = "";
+    fecha.value = "";
+    importeCheque.value = "";
+
+    numeroCheque.focus();
+};

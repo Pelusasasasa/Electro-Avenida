@@ -49,6 +49,10 @@ thead tr th{
     border: .1rem solid black;
 }
 
+tbody td{
+    text-align: end;
+}
+
 footer{
     display: flex;
 }
@@ -71,4 +75,15 @@ footer  main{
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+}
+
+table button{
+    padding: 0;
+    width: 100%;
+    border-radius: 0;
+    font-size: 1.6rem;
+}
+
+table button:hover{
+    transform: scale(1);
 }
