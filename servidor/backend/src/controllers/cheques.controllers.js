@@ -40,4 +40,10 @@ chequesCTRL.deleteforId = async(req,res)=>{
     res.end()
 }
 
+chequesCTRL.getForNumero = async(req,res)=>{
+    const {numero} = req.params;
+    const cheque = await Cheque.findOne({n_cheque:numero});
+    res.send(cheque);
+}
+
 module.exports = chequesCTRL;
