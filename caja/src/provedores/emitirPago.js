@@ -1,4 +1,6 @@
-const {redondear} = require('../assets/js/globales')
+const {redondear} = require('../assets/js/globales');
+
+const sweet = require('sweetalert2');
 
 const axios = require('axios');
 require('dotenv').config();
@@ -110,18 +112,26 @@ importe.addEventListener('focus',e=>{
 const agregarComprobante = ()=>{
     const tr = document.createElement('tr');
 
+    const button = document.createElement('button');
+    button.innerText = "Eliminar";
+
     const tdNumero = document.createElement('td');
     const tdTipo = document.createElement('td');
+    const tdDescuento = document.createElement('td');
     const tdImporte = document.createElement('td');
+    const tdEliminar = document.createElement('td');
 
     tdNumero.innerHTML = puntoVenta.value.padStart(4,'0') + '-' + numero.value.padStart(8,'0');
     tdTipo.innerHTML = tipo.value;
+    tdDescuento.innerHTML = "0.00";
     tdImporte.innerHTML = importe.value;
-    tdEliminar.appendChild(button)
+    tdEliminar.appendChild(button);
 
     tr.appendChild(tdNumero);
     tr.appendChild(tdTipo);
+    tr.appendChild(tdDescuento);
     tr.appendChild(tdImporte);
+    tr.appendChild(tdEliminar);
 
     tbodyComprobante.appendChild(tr);
 
@@ -132,12 +142,15 @@ const agregarComprobante = ()=>{
 numeroCheque.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
         const cheque = (await axios.get(`${URL}cheques/numero/${numeroCheque.value}`)).data;
-        console.log(cheque.entreg_a)
-        if (cheque && cheque.entreg_a) {
+        if (cheque && !cheque.entreg_a) {
             const fechaCheque = cheque.f_cheque.slice(0,10).split('-',3);
             banco.value = cheque.banco;
-            fecha.value = `${fechaCheque[2]}/${fechaCheque[1]}/${fechaCheque[0]}`;
+            fecha.value = `${fechaCheque[0]}-${fechaCheque[1]}-${fechaCheque[2]}`;
             importeCheque.value = redondear(cheque.i_cheque,2);
+        }else if(cheque && cheque.entreg_a){
+            await sweet.fire({
+                title:`Cheque Entregado a ${cheque.entreg_a}`
+            })
         }
         banco.focus();
     }
