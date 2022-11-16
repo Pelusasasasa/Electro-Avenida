@@ -36,6 +36,7 @@
 }
 
 .tables main{
+    border-right: .1rem solid black;
     background-color: white;
     flex: auto;
 }
