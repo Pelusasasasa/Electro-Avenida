@@ -229,6 +229,17 @@ const templateMenu = [
     ]
   },
   {
+    label:"Provedores",
+    submenu:[
+      {
+        label:"Emitir Pago",
+        click(){
+          ventanaPrincipal.webContents.send('emitirPago')
+        }
+      }
+    ]
+  },
+  {
     label:"s",
     accelerator: process.platform == 'darwin' ? 'Comand+D' : 'Ctrl+D',
     click(item,focusedWindow){

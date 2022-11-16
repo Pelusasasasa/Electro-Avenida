@@ -133,9 +133,21 @@ tbody tr:hover{
 .deCompras header{
     display: flex;
     justify-content: space-between;
-
 }
 
 .deCompras p{
     margin: .5rem;
+}
+
+.table-imprimir{
+    overflow:auto;
+}
+
+.table-imprimir th{
+    font-size: 1rem !important;
+}
+
+.table-imprimir td{
+    font-size: 1rem !important;
+    border: none !important;
 }
