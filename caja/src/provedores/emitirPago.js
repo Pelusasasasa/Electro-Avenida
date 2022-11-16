@@ -205,3 +205,19 @@ const agregarCheque = ()=>{
 
     numeroCheque.focus();
 };
+
+tbodyComprobante.addEventListener('click',e=>{
+    if (e.target.nodeName === "BUTTON") {
+        const tr = e.target.parentNode.parentNode
+        total.value = redondear(parseFloat(total.value) - parseFloat(tr.children[3].innerHTML),2) ;
+        tbodyComprobante.removeChild(tr);
+    }
+});
+
+tbodyCheque.addEventListener('click',e=>{
+    if (e.target.nodeName === "BUTTON") {
+        const tr = e.target.parentNode.parentNode
+        totalCheque.value = redondear(parseFloat(totalCheque.value) - parseFloat(tr.children[3].innerHTML),2) ;
+        tbodyComprobante.removeChild(tr);
+    }
+});
