@@ -42,7 +42,7 @@ chequesCTRL.deleteforId = async(req,res)=>{
 
 chequesCTRL.getForNumero = async(req,res)=>{
     const {numero} = req.params;
-    const cheque = await Cheque.findOne({n_cheque:numero});
+    const cheque = await Cheque.findOne({n_cheque:numero},{entreg_a:1,i_cheque:1,banco:1,f_cheque:1});
     res.send(cheque);
 }
 

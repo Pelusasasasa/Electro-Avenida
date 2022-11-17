@@ -46,7 +46,7 @@ datCompCTRL.getFechaImpt = async(req,res)=>{
 
 datCompCTRL.getForNumeroComp = async(req,res)=>{
     const {numero} = req.params;
-    const datComp = await DatComp.findOne({nro_comp:numero});
+    const datComp = await DatComp.findOne({nro_comp:numero},{total:1});
     res.send(datComp)
 }
 module.exports = datCompCTRL;
