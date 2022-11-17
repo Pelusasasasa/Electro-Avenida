@@ -6,6 +6,10 @@
     font-size: 2rem;
 }
 
+.header #codigo{
+    width: 5rem;
+}
+
 .principal{
     display: flex;
     width: 100%;
