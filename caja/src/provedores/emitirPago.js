@@ -310,7 +310,7 @@ const descontarSaldoProvedor = async()=>{
 
 const sumarNumeroPago = async()=>{
     try {
-        await axios.put(`${URL}tipoVenta/name/Ultimo Pago`,numeroVenta.value);
+        await axios.put(`${URL}tipoVenta/name/Ultimo Pago`,{valor:numeroVenta.value});
     } catch (error) {
         sweet.fire({
             title:"No se pudo modifacar el numero de pago, pero si se cargo en la cuenta corriente y se desconto el saldo"
