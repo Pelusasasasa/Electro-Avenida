@@ -39,6 +39,8 @@ const cancelar = document.getElementById('cancelar');
 
 
 window.addEventListener('load',async e=>{
+    let numero = (await axios.get(`${URL}tipoVenta/name/Ultimo Pago`)).data;
+    numeroVenta.value = numero + 1;
     let provedores = (await axios.get(`${URL}provedor`)).data;
     listarProductos(provedores);
 });
