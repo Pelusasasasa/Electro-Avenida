@@ -109,6 +109,7 @@ tipo.addEventListener('change',e=>{
 
 descuento.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
+        importe.value = redondear(-parseFloat(total.value)*parseFloat(descuento.value)/100,2)
         importe.focus();
     }
 });
@@ -122,7 +123,6 @@ importe.addEventListener('keypress',async e=>{
         puntoVenta.focus();
     }
 });
-
 
 puntoVenta.addEventListener('focus',e=>{
     puntoVenta.select();
@@ -155,7 +155,7 @@ const agregarComprobante = ()=>{
     tdNumero.innerHTML = puntoVenta.value.padStart(4,'0') + '-' + numero.value.padStart(8,'0');
     tdTipo.innerHTML = tipo.value;
     tdDescuento.innerHTML = "0.00";
-    tdImporte.innerHTML = importe.value;
+    tdImporte.innerHTML = parseFloat(importe.value).toFixed(2);
     tdEliminar.appendChild(button);
 
     tr.appendChild(tdNumero);
