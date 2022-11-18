@@ -270,6 +270,7 @@ aceptar.addEventListener('click',async e=>{
 
         await ponerEnCuentaCorriente();
         await descontarSaldoProvedor();
+        await sumarNumeroPago();
 
         location.reload();
     }
@@ -304,6 +305,16 @@ const descontarSaldoProvedor = async()=>{
         sweet.fire({
             title: "No se pudo modificar el saldo del provedor, pero si se cargo en la cuenta corriente"
         })
+    }
+};
+
+const sumarNumeroPago = async()=>{
+    try {
+        await axios.put(`${URL}tipoVenta/name/Ultimo Pago`,numeroVenta.value);
+    } catch (error) {
+        sweet.fire({
+            title:"No se pudo modifacar el numero de pago, pero si se cargo en la cuenta corriente y se desconto el saldo"
+        });
     }
 }
 
