@@ -22,7 +22,7 @@ tipoVentaCTLR.modificarTipoVenta = async(req,res)=>{
 tipoVentaCTLR.getForName = async(req,res)=>{
     const {name} = req.params;
     const numero = await TipoVenta.findOne()
-    res.end();
+    res.send(`${numero[name]}`);
 }
 
 tipoVentaCTLR.putForName = async(req,res)=>{
