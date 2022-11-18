@@ -111,7 +111,9 @@ tipo.addEventListener('change',e=>{
 
 descuento.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
-        importe.value = redondear(-parseFloat(total.value)*parseFloat(descuento.value)/100,2)
+        const tr = document.getElementById('tbodyComprobante').lastElementChild;
+        console.log(tr)
+        importe.value = redondear(-parseFloat(tr.children[3].innerHTML)*parseFloat(descuento.value)/100,2)
         importe.focus();
     }
 });
