@@ -29,7 +29,7 @@ tipoVentaCTLR.putForName = async(req,res)=>{
     const {name} = req.params;
     const numeros = await TipoVenta.findOne();
     numeros[name] = req.body.valor;
-    console.log(numeros)
-    res.send(numeros)
+    await TipoVenta.findOneAndUpdate({_id:numeros._id},numeros);
+    res.send(numeros);
 }
 module.exports = tipoVentaCTLR
