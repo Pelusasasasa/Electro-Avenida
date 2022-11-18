@@ -12,6 +12,7 @@
     <section class="header">
         <main>
             <select name="provedores" autofocus id="provedores"></select>
+            <input type="text" disabled name="codigo" id="codigo">
         </main>
         <main>
             <label for="saldo">Saldo</label>
@@ -44,7 +45,7 @@
             </main>
             <main>
                 <label for="importe">Importe</label>
-                <input type="number" name="descuento" id="descuento" class="none">
+                <input type="number" value="0.00" name="descuento" id="descuento" class="none">
                 <input type="number" value="0.00" name="importe" id="importe">
             </main>
         </fieldset>
@@ -116,7 +117,8 @@
         </section>
     </footer>
     <section class="botones">
-        <button>Cancelar</button>
+        <button id="aceptar">Aceptar</button>
+        <button id="cancelar">Cancelar</button>
     </section>
     <script src="./emitirPago.js"></script>
 </body>
