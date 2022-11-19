@@ -18,4 +18,18 @@ tipoVentaCTLR.modificarTipoVenta = async(req,res)=>{
     await TipoVenta.findOneAndUpdate(req.body)
     res.send("Numeros Modificados")
 }
+
+tipoVentaCTLR.getForName = async(req,res)=>{
+    const {name} = req.params;
+    const numero = await TipoVenta.findOne()
+    res.send(`${numero[name]}`);
+}
+
+tipoVentaCTLR.putForName = async(req,res)=>{
+    const {name} = req.params;
+    const numeros = await TipoVenta.findOne();
+    numeros[name] = req.body.valor;
+    await TipoVenta.findOneAndUpdate({_id:numeros._id},numeros);
+    res.send(numeros);
+}
 module.exports = tipoVentaCTLR
