@@ -158,7 +158,7 @@ async function cantidad(e) {
         showCancelButton:true,
         confirmButtonText:"Aceptar"
     }).then(async ({isConfirmed,value})=>{
-        if (isConfirmed && value !== "") {
+        if (isConfirmed && value !== "" && value !== ".") {
             console.log(seleccionado)
             const pro = productos.find(e=>e._id === seleccionado.id)
         if (value === undefined || value === "" || parseFloat(value) === 0) {
