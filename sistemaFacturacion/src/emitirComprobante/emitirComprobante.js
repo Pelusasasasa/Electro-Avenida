@@ -260,7 +260,8 @@ codigo.addEventListener('keypress',async (e) => {
                         showCancelButton:true,
                         confirmButtonText:"Aceptar"
                     }).then(async ({isConfirmed,value})=>{
-                        if (isConfirmed && value !== "") {
+                        console.log(value)
+                        if (isConfirmed && value !== "" && value !== ".") {
                             if (value === undefined || value === "" || parseFloat(value) === 0) {
                                 e.target.value = await "";
                                 codigo.focus()
@@ -466,17 +467,17 @@ async function traerUltimoNroComprobante(tipoCom,codigoComprobante,tipo_pago) {
             const tipoVenta = ((await axios.get(`${URL}tipoVenta`))).data[numeroFactura];
             return tipoVenta
         }
-    }
+}
 
     //propiedad comprobante
-    function numeroComprobante(tipo){
+function numeroComprobante(tipo){
         if (tipo === "Ticket Factura") {
             venta.cod_doc = codDoc(dnicuit.value)
             venta.dnicuit = dnicuit.value
             venta.condIva = conIva.value
         }
 
-    }
+}
 
 //propiedad cod_doc vemos si es dni o cuit para retornar el codDoc
 function codDoc(dniocuit) {
