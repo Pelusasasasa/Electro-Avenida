@@ -92,3 +92,32 @@ table button{
 table button:hover{
     transform: scale(1);
 }
+
+.ingresarVarios .inputs{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.ingresarVarios .inputs main{
+    margin: .5rem 0;
+}
+
+.ingresarVarios .inputs main input{
+    font-size: 1.8rem;
+}
+
+.ingresarVarios .provedores{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.ingresarVarios #provedores{
+    width: 70%;
+}
+
+.ingresarVarios label{
+    width: 9rem;
+    display: inline-block;
+}

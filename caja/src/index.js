@@ -236,6 +236,20 @@ const templateMenu = [
         click(){
           ventanaPrincipal.webContents.send('emitirPago')
         }
+      },
+      {
+        label:"Ingresar Varios",
+        click(){
+          abrirVentana('provedores/ingresarVarios.html',400,500)
+        }
+      }
+    ]
+  },
+  {
+    label:"Bancos",
+    submenu:[
+      {
+        label:"Cheques No Cobrados"
       }
     ]
   },
