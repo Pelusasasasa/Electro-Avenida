@@ -58,4 +58,15 @@ valeCTRL.borrar = async(req,res)=>{
     res.send('Vale Eliminado');
 }
 
+valeCTRL.getTotalPricePersonal = async(req,res)=>{
+    const {tipo} = req.params;
+    const vales = await Vale.find({tipo:tipo});
+    let total = 0;
+    vales.forEach(vale => {
+        total += vale.imp;
+    });
+    console.log(total)
+    res.send(`${total}`);
+}
+
 module.exports = valeCTRL;

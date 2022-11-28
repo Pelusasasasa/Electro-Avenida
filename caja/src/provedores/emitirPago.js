@@ -83,7 +83,14 @@ numero.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
         const datoCompras = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}`)).data;
         if (datoCompras) {
-            const {nro_comp,total} = datoCompras;
+            const {total,tipo_comp} = datoCompras;
+            if (tipo_comp) {
+                const option = document.createElement('option');
+                option.value = tipo_comp;
+                option.text = tipo_comp;
+                tipo.appendChild(option);
+                tipo.value = tipo_comp;
+            }
             importe.value = total;
         }
         tipo.focus();
@@ -178,18 +185,22 @@ const agregarComprobante = ()=>{
 //cuanado apretamos enter si hay un numero buscamos en la base de datos el cheque y sino lo pasamos a banco
 numeroCheque.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
-        const cheque = (await axios.get(`${URL}cheques/numero/${numeroCheque.value}`)).data;
-        if (cheque && !cheque.entreg_a) {
-            const fechaCheque = cheque.f_cheque.slice(0,10).split('-',3);
-            banco.value = cheque.banco;
-            fecha.value = `${fechaCheque[0]}-${fechaCheque[1]}-${fechaCheque[2]}`;
-            importeCheque.value = redondear(cheque.i_cheque,2);
+        if (numeroCheque.value !== "") {
+            const cheque = (await axios.get(`${URL}cheques/numero/${numeroCheque.value}`)).data;
+            if (cheque && !cheque.entreg_a) {
+                const fechaCheque = cheque.f_cheque.slice(0,10).split('-',3);
+                banco.value = cheque.banco;
+                fecha.value = `${fechaCheque[0]}-${fechaCheque[1]}-${fechaCheque[2]}`;
+                importeCheque.value = redondear(cheque.i_cheque,2);
+                banco.focus();
+            }else if(cheque && cheque.entreg_a){
+                await sweet.fire({
+                    title:`Cheque Entregado a ${cheque.entreg_a}`
+                });
+                numeroCheque.value = "";
+            }
+        }else{
             banco.focus();
-        }else if(cheque && cheque.entreg_a){
-            await sweet.fire({
-                title:`Cheque Entregado a ${cheque.entreg_a}`
-            });
-            numeroCheque.value = "";
         }
     }
 });
@@ -261,6 +272,7 @@ tbodyCheque.addEventListener('click',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
+    await ponerEnComprobantePagos();
     if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
         const comprobante = {};
 
@@ -269,7 +281,6 @@ aceptar.addEventListener('click',async e=>{
         comprobante.rSocial = provedores.value;
         comprobante.n_cheque = numeroCheque.value;
 
-
         await ponerEnCuentaCorriente();
         await descontarSaldoProvedor();
         await sumarNumeroPago();
@@ -277,6 +288,30 @@ aceptar.addEventListener('click',async e=>{
         location.reload();
     }
 });
+
+const ponerEnComprobantePagos = async() =>{
+    const trComprobantes = document.querySelectorAll('#tbodyComprobante tr');
+    const trValores = document.querySelectorAll('#tbodyCheque tr');
+
+    for (let i = 0; i < trComprobantes.length; i++) {
+        const comp_pago = {};
+        comp_pago.codProv = codigo.value;
+        comp_pago.rSocial = provedores.innerText;
+        if (trValores[i]) {
+            console.log("a")
+            comp_pago.n_cheque = trValores[i].children[0].innerHTML;
+            comp_pago.banco = trValores[i].children[1].innerHTML;
+            comp_pago.imp_cheque = trValores[i].children[2].innerHTML;
+        }else{
+            comp_pago.imp_cheque = 0.00
+        }
+        comp_pago.n_comp = trComprobantes[i].children[0].innerHTML;
+        comp_pago.t_comp = trComprobantes[i].children[1].innerHTML;
+        comp_pago.imp_Fact = trComprobantes[i].children[3].innerHTML;
+        comp_pago.n_opago = numeroVenta.value;
+        await axios.post(`${URL}compPagos`,comp_pago);
+    }
+}
 
 const ponerEnCuentaCorriente = async()=>{
     const cuenta = {}

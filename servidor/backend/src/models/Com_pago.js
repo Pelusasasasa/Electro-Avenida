@@ -8,7 +8,10 @@ const ComPago = new Schema({
     },
     codProv:String,
     rSocial:String,
-    n_cheque:Number,
+    n_cheque:{
+        type:String,
+        default:""
+    },
     banco:String,
     imp_cheque:Number,
     nro_comp:String,

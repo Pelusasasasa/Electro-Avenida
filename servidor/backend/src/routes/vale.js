@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const {post, getAll, impTotal ,borrar, getForID, putForID, getForPersonal, getForCliente, getForIncobrable} = require('../controllers/Vale.controllers');
+const {post, getAll, impTotal ,borrar, getForID, putForID, getForPersonal, getForCliente, getForIncobrable, getTotalPricePersonal} = require('../controllers/Vale.controllers');
 
 router.route('/')
     .post(post)
@@ -18,4 +18,6 @@ router.route('/id/:id')
     .get(getForID)
     .put(putForID)
     .delete(borrar)
+router.route('/totalPrice/:tipo')
+    .get(getTotalPricePersonal)
 module.exports = router

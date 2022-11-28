@@ -32,6 +32,10 @@ const CtatePro = new Schema({
         type:String,
         default:""
     },
+    observaciones:{
+        type:String,
+        default:""
+    }
 
 });
 
