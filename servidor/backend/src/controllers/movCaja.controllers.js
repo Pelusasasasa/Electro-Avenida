@@ -55,6 +55,28 @@ movCajaCTRL.getForDateAndCuenta = async(req,res)=>{
         }) ;
         res.send(movimientos);
     }
+};
+
+movCajaCTRL.getPriceBetweenDates = async(req,res)=>{
+    const {desde,hasta} = req.params;
+    console.log(desde)
+    const movimientos = await MovCaja.find({
+        $and:[
+            {fecha:{$gte:new Date(desde)}},
+            {fecha:{$gte:new Date(hasta)}},
+        ]
+    });
+    let total = 0;
+    
+    for await(let movimiento of movimientos){
+        if(movimiento.tMov === "I"){
+            total += movimiento.imp; 
+        }else{
+            total -= movimiento.imp;
+        }
+    }
+    console.log(total)
+    res.send(`${total}`);
 }
 
 module.exports = movCajaCTRL; 

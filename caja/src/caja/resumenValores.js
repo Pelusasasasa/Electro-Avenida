@@ -1,6 +1,7 @@
 const { ipcRenderer } = require("electron");
 
 const axios = require('axios');
+const { redondear } = require("../assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -22,10 +23,15 @@ const valesCobrar = document.getElementById('valesCobrar');
 const personal = document.getElementById('personal');
 const incobrable = document.getElementById('incobrable');
 const tarjetasCobrar = document.getElementById('tarjetasCobrar');
+const totalVales = document.getElementById('totalVales');
 
-ipcRenderer.on('recibir-informacion',(e,args)=>{
-    console.log(args)
-});
+const chequesEfectivo = document.getElementById('chequesEfectivo');
+const valesEfectivo = document.getElementById('valesEfectivo');
+
+const caja1 = document.getElementById('caja1');
+
+let desde;
+let hasta;
 
 let ultimos = {};
 
@@ -35,12 +41,15 @@ window.addEventListener('load',async e=>{
     incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`)).data.toFixed(2);
     tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`)).data.toFixed(2);
 
-
+    totalVales.value = parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value);
     ultimos = (await axios.get(`${URL}ultimos`)).data;
 
-    ponerValores(ultimos)
-});
+    ponerValores(ultimos);
 
+    valesEfectivo.value = parseFloat(chequesEfectivo.value) + parseFloat(totalVales.value);
+
+    //traemos el total el movimiento de caja
+});
 
 window.addEventListener('beforeunload',async e=>{
     ultimos.efectivoCaja = efectivoCaja.value;
@@ -60,9 +69,9 @@ window.addEventListener('beforeunload',async e=>{
 });
 
 
-
 const ponerValores = (obj) =>{
     if (obj) {
+        let totalValesCheques = 0;
         efectivoCaja.value = obj.efectivoCaja.toFixed(2)
         chequesCartera.value = obj.cheques.toFixed(2);
         cien.value = obj.cien.toFixed(2);
@@ -76,6 +85,9 @@ const ponerValores = (obj) =>{
         ceroVeinticinco.value = obj.ceroVeinticinco.toFixed(2);
         ceroCincuenta.value = obj.ceroCincuenta.toFixed(2);
         maleta.value = obj.maleta.toFixed(2);
+
+        totalValesCheques+= (obj.efectivoCaja + obj.cheques + obj.cien + obj.cincuenta + obj.veinte + obj.diez + obj.monedas + obj.guardado + obj.uno + obj.cambioCaja + obj.ceroCincuenta + obj.ceroCincuenta + obj.maleta);
+        chequesEfectivo.value = redondear(totalValesCheques,2);
     }
 };
 
@@ -164,4 +176,9 @@ document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {
         window.close();
     }
-})
+});
+
+ipcRenderer.on('recibir-informacion',async (e,args)=>{
+    const saldo = (await axios.get(`${URL}movCajas/price/${args.desde}/${args.hasta}`)).data;
+    caja1.value = saldo;
+});

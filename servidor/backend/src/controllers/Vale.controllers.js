@@ -65,7 +65,6 @@ valeCTRL.getTotalPricePersonal = async(req,res)=>{
     vales.forEach(vale => {
         total += vale.imp;
     });
-    console.log(total)
     res.send(`${total}`);
 }
 
