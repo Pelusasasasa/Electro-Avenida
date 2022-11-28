@@ -18,7 +18,10 @@ const ceroVeinticinco = document.querySelector('#ceroVeinticinco');
 const ceroCincuenta = document.querySelector('#ceroCincuenta');
 const maleta = document.querySelector('#maleta');
 
-
+const valesCobrar = document.getElementById('valesCobrar');
+const personal = document.getElementById('personal');
+const incobrable = document.getElementById('incobrable');
+const tarjetasCobrar = document.getElementById('tarjetasCobrar');
 
 ipcRenderer.on('recibir-informacion',(e,args)=>{
     console.log(args)
@@ -27,7 +30,14 @@ ipcRenderer.on('recibir-informacion',(e,args)=>{
 let ultimos = {};
 
 window.addEventListener('load',async e=>{
+    valesCobrar .value = (await axios.get(`${URL}vales/totalPrice/C`)).data.toFixed(2);
+    personal.value = (await axios.get(`${URL}vales/totalPrice/P`)).data.toFixed(2);
+    incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`)).data.toFixed(2);
+    tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`)).data.toFixed(2);
+
+
     ultimos = (await axios.get(`${URL}ultimos`)).data;
+
     ponerValores(ultimos)
 });
 
@@ -49,20 +59,24 @@ window.addEventListener('beforeunload',async e=>{
     await axios.put(`${URL}ultimos`,ultimos);
 });
 
+
+
 const ponerValores = (obj) =>{
-    efectivoCaja.value = obj.efectivoCaja.toFixed(2)
-    chequesCartera.value = obj.cheques.toFixed(2);
-    cien.value = obj.cien.toFixed(2);
-    cincuenta.value = obj.cincuenta.toFixed(2);
-    veinte.value = obj.veinte.toFixed(2);
-    diez.value = obj.diez.toFixed(2);
-    monedas.value = obj.monedas.toFixed(2);
-    guardado.value = obj.guardado.toFixed(2);
-    uno.value = obj.uno.toFixed(2);
-    cambioCaja.value = obj.cambioCaja.toFixed(2);
-    ceroVeinticinco.value = obj.ceroVeinticinco.toFixed(2);
-    ceroCincuenta.value = obj.ceroCincuenta.toFixed(2);
-    maleta.value = obj.maleta.toFixed(2);
+    if (obj) {
+        efectivoCaja.value = obj.efectivoCaja.toFixed(2)
+        chequesCartera.value = obj.cheques.toFixed(2);
+        cien.value = obj.cien.toFixed(2);
+        cincuenta.value = obj.cincuenta.toFixed(2);
+        veinte.value = obj.veinte.toFixed(2);
+        diez.value = obj.diez.toFixed(2);
+        monedas.value = obj.monedas.toFixed(2);
+        guardado.value = obj.guardado.toFixed(2);
+        uno.value = obj.uno.toFixed(2);
+        cambioCaja.value = obj.cambioCaja.toFixed(2);
+        ceroVeinticinco.value = obj.ceroVeinticinco.toFixed(2);
+        ceroCincuenta.value = obj.ceroCincuenta.toFixed(2);
+        maleta.value = obj.maleta.toFixed(2);
+    }
 };
 
 const selected = (e)=>{
@@ -141,6 +155,10 @@ ceroCincuenta.addEventListener('keypress',e=>{
        maleta.focus();
     };
 });
+
+salir.addEventListener('click',e=>{
+    window.close();
+})
 
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {

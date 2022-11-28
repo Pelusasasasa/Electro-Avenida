@@ -32,4 +32,13 @@ tarjetaCTRL.deleteId = async(req,res)=>{
     res.send('Tarjeta Eliminada');
 }
 
+tarjetaCTRL.totalPrice = async(req,res)=>{
+    let total = 0;
+    const tarjetas = await Tarjeta.find();
+    for(let tarjeta of tarjetas){
+        total += tarjeta.imp;
+    }
+    res.send(total.toFixed(2));
+}
+
 module.exports = tarjetaCTRL;

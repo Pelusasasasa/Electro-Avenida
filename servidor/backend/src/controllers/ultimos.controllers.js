@@ -6,7 +6,8 @@ const Ultimos = require('../models/Ultimos');
 ultimosCTRL.post = async(req,res)=>{
     const ultimo = new Ultimos(req.body);
     await ultimo.save();
-    res.send('ultimo guardado');
+    console.log("Ultimos Cargados");
+    res.end();
 }
 
 ultimosCTRL.get = async(req,res)=>{
