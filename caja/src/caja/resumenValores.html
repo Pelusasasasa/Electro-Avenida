@@ -19,8 +19,8 @@
                 <input onfocus="selected(this)" class="text-right" type="number" name="efectivoCaja" id="efectivoCaja">
             </main>
             <main>
-                <label for="chequesCartera">Cheques en Cartera</label>
-                <input onfocus="selected(this)" class="text-right" type="number" name="chequesCartera" id="chequesCartera">
+                <label for="cheques">Cheques en Cartera</label>
+                <input onfocus="selected(this)" class="text-right" type="number" name="cheques" id="cheques">
             </main>
             <main>
                 <label for="cien">$ 100.00</label>
@@ -101,32 +101,25 @@
                 <label for="caja1">Saldo Caja 1</label>
                 <input onfocus="selected(this)" disabled class="text-right" type="number" name="caja1" id="caja1">
             </main>
-            <main>
-                <label for="caja2">Saldo Caja 2</label>
-                <input onfocus="selected(this)" disabled class="text-right" type="number" name="caja2" id="caja2">
-            </main>
-            <main>
-                <label for="caja">Total Saldo caja</label>
-                <input onfocus="selected(this)" disabled class="text-right" type="number" name="caja" id="caja">
-            </main>
-            
+
+            <section class="abajo">
+                <main>
+                    <label for="chequesEfectivo">Total Cheques + Efectivo</label>
+                    <input onfocus="selected(this)" type="number" name="chequesEfectivo" id="chequesEfectivo">
+                </main>
+                <main>
+                    <label for="valesEfectivo">Total Vales + Efectivo</label>
+                    <input onfocus="selected(this)" type="number" name="valesEfectivo" id="valesEfectivo">
+                </main>
+                <main>
+                    <label for="diferencia">Diferencia</label>
+                    <input onfocus="selected(this)" type="number" name="diferencia" id="diferencia">
+                </main>
+            </section>
         </section>
-    </section>
-    <section class="abajo">
-        <main>
-            <label for="chequesEfectivo">Total Cheques + Efectivo</label>
-            <input onfocus="selected(this)" type="number" name="chequesEfectivo" id="chequesEfectivo">
-        </main>
-        <main>
-            <label for="diferencia">Diferencia</label>
-            <input onfocus="selected(this)" type="number" name="diferencia" id="diferencia">
-        </main>
-        <main>
-            <label for="valesEfectivo">Total Vales + Efectivo</label>
-            <input onfocus="selected(this)" type="number" name="valesEfectivo" id="valesEfectivo">
-        </main>
 
     </section>
+   
     <section class="botones">
         <button id="salir">Salir</button>
         <button>Imprimir</button>

@@ -34,7 +34,6 @@ const cerrarVentana = ()=>{
     });
 }
 
-
 const recorrerFlechas =  async(code) => {
     if (code === 40 && seleccionado.nextElementSibling) {
         let aux = 0;

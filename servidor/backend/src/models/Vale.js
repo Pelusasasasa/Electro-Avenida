@@ -27,7 +27,7 @@ const Vale = new Schema({
     },
     pago:{
         type:String,
-        default:""
+        default:false
     }
 });
 

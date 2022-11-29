@@ -29,6 +29,11 @@ valeCTRL.getForIncobrable = async(req,res)=>{
     res.send(vales)
 }
 
+valeCTRL.getForFactura = async(req,res)=>{
+    const vales = await Vale.find({tipo:"F"});
+    res.send(vales);
+}
+
 valeCTRL.getForID = async(req,res)=>{
     const {id} = req.params;
     const vale = (await Vale.find({_id:id}))[0];

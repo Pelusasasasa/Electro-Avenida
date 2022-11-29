@@ -36,7 +36,7 @@ ipcRenderer.on('fechas',async e=>{
             ipcRenderer.send('abrir-ventana',{
                 path:"caja/resumenValores.html",
                 width:1200,
-                height:1200,
+                height:1000,
                 informacion:{
                     desde:desde.value,
                     hasta:hasta.value

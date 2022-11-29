@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 
-const {post, getAll, impTotal ,borrar, getForID, putForID, getForPersonal, getForCliente, getForIncobrable, getTotalPricePersonal} = require('../controllers/Vale.controllers');
+const {post, getAll, impTotal ,borrar, getForID, putForID, getForPersonal, getForCliente, getForIncobrable, getTotalPricePersonal, getForFactura} = require('../controllers/Vale.controllers');
 
 router.route('/')
     .post(post)
@@ -14,6 +14,8 @@ router.route('/cliente')
     .get(getForCliente)
 router.route('/incobrable')
     .get(getForIncobrable)
+router.route('/factura')
+    .get(getForFactura)
 router.route('/id/:id')
     .get(getForID)
     .put(putForID)

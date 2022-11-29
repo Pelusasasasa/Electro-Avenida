@@ -6,7 +6,7 @@ require('dotenv').config();
 const URL = process.env.URL;
 
 const efectivoCaja = document.querySelector('#efectivoCaja');
-const chequesCartera = document.querySelector('#chequesCartera');
+const cheques = document.querySelector('#cheques');
 const cien = document.querySelector('#cien');
 const cincuenta = document.querySelector('#cincuenta');
 const veinte = document.querySelector('#veinte');
@@ -29,6 +29,7 @@ const chequesEfectivo = document.getElementById('chequesEfectivo');
 const valesEfectivo = document.getElementById('valesEfectivo');
 
 const caja1 = document.getElementById('caja1');
+const diferencia = document.getElementById('diferencia');
 
 let desde;
 let hasta;
@@ -46,14 +47,13 @@ window.addEventListener('load',async e=>{
 
     ponerValores(ultimos);
 
-    valesEfectivo.value = parseFloat(chequesEfectivo.value) + parseFloat(totalVales.value);
-
+    
     //traemos el total el movimiento de caja
 });
 
 window.addEventListener('beforeunload',async e=>{
     ultimos.efectivoCaja = efectivoCaja.value;
-    ultimos.cheques = chequesCartera.value;
+    ultimos.cheques = cheques.value;
     ultimos.cien = cien.value;
     ultimos.cincuenta = cincuenta.value;
     ultimos.veinte = veinte.value;
@@ -68,12 +68,11 @@ window.addEventListener('beforeunload',async e=>{
     await axios.put(`${URL}ultimos`,ultimos);
 });
 
-
 const ponerValores = (obj) =>{
     if (obj) {
         let totalValesCheques = 0;
         efectivoCaja.value = obj.efectivoCaja.toFixed(2)
-        chequesCartera.value = obj.cheques.toFixed(2);
+        cheques.value = obj.cheques.toFixed(2);
         cien.value = obj.cien.toFixed(2);
         cincuenta.value = obj.cincuenta.toFixed(2);
         veinte.value = obj.veinte.toFixed(2);
@@ -88,6 +87,10 @@ const ponerValores = (obj) =>{
 
         totalValesCheques+= (obj.efectivoCaja + obj.cheques + obj.cien + obj.cincuenta + obj.veinte + obj.diez + obj.monedas + obj.guardado + obj.uno + obj.cambioCaja + obj.ceroCincuenta + obj.ceroCincuenta + obj.maleta);
         chequesEfectivo.value = redondear(totalValesCheques,2);
+
+        valesEfectivo.value = parseFloat(chequesEfectivo.value) + parseFloat(totalVales.value);
+
+        diferencia.value = redondear(parseFloat(caja1.value) - parseFloat(valesEfectivo.value),2);
     }
 };
 
@@ -97,11 +100,11 @@ const selected = (e)=>{
 
 efectivoCaja.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
-        chequesCartera.focus();
+        cheques.focus();
     };
 });
 
-chequesCartera.addEventListener('keypress',e=>{
+cheques.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
         cien.focus();
     };
@@ -112,7 +115,6 @@ cien.addEventListener('keypress',e=>{
         cincuenta.focus();
     };
 });
-
 
 cincuenta.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
@@ -182,3 +184,61 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
     const saldo = (await axios.get(`${URL}movCajas/price/${args.desde}/${args.hasta}`)).data;
     caja1.value = saldo;
 });
+
+
+efectivoCaja.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+cheques.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+cien.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+cincuenta.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+veinte.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+diez.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+monedas.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+guardado.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+uno.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+cambioCaja.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+ceroVeinticinco.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+ceroCincuenta.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+maleta.addEventListener('change',e=>{
+    cambiarTotales(e.target)
+});
+
+const cambiarTotales = (input)=>{
+    ultimos[input.id] = parseFloat(input.value)
+    ponerValores(ultimos);
+}
