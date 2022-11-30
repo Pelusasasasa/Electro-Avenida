@@ -45,30 +45,28 @@ nro_comp.addEventListener('keyup',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
-    const factura = {};
-    factura.nro_comp = nro_comp.value;
-    factura.rSoc = rSocial.value.toUpperCase();
-    factura.imp = imp.value;
-    factura.concepto = concepto.value.toUpperCase();
-    factura.fecha = fecha.value;
+    const vale = {};
+    vale.nro_comp = nro_comp.value;
+    vale.rsoc = rSocial.value.toUpperCase();
+    vale.imp = imp.value;
+    vale.concepto = concepto.value.toUpperCase();
+    vale.fecha = fecha.value;
+    vale.tipo = "F";
+    await axios.post(`${URL}vales`,vale);
 
-    await axios.post(`${URL}facturas`,factura);
-
-    window.close();
 });
 
 modificar.addEventListener('click',async e=>{
-    const factura = {};
-    factura.nro_comp = nro_comp.value;
-    factura.rSoc = rSocial.value.toUpperCase();
-    factura.imp = imp.value;
-    factura.concepto = concepto.value.toUpperCase();
-    factura.fecha = fecha.value;
+    const vales = {};
+    vales.nro_comp = nro_comp.value;
+    vales.rSoc = rSocial.value.toUpperCase();
+    vales.imp = imp.value;
+    vales.concepto = concepto.value.toUpperCase();
+    vales.fecha = fecha.value;
 
-    await axios.put(`${URL}facturas/id/${modificar.id}`,factura);
+    await axios.put(`${URL}vales/id/${modificar.id}`,vales);
 
     window.close();
-
 });
 
 salir.addEventListener('click',e=>{
@@ -109,8 +107,6 @@ imp.addEventListener('focus',e=>{
     imp.select();
 });
 
-
-
 ipcRenderer.on('recibir-informacion',async(e,args)=>{
     h1.innerHTML = "MODIFICAR FACTURA";
 
@@ -118,7 +114,7 @@ ipcRenderer.on('recibir-informacion',async(e,args)=>{
     modificar.classList.remove('none');
     modificar.id = args;
 
-    const factura = (await axios.get(`${URL}facturas/id/${args}`)).data
+    const factura = (await axios.get(`${URL}vales/id/${args}`)).data
     llenarInputs(factura)
 });
 

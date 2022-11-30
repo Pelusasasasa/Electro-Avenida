@@ -6,10 +6,7 @@ const URL = process.env.URL;
 
 let tipo;
 
-
-
 const titulo = document.querySelector('h1');
-
 
 const desde = document.querySelector('#desde');
 const hasta = document.querySelector('#hasta');
@@ -43,7 +40,6 @@ window.addEventListener('load',async e=>{
         tipo = args;
         if (tipo === "I") {
             titulo.innerHTML = "Ingreso de Caja";
-            console.log(cuentas)
             cuentasConTipo = cuentas.filter(cuenta=>cuenta.tipo === tipo);
         }else{
             titulo.innerHTML = "Egreso de Caja";

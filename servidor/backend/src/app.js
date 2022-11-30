@@ -42,8 +42,6 @@ app.use('/api/cuentas',require('./routes/cuenta'));
 app.use('/api/movCajas',require('./routes/movCaja'));
 //comprobante de pago
 app.use('/api/compPagos',require('./routes/comp_pago'));
-//Facturas
-app.use('/api/facturas',require('./routes/factura'));
 //Ultimos
 app.use('/api/ultimos',require('./routes/ultimos'));
 //Provedor

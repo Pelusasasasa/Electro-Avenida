@@ -25,7 +25,7 @@ let facturas;
 
 window.addEventListener('load',async e=>{
     copiar();
-    facturas = (await axios.get(`${URL}facturas`)).data;
+    facturas = (await axios.get(`${URL}vales/factura`)).data;
     listarFacturas(facturas);
 });
 
@@ -48,7 +48,7 @@ const listarFacturas = async(lista)=>{
         const tdConcepto = document.createElement('td');
         const tdImporte = document.createElement('td');
     
-        tdSocial.innerHTML = elem.rSoc;
+        tdSocial.innerHTML = elem.rsoc;
         tdFecha.innerHTML = `${date[2]}/${date[1]}/${date[0]}`;
         tdNroComprobante.innerHTML = elem.nro_comp;
         tdConcepto.innerHTML = elem.concepto;
