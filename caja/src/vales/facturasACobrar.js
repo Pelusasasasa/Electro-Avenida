@@ -12,7 +12,6 @@ const inputTotal = document.getElementById('total');
 const tbody = document.querySelector('tbody');
 
 const agregar = document.querySelector('.agregar');
-const modificar = document.querySelector('.modificar');
 const sumar = document.querySelector('.sumar');
 const salir = document.querySelector('.salir');
 
@@ -47,13 +46,24 @@ const listarFacturas = async(lista)=>{
         const tdNroComprobante = document.createElement('td');
         const tdConcepto = document.createElement('td');
         const tdImporte = document.createElement('td');
+        const tdAcciones = document.createElement('td');
     
         tdSocial.innerHTML = elem.rsoc;
         tdFecha.innerHTML = `${date[2]}/${date[1]}/${date[0]}`;
         tdNroComprobante.innerHTML = elem.nro_comp;
         tdConcepto.innerHTML = elem.concepto;
         tdImporte.innerHTML = elem.imp.toFixed(2);
-
+        tdAcciones.innerHTML = `
+            <div id=edit class=tool>
+                <span class=material-icons>edit</span>
+                <p class=tooltip>Modificar</p>
+            </div>
+            <div id=delete class=tool>
+                <span class=material-icons>delete</span>
+                <p class=tooltip>Eliminar</p>
+            </div>
+        `
+        tdAcciones.classList.add('acciones');
         tdImporte.classList.add('text-right');
 
         tr.appendChild(tdSocial);
@@ -61,6 +71,7 @@ const listarFacturas = async(lista)=>{
         tr.appendChild(tdNroComprobante);
         tr.appendChild(tdConcepto);
         tr.appendChild(tdImporte);
+        tr.appendChild(tdAcciones);
 
         tbody.appendChild(tr);
         total += elem.imp;
@@ -70,12 +81,48 @@ const listarFacturas = async(lista)=>{
 
 tbody.addEventListener('click',e=>{
     seleccionado && seleccionado.classList.remove('seleccionado');
-    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
-    seleccionado.classList.add('seleccionado');
-
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }else if(e.target.nodeName === "DIV"){
+        seleccionado = e.target.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode;
+    }else if(e.target.nodeName === "SPAN"){
+        seleccionado = e.target.parentNode.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode.parentNode;
+    }
+    
+    seleccionado.classList.add('seleccionado');    
     subSeleccionado.classList.add('subSeleccionado');
+
+
+    if (e.target.innerHTML === "delete") {
+        sweet.fire({
+            title:"Quiere Eliminar",
+            confirmButtonText:"Aceptar",
+            showCancelButton:true
+        }).then(async ({isConfirmed})=>{
+            if (isConfirmed) {
+                try {
+                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
+                    tbody.removeChild(seleccionado);
+                } catch (error) {
+                    sweet.fire({
+                        title:"No se pudo borrar el Vale Factura"
+                    })
+                }
+            }
+        })
+    }else if(e.target.innerHTML === "edit"){
+        ipcRenderer.send('abrir-ventana',{
+            path:'vales/agregar-modificarFacturas.html',
+            width: 500,
+            height: 400,
+            reinicio:true,
+            informacion:seleccionado.id
+        })
+    }
 });
 
 agregar.addEventListener('click',e=>{
@@ -87,28 +134,12 @@ agregar.addEventListener('click',e=>{
     })
 });
 
-modificar.addEventListener('click',e=>{
-    if (seleccionado) {
-        ipcRenderer.send('abrir-ventana',{
-            path:'vales/agregar-modificarFacturas.html',
-            width: 500,
-            height: 400,
-            reinicio:true,
-            informacion:seleccionado.id
-        })
-    }else{
-        sweet.fire({
-            title:"Ninguna factura seleccionado"
-        })
-    }
-});
-
 sumar.addEventListener('click',async e=>{
     if (seleccionado) {
         const rSocial = seleccionado.children[0].innerHTML;
         let totalSumar = 0;
         for(let factura of facturas){
-            if (factura.rSoc === rSocial) {
+            if (factura.rsoc === rSocial) {
                 totalSumar += factura.imp;
             }
         }

@@ -135,8 +135,8 @@ nro_comp.addEventListener('focus',e=>{
     nro_comp.focus();
 });
 
-rsoc.addEventListener('focus',e=>{
-    rsoc.focus();
+rSocial.addEventListener('focus',e=>{
+    rSocial.focus();
 });
 
 concepto.addEventListener('focus',e=>{

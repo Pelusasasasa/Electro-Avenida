@@ -35,8 +35,8 @@ window.addEventListener('load',e=>{
 });
 
 //cuando escribimos en el nro de comprobante se pone un guion despues de 4 numeros
-nro_comp.addEventListener('keyup',e=>{
-    if (e.target.value.length === 5 && e.keyCode !== 8) {
+nro_comp.addEventListener('keydown',e=>{
+    if (e.target.value.length === 4 && e.keyCode !== 109 && e.keyCode !== 8) {
         nro_comp.value = nro_comp.value + '-';
     }
     if (e.keyCode === 13) {
@@ -53,13 +53,13 @@ aceptar.addEventListener('click',async e=>{
     vale.fecha = fecha.value;
     vale.tipo = "F";
     await axios.post(`${URL}vales`,vale);
-
+    window.close();
 });
 
 modificar.addEventListener('click',async e=>{
     const vales = {};
     vales.nro_comp = nro_comp.value;
-    vales.rSoc = rSocial.value.toUpperCase();
+    vales.rsoc = rSocial.value.toUpperCase();
     vales.imp = imp.value;
     vales.concepto = concepto.value.toUpperCase();
     vales.fecha = fecha.value;
@@ -73,21 +73,25 @@ salir.addEventListener('click',e=>{
     window.close();
 });
 
-rSocial.addEventListener('keyup',e=>{
+rSocial.addEventListener('keydown',e=>{
     if (e.keyCode === 13) {
         concepto.focus();
     }
 });
 
-concepto.addEventListener('keyup',e=>{
+concepto.addEventListener('keydown',e=>{
     if (e.keyCode === 13) {
         imp.focus();
     }
 });
 
-imp.addEventListener('keyup',e=>{
+imp.addEventListener('keydown',e=>{
     if (e.keyCode === 13) {
-       aceptar.focus();
+       if (aceptar.classList.contains('none')) {
+        modificar.focus();
+       }else{
+        aceptar.focus();
+       }
     }
 });
 
@@ -120,7 +124,7 @@ ipcRenderer.on('recibir-informacion',async(e,args)=>{
 
 const llenarInputs = async(factura)=>{
     nro_comp.value = factura.nro_comp;
-    rSocial.value = factura.rSoc;
+    rSocial.value = factura.rsoc;
     concepto.value = factura.concepto;
     imp.value = factura.imp.toFixed(2);
 };

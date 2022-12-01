@@ -12,8 +12,6 @@ const buscador = document.getElementById('buscador');
 const totalInput = document.getElementById('total');
 
 const agregar = document.querySelector('.agregar');
-const modificar = document.querySelector('.modificar');
-const borrar = document.querySelector('.borrar');
 const sumar = document.querySelector('.sumar');
 const imprimir = document.querySelector('.imprimir');
 const salir = document.querySelector('.salir');
@@ -37,6 +35,7 @@ buscador.addEventListener('keyup',e=>{
 
 //Listamos los vales en el tbody
 const listarVales = (lista)=>{
+    total = 0;
     tbody.innerHTML = "";
     for(let elem of lista){
         total += elem.imp;
@@ -52,6 +51,9 @@ const listarVales = (lista)=>{
         const tdTipoComp = document.createElement('td');
         const tdConcepto = document.createElement('td');
         const tdImp = document.createElement('td');
+        const tdAcciones = document.createElement('td');
+
+        tdAcciones.classList.add('acciones')
 
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         tdNro_comp.innerHTML = elem.nro_comp;
@@ -59,6 +61,16 @@ const listarVales = (lista)=>{
         tdTipoComp.innerHTML = "";
         tdConcepto.innerHTML = elem.concepto;
         tdImp.innerHTML = elem.imp.toFixed(2);
+        tdAcciones.innerHTML = `
+            <div id=edit class=tool>
+                <span class=material-icons>edit</span>
+                <p class=tooltip>Modificar</p>
+            </div>
+            <div id=delete class=tool>
+                <span class=material-icons>delete</span>
+                <p class=tooltip>Eliminar</p>
+            </div>
+        `
 
         tr.appendChild(tdFecha);
         tr.appendChild(tdNro_comp);
@@ -66,6 +78,7 @@ const listarVales = (lista)=>{
         tr.appendChild(tdTipoComp);
         tr.appendChild(tdConcepto);
         tr.appendChild(tdImp);
+        tr.appendChild(tdAcciones);
 
         tbody.appendChild(tr);
     }
@@ -76,12 +89,49 @@ const listarVales = (lista)=>{
 tbody.addEventListener('click',e=>{
 
     seleccionado && seleccionado.classList.remove('seleccionado');
-    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
-    seleccionado.classList.add('seleccionado');
-
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
+    console.log(e.target)
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }else if(e.target.nodeName === "DIV"){
+        seleccionado = e.target.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode;
+    }else if(e.target.nodeName === "SPAN"){
+        seleccionado = e.target.parentNode.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode.parentNode.parentNode;
+    }
+
+    seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
+
+
+    if (e.target.innerHTML === "delete") {
+        sweet.fire({
+            title:"Quiere Eliminar?",
+            confirmButtonText:"Aceptar",
+            showCancelButton:true
+        }).then(async ({isConfirmed})=>{
+            if (isConfirmed) {
+                try {
+                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
+                    tbody.removeChild(seleccionado);
+                } catch (error) {
+                    sweet.fire({
+                        title:"No se pudo eliminar el vale"
+                    })
+                }
+            }
+        });
+    }else if(e.target.innerHTML === "edit"){
+        ipcRenderer.send('abrir-ventana',{
+            path: './vales/agregar-modificarVales.html',
+            width:500,
+            height:400,
+            reinicio:true,
+            informacion:seleccionado.id
+        });
+    }
 
 });
 
@@ -95,37 +145,6 @@ agregar.addEventListener('click',e=>{
     });
 });
 
-//abrimos una ventana para modificar vales
-modificar.addEventListener('click',e=>{
-    ipcRenderer.send('abrir-ventana',{
-        path: './vales/agregar-modificarVales.html',
-        width:500,
-        height:400,
-        reinicio:true,
-        informacion:seleccionado.id
-    });
-});
-
-borrar.addEventListener('click',async e=>{
-    if (seleccionado) {
-        await sweet.fire({
-            title:"Seguro quiere borrar",
-            confirmButtonText:"Aceptar",
-            showCancelButton:true
-        }).then(async({isConfirmed})=>{
-            if (isConfirmed) {
-                try {
-                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
-                    location.reload();
-                } catch (error) {
-                    await sweet.fire({
-                        title:"No se pudo borrar el Vale"
-                    })
-                }
-            }
-        });
-    }
-});
 
 //sumamos la rason social que aparezcan igual
 sumar.addEventListener('click',async e=>{

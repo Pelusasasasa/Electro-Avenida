@@ -20,6 +20,7 @@ const ceroCincuenta = document.querySelector('#ceroCincuenta');
 const maleta = document.querySelector('#maleta');
 
 const valesCobrar = document.getElementById('valesCobrar');
+const facturasCobrar = document.getElementById('facturasCobrar');
 const personal = document.getElementById('personal');
 const incobrable = document.getElementById('incobrable');
 const tarjetasCobrar = document.getElementById('tarjetasCobrar');
@@ -40,9 +41,10 @@ window.addEventListener('load',async e=>{
     valesCobrar .value = (await axios.get(`${URL}vales/totalPrice/C`)).data.toFixed(2);
     personal.value = (await axios.get(`${URL}vales/totalPrice/P`)).data.toFixed(2);
     incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`)).data.toFixed(2);
+    facturasCobrar.value = (await axios.get(`${URL}vales/totalPrice/F`)).data.toFixed(2);
     tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`)).data.toFixed(2);
 
-    totalVales.value = parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value);
+    totalVales.value = redondear(parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value) + parseFloat(facturasCobrar.value),2);
     ultimos = (await axios.get(`${URL}ultimos`)).data;
 
     ponerValores(ultimos);
@@ -85,7 +87,7 @@ const ponerValores = (obj) =>{
         ceroCincuenta.value = obj.ceroCincuenta.toFixed(2);
         maleta.value = obj.maleta.toFixed(2);
 
-        totalValesCheques+= (obj.efectivoCaja + obj.cheques + obj.cien + obj.cincuenta + obj.veinte + obj.diez + obj.monedas + obj.guardado + obj.uno + obj.cambioCaja + obj.ceroCincuenta + obj.ceroCincuenta + obj.maleta);
+        totalValesCheques+= (obj.efectivoCaja + obj.cheques + obj.cien + obj.cincuenta + obj.veinte + obj.diez + obj.monedas + obj.guardado + obj.uno + obj.cambioCaja + obj.ceroVeinticinco + obj.ceroCincuenta + obj.maleta);
         chequesEfectivo.value = redondear(totalValesCheques,2);
 
         valesEfectivo.value = parseFloat(chequesEfectivo.value) + parseFloat(totalVales.value);
@@ -240,5 +242,6 @@ maleta.addEventListener('change',e=>{
 
 const cambiarTotales = (input)=>{
     ultimos[input.id] = parseFloat(input.value)
+    console.log(ultimos)
     ponerValores(ultimos);
 }

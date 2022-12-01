@@ -33,6 +33,7 @@ window.addEventListener('load',e=>{
     fecha.value = `${year}-${month}-${day}`;
 });
 
+console.log(salir)
 aceptar.addEventListener('click',async e=>{
     const vale = {};
     vale.fecha = fecha.value;

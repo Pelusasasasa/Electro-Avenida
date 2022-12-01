@@ -49,6 +49,7 @@
     "dotenv": "^16.0.1",
     "electron-reload": "^2.0.0-alpha.1",
     "electron-squirrel-startup": "^1.0.0",
+    "material-icons": "^1.12.2",
     "node-notifier": "^10.0.1",
     "sweetalert2": "^11.4.24",
     "xlsx": "^0.18.5"

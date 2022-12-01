@@ -38,20 +38,33 @@ const listarVales = (vales)=>{
     const tdSocial = document.createElement('td');
     const tdConcepto = document.createElement('td');
     const tdImporte = document.createElement('td');
+    const tdAcciones = document.createElement('td');
     
     tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`
     tdNumero.innerHTML = vale.nro_comp;
     tdSocial.innerHTML = vale.rsoc;
     tdConcepto.innerHTML = vale.concepto;
     tdImporte.innerHTML = redondear(vale.imp,2);
+    tdAcciones.innerHTML = `
+            <div id=edit class=tool>
+                <span class=material-icons>edit</span>
+                <p class=tooltip>Modificar</p>
+            </div>
+            <div id=delete class=tool>
+                <span class=material-icons>delete</span>
+                <p class=tooltip>Eliminar</p>
+            </div>
+        `
 
     tdImporte.classList.add('text-right');
+    tdAcciones.classList.add('acciones')
 
     tr.appendChild(tdFecha);
     tr.appendChild(tdNumero);
     tr.appendChild(tdSocial);
     tr.appendChild(tdConcepto);
     tr.appendChild(tdImporte);
+    tr.appendChild(tdAcciones);
 
     tbody.appendChild(tr);
 
@@ -63,12 +76,48 @@ const listarVales = (vales)=>{
 tbody.addEventListener('click',e=>{
 
     seleccionado && seleccionado.classList.remove('seleccionado');
-    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
-    seleccionado.classList.add('seleccionado');
-
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.parentNode;
+
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }else if(e.target.nodeName === "DIV"){
+        seleccionado = e.target.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode;
+    }else if(e.target.nodeName === "SPAN"){
+        seleccionado = e.target.parentNode.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode.parentNode;
+    }
+
+    seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
+
+    if (e.target.innerHTML === "delete") {
+        sweet.fire({
+            title:"Quiere Eliminar",
+            confirmButtonText:"Aceptar",
+            showCancelButton:true
+        }).then(async ({isConfirmed})=>{
+            if (isConfirmed) {
+                try {
+                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
+                    tbody.removeChild(seleccionado)
+                } catch (error) {
+                    await sweet.fire({
+                        title:"No se pudo borrar el vale"
+                    })
+                }
+            }
+        })
+    }else if(e.target.innerHTML === "edit"){
+        ipcRenderer.send('abrir-ventana',{
+            path:'vales/agregar-modificarValesPersonal.html',
+            width:500,
+            height:500,
+            reinicio:true,
+            informacion:seleccionado.id
+        })
+    }
 
 });
 
@@ -81,30 +130,9 @@ agregar.addEventListener('click',e=>{
     })
 });
 
-modificar.addEventListener('click',async e=>{
-    if (seleccionado) {
-        ipcRenderer.send('abrir-ventana',{
-            path:'vales/agregar-modificarValesPersonal.html',
-            width:500,
-            height:500,
-            reinicio:true,
-            informacion:seleccionado.id
-        })
-    }else{
-        await sweet.fire({title:"Seleccionar un vale"});
-    }
-});
-
 borrar.addEventListener('click',async e=>{
     if (seleccionado) {
-        try {
-            await axios.delete(`${URL}vales/id/${seleccionado.id}`);
-            location.reload();
-        } catch (error) {
-            await sweet.fire({
-                title:"No se pudo borrar el vale"
-            })
-        }
+
     }
 });
 

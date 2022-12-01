@@ -28,6 +28,7 @@ window.addEventListener('load',e=>{
 
     let day = date.getDate();
     let month = date.getMonth() + 1;
+    
     let year = date.getFullYear();
 
     month = month === 13 ? 1 : month;
