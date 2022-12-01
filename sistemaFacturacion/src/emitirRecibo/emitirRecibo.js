@@ -9,7 +9,7 @@ function getParameterByName(name) {
 const sweet = require('sweetalert2');
 const { ipcRenderer} = require("electron");
 const axios = require("axios");
-const { copiar } = require('../funciones');
+const { copiar, verCodComp } = require('../funciones');
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -104,10 +104,6 @@ let trSeleccionado;
 let cliente = {}
 let nuevaLista = []
 vendedor.innerHTML = `<h3>${Vendedor}</h3>`
-
-codigo.addEventListener('focus',e=>{
-    codigo.select();
-})
 
 //cuando apretamos enter y el codigo esta vacio se abre la ventana para buscar un cliente, sino traemos con el codigo
 codigo.addEventListener('keypress', async (e)=>{
@@ -390,7 +386,7 @@ const hacerRecibo = async()=>{
     };
 
      const recibo = {}
-     recibo.cod_comp = verCodComp(cond_iva.value)
+     recibo.cod_comp = verCodComp("Recibos",cond_iva.value)
      recibo.dnicuit = cuit.value;
      recibo.fecha = new Date();
      recibo.cliente = codigo.value;
@@ -415,6 +411,7 @@ const hacerRecibo = async()=>{
      try {
         //modificamos las ventas en cuentas compensada
         await modificarVentas(nuevaLista);
+
 
         //modificamos el  numero del recibo
         recibo.nro_comp = await traerUltimoNroRecibo();
@@ -456,7 +453,13 @@ const traerUltimoNroRecibo = async ()=>{
 const modifcarNroRecibo = async(numero,tipo_comp,iva)=>{
     let numeros = (await axios.get(`${URL}tipoVenta`)).data;
     numeros["Ultimo Recibo"] = `0004-${(numero + 1).toString().padStart(8,'0')}`;    
-    await axios.put(`${URL}tipoventa`,numeros);
+    try {
+        await axios.put(`${URL}tipoventa`,numeros);
+    } catch (error) {
+        await sweet.fire({
+            title:"No se pudo modifcar el numero de recibo en las variales de numeros, pero si se modifico las cuentas compensadas"
+        })
+    }
 
 }
 
@@ -468,7 +471,13 @@ const modificarVentas = (lista)=>{
                 venta.pagado = (tr.children[5].children[0].value !== "") ? parseFloat((parseFloat(tr.children[4].innerHTML) + parseFloat(tr.children[5].children[0].value)).toFixed(2)) : parseFloat(venta.pagado);
                 venta.pagado = venta.tipo_comp === "Nota Credito" ? parseFloat((venta.pagado * -1).toFixed(2)) : venta.pagado;
                 venta.saldo = venta.tipo_comp === "Nota Credito" ? parseFloat(tr.children[6].innerHTML) * -1 : parseFloat(tr.children[6].innerHTML);
-                await axios.put(`${URL}cuentaComp/numero/${venta.nro_comp}`,venta);
+                try {
+                    await axios.put(`${URL}cuentaComp/numero/${venta.nro_comp}`,venta);
+                } catch (error) {
+                    sweet.fire({
+                        title:`No se pudo modifcar la cuenta compensada ${venta.nro_comp}, Anotalo!!`
+                    })
+                }
             }
         })
     })
@@ -498,16 +507,6 @@ todo.addEventListener('click',e=>{
     }
 });
 
-
-//
-const verCodComp = (condicionIva) =>{
-    if(condicionIva === "Inscripto"){
-        return  4
-    }else{
-        return 9
-    }
-};
-
 const ponerEnCuentaCorrienteCompensada = async(recibo)=>{
     const cuenta = {};
     cuenta.codigo = recibo.cliente;
@@ -527,8 +526,19 @@ const ponerEnCuentaCorrienteHistorica = async(recibo)=>{
     cuenta.nro_comp = recibo.nro_comp;
     cuenta.haber = parseFloat(recibo.precioFinal);
     cuenta.saldo = cuenta.tipo_comp === "Recibos" ? parseFloat((parseFloat(saldo.value) - cuenta.haber).toFixed(2))  : parseFloat((parseFloat(saldo_p.value) - cuenta.haber).toFixed(2));
-    await axios.post(`${URL}cuentaHisto`,cuenta)
+    try {
+        await axios.post(`${URL}cuentaHisto`,cuenta);
+    } catch (error) {
+        await sweet.fire({
+            title:"No se pudo poner en historica el recibo, Anotalo!!"
+        })
+    }
 };
+
+codigo.addEventListener('focus',e=>{
+    codigo.select();
+});
+
 
 document.addEventListener('keydown',e=>{
     if(e.key === "Escape"){

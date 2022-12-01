@@ -249,8 +249,18 @@ const botonesSalir = async()=>{
     salir.addEventListener('click',e=>{
         window.close();
     });
-    
 }
 
 
-  module.exports = {redondear,abrirVentana,copiar,recorrerFlechas,inputOptions,cerrarVentana,botonesSalir}
+const verCodComp = (tipoComp,condicionIva) =>{
+    if(tipoComp === "Recibos"){
+        if(condicionIva === "Inscripto"){
+            return  4
+        }else{
+            return 9
+        }
+    }
+};
+
+
+  module.exports = {redondear,abrirVentana,copiar,recorrerFlechas,inputOptions,cerrarVentana,botonesSalir,verCodComp}
