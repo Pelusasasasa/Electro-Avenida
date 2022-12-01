@@ -8,14 +8,12 @@ function getParameterByName(name) {
 
 const sweet = require('sweetalert2');
 const { ipcRenderer} = require("electron");
+
 const axios = require("axios");
-const { copiar, verCodComp } = require('../funciones');
 require("dotenv").config;
 const URL = process.env.URL;
 
-const Vendedor = getParameterByName('vendedor');
-let situacion = "blanco";//es con la situacion que empezamos a ver
-let subseleccionado = "";
+const { copiar, verCodComp } = require('../funciones');
 
 
 const hoy = new Date();
@@ -54,6 +52,17 @@ const cancelar = document.querySelector('.cancelar');
 const vendedor = document.querySelector('.vendedor');
 const saldoAfavor = document.querySelector('#saldoAFavor');
 const total = document.querySelector('#total');
+
+
+const Vendedor = getParameterByName('vendedor');
+let situacion = "blanco";//es con la situacion que empezamos a ver
+let subseleccionado = "";
+let inputSeleccionado  = listar
+let trSeleccionado;
+let cliente = {}
+let nuevaLista = []
+vendedor.innerHTML = `<h3>${Vendedor}</h3>`
+
 
 window.addEventListener('load',e=>{
     fecha.value = `${anioDeHoy}-${mesDeHoy}-${diaDeHoy}`
@@ -98,12 +107,6 @@ const mostrarNegro = ()=>{
     saldo_p.classList.remove('none')
     body.classList.add('mostrarNegro')
 };
-
-let inputSeleccionado  = listar
-let trSeleccionado;
-let cliente = {}
-let nuevaLista = []
-vendedor.innerHTML = `<h3>${Vendedor}</h3>`
 
 //cuando apretamos enter y el codigo esta vacio se abre la ventana para buscar un cliente, sino traemos con el codigo
 codigo.addEventListener('keypress', async (e)=>{
@@ -265,7 +268,6 @@ listar.addEventListener('click',e=>{
     subseleccionado.classList.add('subseleccionado');
 });
 
-
 inputSeleccionado.addEventListener('keyup',async (e)=>{
     //si se apreta enter o tab vamos a resolver todo
     if ((e.key==="Tab" || e.key === "Enter")) {
@@ -321,6 +323,7 @@ saldoAfavor.addEventListener('keydown',e=>{
         saldoAFavorAnterior = saldoAfavor.value 
     }
 });
+
 saldoAfavor.addEventListener('blur',e=>{
     if (saldoAfavor.value !== "") {
         total.value = (parseFloat(total.value) + parseFloat(saldoAfavor.value) -parseFloat(saldoAFavorAnterior)).toFixed(2);
@@ -346,6 +349,7 @@ imprimir.addEventListener('click',async e=>{
     }
     
 })
+
 imprimir.addEventListener('keydown',async e=>{
     e.preventDefault();
     if (e.key === "Enter") {
@@ -367,7 +371,6 @@ imprimir.addEventListener('keydown',async e=>{
 
 
 const hacerRecibo = async()=>{
-
     //Pnemos en un arreglo las ventas que se modificaron, asi despues imprimimos el recibo
     let arregloParaImprimir = [];
 
@@ -538,7 +541,6 @@ const ponerEnCuentaCorrienteHistorica = async(recibo)=>{
 codigo.addEventListener('focus',e=>{
     codigo.select();
 });
-
 
 document.addEventListener('keydown',e=>{
     if(e.key === "Escape"){
