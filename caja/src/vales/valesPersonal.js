@@ -77,7 +77,6 @@ tbody.addEventListener('click',e=>{
 
     seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-
     if (e.target.nodeName === "TD") {
         seleccionado = e.target.parentNode;
         subSeleccionado = e.target;
@@ -88,7 +87,6 @@ tbody.addEventListener('click',e=>{
         seleccionado = e.target.parentNode.parentNode.parentNode;
         subSeleccionado = e.target.parentNode.parentNode;
     }
-
     seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
 
@@ -101,7 +99,8 @@ tbody.addEventListener('click',e=>{
             if (isConfirmed) {
                 try {
                     await axios.delete(`${URL}vales/id/${seleccionado.id}`);
-                    tbody.removeChild(seleccionado)
+                    tbody.removeChild(seleccionado);
+                    inputTotal.value = redondear(parseFloat(inputTotal.value) - parseFloat(seleccionado.children[4].innerHTML),2);
                 } catch (error) {
                     await sweet.fire({
                         title:"No se pudo borrar el vale"

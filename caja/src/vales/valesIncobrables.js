@@ -11,9 +11,7 @@ const tbody = document.querySelector('tbody');
 const total = document.getElementById('total');
 
 const agregar = document.querySelector('.agregar');
-const modificar = document.querySelector('.modificar');
 const sumar = document.querySelector('.sumar');
-const borrar = document.querySelector('.borrar');
 const salir = document.querySelector('.salir');
 
 let vales;
@@ -37,6 +35,7 @@ const listarVales = (lista)=>{
         const tdRSocial = document.createElement('td');
         const tdConcepto = document.createElement('td');
         const tdImporte = document.createElement('td');
+        const tdAcciones = document.createElement('td');
 
         const fecha = elem.fecha.slice(0,10).split('-',3);
 
@@ -46,11 +45,25 @@ const listarVales = (lista)=>{
         tdConcepto.innerHTML = elem.concepto;
         tdImporte.innerHTML = redondear(elem.imp,2);
 
+        tdAcciones.innerHTML = `
+            <div id=edit class=tool>
+                <span class=material-icons>edit</span>
+                <p class=tooltip>Modificar</p>
+            </div>
+            <div id=delete class=tool>
+                <span class=material-icons>delete</span>
+                <p class=tooltip>Eliminar</p>
+            </div>
+         `
+
+        tdAcciones.classList.add('acciones')
+
         tr.appendChild(tdFecha);
         tr.appendChild(tdNumero);
         tr.appendChild(tdRSocial);
         tr.appendChild(tdConcepto);
         tr.appendChild(tdImporte);
+        tr.appendChild(tdAcciones);
 
         tbody.appendChild(tr);
 
@@ -59,14 +72,51 @@ const listarVales = (lista)=>{
     total.value = redondear(totalInput,2);
 }
 
-tbody.addEventListener('click',e=>{
+tbody.addEventListener('click',async e=>{
     seleccionado && seleccionado.classList.remove('seleccionado');
-    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
-    seleccionado.classList.add('seleccionado');
-
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
+
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }else if(e.target.nodeName === "DIV"){
+        seleccionado = e.target.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode;
+    }else if(e.target.nodeName === "SPAN"){
+        seleccionado = e.target.parentNode.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode.parentNode;
+    }
+
+    seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
+
+    if (e.target.innerHTML === "delete") {
+        await sweet.fire({
+            title: "Quiere Eliminar",
+            showCancelButton:true,
+            confirmButtonText:"Aceptar"
+        }).then(async ({isConfirmed})=>{
+            if(isConfirmed){
+                try {
+                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
+                    tbody.removeChild(seleccionado);
+                    total.value = redondear(parseFloat(total.value) - parseFloat(seleccionado.children[4].innerHTML),2);
+                } catch (erro) {
+                    await sweet.fire({
+                        title:"No se pudo borrar el vale"
+                    })
+                }
+            }
+        })
+    }else if(e.target.innerHTML === "edit"){
+        ipcRenderer.send('abrir-ventana',{
+            path:'vales/agregar-modificarIncobrables.html',
+            width:500,
+            height:500,
+            reinicio:true,
+            informacion:seleccionado.id
+        });
+    }
 
 });
 
@@ -78,39 +128,6 @@ agregar.addEventListener('click',e=>{
         reinicio:true
     })
 });
-
-modificar.addEventListener('click',e=>{
-    if (seleccionado) {
-        ipcRenderer.send('abrir-ventana',{
-            path:'vales/agregar-modificarIncobrables.html',
-            width:500,
-            height:500,
-            reinicio:true,
-            informacion:seleccionado.id
-        });
-    }
-});
-
-borrar.addEventListener('click',async e=>{
-    if (seleccionado) {
-        await sweet.fire({
-            title: "Seguro Quiere Borrar",
-            showCancelButton:true,
-            confirmButtonText:"Aceptar"
-        }).then(async ({isConfirmed})=>{
-            if(isConfirmed){
-                try {
-                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
-                    location.reload();
-                } catch (erro) {
-                    await sweet.fire({
-                        title:"No se pudo borrar el vale"
-                    })
-                }
-            }
-        })
-    }
-})
 
 sumar.addEventListener('click',async e=>{
     if (seleccionado) {

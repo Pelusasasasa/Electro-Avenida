@@ -117,6 +117,11 @@ const templateMenu = [
         click(){
           ventanaPrincipal.webContents.send('saldoInicial')
         }
+      },{
+        label:"Tarjetas",
+        click(){
+          abrirVentana("datos/tarjetas.html",300,300);
+        }
       }
     ]
   },
