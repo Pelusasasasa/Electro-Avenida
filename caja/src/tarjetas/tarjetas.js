@@ -43,25 +43,43 @@ agregar.addEventListener('click',e=>{
 
 modificar.addEventListener('click',async e=>{
     if (seleccionado) {
-        ipcRenderer.send('abrir-ventana',{
-            path:"./tarjetas/agregarTarjeta.html",
-            width:500,
-            height:600,
-            reinicio:true,
-            informacion: seleccionado.id
-        });
+        
     }
 });
 
 tbody.addEventListener('click',e=>{
     if (e.target.nodeName !== "TBODY") {
         seleccionado && seleccionado.classList.remove('seleccionado')
-        seleccionado = e.target.nodeName === "INPUT" ? e.target.parentNode.parentNode : e.target.parentNode;
-        seleccionado.classList.add('seleccionado');
-
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-        subSeleccionado = e.target.nodeName === "INPUT" ? e.target.parentNode : e.target;
+
+        if (e.target.nodeName === "TD") {
+            seleccionado = e.target.parentNode;
+            subSeleccionado = e.target;
+        }else if(e.target.nodeName === "DIV"){
+            seleccionado = e.target.parentNode.parentNode;
+            subSeleccionado = e.target.parentNode;
+        }else if(e.target.nodeName === "SPAN"){
+            seleccionado = e.target.parentNode.parentNode.parentNode;
+            subSeleccionado = e.target.parentNode.parentNode
+        }
+
+        seleccionado.classList.add('seleccionado');
         subSeleccionado.classList.add('subSeleccionado');
+
+
+        if (e.target.innerHTML === "edit") {
+            
+        }
+
+        if (e.target.innerHTML === "edit") {
+            ipcRenderer.send('abrir-ventana',{
+                path:"./tarjetas/agregarTarjeta.html",
+                width:500,
+                height:600,
+                reinicio:true,
+                informacion: seleccionado.id
+            });
+        }
     }
 });
 
@@ -117,6 +135,7 @@ const listar = async(tarjetas)=>{
         const tdTarjeta = document.createElement('td');
         const tdImporte = document.createElement('td');
         const tdVendedor = document.createElement('td');
+        const tdAcciones = document.createElement('td');
 
         const fecha = tarjeta.fecha.slice(0,10).split('-',3);
         
@@ -124,12 +143,25 @@ const listar = async(tarjetas)=>{
         tdTarjeta.innerHTML = tarjeta.tarjeta;
         tdImporte.innerHTML = (tarjeta.imp).toFixed(2);
         tdVendedor.innerHTML = tarjeta.vendedor;
+        tdAcciones.innerHTML = `
+            <div id=edit class=tool>
+                <span class=material-icons>edit</span>
+                <p class=tooltip>Modificar</p>
+            </div>
+            <div id=delete class=tool>
+                <span class=material-icons>delete</span>
+                <p class=tooltip>Eliminar</p>
+            </div>
+        `
+
+        tdAcciones.classList.add('acciones');
         total += tarjeta.imp;
 
         tr.appendChild(tdFecha);
         tr.appendChild(tdTarjeta);
         tr.appendChild(tdImporte);
         tr.appendChild(tdVendedor);
+        tr.appendChild(tdAcciones)
 
         tbody.appendChild(tr)
     }

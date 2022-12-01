@@ -4,7 +4,7 @@ const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
 
-const { copiar } = require('../assets/js/globales');
+const { copiar, redondear } = require('../assets/js/globales');
 const { ipcRenderer } = require('electron/renderer');
 
 const buscador = document.getElementById('buscador');
@@ -107,7 +107,9 @@ tbody.addEventListener('click',e=>{
                 try {
                     await axios.delete(`${URL}vales/id/${seleccionado.id}`);
                     tbody.removeChild(seleccionado);
+                    inputTotal.value = redondear(parseFloat(inputTotal.value) - parseFloat(seleccionado.children[4].innerHTML),2)
                 } catch (error) {
+                    console.log(error)
                     sweet.fire({
                         title:"No se pudo borrar el Vale Factura"
                     })
@@ -156,4 +158,10 @@ sumar.addEventListener('click',async e=>{
 
 salir.addEventListener('click',e=>{
     location.href = '../index.html';
+});
+
+document.addEventListener('keyup',e=>{
+    if(e.keyCode === 27){
+        location.href = `../index.html`
+    }
 });

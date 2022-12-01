@@ -4,7 +4,7 @@ const URL = process.env.URL;
 const sweet = require('sweetalert2');
 
 const { ipcRenderer } = require('electron');
-const { copiar } = require('../assets/js/globales');
+const { copiar, redondear } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
 
@@ -90,7 +90,6 @@ tbody.addEventListener('click',e=>{
 
     seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-    console.log(e.target)
     if (e.target.nodeName === "TD") {
         seleccionado = e.target.parentNode;
         subSeleccionado = e.target;
@@ -116,6 +115,7 @@ tbody.addEventListener('click',e=>{
                 try {
                     await axios.delete(`${URL}vales/id/${seleccionado.id}`);
                     tbody.removeChild(seleccionado);
+                    totalInput.value = redondear(parseFloat(totalInput.value) - parseFloat(seleccionado.children[5].innerHTML),2);
                 } catch (error) {
                     sweet.fire({
                         title:"No se pudo eliminar el vale"
