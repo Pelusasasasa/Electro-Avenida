@@ -90,6 +90,7 @@ function listarVentas(lista,bodyelegido) {
             const tdEgreso = document.createElement('td');
             const tdPrecio = document.createElement('td');
             const tdTotal = document.createElement('td');
+            const tdVend = document.createElement('td');
             
             tdFecha.innerHTML = `${hoy}/${mes}/${anio} - ${hours}:${minuts}:${seconds}`;
             tdNumero.innerHTML = venta.nro_comp;
@@ -100,6 +101,8 @@ function listarVentas(lista,bodyelegido) {
             tdEgreso.innerHTML = parseFloat(cantidad).toFixed(2);
             tdPrecio.innerHTML = objeto.precio_venta;
             tdTotal.innerHTML = (parseFloat(objeto.precio_venta) * cantidad).toFixed(2);
+            tdVend.innerHTML = venta.vendedor.slice(0,3);
+
             tr.appendChild(tdNumero);
             tr.appendChild(tdFecha);
             tr.appendChild(tdCliente);
@@ -108,6 +111,7 @@ function listarVentas(lista,bodyelegido) {
             tr.appendChild(tdEgreso);
             tr.appendChild(tdPrecio);
             tr.appendChild(tdTotal);
+            tr.appendChild(tdVend)
             bodyelegido.appendChild(tr);
         }
         const tr = document.createElement('tr');
