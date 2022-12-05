@@ -314,17 +314,14 @@ inputSeleccionado.addEventListener('keyup',async (e)=>{
 });
 
 let saldoAFavorAnterior = "0"
-saldoAfavor.addEventListener('keydown',e=>{
-    if (e.key === "Enter" && saldoAfavor.value !== "") {
-        total.value = (parseFloat(total.value) + parseFloat(saldoAfavor.value) - parseFloat(saldoAFavorAnterior)).toFixed(2);
-        (saldoAfavor.value = (parseFloat(saldoAfavor.value)).toFixed(2));
-        saldoAFavorAnterior = saldoAfavor.value 
+saldoAfavor.addEventListener('change',e=>{
+    if (!total.value) {
+        total.value = 0;
     }
-});
-saldoAfavor.addEventListener('blur',e=>{
     if (saldoAfavor.value !== "") {
         total.value = (parseFloat(total.value) + parseFloat(saldoAfavor.value) -parseFloat(saldoAFavorAnterior)).toFixed(2);
         saldoAFavorAnterior = saldoAfavor.value;
+        saldoAfavor.value = parseFloat(saldoAfavor.value).toFixed(2)
         imprimir.focus();
     }
 })
@@ -474,7 +471,7 @@ const modificarVentas = (lista)=>{
                 try {
                     await axios.put(`${URL}cuentaComp/numero/${venta.nro_comp}`,venta);
                 } catch (error) {
-                    sweet.fire({
+                    await sweet.fire({
                         title:`No se pudo modifcar la cuenta compensada ${venta.nro_comp}, Anotalo!!`
                     })
                 }
