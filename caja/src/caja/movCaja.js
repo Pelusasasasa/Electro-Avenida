@@ -1,3 +1,11 @@
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
+
 const {alerta} = require('../assets/js/globales');
 const axios = require('axios');
 require('dotenv').config();
@@ -13,6 +21,7 @@ const descripcion = document.querySelector('#descripcion');
 const importe = document.querySelector('#importe');
 
 const aceptar = document.querySelector('.aceptar');
+const modificar = document.querySelector('.modificar');
 const salir = document.querySelector('.salir');
 
 const hoy = new Date();
@@ -88,6 +97,15 @@ importe.addEventListener('focus',e=>{
 });
 
 window.addEventListener('load',async e=>{
+    const informacion = getParameterByName("informacion");
+    let movimiento;
+    if (informacion) {
+        aceptar.classList.add('none');
+        modificar.classList.remove('none');
+        modificar.id = informacion
+        movimiento = (await axios.get(`${URL}movCajas/id/${informacion}`)).data;
+        listarMovimiento(movimiento);
+    }
     const cuentas = (await axios.get(`${URL}cuentas`)).data;
     for(let cuenta of cuentas){
         const option = document.createElement('option');
@@ -112,7 +130,7 @@ aceptar.addEventListener('click',async e=>{
         movimientoCaja.imp = importe.value;
         movimientoCaja.cuenta = document.querySelector('option[value = ' + tipoCuenta.value + ']').innerHTML;
         movimientoCaja.idCuenta = tipoCuenta.value;
-        movimientoCaja.desc = descripcion.value;
+        movimientoCaja.desc = descripcion.value.toUpperCase();
         movimientoCaja.tMov = tipoMovimiento.value;
         movimientoCaja.nro_comp = punto.value.padStart(4,'0') + "-" + numero.value.padStart(8,'0');
         try {
@@ -124,6 +142,25 @@ aceptar.addEventListener('click',async e=>{
     }
 });
 
+modificar.addEventListener('click',async e=>{
+    const movimiento = {};
+    movimiento.fecha = fecha.value;
+    movimiento.nro_comp = `${punto.value.padStart(4,'0')} - ${numero.value.padStart(8,'0')}`;
+    movimiento.tMov = tipoMovimiento.value;
+    movimiento.idCuenta = tipoCuenta.value;
+    movimiento.cuenta = tipoCuenta.innerText;
+    movimiento.desc = descripcion.value.toUpperCase();
+    movimiento.imp = importe.value;
+    try {
+        await axios.put(`${URL}movCajas/id/${modificar.id}`,movimiento);
+        window.close();
+    } catch (error) {
+        sweet.fire({
+            title:"No se pudo modificar"
+        });
+        console.log(error)
+    }
+})
 
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {
@@ -134,3 +171,14 @@ document.addEventListener('keyup',e=>{
 salir.addEventListener('click',e=>{
     window.close();
 });
+
+const listarMovimiento = (movimiento)=>{
+    const date = movimiento.fecha.slice(0,10);
+    inputFecha.value = date
+    punto.value = movimiento.nro_comp.slice(0,4);
+    numero.value = movimiento.nro_comp.slice(5,14)
+    tipoMovimiento.value = movimiento.tMov;
+    tipoCuenta.value = movimiento.idCuenta;
+    descripcion.value = movimiento.desc;
+    importe.value = movimiento.imp.toFixed(2);
+}

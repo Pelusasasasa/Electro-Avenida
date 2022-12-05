@@ -1,9 +1,10 @@
 const axios = require('axios');
 const { ipcRenderer } = require('electron/renderer');
-const { cerrarVentana, copiar } = require('../assets/js/globales');
+const { cerrarVentana, copiar, redondear } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
+const sweet = require('sweetalert2');
 let tipo;
 
 const titulo = document.querySelector('h1');
@@ -28,26 +29,13 @@ day = day < 10 ? `0${day}` : day;
 
 let seleccionado;
 let subSeleccionado;
+let cuentasConTipo;
+let cuentas;
 
 window.addEventListener('load',async e=>{
     cerrarVentana();
     copiar();
-
-    const cuentas = (await axios.get(`${URL}cuentas`)).data;
-    let cuentasConTipo;
     
-    await ipcRenderer.on('recibir-informacion',(e,args)=>{
-        tipo = args;
-        if (tipo === "I") {
-            titulo.innerHTML = "Ingreso de Caja";
-            cuentasConTipo = cuentas.filter(cuenta=>cuenta.tipo === tipo);
-        }else{
-            titulo.innerHTML = "Egreso de Caja";
-            cuentasConTipo = cuentas.filter(cuenta=>cuenta.tipo === tipo)
-        }
-        listarRubros(cuentasConTipo)
-    });
-
 
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
@@ -133,16 +121,30 @@ const listar = async(lista)=>{
         const tdNumero = document.createElement('td');
         const tdDescripcion = document.createElement('td');
         const tdImporte = document.createElement('td');
+        const tdAcciones = document.createElement('td');
+
+        tdAcciones.classList.add('acciones');
         
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         tdNumero.innerHTML = elem.nro_comp;
         tdDescripcion.innerHTML = elem.desc;
         tdImporte.innerHTML = elem.imp.toFixed(2);
+        tdAcciones.innerHTML = `
+            <div class=tool>
+                <span class=material-icons>edit</span>
+                <p class=tooltip>Modificar</p>
+            </div>
+            <div class=tool>
+                <span class=material-icons>delete</span>
+                <p class=tooltip>Eliminar</p>
+            </div>
+        `
 
         tr.appendChild(tdFecha);
         tr.appendChild(tdNumero);
         tr.appendChild(tdDescripcion);
         tr.appendChild(tdImporte);
+        tr.appendChild(tdAcciones);
 
         tdImporte.classList.add('text-right');
 
@@ -180,11 +182,52 @@ hasta.addEventListener('keypress',async e=>{
 tbody.addEventListener('click',e=>{
 
     seleccionado && seleccionado.classList.remove('seleccionado');
-    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
-    seleccionado.classList.add('seleccionado');
-
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
+
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }else if(e.target.nodeName === "DIV"){
+        seleccionado = e.target.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode;
+    }else if(e.target.nodeName === "SPAN"){
+        seleccionado = e.target.parentNode.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode.parentNode;
+    }
+
+    seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
 
+
+    if (e.target.innerHTML === "delete") {
+        sweet.fire({
+            title:"Eliminar Movimiento Caja",
+            confirmButtonText:"Aceptar",
+            showCancelButton:true,
+        }).then(async ({isConfirmed})=>{
+            if (isConfirmed) {
+                await axios.delete(`${URL}movCajas/id/${seleccionado.id}`);
+                tbody.removeChild(seleccionado);
+                totalInput.value = redondear(parseFloat(totalInput.value) - parseFloat(seleccionado.children[3].innerHTML),2);
+            }
+        });
+    }else if(e.target.innerHTML === "edit"){
+        location.href = `./movCaja.html?informacion=${seleccionado.id}`;
+    }
+
+});
+
+ipcRenderer.on('recibir-informacion',async (e,args)=>{
+    cuentas = (await axios.get(`${URL}cuentas`)).data;
+    tipo = args;
+    console.log(tipo)
+    if (tipo === "I") {
+        titulo.innerHTML = "Ingreso de Caja";
+        cuentasConTipo = cuentas.filter(cuenta=>cuenta.tipo === tipo);
+    }else{
+        titulo.innerHTML = "Egreso de Caja";
+        console.log(cuentas)
+        cuentasConTipo = cuentas.filter(cuenta=>cuenta.tipo === tipo)
+    }
+    listarRubros(cuentasConTipo)
 });

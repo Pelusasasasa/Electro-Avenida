@@ -47,7 +47,7 @@ modificar.addEventListener('click',async e=>{
     }
 });
 
-tbody.addEventListener('click',e=>{
+tbody.addEventListener('click',async e=>{
     if (e.target.nodeName !== "TBODY") {
         seleccionado && seleccionado.classList.remove('seleccionado')
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
@@ -67,11 +67,25 @@ tbody.addEventListener('click',e=>{
         subSeleccionado.classList.add('subSeleccionado');
 
 
-        if (e.target.innerHTML === "edit") {
-            
-        }
-
-        if (e.target.innerHTML === "edit") {
+        if (e.target.innerHTML === "delete") {
+            await sweet.fire({
+                title:"Seguro que quiere eliminar",
+                showCancelButton:true,
+                confirmButtonText: "Aceptar"
+            }).then(async ({isConfirmed})=>{
+                if (isConfirmed) {
+                    try {
+                        totalInput.value = redondear(parseFloat(totalInput.value) - parseFloat(seleccionado.children[2].innerHTML),2)
+                        await axios.delete(`${URL}tarjetas/id/${seleccionado.id}`);
+                        tbody.removeChild(seleccionado)
+                    } catch (error) {
+                        await sweet.fire({
+                            title:"No se pudo borrar"
+                        });
+                    }
+                }
+            });
+        }else if (e.target.innerHTML === "edit") {
             ipcRenderer.send('abrir-ventana',{
                 path:"./tarjetas/agregarTarjeta.html",
                 width:500,
@@ -80,26 +94,6 @@ tbody.addEventListener('click',e=>{
                 informacion: seleccionado.id
             });
         }
-    }
-});
-
-borrar.addEventListener('click',async e=>{
-    if (seleccionado) {
-        await sweet.fire({
-            title:"Seguro que quiere eliminar",
-            showCancelButton:true,
-            confirmButtonText: "Aceptar"
-        }).then(async ({isConfirmed})=>{
-            try {
-                seleccionado.style.display = "none";
-                totalInput.value = redondear(parseFloat(totalInput.value) - parseFloat(seleccionado.children[2].innerHTML),2)
-                await axios.delete(`${URL}tarjetas/id/${seleccionado.id}`);
-            } catch (error) {
-                await sweet.fire({
-                    title:"No se pudo borrar"
-                })
-            }
-        });
     }
 });
 

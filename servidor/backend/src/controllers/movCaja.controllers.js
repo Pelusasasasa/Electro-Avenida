@@ -77,4 +77,22 @@ movCajaCTRL.getPriceBetweenDates = async(req,res)=>{
     res.send(`${total}`);
 }
 
+movCajaCTRL.getForId = async(req,res)=>{
+    const {id} = req.params;
+    const movimiento = await MovCaja.findOne({_id:id});
+    res.send(movimiento);
+}
+
+movCajaCTRL.putForId = async(req,res)=>{
+    const {id} = req.params;
+    await MovCaja.findOneAndUpdate({_id:id},req.body);
+    res.end();
+}
+
+movCajaCTRL.deleteForID = async(req,res)=>{
+    const {id} = req.params;
+    await MovCaja.findOneAndDelete({_id:id});
+    res.end();
+}
+
 module.exports = movCajaCTRL; 

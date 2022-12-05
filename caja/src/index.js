@@ -23,6 +23,7 @@ const abrirVentana = (direccion,width,height,reinicio,informacion)=>{
   nuevaVentana.once('ready-to-show',()=>{
     nuevaVentana.show();
     if (informacion) {
+      console.log(informacion)
       nuevaVentana.webContents.send('recibir-informacion',informacion);
     }
   });
