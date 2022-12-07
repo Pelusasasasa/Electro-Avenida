@@ -17,6 +17,8 @@ cuentaCompCTRL.traerCompensadasPorCliente = async(req,res)=>{
 }
 
 cuentaCompCTRL.cargarCompensada = async(req,res)=>{
+    const now = new Date();
+    req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const nuevaCompensada = new CuentaComp(req.body);
     let id = (await CuentaComp.find().sort({$natural:-1}).limit(1))[0]
     nuevaCompensada._id = id ? id._id + 1 : 1; 

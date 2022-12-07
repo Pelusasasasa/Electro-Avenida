@@ -3,6 +3,8 @@ const ventasCTRL = {}
 const Ventas = require('../models/venta');
 
 ventasCTRL.cargarVenta = async(req,res)=>{
+    const now = new Date();
+    req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const id = (await Ventas.find().sort({$natural:-1}).limit(1))[0];
     req.body._id = id ? id._id + 1 : 1;
     const venta = new Ventas(req.body);

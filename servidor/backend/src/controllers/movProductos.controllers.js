@@ -24,6 +24,8 @@ movProductosCTRL.cargarMovimientoProducto = async(req,res)=>{
     const arreglo = req.body;
     console.log("El id inicial es : " + id)
     for await(let movimiento of arreglo){
+        const now = new Date();
+        movimiento.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
         movimiento._id = id + 1;
         id = id + 1;
         const nuevoMovimiento = new movProducto(movimiento);

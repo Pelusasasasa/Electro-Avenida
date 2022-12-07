@@ -9,6 +9,8 @@ canceladosCTRL.traerCancelados = async(req,res)=>{
 }
 
 canceladosCTRL.CargarCancelado = async(req,res)=>{
+    const now = new Date();
+    req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const cancelado = new Cancelados(req.body)
     await cancelado.save();
     res.send("Cancelado Guardado")

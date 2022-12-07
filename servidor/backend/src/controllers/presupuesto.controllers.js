@@ -4,10 +4,14 @@ const Presupuesto = require("../models/presupuesto");
 
 
 PresupuestoCTRL.cargarPresupuesto = async(req,res)=>{
+    const now = new Date();
+    req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const presupuesto = new Presupuesto(req.body);
     let id = (await Presupuesto.find().sort({$natural:-1}).limit(1))[0];
     presupuesto._id = id ? id._id + 1 : 1;
-    presupuesto.save()
+    presupuesto.save();
+    console.log(req.body.fecha);
+    console.log(presupuesto.fecha)
     console.log(`Presupuesto ${req.body.nro_comp} guardado`)
     res.send(presupuesto)
 }

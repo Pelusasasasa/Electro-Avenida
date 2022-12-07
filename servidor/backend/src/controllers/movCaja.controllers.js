@@ -3,6 +3,8 @@ const movCajaCTRL = {};
 const MovCaja = require('../models/movCaja');
 
 movCajaCTRL.post = async(req,res)=>{
+    const now = new Date();
+    req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const movCaja = new MovCaja(req.body);
     await movCaja.save();
     res.send(`Moviemiento de caja Cargado`);

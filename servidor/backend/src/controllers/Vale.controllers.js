@@ -3,6 +3,8 @@ const valeCTRL = {};
 const Vale = require('../models/Vale');
 
 valeCTRL.post = async(req,res)=>{
+    const now = new Date();
+    req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const vale = new Vale(req.body);
     await vale.save();
     console.log(`Vale a ${req.body.rsoc} cargado con el importe de ${req.body.imp}`);

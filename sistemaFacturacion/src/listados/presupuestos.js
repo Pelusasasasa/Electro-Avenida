@@ -63,20 +63,16 @@ buscar.addEventListener('click',async e=>{
 function listarVentas(lista,bodyelegido) {
     bodyelegido.innerHTML = "";
     for(let venta of lista){
-        const fecha = new Date(venta.fecha);
-        let hoy = fecha.getDate();
-        let mes = fecha.getMonth();
-        let anio = fecha.getFullYear();
-        let hours = fecha.getHours();
-        let minuts = fecha.getMinutes();
-        let seconds = fecha.getSeconds();
+        const fecha = venta.fecha.slice(0,10).split('-',3)
+        const hora = venta.fecha.slice(11,19).split(':',3)
 
-        mes = (mes===0) ? mes + 1 : mes;
-        mes = (mes<10) ? `0${mes}` : mes;
-        hoy = (hoy<10) ? `0${hoy}` : hoy;
-        hours = (hours<10) ? `0${hours}` : hours;
-        minuts = minuts<10 ? `0${minuts}` : minuts;
-        seconds = seconds<10 ? `0${seconds}` : seconds;
+        let hoy = fecha[2];
+        let mes = fecha[1];
+        let anio = fecha[0];
+        let hours = hora[0];
+        let minuts = hora[1];
+        let seconds = hora[2];
+
 
         for(let {cantidad,objeto} of venta.productos){
 
@@ -97,7 +93,6 @@ function listarVentas(lista,bodyelegido) {
             tdCliente.innerHTML = venta.nombreCliente.slice(0,20);
             tdCodigo.innerHTML = objeto._id;    
             tdDescripcion.innerHTML = objeto.descripcion.slice(0,30);
-            console.log(cantidad)
             tdEgreso.innerHTML = parseFloat(cantidad).toFixed(2);
             tdPrecio.innerHTML = objeto.precio_venta;
             tdTotal.innerHTML = (parseFloat(objeto.precio_venta) * cantidad).toFixed(2);

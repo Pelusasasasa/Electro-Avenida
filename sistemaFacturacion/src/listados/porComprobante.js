@@ -22,8 +22,8 @@ const contado = document.querySelector('.contado');
 const cteCorriente = document.querySelector('.cteCorriente');
 const desde =  document.querySelector('#desde')
 const hasta =  document.querySelector('#hasta')
-desde.value = fechaDeHoy
-hasta.value = fechaDeHoy
+desde.value = fechaDeHoy;
+hasta.value = fechaDeHoy;
 const tbody =  document.querySelector('.tbody')
 let ventas = [];
 
@@ -113,20 +113,15 @@ function listarVentas(lista) {
         }else{
             tipo = "R";
         };
-
-        const fecha = new Date(venta.fecha);
-        let hoy = fecha.getDate();
-        let mes = fecha.getMonth() + 1;
-        let hours = fecha.getHours();
-        let minutes = fecha.getMinutes();
-        let seconds = fecha.getSeconds();
-        mes = (mes===13) ? 1 : mes;
-        mes = (mes<10) ? `0${mes}` : mes;
-        hoy = (hoy<10) ? `0${hoy}` : hoy;
-        hours = (hours<10) ? `0${hours}` : hours;
-        minutes = (minutes<10) ? `0${minutes}` : minutes;
-        seconds = (seconds<10) ? `0${seconds}` : seconds;
-        let anio = fecha.getFullYear();
+        const fecha = venta.fecha.slice(0,10).split('-',3);
+        const hora = venta.fecha.slice(11,19).split(':',3);
+        console.log(fecha)
+        let hoy = fecha[2]
+        let mes = fecha[1]
+        let hours = hora[0]
+        let minutes = hora[1]
+        let seconds = hora[2]
+        let anio = fecha[0]
 
 
         venta.productos.forEach(({objeto,cantidad})=>{

@@ -3,6 +3,8 @@ const cuentaHistoricaCTRL = {};
 const CuentaHisto = require('../models/CueCorrHist')
 
 cuentaHistoricaCTRL.cargarHistorica = async(req,res)=>{
+    const now = new Date();
+    req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const historica = new CuentaHisto(req.body);
     let id = (await CuentaHisto.find().sort({$natural:-1}).limit(1))[0];
     historica._id = id ? id._id + 1 : 1;

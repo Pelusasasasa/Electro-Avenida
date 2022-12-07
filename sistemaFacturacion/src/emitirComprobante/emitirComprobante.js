@@ -677,7 +677,6 @@ presupuesto.addEventListener('click',async (e)=>{
                                     producto.objeto.precio_venta = producto.objeto.precio_venta.toFixed(2)
                                 }
                             }
-    
                         await axios.post(`${URL}presupuesto`,venta)
                         await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp)
                          //si la venta es CC Sumamos un saldo al cliente y ponemos en cuenta corriente compensada y historica
@@ -716,7 +715,7 @@ presupuesto.addEventListener('click',async (e)=>{
                             arregloMovimiento = [];
                             arregloProductosDescontarStock = [];
                         
-        
+                            
                         window.location = "../index.html";
                          
                     } catch (error) {
