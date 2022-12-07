@@ -48,10 +48,10 @@ buscar.addEventListener('click',async e=>{
               const tdObservaciones = document.createElement('td');
 
               tdId.innerHTML = _id;
-              tdDescripcion.innerHTML = descripcion;
+              tdDescripcion.innerHTML = descripcion.slice(0,30);
               tdCodFabrica.innerHTML = cod_fabrica;
               tdStock.innerHTML = parseFloat(stock).toFixed(2);
-              tdObservaciones.innerHTML = observacion
+              tdObservaciones.innerHTML = observacion.slice(0,15);
 
               tr.appendChild(tdId);
               tr.appendChild(tdDescripcion);

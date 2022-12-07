@@ -33,9 +33,8 @@ ultimoDiaMesAnterior=ultimoDiaMesAnterior.getDate()
 
 let ultimoDia = (new Date(anio,mes,0))
 ultimoDia = ultimoDia.getDate();
-
 let mesAyer = ((mes-1) === 0) ? 12 : mes-1;
-mesAyer = mesAyer < 10 ? `0${mesAyer}` : mes
+mesAyer = mesAyer < 10 ? `0${mesAyer}` : mesAyer
 const anioAyer = (mes === "01") ? (anio-1) : anio;
 
 const fechaAyer = `${anioAyer}-${mesAyer}-${ultimoDiaMesAnterior}`
