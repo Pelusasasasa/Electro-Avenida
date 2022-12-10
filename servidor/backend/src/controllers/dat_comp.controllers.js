@@ -3,6 +3,8 @@ const datCompCTRL = {};
 const DatComp= require('../models/Dat_comp');
 
 datCompCTRL.post = async(req,res)=>{
+    const now = new Date();
+    req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const datComp = new DatComp(req.body);
     await datComp.save();
     res.send(`Dato de Comprobante a la empresa ${req.body.empresa} con el importe $${req.body.total} cargado`);

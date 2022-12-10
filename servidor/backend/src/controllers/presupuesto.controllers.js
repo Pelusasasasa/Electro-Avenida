@@ -9,9 +9,9 @@ PresupuestoCTRL.cargarPresupuesto = async(req,res)=>{
     const presupuesto = new Presupuesto(req.body);
     let id = (await Presupuesto.find().sort({$natural:-1}).limit(1))[0];
     presupuesto._id = id ? id._id + 1 : 1;
-    presupuesto.save();
     console.log(req.body.fecha);
-    console.log(presupuesto.fecha)
+    console.log(presupuesto)
+    presupuesto.save();
     console.log(`Presupuesto ${req.body.nro_comp} guardado`)
     res.send(presupuesto)
 }

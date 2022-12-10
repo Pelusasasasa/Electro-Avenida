@@ -51,7 +51,6 @@ segundoNumero.addEventListener('focus',e=>{
 });
 
 seleccionar.addEventListener('click',e=>{
-    console.log("a")
     seleccion.forEach(e=>{
         e.checked && (seleccionado = e);
     });

@@ -9,7 +9,7 @@ const Afip = require('@afipsdk/afip.js');
 const afip = new Afip({ CUIT: 27165767433 });
 
 const sweet = require('sweetalert2');
-const {inputOptions,copiar, recorrerFlechas} = require('../funciones');
+const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip} = require('../funciones');
 const { ipcRenderer } = require("electron");
 const axios = require("axios");
 require("dotenv").config;
@@ -362,8 +362,7 @@ nuevaCantidad.addEventListener('keypress',e=>{
 //aplicamos el descuento
 const descuento = document.querySelector('#descuento')
 const descuentoN = document.querySelector('#descuentoN')
-descuento.value=0
-descuentoN.value=0
+
 descuento.addEventListener('blur',()=>{
     verDescuento();
 })
@@ -384,15 +383,15 @@ cobrado.addEventListener('keypress',e=>{
 let Total = 0
 function verDescuento() {
      Total = totalPrecioProducos
-    descuentoN.value = redondear(descuento.value*Total/100);
-    total.value=redondear(Total - descuentoN.value);
+    descuentoN.value = redondear(descuento.value*Total/100,2);
+    total.value=redondear(Total - descuentoN.value,2);
 }
 
 //si se sobra menos que se muestre cuanto es la diferencia
 function inputCobrado(numero) {
     Total=totalPrecioProducos
-    descuentoN.value =  redondear(Total-numero)
-    descuento.value = redondear(descuentoN.value*100/Total)
+    descuentoN.value =  redondear(Total-numero,2)
+    descuento.value = redondear(descuentoN.value*100/Total,2)
     total.value = parseFloat(numero).toFixed(2);
 }
 //FIN PARTE DE DESCUENTO
@@ -537,12 +536,6 @@ numeroDeFactura.addEventListener('click', async () =>{
      mostrar.value = ((await axios.get(`${URL}tipoVenta`)).data)[texto];
 })
 
-
-//redondea un numero a dos decimales
-function redondear(numero) {
-    return (parseFloat((Math.round(numero + "e+2") +  "e-2")));
-};
-
 async function actualizarNumeroComprobante(comprobante,tipo_pago,codigoComp) {
     let numero
     let tipoFactura
@@ -658,7 +651,7 @@ presupuesto.addEventListener('click',async (e)=>{
                         venta.nombreCliente = buscarCliente.value;
                         tipoVenta="Presupuesto";
                         venta.descuento = (descuentoN.value);
-                        venta.precioFinal = redondear(total.value);
+                        venta.precioFinal = redondear(total.value,2);
                         venta.fecha = new Date();
                         venta.tipo_comp = tipoVenta;
                         venta.observaciones = observaciones.value;
@@ -730,7 +723,6 @@ presupuesto.addEventListener('click',async (e)=>{
         }
     }
 });
-
 
 remito.addEventListener('click',async e=>{
     e.preventDefault();
@@ -806,98 +798,102 @@ ticketFactura.addEventListener('click',async (e) =>{
             }
         }).then(async ({isConfirmed})=>{
         if (isConfirmed) {
-     if (venta.tipo_pago === "Ninguno") {
-            sweet.fire({title:"Seleccionar un modo de venta"});
-        }else{
-            alerta.classList.remove('none');
-            const listaSinDescuento = JSON.parse(JSON.stringify(listaProductos))
-            venta.productos = listaProductos;
-            venta.nombreCliente = buscarCliente.value;
-            venta.observaciones = observaciones.value;
-            venta.fecha = new Date();
-            venta.direccion = direccion.value;
-            venta.localidad = localidad.value;
-            venta.descuento = (descuentoN.value);
-            venta.precioFinal = redondear(total.value);
-            venta.tipo_comp = tipoVenta;
-            numeroComprobante(tipoVenta);
-            venta.empresa = inputEmpresa.value;
-            venta.cod_comp = verCodComprobante(tipoVenta);
-            if (venta.precioFinal >=10000 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
-                sweet.fire({title:"Factura mayor a 10000, poner datos cliente"});
-                alerta.classList.add('none');
+            if (venta.tipo_pago === "Ninguno") {
+                sweet.fire({title:"Seleccionar un modo de venta"});
             }else{
-                try {
-                    for(let producto of venta.productos){
-                        if (parseFloat(descuentoN.value) !== 0 && descuentoN.value !== "" ) {
-                            producto.objeto.precio_venta = (parseFloat(producto.objeto.precio_venta)) - parseFloat(producto.objeto.precio_venta)*parseFloat(descuento.value)/100
-                            producto.objeto.precio_venta = producto.objeto.precio_venta.toFixed(2)
-                        }
-                    };
-                    const [iva21,iva105,gravado21,gravado105,cant_iva] = gravadoMasIva(venta.productos);
-                    
-                    venta.gravado21 = gravado21;
-                    venta.gravado105 = gravado105;
-                    venta.iva21 = iva21;
-                    venta.iva105 = iva105;
-                    venta.cant_iva = cant_iva;
-                    borraNegro && (venta.observaciones = ventaAnterior.nro_comp);
-                    const afip = await subirAAfip(venta);
-                    venta.nro_comp = `0005-${(afip.numero).toString().padStart(8,'0')}`;
-                    venta.comprob = venta.nro_comp;
-                    venta.tipo_pago === "CC" && sumarSaldoAlCliente(venta.precioFinal,venta.cliente,venta.nro_comp);
-                    venta.tipo_pago === "CC" && ponerEnCuentaCorrienteCompensada(venta,true);
-                    venta.tipo_pago === "CC" && ponerEnCuentaCorrienteHistorica(venta,true,saldo.value);
-                    await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
-                    nuevaVenta = await axios.post(`${URL}ventas`,venta)
-                    const cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`)).data;
-
-                    alerta.children[1].children[0].innerHTML = "Imprimiendo Venta";//cartel de que se esta imprimiendo la venta
-
-                    //mandamos a imprimir el ticket
-                    ipcRenderer.send('imprimir-venta',[venta,afip,true,1,'Ticket Factura']);
-                    
-                    //Le mandamos al servidor que cree un pdf con los datos
-                    await axios.post(`${URL}crearPdf`,[venta,cliente,afip]);
-                    
-                    if(!borraNegro){
+                alerta.classList.remove('none');
+                const listaSinDescuento = JSON.parse(JSON.stringify(listaProductos))
+                venta.productos = listaProductos;
+                venta.nombreCliente = buscarCliente.value;
+                venta.observaciones = observaciones.value;
+                venta.fecha = new Date();
+                venta.direccion = direccion.value;
+                venta.localidad = localidad.value;
+                venta.descuento = (descuentoN.value);
+                venta.precioFinal = redondear(total.value,2);
+                venta.tipo_comp = tipoVenta;
+                numeroComprobante(tipoVenta);
+                venta.empresa = inputEmpresa.value;
+                venta.cod_comp = verCodComprobante(tipoVenta);
+                if (venta.precioFinal >= 10000 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
+                    sweet.fire({title:"Factura mayor a 10000, poner datos cliente"});
+                    alerta.classList.add('none');
+                }else{
+                    try {
                         for(let producto of venta.productos){
-                            if (venta.tipo_pago !== "PP") {
-                                producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
+                            if (parseFloat(descuentoN.value) !== 0 && descuentoN.value !== "" ) {
+                                producto.objeto.precio_venta = (parseFloat(producto.objeto.precio_venta)) - parseFloat(producto.objeto.precio_venta)*parseFloat(descuento.value)/100
+                                producto.objeto.precio_venta = producto.objeto.precio_venta.toFixed(2)
                             }
-                            await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente);
-                        }
-                        if (venta.tipo !== "PP") {
-                            await axios.put(`${URL}productos`,arregloProductosDescontarStock);
                         };
-                        await axios.post(`${URL}movProductos`,arregloMovimiento);
-                        arregloMovimiento = [];
-                        arregloProductosDescontarStock = [];
-                    }
-        
-                    if (borraNegro) {
-                        //traemos los movimientos de productos de la venta anterior y lo modificamos a la nueva venta
-                        const movimientosViejos = (await axios.get(`${URL}movProductos/${ventaAnterior.nro_comp}/Presupuesto`)).data;
-                        for await (let mov of movimientosViejos){
-                            mov.nro_comp = venta.nro_comp;
-                            mov.tipo_comp = "Ticket Factura";
-                        }
-                        await axios.put(`${URL}movProductos`,movimientosViejos);
+                        const [iva21,iva105,gravado21,gravado105,cant_iva] = gravadoMasIva(venta.productos);
+                        //Ponemos en la venta los distintos ivas
+                        venta.gravado21 = gravado21;
+                        venta.gravado105 = gravado105;
+                        venta.iva21 = iva21;
+                        venta.iva105 = iva105;
+                        venta.cant_iva = cant_iva;
 
-                        //borramos la cuenta compensada
-                        await borrrarCuentaCompensada(ventaDeCtaCte);
-                        //descontamos el saldo del cliente y le borramos la venta de la lista
-                        await descontarSaldo(ventaAnterior.cliente,ventaAnterior.precioFinal,ventaAnterior.nro_comp,venta.nro_comp);
-                        await borrarCuentaHistorica(ventaAnterior.nro_comp,ventaAnterior.cliente,ventaAnterior.tipo_comp);
-                        await borrarVenta(ventaAnterior.nro_comp)
-                    };
-                    !borraNegro ? (window.location = '../index.html') : window.close();
-                } catch (error) {
-                    await sweet.fire({title:"No se puedo generar la Venta"})
-                    console.log(error)
-                }finally{
-                    alerta.classList.add('none')
-                }
+                        borraNegro && (venta.observaciones = ventaAnterior.nro_comp);//Se hace por si pasamos de presupuesto a factura
+
+                        const afip = await subirAAfip(venta);
+                        venta.nro_comp = `0005-${(afip.numero).toString().padStart(8,'0')}`;
+                        venta.comprob = venta.nro_comp;
+
+                        venta.tipo_pago === "CC" && sumarSaldoAlCliente(venta.precioFinal,venta.cliente,venta.nro_comp);
+                        venta.tipo_pago === "CC" && ponerEnCuentaCorrienteCompensada(venta,true);
+                        venta.tipo_pago === "CC" && ponerEnCuentaCorrienteHistorica(venta,true,saldo.value);
+
+                        await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
+                        nuevaVenta = await axios.post(`${URL}ventas`,venta);
+                        const cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`)).data;
+
+                        alerta.children[1].children[0].innerHTML = "Imprimiendo Venta";//cartel de que se esta imprimiendo la venta
+
+                        //mandamos a imprimir el ticket
+                        ipcRenderer.send('imprimir-venta',[venta,afip,true,1,'Ticket Factura']);
+                        
+                        //Le mandamos al servidor que cree un pdf con los datos
+                        await axios.post(`${URL}crearPdf`,[venta,cliente,afip]);
+                        
+                        if(!borraNegro){
+                            for(let producto of venta.productos){
+                                if (venta.tipo_pago !== "PP") {
+                                    producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
+                                }
+                                await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente);
+                            }
+                            if (venta.tipo !== "PP") {
+                                await axios.put(`${URL}productos`,arregloProductosDescontarStock);
+                            };
+                            await axios.post(`${URL}movProductos`,arregloMovimiento);
+                            arregloMovimiento = [];
+                            arregloProductosDescontarStock = [];
+                        }
+            
+                        if (borraNegro) {
+                            //traemos los movimientos de productos de la venta anterior y lo modificamos a la nueva venta
+                            const movimientosViejos = (await axios.get(`${URL}movProductos/${ventaAnterior.nro_comp}/Presupuesto`)).data;
+                            for await (let mov of movimientosViejos){
+                                mov.nro_comp = venta.nro_comp;
+                                mov.tipo_comp = "Ticket Factura";
+                            }
+                            await axios.put(`${URL}movProductos`,movimientosViejos);
+
+                            //borramos la cuenta compensada
+                            await borrrarCuentaCompensada(ventaDeCtaCte);
+                            //descontamos el saldo del cliente y le borramos la venta de la lista
+                            await descontarSaldo(ventaAnterior.cliente,ventaAnterior.precioFinal,ventaAnterior.nro_comp,venta.nro_comp);
+                            await borrarCuentaHistorica(ventaAnterior.nro_comp,ventaAnterior.cliente,ventaAnterior.tipo_comp);
+                            await borrarVenta(ventaAnterior.nro_comp)
+                        };
+                        !borraNegro ? (window.location = '../index.html') : window.close();
+                    } catch (error) {
+                        await sweet.fire({title:"No se puedo generar la Venta"})
+                        console.log(error)
+                    }finally{
+                        alerta.classList.add('none')
+                    }
         }
         }
         }
@@ -1133,7 +1129,7 @@ const descontarSaldo = async(codigo,precio,numero,venta)=>{
     cliente.listaVentas = venta;
     cliente.saldo_p = parseFloat(cliente.saldo_p) - precio;
     await axios.put(`${URL}clientes/${codigo}`,cliente);
-}
+};
 
 const borrrarCuentaCompensada = async(numero)=>{
     await axios.delete(`${URL}cuentaComp/id/${numero}`);
@@ -1148,87 +1144,12 @@ const borrarCuentaHistorica = async(numero,cliente,tipoComp)=>{
     cuentaHistoricas.forEach(async cuenta=>{
         cuenta.saldo = cuenta.saldo - importeEliminado;
         await axios.put(`${URL}cuentaHisto/id/${cuenta.nro_comp}`,cuenta);
-    })
-}
+    });
+};
 
 const borrarVenta = async(numero)=>{
     await axios.delete(`${URL}presupuesto/${numero}`);
-}
-
-//funcion que hace la factura para subir a la afip directamente
-const subirAAfip = async(venta)=>{
-    alerta.children[1].children[0].innerHTML = "Esperando Confirmacion de AFIP";
-    const fecha = new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000)).toISOString().split('T')[0];
-
-    const serverStatus = await afip.ElectronicBilling.getServerStatus();
-    console.log(serverStatus)
-
-    let ultimoElectronica = await afip.ElectronicBilling.getLastVoucher(5,parseFloat(venta.cod_comp));
-
-    let data = {
-        'CantReg': 1,
-        'CbteTipo': venta.cod_comp,
-        'Concepto': 1,
-        'DocTipo': venta.cod_doc,
-        'DocNro': venta.dnicuit,
-        'CbteDesde': ultimoElectronica + 1,
-        'CbteHasta': ultimoElectronica+1,
-        'CbteFch': parseInt(fecha.replace(/-/g, '')),
-        'ImpTotal': venta.precioFinal,
-        'ImpTotConc': 0,
-        'ImpNeto': parseFloat((venta.gravado21+venta.gravado105).toFixed(2)),
-        'ImpOpEx': 0,
-        'ImpIVA': parseFloat((venta.iva21+venta.iva105).toFixed(2)), //Importe total de IVA
-        'ImpTrib': 0,
-        'MonId': 'PES',
-        'PtoVta': 5,
-        'MonCotiz' 	: 1,
-        'Iva' 		: [],
-        }
-        
-        if (venta.iva105 !=0 ) {
-            data.Iva.push({
-                    'Id' 		: 4, // Id del tipo de IVA (4 para 10.5%)
-                    'BaseImp' 	: venta.gravado105, // Base imponible
-                    'Importe' 	: venta.iva105 // Importe 
-            })
-        }
-        if (venta.iva21 !=0 ) {
-            data.Iva.push({
-                    'Id' 		: 5, // Id del tipo de IVA (5 para 21%)
-                    'BaseImp' 	: venta.gravado21, // Base imponible
-                    'Importe' 	: venta.iva21 // Importe 
-            })
-        };
-        console.log(data);
-        console.log(venta);
-        const res = await afip.ElectronicBilling.createVoucher(data); //creamos la factura electronica
-        alerta.children[1].children[0].innerHTML = "Venta en AFIP Aceptada";
-        const qr = {
-            ver: 1,
-            fecha: fecha,
-            cuit: 27165767433,
-            ptoVta: 5,
-            tipoCmp: venta.cod_comp,
-            nroCmp: ultimoElectronica + 1,
-            importe: data.ImpTotal,
-            moneda: "PES",
-            ctz: 1,
-            tipoDocRec: data.DocTipo,
-            nroDocRec: parseInt(data.DocNro),
-            tipoCodAut: "E",
-            codAut: parseFloat(res.CAE)
-        };
-        const textoQR = btoa(JSON.stringify(qr));//codificamos lo que va en el QR
-        const QR = await generarQR(textoQR);
-        return {
-            QR,
-            cae:res.CAE,
-            vencimientoCae:res.CAEFchVto,
-            texto:textoQR,
-            numero:ultimoElectronica + 1
-        }
-}
+};
 
 telefono.addEventListener('focus',e=>{
     telefono.select()
@@ -1252,45 +1173,45 @@ direccion.addEventListener('focus',e=>{
 
 dnicuit.addEventListener('focus',e=>{
     dnicuit.select()
-})
+});
 
 descuento.addEventListener('focus',e=>{
     descuento.select()
-})
+});
 
 cobrado.addEventListener('focus',e=>{
     cobrado.select()
-})
+});
 
 buscarCliente.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         telefono.focus()
     }
-})
+});
 
 telefono.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         direccion.focus()
     }
-})
+});
 
 direccion.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         localidad.focus()
     }
-})
+});
 
 localidad.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         provincia.focus()
     }
-})
+});
 
 provincia.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         conIva.focus()
     }
-})
+});
 
 conIva.addEventListener('keypress',e=>{
     e.preventDefault()

@@ -1,4 +1,7 @@
 .buscarVentas {
+
+  background-color: lightgreen;
+
   .none {
     display: none;
   }
@@ -55,6 +58,8 @@
   }
 
   .listar {
+    background-color: white;
+    height: 70vh;
     table{
       border-collapse: collapse;
 
@@ -75,4 +80,5 @@
       }
     }
   }
+
 }

@@ -17,7 +17,6 @@ mes = (mes === 13) ? 1 : mes
 mes = mes < 10 ? `0${mes}` : mes;
 
 const fechaDeHoy = (`${hoy.getFullYear()}-${mes}-${dia}`)
-const buscar = document.querySelector('.buscar');
 const contado = document.querySelector('.contado');
 const cteCorriente = document.querySelector('.cteCorriente');
 const desde =  document.querySelector('#desde')
@@ -27,14 +26,22 @@ hasta.value = fechaDeHoy;
 const tbody =  document.querySelector('.tbody')
 let ventas = [];
 
-buscar.addEventListener('click',async e=>{
-    const desdefecha = new Date(desde.value)
+window.addEventListener('load',async e=>{
+    contado.classList.add('seleccionado');
+
+    const desdefecha = new Date(desde.value);
     let hastafecha = DateTime.fromISO(hasta.value).endOf('day');
     let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hastafecha}`)).data;
     let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`)).data;
     ventas = [...tickets,...presupuesto];
-    contado.focus();
+
+    const recibos_P = ventas.filter(venta=>venta.tipo_comp === "Recibos_P");
+    const recibos = ventas.filter(venta=>venta.tipo_comp === "Recibos");
+    const ventasContado = ventas.filter(venta=> venta.tipo_pago == "CD");
+
+    listarVentas([...recibos_P,...recibos,...ventasContado]);
 });
+
 
 
 desde.addEventListener('keypress',e=>{
@@ -43,23 +50,20 @@ desde.addEventListener('keypress',e=>{
     }
 });
 
-hasta.addEventListener('keypress',e=>{
+hasta.addEventListener('keypress',async e=>{
     if (e.key === "Enter") {
-        buscar.focus();
+        const desdefecha = new Date(desde.value)
+        let hastafecha = DateTime.fromISO(hasta.value).endOf('day');
+        let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hastafecha}`)).data;
+        let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`)).data;
+        ventas = [...tickets,...presupuesto];
+        contado.focus();
     }
 });
 
 
 const inicio = async()=>{
-    const desdefecha = new Date(desde.value)
-    let hastafecha = DateTime.fromISO(hasta.value).endOf('day');
-    let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hastafecha}`)).data;
-    let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`)).data;
-    ventas = [...tickets,...presupuesto];
-    const recibos_P = ventas.filter(venta=>venta.tipo_comp === "Recibos_P");
-    const recibos = ventas.filter(venta=>venta.tipo_comp === "Recibos");
-    const ventasContado = ventas.filter(venta=> venta.tipo_pago == "CD");
-    listarVentas([...recibos_P,...recibos,...ventasContado])
+   
 };
 
 inicio();   
@@ -68,7 +72,6 @@ contado.addEventListener('click',e=>{
     totalFactura = 0;
     totalPresupuesto = 0;
     totalRecibos = 0;
-
 
     const recibos_P = ventas.filter(venta=>venta.tipo_comp === "Recibos_P");
     const recibos = ventas.filter(venta=>venta.tipo_comp === "Recibos");

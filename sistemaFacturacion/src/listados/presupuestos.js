@@ -20,7 +20,6 @@ if (mes<10) {
 const desde =  document.querySelector('#desde')
 const hasta =  document.querySelector('#hasta')
 const fechaDeHoy = (`${hoy.getFullYear()}-${mes}-${dia}`)
-const buscar = document.querySelector('.buscar');
 
 desde.value = fechaDeHoy;
 hasta.value = fechaDeHoy;
@@ -44,21 +43,17 @@ desde.addEventListener('keypress',e=>{
     };
 });
 
-hasta.addEventListener('keypress',e=>{
+hasta.addEventListener('keypress',async e=>{
     if (e.key === "Enter") {
-        buscar.focus();
+        const desdeFecha = new Date(desde.value);
+        let hastaFecha = DateTime.fromISO(hasta.value).endOf('day');
+        let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`)).data;
+        let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hastaFecha}`)).data;
+        const ventasPresupuestos = ventas.filter(venta => venta.tipo_pago === "PP")
+        const presupuestoPresupuestos = presupuesto.filter(venta => venta.tipo_pago === "PP")
+        listarVentas([...ventasPresupuestos,...presupuestoPresupuestos],tbody)
     };
 });
-
-buscar.addEventListener('click',async e=>{
-    const desdeFecha = new Date(desde.value);
-    let hastaFecha = DateTime.fromISO(hasta.value).endOf('day');
-    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`)).data;
-    let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hastaFecha}`)).data;
-    const ventasPresupuestos = ventas.filter(venta => venta.tipo_pago === "PP")
-    const presupuestoPresupuestos = presupuesto.filter(venta => venta.tipo_pago === "PP")
-    listarVentas([...ventasPresupuestos,...presupuestoPresupuestos],tbody)
-})
 
 function listarVentas(lista,bodyelegido) {
     bodyelegido.innerHTML = "";

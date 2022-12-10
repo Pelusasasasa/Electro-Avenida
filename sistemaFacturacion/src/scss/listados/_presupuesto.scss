@@ -1,4 +1,5 @@
 .presupuestos {
+  background-color: lightgreen;
   display: flex;
   flex-direction: column;
 
@@ -17,6 +18,8 @@
     overflow: scroll;
     border-top: none;
     border: .1rem solid black;
+    background-color: white;
+
     table {
       border-collapse: collapse;
       caption {
@@ -43,5 +46,15 @@
 
   .botones {
     display: flex;
+  }
+
+  @media print{
+    table{
+      font-size: 1.05rem;
+    }
+
+    .total{
+      font-size: 1.2rem !important;
+    }
   }
 }

@@ -80,8 +80,6 @@ const recorrerFlechas = async (e) => {
     
 };
 
-
-
   //Para abrir todas las ventanas
 function abrirVentana(texto,width,height,reinicio,informacion = ""){
   if (texto === "resumenCuenta") {
@@ -225,7 +223,6 @@ function abrirVentana(texto,width,height,reinicio,informacion = ""){
 
 }
 
-
 const inputOptions = new Promise((resolve) => {
     setTimeout(() => {
       resolve({
@@ -262,5 +259,80 @@ const verCodComp = (tipoComp,condicionIva) =>{
     }
 };
 
+//funcion que hace la factura para subir a la afip directamente
+const subirAAfip = async(venta)=>{
+    alerta.children[1].children[0].innerHTML = "Esperando Confirmacion de AFIP";
+    const fecha = new Date(Date.now() - ((new Date()).getTimezoneOffset() * 60000)).toISOString().split('T')[0];
 
-  module.exports = {redondear,abrirVentana,copiar,recorrerFlechas,inputOptions,cerrarVentana,botonesSalir,verCodComp}
+    const serverStatus = await afip.ElectronicBilling.getServerStatus();
+    console.log(serverStatus)
+
+    let ultimoElectronica = await afip.ElectronicBilling.getLastVoucher(5,parseFloat(venta.cod_comp));
+
+    let data = {
+        'CantReg': 1,
+        'CbteTipo': venta.cod_comp,
+        'Concepto': 1,
+        'DocTipo': venta.cod_doc,
+        'DocNro': venta.dnicuit,
+        'CbteDesde': ultimoElectronica + 1,
+        'CbteHasta': ultimoElectronica+1,
+        'CbteFch': parseInt(fecha.replace(/-/g, '')),
+        'ImpTotal': venta.precioFinal,
+        'ImpTotConc': 0,
+        'ImpNeto': parseFloat((venta.gravado21+venta.gravado105).toFixed(2)),
+        'ImpOpEx': 0,
+        'ImpIVA': parseFloat((venta.iva21+venta.iva105).toFixed(2)), //Importe total de IVA
+        'ImpTrib': 0,
+        'MonId': 'PES',
+        'PtoVta': 5,
+        'MonCotiz' 	: 1,
+        'Iva' 		: [],
+        }
+        
+        if (venta.iva105 !=0 ) {
+            data.Iva.push({
+                    'Id' 		: 4, // Id del tipo de IVA (4 para 10.5%)
+                    'BaseImp' 	: venta.gravado105, // Base imponible
+                    'Importe' 	: venta.iva105 // Importe 
+            })
+        }
+        if (venta.iva21 !=0 ) {
+            data.Iva.push({
+                    'Id' 		: 5, // Id del tipo de IVA (5 para 21%)
+                    'BaseImp' 	: venta.gravado21, // Base imponible
+                    'Importe' 	: venta.iva21 // Importe 
+            })
+        };
+        console.log(data);
+        console.log(venta);
+        const res = await afip.ElectronicBilling.createVoucher(data); //creamos la factura electronica
+        alerta.children[1].children[0].innerHTML = "Venta en AFIP Aceptada";
+        const qr = {
+            ver: 1,
+            fecha: fecha,
+            cuit: 27165767433,
+            ptoVta: 5,
+            tipoCmp: venta.cod_comp,
+            nroCmp: ultimoElectronica + 1,
+            importe: data.ImpTotal,
+            moneda: "PES",
+            ctz: 1,
+            tipoDocRec: data.DocTipo,
+            nroDocRec: parseInt(data.DocNro),
+            tipoCodAut: "E",
+            codAut: parseFloat(res.CAE)
+        };
+        const textoQR = btoa(JSON.stringify(qr));//codificamos lo que va en el QR
+        const QR = await generarQR(textoQR);
+        return {
+            QR,
+            cae:res.CAE,
+            vencimientoCae:res.CAEFchVto,
+            texto:textoQR,
+            numero:ultimoElectronica + 1
+        }
+}
+
+
+  module.exports = {redondear,abrirVentana,copiar,recorrerFlechas,inputOptions,cerrarVentana,botonesSalir,subirAAfip,verCodComp}
