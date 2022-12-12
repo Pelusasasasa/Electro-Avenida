@@ -583,7 +583,7 @@ presupuesto.addEventListener('click',async (e)=>{
     if (listaProductos.length===0) {
         //Avisamos que no se puede hacer una venta sin productos
         sweet.fire({title:"Cargar Productos"});
-    }else if((parseFloat(descuento.value) < 10 || parseFloat(descuento.value) > 10) && codigoC.value !== "L082" && vendedor!=="ELBIO"){
+    }else if((parseFloat(descuento.value) < -10 || parseFloat(descuento.value) > 10) && codigoC.value !== "L082" && vendedor!=="ELBIO"){
         await sweet.fire({title:"Descuento no autorizado"});
     }else if(document.getElementById('cuentaCorriente').checked && listaProductos.find(producto => producto.objeto._id === "999-999")){
         await sweet.fire({title: "Producto con 999-999 no se puedo hacer Cuenta Corriente"});
@@ -738,7 +738,7 @@ ticketFactura.addEventListener('click',async (e) =>{
     //mostramos alertas
     if(stockNegativo){
         sweet.fire({title:"Ticket Factura no puede ser productos en negativo"});
-    }else if(( parseFloat(descuento.value) < 10 || parseFloat(descuento.value) > 10) && vendedor!=="ELBIO"){
+    }else if(( parseFloat(descuento.value) < -10 || parseFloat(descuento.value) > 10) && vendedor!=="ELBIO"){
         await sweet.fire({title:"Descuento No Autorizado"})
     }else if(listaProductos.length===0){
         await sweet.fire({title:"Ningun producto cargado"});
