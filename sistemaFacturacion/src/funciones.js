@@ -3,6 +3,10 @@ const url = require('url');
 const path = require('path');
 const { clipboard } = require('electron/common');
 
+const Afip = require('@afipsdk/afip.js');
+const afip = new Afip({ CUIT: 27165767433 });
+
+
 function redondear(numero,decimales){
     const signo = numero >= 0 ? 1 : -1;
     return(Math.round((numero * Math.pow(10,decimales)) + (signo * 0.0001)) / Math.pow(10,decimales)).toFixed(decimales);
@@ -250,8 +254,6 @@ const botonesSalir = async()=>{
 
 
 const verCodComp = (tipoComp,condicionIva) =>{
-    console.log(tipoComp)
-    console.log(condicionIva)
     if(tipoComp === "Recibos"){
         if(condicionIva === "Inscripto"){
             return  4
@@ -358,5 +360,9 @@ const subirAAfip = async(venta)=>{
         }
 }
 
+const ultimasFacturas = async(puntoVenta,tipoComp)=>{
+    const lastVoucher = await afip.ElectronicBilling.getLastVoucher(puntoVenta,tipoComp);
+    return lastVoucher
+}
 
-  module.exports = {redondear,abrirVentana,copiar,recorrerFlechas,inputOptions,cerrarVentana,botonesSalir,subirAAfip,verCodComp}
+  module.exports = {redondear,abrirVentana,copiar,recorrerFlechas,inputOptions,cerrarVentana,botonesSalir,subirAAfip,verCodComp,ultimasFacturas}
