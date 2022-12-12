@@ -11,6 +11,7 @@ function getParameterByName(name) {
 }
 
 const axios = require("axios");
+const { verCodComp } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -336,7 +337,7 @@ factura.addEventListener('click',async e=>{
             venta.tipo_comp = "Nota Credito";
             venta.observaciones = observaciones.value;
             venta.descuento = descuentoN.value;
-            venta.cod_comp = verCod_comp(conIva.value);
+            venta.cod_comp = verCodComp(venta.tipo_comp,conIva.value);
             venta.productos = listaProductos;
             venta.numeroAsociado = facturaOriginal.value;
             venta.dnicuit = dnicuit.value;
@@ -469,14 +470,6 @@ const actualizarNroCom = async(comprobante,codigo)=>{
     let numeros = (await axios.get(`${URL}tipoVenta`)).data;
     numeros[tipoFactura] = `0005-${numero}`;
     await axios.put(`${URL}tipoventa`,numeros);
-}
-
-const verCod_comp = (iva)=>{
-    if(iva === "Inscripto"){
-        return 3
-    }else{
-        return 8
-    }
 }
 
 cancelar.addEventListener('click',async e=>{

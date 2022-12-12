@@ -9,7 +9,7 @@ const Afip = require('@afipsdk/afip.js');
 const afip = new Afip({ CUIT: 27165767433 });
 
 const sweet = require('sweetalert2');
-const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip} = require('../funciones');
+const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp} = require('../funciones');
 const { ipcRenderer } = require("electron");
 const axios = require("axios");
 require("dotenv").config;
@@ -411,19 +411,6 @@ async function verElTipoDeVenta(tipo) {
     return retornar;
 }
 
-//ver el numero de comprobonante para el codigo
-function verCodComprobante(tipo){
-    if (tipo === "Ticket Factura") {
-    if (conIva.value === "Inscripto") {
-        return 1
-    } else {
-        return 6
-    }
-    }else{
-        return " "
-    }
-}
-
 //Vemos que tipo de venta es
 function verQueVentaEs(tipo,cod_comp) {
     if (tipo === "Presupuesto") {
@@ -596,7 +583,7 @@ presupuesto.addEventListener('click',async (e)=>{
     if (listaProductos.length===0) {
         //Avisamos que no se puede hacer una venta sin productos
         sweet.fire({title:"Cargar Productos"});
-    }else if(parseFloat(descuento.value) >= 10 && codigoC.value !== "L082" && vendedor!=="ELBIO"){
+    }else if((parseFloat(descuento.value) < 10 || parseFloat(descuento.value) > 10) && codigoC.value !== "L082" && vendedor!=="ELBIO"){
         await sweet.fire({title:"Descuento no autorizado"});
     }else if(document.getElementById('cuentaCorriente').checked && listaProductos.find(producto => producto.objeto._id === "999-999")){
         await sweet.fire({title: "Producto con 999-999 no se puedo hacer Cuenta Corriente"});
@@ -751,7 +738,7 @@ ticketFactura.addEventListener('click',async (e) =>{
     //mostramos alertas
     if(stockNegativo){
         sweet.fire({title:"Ticket Factura no puede ser productos en negativo"});
-    }else if(parseFloat(descuento.value) > 10 && vendedor!=="ELBIO"){
+    }else if(( parseFloat(descuento.value) < 10 || parseFloat(descuento.value) > 10) && vendedor!=="ELBIO"){
         await sweet.fire({title:"Descuento No Autorizado"})
     }else if(listaProductos.length===0){
         await sweet.fire({title:"Ningun producto cargado"});
@@ -814,7 +801,7 @@ ticketFactura.addEventListener('click',async (e) =>{
                 venta.tipo_comp = tipoVenta;
                 numeroComprobante(tipoVenta);
                 venta.empresa = inputEmpresa.value;
-                venta.cod_comp = verCodComprobante(tipoVenta);
+                venta.cod_comp = verCodComp(tipoVenta,conIva.value);
                 if (venta.precioFinal >= 10000 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
                     sweet.fire({title:"Factura mayor a 10000, poner datos cliente"});
                     alerta.classList.add('none');
@@ -923,13 +910,7 @@ ticketFactura.addEventListener('click',async (e) =>{
     return [parseFloat(totalIva21.toFixed(2)),parseFloat(totalIva105.toFixed(2)),parseFloat(gravado21.toFixed(2)),parseFloat(gravado105.toFixed(2)),cantIva]
  }
 
-//Generamos el qr
-async function generarQR(texto) {
-    const qrCode = require('qrcode');
-    const url = `https://www.afip.gob.ar/fe/qr/?p=${texto}`;
-    const QR = await qrCode.toDataURL(url);
-    return QR;
-}
+
 
 //funcion que busca en la afip a una persona
  buscarAfip.addEventListener('click',  async (e)=>{

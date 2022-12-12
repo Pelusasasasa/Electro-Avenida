@@ -250,14 +250,38 @@ const botonesSalir = async()=>{
 
 
 const verCodComp = (tipoComp,condicionIva) =>{
+    console.log(tipoComp)
+    console.log(condicionIva)
     if(tipoComp === "Recibos"){
         if(condicionIva === "Inscripto"){
             return  4
         }else{
             return 9
         }
+    }else if(tipoComp === "Nota Credito"){
+        if(condicionIva === "Inscripto"){
+            return 3
+        }else{
+            return 8
+        }
+    }else if(tipoComp === "Ticket Factura"){
+        if (conIva.value === "Inscripto") {
+            return 1
+        } else {
+            return 6
+        }
+    }else{
+        return 0
     }
 };
+
+//Generamos el qr
+async function generarQR(texto) {
+    const qrCode = require('qrcode');
+    const url = `https://www.afip.gob.ar/fe/qr/?p=${texto}`;
+    const QR = await qrCode.toDataURL(url);
+    return QR;
+}
 
 //funcion que hace la factura para subir a la afip directamente
 const subirAAfip = async(venta)=>{
