@@ -30,7 +30,7 @@ const consultar = document.querySelector('.consultar');
 const salir = document.querySelector('.salir');
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    const provedor = (await axios.get(`${URL}provedor/${args}`)).data;
+    const provedor = (await axios.get(`${URL}provedor/codigo/${args}`)).data;
     console.log(provedor)
     llenarinputs(provedor);
 });

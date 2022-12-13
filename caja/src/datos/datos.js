@@ -2,6 +2,8 @@ const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
 
+const sweet = require('sweetalert2');
+
 const codigo = document.querySelector('#codigo');
 const descripcion = document.querySelector('#descripcion');
 const tipo = document.querySelector('#tipo');
@@ -12,7 +14,6 @@ const salir = document.querySelector('.salir');
 
 
 let cuentas = [];
-
 
 const listar = (cuenta)=>{
     codigo.value =cuenta.cod;
@@ -32,12 +33,25 @@ agregar.addEventListener('click',e=>{
     codigo.value = "";
     descripcion.value = "";
     tipo.value = "";
+
+    codigo.removeAttribute('disabled');
+    descripcion.removeAttribute('disabled');
+    tipo.removeAttribute('disabled');
+
     codigo.focus();
 });
 
-codigo.addEventListener('keypress',e=>{
+codigo.addEventListener('keypress',async e=>{
     if ((e.key === "Enter")) {
-        descripcion.focus();
+        const cuentaExistente = cuentas.find(cuenta => cuenta.cod === codigo.value.toUpperCase());
+        if (cuentaExistente) {
+            await sweet.fire({
+                title:"CODIGO YA UTILIZADO"
+            });
+            codigo.value = "";
+        }else{
+            descripcion.focus();
+        }
     }
 });
 
@@ -80,8 +94,14 @@ guardar.addEventListener('click',async e=>{
     cuenta.cod = (codigo.value).toUpperCase();
     cuenta.desc = (descripcion.value).toUpperCase();
     cuenta.tipo = tipo.value.toUpperCase();
-    await axios.post(`${URL}cuentas`,cuenta);
-    location.reload();
+    try {
+        await axios.post(`${URL}cuentas`,cuenta);
+        location.reload();
+    } catch (error) {
+        sweet.fire({
+            title:"No se pudo cargar la cuenta"
+        })
+    }
 })
 
 proximo.addEventListener('click',e=>{

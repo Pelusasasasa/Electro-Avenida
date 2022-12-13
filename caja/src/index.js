@@ -34,7 +34,7 @@ const abrirVentana = (direccion,width,height,reinicio,informacion)=>{
       ventanaPrincipal.reload();
     }
   })
-  // nuevaVentana.setMenuBarVisibility(false)
+  nuevaVentana.setMenuBarVisibility(false)
   nuevaVentana.loadFile(path.join(__dirname, `${direccion}`));
 }
 

@@ -10,8 +10,6 @@ let subSeleccionado;
 
 const tbody = document.querySelector('tbody');
 const agregar = document.querySelector('.agregar');
-const consultar = document.querySelector('.consultar');
-const borrar = document.querySelector('.borrar');
 const salir = document.querySelector('.salir');
 
 let botones = true;
@@ -39,41 +37,6 @@ agregar.addEventListener('click',e=>{
 });
 
 
-borrar.addEventListener('click',async e=>{
-    if (seleccionado) {
-        await sweet.fire({
-            title:"Seguro eliminar provedor",
-            showCancelButton:true,
-            confirmButtonText:"Aceptar"
-        }).then(async ({isConfirmed})=>{
-            if (isConfirmed) {
-                await axios.delete(`${URL}provedor/${seleccionado.id}`);
-            }
-            location.reload();  
-        })
-        }else{
-        await sweet.fire({
-            title:"No se selecciono ningun provedor"
-        });
-    }
-});
-
-consultar.addEventListener('click',async e=>{
-    if (seleccionado) {
-        ipcRenderer.send('abrir-ventana',{
-            path:"datos/modificarProvedor.html",
-            width:1200,
-            height:700,
-            reinicio:false,
-            informacion:seleccionado.id
-        })
-    }else{
-        await sweet.fire({
-            title:"No se selecciono ningun provedor"
-        });
-    }
-});
-
 salir.addEventListener('click',e=>{
     location.href = '../index.html';
 });
@@ -97,34 +60,85 @@ const listar = (lista)=>{
         const tdRazonSocial = document.createElement('td');
         const tdDireccion = document.createElement('td');
         const tdLocalidad = document.createElement('td');
+        const tdAcciones = document.createElement('td');
+
+        tdAcciones.classList.add('acciones')
 
         tdCodigo.innerHTML = elem.codigo;
         tdCliente.innerHTML = elem.nombre;
         tdRazonSocial.innerHTML = elem.provedor;
         tdDireccion.innerHTML = elem.direccion;
         tdLocalidad.innerHTML = elem.localidad;
+        tdAcciones.innerHTML = `
+            <div class=tool>
+                <span class=material-icons>edit</span>
+                <p class=tooltip>Editar</p>
+            </div>
+            <div class=tool>
+                <span class=material-icons>delete</span>
+                <p class=tooltip>Eliminar</p>
+            </div>
+        `
 
         tr.appendChild(tdCodigo);
         tr.appendChild(tdCliente);
         tr.appendChild(tdRazonSocial);
         tr.appendChild(tdDireccion);
         tr.appendChild(tdLocalidad);
+        tr.appendChild(tdAcciones);
+
         tr.id = elem.codigo;
         tbody.appendChild(tr);
     }
 };
 
 const body = document.querySelector('body');
-body.addEventListener('click',e=>{
-   if (e.target.nodeName === "TD" || e.target.nodeName === "TR") {
-    seleccionado && seleccionado.classList.remove('seleccionado')
-    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
-    seleccionado.classList.add('seleccionado');
-
+tbody.addEventListener('click',async e=>{
+    seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
-    subSeleccionado.classList.add('subSeleccionado')
-   }
+
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }else if(e.target.nodeName === "DIV"){
+        seleccionado = e.target.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode;
+    }else if(e.target.nodeName === "SPAN"){
+        seleccionado = e.target.parentNode.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode.parentNode;
+    }
+
+    seleccionado.classList.add('seleccionado');
+    subSeleccionado.classList.add('subSeleccionado');
+
+
+    if (e.target.innerHTML === "edit") {
+        ipcRenderer.send('abrir-ventana',{
+            path:"datos/modificarProvedor.html",
+            width:1200,
+            height:700,
+            reinicio:false,
+            informacion:seleccionado.id
+        })
+    }else if(e.target.innerHTML === "delete"){
+        await sweet.fire({
+            title:"Seguro eliminar provedor",
+            showCancelButton:true,
+            confirmButtonText:"Aceptar"
+        }).then(async ({isConfirmed})=>{
+            if (isConfirmed) {
+                try {
+                    await axios.delete(`${URL}provedor/codigo/${seleccionado.id}`);
+                    location.reload();
+                } catch (error) {
+                    sweet.fire({
+                        title:"No se pudo borrar el provedor"
+                    })
+                }
+            }
+            
+        })
+    }
 
 });
 
@@ -195,6 +209,6 @@ ipcRenderer.on('recibir-informacion',(e,args)=>{
     botones = args.botones;
 
     if (!botones) {
-        borrar.parentNode.classList.add('none');
+        agregar.parentNode.classList.add('none');
     }
 })
