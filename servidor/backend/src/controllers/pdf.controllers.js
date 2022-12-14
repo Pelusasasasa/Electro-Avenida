@@ -74,7 +74,7 @@ pdfCTRL.crearPdf = async(req,res)=>{
     }else if(venta.tipo_comp === "Ticket Factura"){
         textoFactura = "FACTURA";
     }else{
-        textoFactura === "NOTA CREDITO"
+        textoFactura = "NOTA CREDITO"
     }
 
     html = html.replace('{{tipoCompropobante}}',tipoCompropobante);
@@ -89,8 +89,8 @@ pdfCTRL.crearPdf = async(req,res)=>{
     html = venta.dnicuit.length === 8 ? html.replace('{{dniocuit}}',"DNI") : html.replace('{{dniocuit}}','CUIT');
     html = html.replace('{{dnicuit}}',venta.dnicuit);
     html = venta.condIva === "" ? html.replace('{{condIva}}',"Consumidor Final") : html.replace('{{condIva}}',venta.condIva)
-    html = html.replace('{{direccion}}',venta.direccion + " " + venta.localidad);
-    html = html.replace('{{}}',);
+    html = html.replace('{{direccion}}',venta.direccion);
+    html = html.replace('{{localidad}}',venta.localidad);
     html = (venta.tipo_pago !== "CC" || venta.cliente === "M122") ? html.replace('{{condVenta}}',"Contado") : html.replace('{{condVenta}}',"Cuenta Corriente")
     html = html.replace('{{}}',);
 

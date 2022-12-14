@@ -5,6 +5,7 @@ const modificar = document.querySelector('#modificar');
 const grabar = document.querySelector('#grabar');
 const cancelar = document.querySelector('#cancelar');
 const axios = require("axios");
+const { ultimasFacturas } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -63,7 +64,7 @@ async function guardarDatos() {
     };
     (parseFloat(dolarAux) !== parseFloat(dolar.value)) && cambiarPrecios(parseFloat(dolar.value));
     await axios.put(`${URL}tipoVenta`,numeros);
-    //location.reload();
+    location.reload();
 }
 
 const recibirNumeros = async()=>{
@@ -73,12 +74,12 @@ const recibirNumeros = async()=>{
 }
 recibirNumeros()
 
-const ponerInpusnumero = (objeto)=>{
+const ponerInpusnumero = async(objeto)=>{
     const numeros = objeto
-    facturaA.value = numeros["Ultima Factura A"];
-    facturaB.value =numeros["Ultima Factura B"];
-    creditoA.value =numeros["Ultima N Credito A"];
-    creditoB.value =numeros["Ultima N Credito B"];
+    facturaA.value = await ultimasFacturas(5,1)
+    facturaB.value = await ultimasFacturas(5,6)
+    creditoA.value = numeros["Ultima N Credito A"];
+    creditoB.value = numeros["Ultima N Credito B"];
     reciboA.value =numeros["Ultima Recibo A"];
     reciboB.value =numeros["Ultima Recibo B"];
     debitoA.value =numeros["Ultima N Debito A"];
