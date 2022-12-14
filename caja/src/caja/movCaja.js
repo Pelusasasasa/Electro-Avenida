@@ -77,7 +77,11 @@ descripcion.addEventListener('keypress',e=>{
 
 importe.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-     aceptar.focus();
+     if (aceptar.classList.contains('none')) {
+        modificar.focus();
+     }else{
+        aceptar.focus();
+     }
     }
 });
 
