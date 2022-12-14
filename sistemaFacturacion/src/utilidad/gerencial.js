@@ -64,15 +64,18 @@ buscar.addEventListener('click',async e=>{
 
 const listarVentasCanceladas = async (venta)=>{
     let vendedor = venta.vendedor
-    let fecha = new Date(venta.fecha)
-    let dia = fecha.getDate()
-    let mes = fecha.getMonth()+1
-    let anio = fecha.getFullYear()
-    let hora = fecha.getHours()
-    let minutos = fecha.getMinutes()
-    let segundos = fecha.getSeconds()
+    let fecha = venta.fecha.slice(0,10).split('-',3)
+    let horas = venta.fecha.slice(11,18).split(':',3)
+    let dia = fecha[2]
+    let mes = fecha[1]
+    let anio = fecha[0]
+    let hora = horas[0]
+    let minutos = horas[1]
+    let segundos = horas[2]
     dia = dia < 10 ? `0${dia}` : dia ;
     mes = mes < 10 ? `0${mes}` : mes ;
+    minutos = minutos < 10 ? `0${minutos}` : minutos ;
+    segundos = segundos < 10 ? `0${segundos}` : segundos ;
            
         venta.productos.forEach(({cantidad,objeto}) => {
         tbody.innerHTML += `
