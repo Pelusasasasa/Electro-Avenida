@@ -62,13 +62,14 @@ const ventas = (Ventas,path)=>{
     });
 
     Ventas.forEach(venta=>{
-        const fecha = new Date(venta.fecha);
-        let dia = fecha.getDate();
-        let mes = fecha.getMonth()+1;
-        let anio = fecha.getFullYear();
-        let hora = fecha.getHours();
-        let minuts = fecha.getMinutes();
-        let secons = fecha.getSeconds();
+        const fecha = venta.fecha.slice(0,10).split('-',3);
+        const horas = venta.fecha.slice(11,18).split(':',3);
+        let dia = fecha[2];
+        let mes = fecha[1];
+        let anio = fecha[0];
+        let hora = horas[0];
+        let minuts = horas[1];
+        let secons = horas[2];
         dia = dia < 10 ? `0${dia}` : dia;
         mes = mes < 10 ? `0${mes}` : mes;
         mes = mes === 13 ? 1 : mes;
