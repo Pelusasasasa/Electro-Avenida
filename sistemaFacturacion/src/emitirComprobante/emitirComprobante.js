@@ -55,6 +55,7 @@ const valorizado = document.querySelector('.valorizado');
 const imprimirCheck = document.querySelector('.imprimirCheck');
 const impresion = document.querySelector('.impresion');
 const cuentaC = document.querySelector('.cuentaC');
+const cobrado = document.querySelector('#cobrado')
 
 const nuevaCantidad = document.querySelector('#nuevaCantidad');
 
@@ -70,7 +71,7 @@ const cancelar = document.querySelector('.cancelar')
 inputEmpresa.value = empresa;
 
 let situacion = "blanco"//para teclas alt y F9
-let totalPrecioProducos = 0;
+let totalPrecioProductos = 0;
 let seleccionado = "";
 let subSeleccionado = ""
 let tipoVenta;
@@ -132,12 +133,6 @@ ipcRenderer.on('mando-el-cliente',async (e,args)=>{
     cliente = (await axios.get(`${URL}clientes/id/${args}`)).data
     await ponerInputsClientes(cliente);//ponemos en los inputs los valores del cliente
     codigoC.value === "9999" ? buscarCliente.focus() : observaciones.focus()
-})
-
-observaciones.addEventListener('keypress',e=>{
-    if (e.key==='Enter') {
-        codigo.focus()
-    }
 });
 
 //hacemos enter despues de agregar la descripcion al producto 999-999
@@ -146,19 +141,6 @@ descripcion.addEventListener('keypress',e=>{
         agregariva.children[0].focus();
     }
 });
-
-//hacemos enter al iva del producto 999-999
-agregariva.children[0].addEventListener('keypress',e=>{
-    e.preventDefault();
-    if (e.key === "Enter") {
-        if (precioAgregar.classList.contains('none')) {
-            cambioPrecio.children[1].focus();
-        }else{
-            precio.focus();
-        }
-    }
-})
-
 
 //creamos un producto para listarlo en la pantalla
 precioAgregar.addEventListener('keypress',e=>{
@@ -294,7 +276,7 @@ ipcRenderer.on('mando-el-producto',async (e,args) => {
 let id = 1 //id de la tabla de ventas
 function mostrarVentas(objeto,cantidad) {
     Preciofinal += (parseFloat(objeto.precio_venta)*cantidad);
-    total.value = (parseFloat(Preciofinal)).toFixed(2)
+    total.value = redondear(Preciofinal,2)
     resultado.innerHTML += `
         <tr id=${id}>
         <td class="tdEnd">${(cantidad).toFixed(2)}</td>
@@ -307,17 +289,20 @@ function mostrarVentas(objeto,cantidad) {
     `
     objeto.identificadorTabla = `${id}`;
     id++;
-    totalPrecioProducos += (objeto.precio_venta * cantidad);
+    totalPrecioProductos += objeto.precio_venta * cantidad;
     listaProductos.push({objeto,cantidad});
 }
 
 resultado.addEventListener('click',e=>{
     seleccionado && seleccionado.classList.remove('seleccionado');
-    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
-    seleccionado.classList.add('seleccionado');
-
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0 ];
+    
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;   
+    }
+
+    seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
 
     if (seleccionado) {
@@ -355,6 +340,18 @@ nuevaCantidad.addEventListener('keypress',e=>{
     }
 });
 
+//hacemos enter al iva del producto 999-999
+agregariva.children[0].addEventListener('keypress',e=>{
+    e.preventDefault();
+    if (e.key === "Enter") {
+        if (precioAgregar.classList.contains('none')) {
+            cambioPrecio.children[1].focus();
+        }else{
+            precio.focus();
+        }
+    }
+})
+
 //FIN TABLA PRODUCTOS
 
 //INICIO PARTE DE DESCUENTO
@@ -368,7 +365,6 @@ descuento.addEventListener('blur',()=>{
 })
 
 //aplicamos el descuento de cobrado
-const cobrado = document.querySelector('#cobrado')
 cobrado.addEventListener('blur',()=>{
     cobrado.value !== "" && inputCobrado(cobrado.value)
 });
@@ -382,14 +378,14 @@ cobrado.addEventListener('keypress',e=>{
 //ver si hay un descuento 
 let Total = 0
 function verDescuento() {
-     Total = totalPrecioProducos
+     Total = totalPrecioProductos
     descuentoN.value = redondear(descuento.value*Total/100,2);
     total.value=redondear(Total - descuentoN.value,2);
 }
 
 //si se sobra menos que se muestre cuanto es la diferencia
 function inputCobrado(numero) {
-    Total=totalPrecioProducos
+    Total=totalPrecioProductos
     descuentoN.value =  redondear(Total-numero,2)
     descuento.value = redondear(descuentoN.value*100/Total,2)
     total.value = parseFloat(numero).toFixed(2);
@@ -908,12 +904,10 @@ ticketFactura.addEventListener('click',async (e) =>{
         cantIva = 2;
     }
     return [parseFloat(totalIva21.toFixed(2)),parseFloat(totalIva105.toFixed(2)),parseFloat(gravado21.toFixed(2)),parseFloat(gravado105.toFixed(2)),cantIva]
- }
-
-
+}
 
 //funcion que busca en la afip a una persona
- buscarAfip.addEventListener('click',  async (e)=>{
+buscarAfip.addEventListener('click',  async (e)=>{
     let cliente = (await axios.get(`${URL}clientes/cuit/${dnicuit.value}`)).data;
         if (cliente !== "") {
             await ponerInputsClientes(cliente)
@@ -934,7 +928,7 @@ ticketFactura.addEventListener('click',async (e) =>{
             }
     cuentaC.classList.add('none');
     observaciones.focus();
- });
+});
 
  //Funcion para buscar una persona directamente por el cuit
  async function buscarPersonaPorCuit(cuit) {
@@ -983,6 +977,39 @@ borrarProducto.addEventListener('click',e=>{
     borrarUnProductoDeLaLista(seleccionado);
 });
 
+const borrarUnProductoDeLaLista =async  (productoSeleccionado)=>{
+        if (productoSeleccionado) {
+            
+            producto = listaProductos.find(e=>e.objeto.identificadorTabla === productoSeleccionado.id);
+            
+            //tomamos el precio del producto que borramos
+            const aDescontar = parseFloat(productoSeleccionado.children[5].innerHTML);
+            //si hay un descuento ya prehecho tomamos ese descuento
+            const descuentoProducto = parseFloat((aDescontar*parseFloat((descuento.value)/100).toFixed(2)).toFixed(2));
+
+            total.value = (parseFloat(total.value)-(aDescontar - descuentoProducto)).toFixed(2);
+            
+            Preciofinal = (Preciofinal - (parseFloat(productoSeleccionado.children[5].innerHTML)).toFixed(2)) 
+            for await(let e of listaProductos){
+                if (productoSeleccionado.id === e.objeto.identificadorTabla) {
+                        listaProductos = listaProductos.filter(e=>e.objeto.identificadorTabla !== productoSeleccionado.id);
+                        totalPrecioProductos -= (e.objeto.precio_venta*e.cantidad);
+                }
+            };
+            console.log(productoSeleccionado)
+            productoSeleccionado.parentNode.removeChild(productoSeleccionado);
+            seleccionado = "";
+            subSeleccionado = "";
+        }
+        let nuevoTotal = 0;
+        listaProductos.forEach(({objeto,cantidad})=>{
+            nuevoTotal += (objeto.precio_venta * cantidad);
+        })
+        descuentoN.value = (nuevoTotal*parseFloat(descuento.value)/100).toFixed(2);
+        borrarProducto.classList.add('none');
+        codigo.focus();
+} 
+
 //Cuando se hace un click en cancelar y se confirma, vemos si hay productos para que se guarde en una base de datos
 cancelar.addEventListener('click',async e=>{
     e.preventDefault()
@@ -1005,46 +1032,13 @@ cancelar.addEventListener('click',async e=>{
                 window.location = "../index.html";    
         }
     })
-})
-
-const borrarUnProductoDeLaLista =async  (productoSeleccionado)=>{
-        if (productoSeleccionado) {
-            
-            producto = listaProductos.find(e=>e.objeto.identificadorTabla === productoSeleccionado.id);
-            
-            //tomamos el precio del producto que borramos
-            const aDescontar = parseFloat(productoSeleccionado.children[5].innerHTML);
-            //si hay un descuento ya prehecho tomamos ese descuento
-            const descuentoProducto = parseFloat((aDescontar*parseFloat((descuento.value)/100).toFixed(2)).toFixed(2));
-
-            total.value = (parseFloat(total.value)-(aDescontar - descuentoProducto)).toFixed(2);
-            
-            Preciofinal = (Preciofinal - (parseFloat(productoSeleccionado.children[5].innerHTML)).toFixed(2)) 
-            for await(let e of listaProductos){
-                if (productoSeleccionado.id === e.objeto.identificadorTabla) {
-                        listaProductos = listaProductos.filter(e=>e.objeto.identificadorTabla !== productoSeleccionado.id);
-                        totalPrecioProducos -= (e.objeto.precio_venta*e.cantidad);
-                }
-            };
-            console.log(productoSeleccionado)
-            productoSeleccionado.parentNode.removeChild(productoSeleccionado);
-            seleccionado = "";
-            subSeleccionado = "";
-        }
-        let nuevoTotal = 0;
-        listaProductos.forEach(({objeto,cantidad})=>{
-            nuevoTotal += (objeto.precio_venta * cantidad);
-        })
-        descuentoN.value = (nuevoTotal*parseFloat(descuento.value)/100).toFixed(2);
-        borrarProducto.classList.add('none');
-        codigo.focus();
-} 
+});
 
 // Vemos el tamanio de los Cancelados
 const tamanioCancelados = async() =>{
     let tamanio = (await axios.get(`${URL}cancelados/tamanio`)).data;
     return `${tamanio + 1}`;
-}
+};
 
  //Ponemos valores a los inputs del cliente
 async function ponerInputsClientes(cliente) {
@@ -1309,6 +1303,12 @@ function ocultarNegro() {
         ventaValorizado.classList.add('none')
         imprimirCheck.classList.add('none')
 }
+
+observaciones.addEventListener('keypress',e=>{
+    if (e.key==='Enter') {
+        codigo.focus()
+    }
+});
 
 codigoC.addEventListener('focus',e=>{
     codigoC.select();

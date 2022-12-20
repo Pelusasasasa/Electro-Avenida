@@ -13,7 +13,7 @@ const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const { copiar, verCodComp } = require('../funciones');
+const { copiar, verCodComp, redondear } = require('../funciones');
 
 
 const hoy = new Date();
@@ -329,8 +329,9 @@ saldoAfavor.addEventListener('change',e=>{
 })
 
 imprimir.addEventListener('click',async e=>{
-    e.preventDefault;
-    if(parseFloat(total.value) === 0){
+    e.preventDefault();
+    total.value = total.value === "" && 0;
+    if(parseFloat(total.value) === 0 ){
         await sweet.fire({
             title:"Recibo en 0, Desea Continuar",
             showCancelButton:true,
@@ -348,6 +349,7 @@ imprimir.addEventListener('click',async e=>{
 
 imprimir.addEventListener('keydown',async e=>{
     e.preventDefault();
+    total.value = total.value === "" && 0;
     if (e.key === "Enter") {
         if(parseFloat(total.value) === 0){
             await sweet.fire({
@@ -372,7 +374,7 @@ const hacerRecibo = async()=>{
 
     alerta.classList.remove('none');
     const trs = document.querySelectorAll('tbody tr');
-    for(let tr of trs){
+    for await (let tr of trs){
         if (tr.children[5].children[0].value !== "" && parseFloat(tr.children[5].children[0].value) !== 0) {
             arregloParaImprimir.push({
                 fecha: tr.children[0].innerHTML,
@@ -400,13 +402,14 @@ const hacerRecibo = async()=>{
      let saldoFavor = 0;
      saldoFavor = (saldoAfavor.value !== "") && parseFloat(saldoAFavor.value);
      recibo.abonado = saldoAfavor.value;
-     recibo.precioFinal = parseFloat((parseFloat(total.value)).toFixed(2));
-     const saldoNuevo = parseFloat((parseFloat(cliente[aux]) - parseFloat(total.value)).toFixed(2));
+     recibo.precioFinal = parseFloat((parseFloat(total.value)));
+     const saldoNuevo = redondear(parseFloat(cliente[aux]) - parseFloat(total.value),2);
 
      //Tomamos el cliente y modificamos su saldo
      let clienteTraido = (await axios.get(`${URL}clientes/id/${recibo.cliente}`)).data;
-     clienteTraido[aux] = saldoNuevo.toFixed(2);
-
+     clienteTraido[aux] = parseFloat(saldoNuevo);
+     console.log(clienteTraido)
+     asdasdasd
      try {
         //modificamos las ventas en cuentas compensada
         await modificarVentas(nuevaLista);
