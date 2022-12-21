@@ -330,7 +330,6 @@ saldoAfavor.addEventListener('change',e=>{
 
 imprimir.addEventListener('click',async e=>{
     e.preventDefault();
-    total.value = total.value === "" && 0;
     if(parseFloat(total.value) === 0 ){
         await sweet.fire({
             title:"Recibo en 0, Desea Continuar",
@@ -402,14 +401,12 @@ const hacerRecibo = async()=>{
      let saldoFavor = 0;
      saldoFavor = (saldoAfavor.value !== "") && parseFloat(saldoAFavor.value);
      recibo.abonado = saldoAfavor.value;
-     recibo.precioFinal = parseFloat((parseFloat(total.value)));
+     recibo.precioFinal = parseFloat(total.value);
      const saldoNuevo = redondear(parseFloat(cliente[aux]) - parseFloat(total.value),2);
 
      //Tomamos el cliente y modificamos su saldo
      let clienteTraido = (await axios.get(`${URL}clientes/id/${recibo.cliente}`)).data;
      clienteTraido[aux] = parseFloat(saldoNuevo);
-     console.log(clienteTraido)
-     asdasdasd
      try {
         //modificamos las ventas en cuentas compensada
         await modificarVentas(nuevaLista);
@@ -521,6 +518,7 @@ const ponerEnCuentaCorrienteCompensada = async(recibo)=>{
 }
 
 const ponerEnCuentaCorrienteHistorica = async(recibo)=>{
+    console.log(recibo)
     const cuenta = {};
     cuenta.codigo = recibo.cliente;
     cuenta.cliente = cliente.cliente;
