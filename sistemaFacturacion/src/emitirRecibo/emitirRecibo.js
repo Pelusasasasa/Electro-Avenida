@@ -463,12 +463,12 @@ const modifcarNroRecibo = async(numero,tipo_comp,iva)=>{
 }
 
 const modificarVentas = (lista)=>{
-    const trs = document.querySelectorAll('tbody tr')
+    const trs = document.querySelectorAll('tbody tr');
     trs.forEach(tr=>{
         nuevaLista.forEach(async venta=>{
             if(tr.id === venta.nro_comp){
-                venta.pagado = (tr.children[5].children[0].value !== "") ? parseFloat((parseFloat(tr.children[4].innerHTML) + parseFloat(tr.children[5].children[0].value)).toFixed(2)) : parseFloat(venta.pagado);
-                venta.pagado = venta.tipo_comp === "Nota Credito" ? parseFloat((venta.pagado * -1).toFixed(2)) : venta.pagado;
+                venta.pagado = (tr.children[5].children[0].value !== "") ? parseFloat(redondear(parseFloat(tr.children[4].innerHTML) + parseFloat(tr.children[5].children[0].value),2)) : parseFloat(venta.pagado);
+                venta.pagado = venta.tipo_comp === "Nota Credito" ? parseFloat(redondear(venta.pagado * -1,2)) : venta.pagado;
                 venta.saldo = venta.tipo_comp === "Nota Credito" ? parseFloat(tr.children[6].innerHTML) * -1 : parseFloat(tr.children[6].innerHTML);
                 try {
                     await axios.put(`${URL}cuentaComp/numero/${venta.nro_comp}`,venta);
