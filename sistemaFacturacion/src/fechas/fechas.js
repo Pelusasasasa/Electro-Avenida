@@ -28,11 +28,8 @@ day = day<10 ? `0${day}` : day;
 month = month<10 ? `0${month}` : month;
 month = month===13 ? 1 : month;
 
-
-
-desde.value = `${year}-${month}-${day}`
-hasta.value = `${year}-${month}-${day}`
-
+desde.value = `${year}-${month}-${20}`
+hasta.value = `${year}-${month}-${20}`
 
 aceptar.addEventListener('click',async e=>{
     ipcRenderer.send('elegirPath');
@@ -41,8 +38,6 @@ aceptar.addEventListener('click',async e=>{
     let hastafecha = DateTime.fromISO(hasta.value).endOf('day');
     const tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hastafecha}`)).data;
     const presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`)).data;
-    console.log(tickets)
-    console.log("a")
         let ticketsDelDia = tickets.filter(ticket =>{
             if ((ticket.tipo_comp === "Ticket Factura" || ticket.tipo_comp === "Nota Credito") && ticket.tipo_pago==="CD") {
                 return ticket;
@@ -57,13 +52,12 @@ aceptar.addEventListener('click',async e=>{
         });
         let arreglo = [...ticketsDelDia,...presupuestosDelDia];
         if (select.value === "AM") {
-            arreglo = arreglo.filter(venta=>(new Date(venta.fecha)).getHours()<14);
+            arreglo = arreglo.filter(venta=>parseFloat(venta.fecha.slice(11,13))<14);
         }else if(select.value === "PM"){
-            arreglo = arreglo.filter(venta=>(new Date(venta.fecha)).getHours()>14);
+            arreglo = arreglo.filter(venta=>parseFloat(venta.fecha.slice(11,13))>14);
         }
-        console.log(arreglo)
         ipcRenderer.send('enviar-arreglo-descarga',[arreglo,args]);
-        // window.close();
+        window.close();
         })
 });
 
