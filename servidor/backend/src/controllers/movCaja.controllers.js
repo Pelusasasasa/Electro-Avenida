@@ -7,6 +7,7 @@ movCajaCTRL.post = async(req,res)=>{
     req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const movCaja = new MovCaja(req.body);
     await movCaja.save();
+    console.log(`Movimiento de caja ${req.body.desc} cargado a la hora ${req.body.fecha}`);
     res.send(`Moviemiento de caja Cargado`);
 }
 

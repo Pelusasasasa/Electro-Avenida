@@ -34,7 +34,7 @@ const abrirVentana = (direccion,width,height,reinicio,informacion)=>{
       ventanaPrincipal.reload();
     }
   })
-  // nuevaVentana.setMenuBarVisibility(false)
+  nuevaVentana.setMenuBarVisibility(false)
   nuevaVentana.loadFile(path.join(__dirname, `${direccion}`));
 }
 
@@ -121,7 +121,7 @@ const templateMenu = [
       },{
         label:"Tarjetas",
         click(){
-          abrirVentana("datos/tarjetas.html",300,300);
+          abrirVentana("datos/tarjetas.html",350,450);
         }
       }
     ]
