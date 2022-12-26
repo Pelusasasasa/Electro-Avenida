@@ -8,8 +8,6 @@ const URL = process.env.URL;
 const buscador = document.getElementById('buscador');
 
 const agregar = document.querySelector('.agregar');
-const modificar = document.querySelector('.modificar');
-const borrar = document.querySelector('.borrar');
 const salir = document.querySelector('.salir');
 const tbody = document.querySelector('tbody');
 
@@ -46,50 +44,57 @@ agregar.addEventListener('click',async e=>{
     ipcRenderer.send('abrir-ventana',{
         path:"./cheques/agregar-modificarCheques.html",
         width:500,
-        height:600,
+        height:700,
         reinicio:true
     })
 })
 
-modificar.addEventListener('click',e=>{
-    ipcRenderer.send('abrir-ventana',{
-        path:"./cheques/agregar-modificarCheques.html",
-        width:500,
-        height:600,
-        reinicio:true,
-        informacion: seleccionado.id
-    })
-});
 
-borrar.addEventListener('click',e=>{
-    if (seleccionado) {
-        sweet.fire({
-            title: "Eliminar Cheque",
-            confirmButtonText:"Aceptar",
-            showCancelButton:true
-        }).then(async({isConfirmed})=>{
+tbody.addEventListener('click',async e=>{
+    seleccionado && seleccionado.classList.remove('seleccionado');
+    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }else if(e.target.nodeName === "DIV"){
+        seleccionado = e.target.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode;
+    }else if(e.target.nodeName === "SPAN"){
+        seleccionado = e.target.parentNode.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode.parentNode;
+    }
+
+    seleccionado.classList.add('seleccionado');
+    subSeleccionado.classList.add('subSeleccionado');
+
+    if (e.target.innerHTML === "delete") {
+        await sweet.fire({
+            title:"Seguro Borrar Cheque?",
+            showCancelButton:true,
+            confirmButtonText:"Aceptar"
+        }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
                     await axios.delete(`${URL}cheques/id/${seleccionado.id}`);
-                    tbody.removeChild(seleccionado)
+                    tbody.removeChild(seleccionado);
                 } catch (error) {
-                 await sweet.fire({
-                    title:"No se pudo borrar el cheque"
-                 })   
+                    console.log(error)
+                    await sweet.fire({
+                        title:"No se pudo borrar el cheque"
+                    })
                 }
             }
-        })
+        });
+    }else if(e.target.innerHTML === "edit"){
+        ipcRenderer.send('abrir-ventana',{
+            path:"./cheques/agregar-modificarCheques.html",
+            width:500,
+            height:700,
+            reinicio:true,
+            informacion: seleccionado.id
+        });
     }
-});
-
-tbody.addEventListener('click',e=>{
-    seleccionado && seleccionado.classList.remove('seleccionado')
-    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
-    seleccionado.classList.add('seleccionado');
-
-    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado')
-    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
-    subSeleccionado.classList.add('subSeleccionado');
 });
 
 salir.addEventListener('click',async e=>{
@@ -98,7 +103,7 @@ salir.addEventListener('click',async e=>{
 
 const listarCheques = async(cheques)=>{
     tbody.innerHTML = "";
-    for await(let {_id,f_recibido,n_cheque,banco,f_cheque,plaza,i_cheque,ent_por,entreg_a} of cheques){
+    for await(let {_id,f_recibido,n_cheque,banco,f_cheque,plaza,i_cheque,ent_por,entreg_a,domicilio,telefono} of cheques){
         const fechaCorta = f_recibido.slice(0,10).split('-',3);
         const fechaCheque = f_cheque.slice(0,10).split('-',3);
         
@@ -116,6 +121,11 @@ const listarCheques = async(cheques)=>{
         const tdImporte = document.createElement('td');
         const tdEntrePor = document.createElement('td');
         const tdEntreg_a = document.createElement('td');
+        const tdDomicilio = document.createElement('td');
+        const tdTelefono = document.createElement('td');
+        const tdAcciones = document.createElement('td');
+
+        tdAcciones.classList.add('acciones');
 
         tdF_recibido.innerHTML = recibido;
         tdNumero.innerHTML = n_cheque;
@@ -125,6 +135,19 @@ const listarCheques = async(cheques)=>{
         tdImporte.innerHTML = i_cheque.toFixed(2);
         tdEntrePor.innerHTML = ent_por;
         tdEntreg_a.innerHTML = entreg_a;
+        tdDomicilio.innerHTML = domicilio;
+        tdTelefono.innerHTML = telefono;
+
+        tdAcciones.innerHTML = `
+            <div class=tool>
+                <span class=material-icons>edit</span>
+                <p class=tooltip>Modificar</p>
+            </div>
+            <div class=tool>
+                <span class=material-icons>delete</span>
+                <p class=tooltip>Eliminar</p>
+            </div>
+        `
         
         tr.appendChild(tdF_recibido);
         tr.appendChild(tdNumero);
@@ -134,6 +157,9 @@ const listarCheques = async(cheques)=>{
         tr.appendChild(tdImporte);
         tr.appendChild(tdEntrePor);
         tr.appendChild(tdEntreg_a);
+        tr.appendChild(tdDomicilio);
+        tr.appendChild(tdTelefono);
+        tr.appendChild(tdAcciones);
 
         tbody.appendChild(tr)
     }

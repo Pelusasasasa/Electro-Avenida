@@ -36,7 +36,6 @@ window.addEventListener('load',async e=>{
     cerrarVentana();
     copiar();
     
-
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
 
@@ -60,12 +59,13 @@ const listarRubros = async(cuentasConTipo)=>{
     let nextDay = new Date(hasta.value);
     nextDay.setDate(today.getDate() + 1);
 
-    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data
-    listar(ingresos)
+    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data;
+    
+    listar(ingresos.filter(ingreso => ingreso.tMov === tipo))
 }
 
 const listar = async(lista)=>{
-
+    console.log(lista)
     const listaOrdenada = lista.sort((a,b)=>{//la usamos para ordenar la lsita
         if (a.idCuenta>b.idCuenta) {
             return 1
@@ -220,13 +220,11 @@ tbody.addEventListener('click',e=>{
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
     cuentas = (await axios.get(`${URL}cuentas`)).data;
     tipo = args;
-    console.log(tipo)
     if (tipo === "I") {
         titulo.innerHTML = "Ingreso de Caja";
         cuentasConTipo = cuentas.filter(cuenta=>cuenta.tipo === tipo);
     }else{
         titulo.innerHTML = "Egreso de Caja";
-        console.log(cuentas)
         cuentasConTipo = cuentas.filter(cuenta=>cuenta.tipo === tipo)
     }
     listarRubros(cuentasConTipo)

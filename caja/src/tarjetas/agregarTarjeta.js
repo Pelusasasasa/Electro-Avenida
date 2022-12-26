@@ -73,7 +73,11 @@ importe.addEventListener('keypress',e=>{
 selectVendedor.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         e.preventDefault();
-        aceptar.focus();
+        if (aceptar.classList.contains('none')) {
+            modificar.focus();
+        }else{
+            aceptar.focus();
+        }
     }
 });
 
@@ -82,7 +86,7 @@ ipcRenderer.on('recibir-informacion',async(e,args)=>{
     modificar.classList.remove('none');
     aceptar.classList.add('none');
     modificar.id = args;
-    // listarTarjeta(tarjeta)
+    listarTarjeta(tarjeta)
 });
 
 const listarTarjeta = (tarjeta)=>{
@@ -107,29 +111,29 @@ aceptar.addEventListener('click',async e=>{
     tarjeta.tarjeta = selectTarjeta.value;
     tarjeta.imp = importe.value;
     tarjeta.vendedor = selectVendedor.value;
+
     if (selectTarjeta.value  === "") {
      await sweet.fire({
-         title:"Necesita elegir una tarjeta",
-         returnFocus:false
-     });
+        title:"Necesita elegir una tarjeta",
+        returnFocus:false
+    });
      selectTarjeta.focus();
     }else if(parseFloat(importe.value) === 0){
      await sweet.fire({
-         title:"El importe tiene que ser distinto de 0",
-         returnFocus:false
-     });
-     importe.focus();
+        title:"El importe tiene que ser distinto de 0",
+        returnFocus:false
+    });
+    importe.focus();
     }else{
-     try {
-         await axios.post(`${URL}tarjetas`,tarjeta);
-         window.close();
-     } catch (error) {
-         console.log(error)
-         await sweet.fire({
-             title:"No se pudo cargar la tarjeta"
-         });
-     }
- 
+        try {
+            await axios.post(`${URL}tarjetas`,tarjeta);
+            window.close();
+        } catch (error) {
+            console.log(error)
+            await sweet.fire({
+                title:"No se pudo cargar la tarjeta"
+            });
+        };
     }
 });
 
@@ -139,7 +143,6 @@ modificar.addEventListener('click',async e=>{
     tarjeta.tarjeta = selectTarjeta.value;
     tarjeta.imp = redondear(importe.value,2);
     tarjeta.vendedor = selectVendedor.value;
-    console.log(tarjeta)
     try {
         await axios.put(`${URL}tarjetas/id/${modificar.id}`,tarjeta);
         window.close();
@@ -157,7 +160,7 @@ salir.addEventListener('click',e=>{
     window.close();
 });
 
-document.addEventListener('keydown',e=>{
+document.addEventListener('keyup',e=>{
     if (e.key === "Escape") {
         window.close();
     }
