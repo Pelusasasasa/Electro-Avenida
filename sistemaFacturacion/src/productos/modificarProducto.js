@@ -2,6 +2,7 @@ const { ipcRenderer } = require("electron");
 require('dotenv').config();
 const URL = process.env.URL;
 const axios = require("axios");
+const { redondear } = require("../funciones");
 let data = new FormData();
 
 
@@ -108,12 +109,11 @@ costoTotal.addEventListener('focus',()=>{
     let costoP = 0
     
     if (parseFloat(costoDolares.value) !== 0) {
-        costoP = parseFloat(costoDolares.value);
-        costoTotal.value = ((parseFloat(ivaImp.value)+parseFloat(costoDolares.value))*dolar).toFixed(2)
+        const costoMasIVa = parseFloat(redondear(parseFloat(ivaImp.value) + parseFloat(costoDolares.value),2));
+        costoTotal.value = redondear(costoMasIVa*dolar,2);
     }else{
         costoP = parseFloat(costoPesos.value)
-        costoTotal.value = ((parseFloat(ivaImp.value) + costoP).toFixed(2));
-        console.log(costoTotal.value)
+        costoTotal.value = redondear((parseFloat(ivaImp.value) + costoP),2);
     }
 })
 
@@ -121,7 +121,7 @@ precioVenta.addEventListener('focus',e=>{
     
     const aux = (parseFloat(utilidad.value)*parseFloat(costoTotal.value)/100).toFixed(2)
     console.log(costoTotal.value)
-    precioVenta.value = parseFloat((parseFloat(aux) + parseFloat(costoTotal.value)).toFixed(2))
+    precioVenta.value = redondear((parseFloat(aux) + parseFloat(costoTotal.value)),2)
 })
 
 const modificar = document.querySelector('.modificar')
