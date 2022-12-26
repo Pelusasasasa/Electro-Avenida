@@ -15,6 +15,8 @@ const f_cheque = document.getElementById('f_cheque');
 const i_cheque = document.getElementById('i_cheque');
 const ent_por = document.getElementById('ent_por');
 const entre_a = document.getElementById('entre_a');
+const domicilio = document.getElementById('domicilio');
+const telefono = document.getElementById('telefono');
 
 const agregar = document.querySelector('.agregar');
 const modificar = document.querySelector('.modificar');
@@ -41,12 +43,14 @@ agregar.addEventListener('click',async e=>{
     const cheque = {};
     cheque.f_recibido = f_entrega.value;
     cheque.n_cheque = n_cheque.value;
-    cheque.banco = banco.value;
-    cheque.plaza = plaza.value;
+    cheque.banco = banco.value.toUpperCase();
+    cheque.plaza = plaza.value.toUpperCase();
     cheque.f_cheque = f_cheque.value;
     cheque.i_cheque = i_cheque.value;
-    cheque.ent_por = ent_por.value;
-    cheque.entre_a = entre_a.value;
+    cheque.ent_por = ent_por.value.toUpperCase();
+    cheque.entreg_a = entre_a.value.toUpperCase();
+    cheque.domicilio = domicilio.value.toUpperCase();
+    cheque.telefono = telefono.value;
     
     try {
         await axios.post(`${URL}cheques`,cheque);
@@ -70,6 +74,8 @@ modificar.addEventListener('click',async e=>{
     cheque.i_cheque = i_cheque.value;
     cheque.ent_por = ent_por.value.toUpperCase();
     cheque.entreg_a = entre_a.value.toUpperCase();
+    cheque.domicilio = domicilio.value.toUpperCase();
+    cheque.telefono = telefono.value;
     try {
         await axios.put(`${URL}cheques/id/${modificar.id}`,cheque);
         window.close();
@@ -79,6 +85,32 @@ modificar.addEventListener('click',async e=>{
         })
     }
 });
+
+
+ipcRenderer.on('recibir-informacion',async (e,args)=>{
+    agregar.classList.add('none');
+    modificar.classList.remove('none');
+    modificar.id = args;
+    const cheque = (await axios.get(`${URL}cheques/id/${args}`)).data;
+    listarCheque(cheque)
+});
+
+function listarCheque(cheque) {
+    const fechaEntrega = cheque.f_recibido.slice(0,10).split('-',3);
+    const fechaCheque =  cheque.f_cheque.slice(0,10).split('-',3);
+    console.log(fechaCheque)
+
+    f_entrega.value = `${fechaEntrega[0]}-${fechaEntrega[1]}-${fechaEntrega[2]}`
+    n_cheque.value = cheque.n_cheque;
+    banco.value = cheque.banco;
+    plaza.value = cheque.plaza;
+    f_cheque.value = `${fechaCheque[0]}-${fechaCheque[1]}-${fechaCheque[2]}`
+    i_cheque.value = redondear(cheque.i_cheque,2);
+    ent_por.value = cheque.ent_por;
+    entre_a.value = cheque.entreg_a;
+    domicilio.value = cheque.domicilio;
+    telefono.value = cheque.telefono;
+}
 
 salir.addEventListener('click',e=>{
     window.close();
@@ -124,38 +156,58 @@ ent_por.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
         entre_a.focus();    
     }
-    
 });
 
 entre_a.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
+        domicilio.focus();    
+    }
+});
+
+domicilio.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        telefono.focus();    
+    }
+});
+
+telefono.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
         if (agregar.classList.contains('none')) {
-            modifcar.focus();
+            modificar.focus();
         }else{
             agregar.focus();
         }
     }
 });
 
-ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    agregar.classList.add('none');
-    modificar.classList.remove('none');
-    modificar.id = args;
-    const cheque = (await axios.get(`${URL}cheques/id/${args}`)).data;
-    listarCheque(cheque)
+n_cheque.addEventListener('focus',e=>{
+    n_cheque.select();
 });
 
-function listarCheque(cheque) {
-    const fechaEntrega = cheque.f_recibido.slice(0,10).split('-',3);
-    const fechaCheque =  cheque.f_cheque.slice(0,10).split('-',3);
-    console.log(fechaCheque)
+banco.addEventListener('focus',e=>{
+    banco.select();
+});
 
-    f_entrega.value = `${fechaEntrega[0]}-${fechaEntrega[1]}-${fechaEntrega[2]}`
-    n_cheque.value = cheque.n_cheque;
-    banco.value = cheque.banco;
-    plaza.value = cheque.plaza;
-    f_cheque.value = `${fechaCheque[0]}-${fechaCheque[1]}-${fechaCheque[2]}`
-    i_cheque.value = redondear(cheque.i_cheque,2);
-    ent_por.value = cheque.ent_por;
-    entre_a.value = cheque.entreg_a;
-}
+plaza.addEventListener('focus',e=>{
+    plaza.select();
+});
+
+i_cheque.addEventListener('focus',e=>{
+    i_cheque.select();
+});
+
+ent_por.addEventListener('focus',e=>{
+    ent_por.select();
+});
+
+entre_a.addEventListener('focus',e=>{
+    entre_a.select();
+});
+
+domicilio.addEventListener('focus',e=>{
+    domicilio.select();
+});
+
+telefono.addEventListener('focus',e=>{
+    telefono.select();
+});

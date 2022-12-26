@@ -121,7 +121,7 @@ const templateMenu = [
       },{
         label:"Tarjetas",
         click(){
-          abrirVentana("datos/tarjetas.html",300,300);
+          abrirVentana("datos/tarjetas.html",350,450);
         }
       }
     ]

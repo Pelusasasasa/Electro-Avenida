@@ -147,9 +147,15 @@ tbody tr:hover{
     font-size: 1.5rem;
 }
 
-.tarjetas > main{
+.tarjetas main{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    margin: 2rem 0;
+}
+
+.tarjetas select,.tarjetas input{
+    font-size: 2rem;
 }

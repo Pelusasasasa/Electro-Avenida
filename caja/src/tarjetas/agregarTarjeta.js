@@ -86,7 +86,7 @@ ipcRenderer.on('recibir-informacion',async(e,args)=>{
     modificar.classList.remove('none');
     aceptar.classList.add('none');
     modificar.id = args;
-    // listarTarjeta(tarjeta)
+    listarTarjeta(tarjeta)
 });
 
 const listarTarjeta = (tarjeta)=>{
@@ -143,7 +143,6 @@ modificar.addEventListener('click',async e=>{
     tarjeta.tarjeta = selectTarjeta.value;
     tarjeta.imp = redondear(importe.value,2);
     tarjeta.vendedor = selectVendedor.value;
-    console.log(tarjeta)
     try {
         await axios.put(`${URL}tarjetas/id/${modificar.id}`,tarjeta);
         window.close();
@@ -161,7 +160,7 @@ salir.addEventListener('click',e=>{
     window.close();
 });
 
-document.addEventListener('keydown',e=>{
+document.addEventListener('keyup',e=>{
     if (e.key === "Escape") {
         window.close();
     }

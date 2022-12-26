@@ -29,11 +29,11 @@ const Cheque = new Schema({
         type:String,
         default:""
     },
-    dom:{
+    domicilio:{
         type:String,
         default:""
     },
-    tel:{
+    telefono:{
         type:String,
         default:""
     },
