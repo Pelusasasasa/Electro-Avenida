@@ -3,8 +3,11 @@ const chequesCTRL = {};
 const Cheque = require('../models/Cheques');
 
 chequesCTRL.post = async(req,res)=>{
+    const now = new Date();
+    req.body.f_recibido = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const cheque = new Cheque(req.body);
     await cheque.save();
+    console.log(`Cheque nro ${req.body.n_cheque} cargado a la hora ${req.body.f_recibido}`);
     res.end();
 };
 

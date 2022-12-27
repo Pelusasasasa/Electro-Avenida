@@ -23,7 +23,7 @@ cuentaCompCTRL.cargarCompensada = async(req,res)=>{
     let id = (await CuentaComp.find().sort({$natural:-1}).limit(1))[0]
     nuevaCompensada._id = id ? id._id + 1 : 1; 
     nuevaCompensada.save();
-    console.log(`Compensada ${req.body.nro_comp} al cliente ${req.body.cliente} cargado`)
+    console.log(`Compensada ${req.body.nro_comp} al cliente ${req.body.cliente} cargado a la hora ${req.body.fecha}`)
     res.send("Nueva compensada cargada");
 }
 cuentaCompCTRL.modificarCompensadaPorNumero = async(req,res)=>{

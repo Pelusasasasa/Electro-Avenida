@@ -46,7 +46,7 @@ productosCTRL.getproducto = async(req,res)=>{
 productosCTRL.crearProducto = async(req,res)=>{
     const productonuevo = new Productos(req.body);
     await productonuevo.save();
-    console.log(`Producto ${req.body.descripcion} Creado`);
+    console.log(`Producto ${req.body.descripcion} Creado a la hora ${req.body.fecha}`);
     res.send("Producto Cargado");
 }
 

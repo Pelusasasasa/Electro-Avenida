@@ -10,7 +10,7 @@ PresupuestoCTRL.cargarPresupuesto = async(req,res)=>{
     let id = (await Presupuesto.find().sort({$natural:-1}).limit(1))[0];
     presupuesto._id = id ? id._id + 1 : 1;
     presupuesto.save();
-    console.log(`Presupuesto ${req.body.nro_comp} guardado`)
+    console.log(`Presupuesto ${req.body.nro_comp} guardado a la hora ${req.body.fecha}`)
     res.send(presupuesto)
 }
 
