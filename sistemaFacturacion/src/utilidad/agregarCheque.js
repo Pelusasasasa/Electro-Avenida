@@ -4,7 +4,7 @@ const { ipcRenderer } = require("electron");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const{ cerrarVentana, botonesSalir} = require('../funciones')
+const{ cerrarVentana, botonesSalir, verificarUsuarios} = require('../funciones')
 
 const numeroCheque = document.querySelector('#numeroCheque');
 const banco = document.querySelector('#banco');
@@ -16,9 +16,13 @@ const domicilio = document.querySelector('#domicilio');
 const telefono = document.querySelector('#telefono');
 const agregar = document.querySelector('.agregar');
 
-window.addEventListener('load',e=>{
+let vendedor;
+
+window.addEventListener('load',async e=>{
     cerrarVentana();
     botonesSalir();
+    vendedor = await verificarUsuarios();
+    usuario.value = vendedor.nombre;
 });
 
 

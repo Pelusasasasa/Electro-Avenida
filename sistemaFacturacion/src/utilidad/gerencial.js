@@ -1,6 +1,7 @@
 
 const axios = require("axios");
 const { DateTime } = require("luxon");
+const { redondear } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -76,8 +77,10 @@ const listarVentasCanceladas = async (venta)=>{
     mes = mes < 10 ? `0${mes}` : mes ;
     minutos = minutos < 10 ? `0${minutos}` : minutos ;
     segundos = segundos < 10 ? `0${segundos}` : segundos ;
-           
+    let total = 0;       
+
         venta.productos.forEach(({cantidad,objeto}) => {
+        total += parseFloat(redondear(cantidad * objeto.precio_venta,2))
         tbody.innerHTML += `
             <tr>
                 <td>${dia}/${mes}/${anio}</td>
@@ -86,12 +89,22 @@ const listarVentasCanceladas = async (venta)=>{
                 <td>${objeto.descripcion}</td>
                 <td>${cantidad}</td>
                 <td class = "total">${(cantidad*objeto.precio_venta).toFixed(2)}</td>
-                <td class="vendedor">${vendedor[0]}</td>
+                <td class="vendedor">${vendedor.slice(0,3)}</td>
                 <td>${hora}:${minutos}:${segundos}</td>
 
             </tr>
         `
     });
+    tbody.innerHTML += `
+        <tr class = total>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>TOTAL</td>
+            <td>${total}</td>
+        </tr>
+    `
 }
 
 document.addEventListener('keydown',e=>{

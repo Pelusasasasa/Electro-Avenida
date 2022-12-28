@@ -3,7 +3,13 @@ const url = require('url');
 const path = require('path');
 const { clipboard } = require('electron/common');
 
+const axios = require('axios');
+require('dotenv').process;
+const URL = process.env.URL;
+const sweet = require('sweetalert2');
+
 const Afip = require('@afipsdk/afip.js');
+
 const afip = new Afip({ CUIT: 27165767433 });
 
 
@@ -363,6 +369,21 @@ const subirAAfip = async(venta)=>{
 const ultimasFacturas = async(puntoVenta,tipoComp)=>{
     const lastVoucher = await afip.ElectronicBilling.getLastVoucher(puntoVenta,tipoComp);
     return lastVoucher
+};
+
+const verificarUsuarios = async()=>{
+    let vendedor;
+    await sweet.fire({
+        title:"Contraseña",
+        showCancelButton:true,
+        confirmButtonText:"Aceptar",
+        input:"password"
+    }).then(async ({isConfirmed,value})=>{
+        if (isConfirmed) {
+            vendedor = (await axios.get(`${URL}usuarios/${value}`)).data;
+        }
+    })
+    return vendedor
 }
 
-  module.exports = {redondear,abrirVentana,copiar,recorrerFlechas,inputOptions,cerrarVentana,botonesSalir,subirAAfip,verCodComp,ultimasFacturas}
+module.exports = {redondear,abrirVentana,copiar,recorrerFlechas,inputOptions,cerrarVentana,botonesSalir,subirAAfip,verCodComp,ultimasFacturas,verificarUsuarios}
