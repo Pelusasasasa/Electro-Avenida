@@ -1,0 +1,27 @@
+.listadoSaldo{
+    text-align: center;
+}
+
+.listadoSaldo .head{
+    display: flex;
+    justify-content: space-around;
+}
+
+.listadoSaldo h1,.listadoSaldo h3{
+    margin: 0;
+}
+
+.listadoSaldo .tabla{
+    overflow: scroll;
+    height: 70vh;
+    background-color: white;
+    border: .1rem solid black;
+}
+
+.listadoSaldo .tabla .cliente{
+    text-align: start;
+}
+
+.listadoSaldo .tabla table thead tr th{
+    border: .1rem solid black;
+}

@@ -29,35 +29,6 @@ const templateMenu = [
         label: "Datos",
         submenu: [
             {
-                label: "Clientes",
-                submenu:[
-                    {
-                        label:"Listado Saldo",
-                        click(){
-                            abrirVentana("clientes/listadoSaldo.html",1000,900)
-                        }
-                    },
-                    {
-                        label:"Imprimir Presupuesto",
-                        click(){
-                            abrirVentana("clientes/imprimirPresupuesto.html",600,500)
-                        }
-                    },
-                    {
-                        label: "Arreglar Saldo",
-                        click(){
-                            validarUsuario("arreglarSaldo")
-                        }
-                    },
-                    {
-                        label: "Arreglar Compensada",
-                        click(){
-                            validarUsuario("arreglarCompensada")
-                        }
-                    }
-                ]
-            },
-            {
                 label: "Productos",
                 submenu:[
                     
@@ -111,6 +82,35 @@ const templateMenu = [
                 label: "Vendedores",
                 click(){
                     validarUsuario("ValidarUsuario")
+                }
+            }
+        ]
+    },
+    {
+        label: "Clientes",
+        submenu:[
+            {
+                label:"Listado Saldo",
+                click(){
+                    abrirVentana("clientes/listadoSaldo.html",1200,600,false,[],0,100)
+                }
+            },
+            {
+                label:"Imprimir Presupuesto",
+                click(){
+                    abrirVentana("clientes/imprimirPresupuesto.html",600,500)
+                }
+            },
+            {
+                label: "Arreglar Saldo",
+                click(){
+                    validarUsuario("arreglarSaldo")
+                }
+            },
+            {
+                label: "Arreglar Compensada",
+                click(){
+                    validarUsuario("arreglarCompensada")
                 }
             }
         ]

@@ -91,7 +91,8 @@ const recorrerFlechas = async (e) => {
 };
 
   //Para abrir todas las ventanas
-function abrirVentana(texto,width,height,reinicio,informacion = ""){
+function abrirVentana(texto,width,height,reinicio,informacion = "",y = 100,x=100){
+    console.log(texto)
   if (texto === "resumenCuenta") {
       nuevaVentana = new BrowserWindow({
           width: 800,
@@ -206,6 +207,8 @@ function abrirVentana(texto,width,height,reinicio,informacion = ""){
       nuevaVentana = new BrowserWindow({
           parent:ventanaPrincipal,
           modal:true,
+          y:y,
+          x:x,
           width: width,
           height: height,
           webPreferences: {
