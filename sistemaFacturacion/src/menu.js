@@ -159,11 +159,6 @@ const templateMenu = [
                     abrirVentana("utilidad/gerencial.html",1200,1000)
                 }
             },{
-                label: "Ver Registros",
-                click(){
-                    abrirVentana("utilidad/verRegistros.html",1500,1000)
-                }
-            },{
                 label:"Cargar Factura",
                 click(){
                     abrirVentana("utilidad/cargarFactura.html",800,900);
@@ -176,7 +171,7 @@ const templateMenu = [
             },{
                 label:"Agregar cheque",
                 click(){
-                    abrirVentana("utilidad/agregarCheque.html",500,800)
+                    abrirVentana("utilidad/agregarCheque.html",500,550)
                 }
             },{
                 label:"Ultimas Ventas",

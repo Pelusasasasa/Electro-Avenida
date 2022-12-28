@@ -80,7 +80,7 @@ const listarVentasCanceladas = async (venta)=>{
     let total = 0;       
 
         venta.productos.forEach(({cantidad,objeto}) => {
-        total += parseFloat(redondear(cantidad * objeto.precio_venta,2))
+        total = parseFloat(redondear( total + (cantidad * objeto.precio_venta),2));
         tbody.innerHTML += `
             <tr>
                 <td>${dia}/${mes}/${anio}</td>

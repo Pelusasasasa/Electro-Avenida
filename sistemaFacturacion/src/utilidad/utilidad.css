@@ -6,6 +6,8 @@
 .seccionCancelados .listar{
     border: .1rem solid black;
     height: 80vh;
+    background-color: white;
+    overflow: scroll;
 }
 
 .seccionCancelados .listar table thead tr{
@@ -28,9 +30,10 @@
 }
 
 .utlimasVentas .tabla{
-    height: 80vh;
+    height: 75vh;
     border: .1rem solid black;
     background-color: white;
+    overflow: scroll;
 }
 
 .utlimasVentas .tabla table thead tr,.utlimasVentas .tabla table tbody td{
