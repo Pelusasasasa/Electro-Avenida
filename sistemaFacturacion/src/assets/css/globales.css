@@ -67,3 +67,15 @@ tr:hover{
 select{
   font-size: 2rem;
 }
+
+.text-start{
+  text-align: start;
+}
+
+.text-center{
+  text-align: center;
+}
+
+.text-end{
+  text-align: end;
+}

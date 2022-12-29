@@ -1,15 +1,48 @@
-.porComprobante .buscador,.porComprobante .elegir{
+.porComprobante .buscador,.porComprobante .elegir,.presupuestos .buscador,.LibroVentas .buscador{
     display: flex;
     justify-content: space-around;
     margin: 1rem;
 }
 
-.porComprobante .listar{
+.LibroVentas .buscador{
+    margin: 0;
+}
+
+.presupuestos h2,.stockNegativo h2,.LibroVentas h2{
+    margin: 0;
+}
+
+.porComprobante .listar,.presupuestos .listar,.stockNegativo .listar,.LibroVentas .listar{
     background-color: white;
     overflow: scroll;
-    height: 85vh;
+    height: 80vh;
+}
+
+.porComprobante thead tr th,.presupuestos thead tr th,.stockNegativo thead tr th,.LibroVentas thead tr th{
+    border: .1rem solid black;
+}
+
+.porComprobante .tdTotal{
+    border-bottom: .1rem solid black;
 }
 
 .porComprobante .tdTotal{
     font-weight: bold;
+}
+
+.stockNegativo .tbody td{
+    border: .1rem solid black;
+}
+
+.LibroVentas table td{
+    white-space: nowrap;
+}
+
+.LibroVentas .buscador main{
+    display: flex;
+    flex-direction: column;
+}
+
+.LibroVentas .botones{
+    gap: 2rem;
 }

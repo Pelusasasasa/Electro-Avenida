@@ -121,7 +121,7 @@ const templateMenu = [
             {
                 label: "PorComprobante",
                 click(){
-                    abrirVentana("listados/porComrpobante.html",1200,1000)
+                    abrirVentana("listados/porComrpobante.html",1200,600)
                 }
             },
             {
@@ -145,7 +145,7 @@ const templateMenu = [
             {
                 label: "Libro Ventas",
                 click(){
-                    abrirVentana("libroVentas/libroVentas.html",1100,500)
+                    abrirVentana("listados/libroVentas.html",1100,1000)
                 }
             }
         ]

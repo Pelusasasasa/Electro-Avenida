@@ -5,29 +5,30 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Libro Ventas</title>
-    <link rel="stylesheet" href="../../build/css/app.css">
+    <!-- <link rel="stylesheet" href="../../build/css/app.css"> -->
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./listados.css">
 </head>
-<body class="seccionLibroVentas">
+<body class="LibroVentas">
     <header class="buscador">
-            <div>
+            <main>
                 <label for="desde">Desde</label>
                 <input type="date" name="desde" id="desde">
-            </div> 
-            <div>
+            </main> 
+            <main>
                 <label for="hasta">Hasta</label>
                 <input type="date" name="hasta" id="hasta">
-            </div>
+            </main>
             
             <div class="botones">
-                <button class="imprimir">Imprimir</button>
                 <button class="buscar">Buscar</button>
                 <button class="exportar">Exportar</button>
             </div>
     </header>
 
     <main>
-        <h2>LIBRO DE VENTAS  <span class="mes"></span></h2>
-        <div class="tabla">
+        <h2 class="text-center">LIBRO DE VENTAS  <span class="mes"></span></h2>
+        <div class="listar">
             <table>
                 <thead>
                     <tr>
