@@ -92,7 +92,7 @@ const templateMenu = [
             {
                 label:"Listado Saldo",
                 click(){
-                    abrirVentana("clientes/listadoSaldo.html",1200,600,false,[],0,100)
+                    abrirVentana("clientes/listadoSaldo.html",1200,600)
                 }
             },
             {

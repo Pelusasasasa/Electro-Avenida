@@ -1,0 +1,15 @@
+.porComprobante .buscador,.porComprobante .elegir{
+    display: flex;
+    justify-content: space-around;
+    margin: 1rem;
+}
+
+.porComprobante .listar{
+    background-color: white;
+    overflow: scroll;
+    height: 85vh;
+}
+
+.porComprobante .tdTotal{
+    font-weight: bold;
+}
