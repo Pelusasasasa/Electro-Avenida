@@ -104,7 +104,7 @@ const templateMenu = [
             {
                 label: "Arreglar Saldo",
                 click(){
-                    validarUsuario("arreglarSaldo")
+                    abrirVentana('clientes/arreglarSaldo.html',600,500)
                 }
             },
             {
