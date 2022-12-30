@@ -12,22 +12,18 @@
     margin: 0;
 }
 
-.porComprobante .listar,.presupuestos .listar,.stockNegativo .listar,.LibroVentas .listar{
+.porComprobante .listar,.presupuestos .listar,.stockNegativo .listar,.LibroVentas .listar,.buscarVentas .listar{
     background-color: white;
     overflow: scroll;
-    height: 80vh;
+    height: 78vh;
 }
 
-.porComprobante thead tr th,.presupuestos thead tr th,.stockNegativo thead tr th,.LibroVentas thead tr th{
+.porComprobante thead tr th,.presupuestos thead tr th,.stockNegativo thead tr th,.LibroVentas thead tr th,.buscarVentas thead th{
     border: .1rem solid black;
 }
-
-.porComprobante .tdTotal{
-    border-bottom: .1rem solid black;
-}
-
-.porComprobante .tdTotal{
+.porComprobante .tdTotal,.buscarVentas .tdTotal{
     font-weight: bold;
+    border-bottom: .1rem solid black;
 }
 
 .stockNegativo .tbody td{
@@ -45,4 +41,49 @@
 
 .LibroVentas .botones{
     gap: 2rem;
+}
+
+.LibroVentas .oscuro{
+    font-weight: bold;
+}
+
+.buscarVentas .seleccionar{
+    display: flex;
+    justify-content: space-around;
+}
+
+.buscarVentas .seleccionar input{
+    transform: scale(1.5);
+}
+
+.buscarVentas .porNumero{
+    display: flex;
+    justify-content: space-around;
+}
+
+.buscarVentas .porNumero > main{
+    display: flex;
+    flex-direction: column;
+}
+
+.buscarVentas .porNumero .numeros main{
+    display: flex;
+}
+
+.buscarVentas .porNumero .numeros main #primerNumero{
+    width: 10rem;
+}
+
+.buscarVentas .porNumero .numeros main #segundoNumero{
+    width: 15rem;
+}
+
+.buscarVentas .buscador{
+    display: flex;
+    justify-content: space-around;
+}
+
+.buscarVentas .buscador div{
+    display: flex;
+    flex-direction: column;
 }

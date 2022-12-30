@@ -30,26 +30,6 @@ if (mes<10) {
 
 const fechaDeHoy = (`${hoy.getFullYear()}-${mes}-${dia}`)
 
-primerNumero.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        segundoNumero.focus();
-    }
-});
-
-segundoNumero.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        buscar.focus();
-    }
-});
-
-primerNumero.addEventListener('focus',e=>{
-    primerNumero.select();
-});
-
-segundoNumero.addEventListener('focus',e=>{
-    segundoNumero.select();
-});
-
 seleccionar.addEventListener('click',e=>{
     seleccion.forEach(e=>{
         e.checked && (seleccionado = e);
@@ -61,8 +41,10 @@ seleccionar.addEventListener('click',e=>{
     desdeFecha.value = fechaDeHoy
     hastafecha.value = fechaDeHoy
     const numeros = document.querySelector('.numeros')
+    console.log(numeros)
     console.log(seleccionado.id)
-    if (seleccionado.id==="razonSocial") {
+    if (seleccionado.id === "razonSocial") {
+        console.log("a")
         numeros.classList.add('none');
         desde.classList.remove('none');
         hasta.classList.remove('none');
@@ -82,7 +64,7 @@ seleccionar.addEventListener('click',e=>{
 const buscar = document.querySelector('.buscar');
 buscar.addEventListener('click',async e=>{
      if (seleccionado.id==="porNumero") {
-        let venta;
+        let venta; 
         const numero = primerNumero.value.padStart(4,'0') + "-" + segundoNumero.value.padStart(8,'0');
         if (tipoComp.value === "presupuesto") {
            venta = (await axios.get(`${URL}presupuesto/${numero}`)).data;
@@ -141,6 +123,7 @@ function listarVentas(venta) {
         <td></td>
         <td></td>
         <td></td>
+        <td></td>
         <td class=tdTotal>${total.toFixed(2)}</td>
         </tr>`
 }
@@ -180,4 +163,24 @@ document.addEventListener('keydown',e=>{
     if(e.key === "Escape"){
         window.close()
     }
-})
+});
+
+primerNumero.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        segundoNumero.focus();
+    }
+});
+
+segundoNumero.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        buscar.focus();
+    }
+});
+
+primerNumero.addEventListener('focus',e=>{
+    primerNumero.select();
+});
+
+segundoNumero.addEventListener('focus',e=>{
+    segundoNumero.select();
+});
