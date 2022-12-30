@@ -76,6 +76,10 @@ button:hover{
   display: block;
 }
 
+.tool:hover{
+  cursor: pointer;
+}
+
 .tooltip{
   display: none;
 }

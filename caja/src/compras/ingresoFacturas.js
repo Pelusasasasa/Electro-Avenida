@@ -90,6 +90,14 @@ provedor.addEventListener('keypress',e=>{
                 botones:false
             }
         })
+    }else if(e.keyCode === 13 && provedor.value === "0"){
+        codigo.value = "0000";
+        provedor.value = "Provedor Eventual";
+        provedor.removeAttribute('disabled');
+        cond_iva.removeAttribute('disabled');
+        cuit.removeAttribute('disabled');
+        cond_iva.focus();
+        cuentaCorriente.parentNode.classList.add('none')
     }
 })
 

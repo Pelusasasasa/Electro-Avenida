@@ -11,6 +11,7 @@ const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
 const sweet = require('sweetalert2');
+const { ipcRenderer } = require('electron');
 
 const inputFecha = document.querySelector('#fecha');
 const punto = document.querySelector('#punto');
@@ -76,7 +77,11 @@ descripcion.addEventListener('keypress',e=>{
 
 importe.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-     aceptar.focus();
+     if (aceptar.classList.contains('none')) {
+        modificar.focus();
+     }else{
+        aceptar.focus();
+     }
     }
 });
 
@@ -102,9 +107,6 @@ window.addEventListener('load',async e=>{
     if (informacion) {
         aceptar.classList.add('none');
         modificar.classList.remove('none');
-        modificar.id = informacion
-        movimiento = (await axios.get(`${URL}movCajas/id/${informacion}`)).data;
-        listarMovimiento(movimiento);
     }
     const cuentas = (await axios.get(`${URL}cuentas`)).data;
     for(let cuenta of cuentas){
@@ -182,3 +184,11 @@ const listarMovimiento = (movimiento)=>{
     descripcion.value = movimiento.desc;
     importe.value = movimiento.imp.toFixed(2);
 }
+
+ipcRenderer.on('recibir-informacion',async (e,args)=>{
+    aceptar.classList.add('none');
+    modificar.classList.remove('none')
+    modificar.id = args
+    movimiento = (await axios.get(`${URL}movCajas/id/${args}`)).data;
+    listarMovimiento(movimiento);
+})
