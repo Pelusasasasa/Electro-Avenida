@@ -96,12 +96,6 @@ const templateMenu = [
                 }
             },
             {
-                label:"Imprimir Presupuesto",
-                click(){
-                    abrirVentana("clientes/imprimirPresupuesto.html",600,500)
-                }
-            },
-            {
                 label: "Arreglar Saldo",
                 click(){
                     abrirVentana('clientes/arreglarSaldo.html',600,500)
@@ -158,7 +152,14 @@ const templateMenu = [
                 click(){
                     abrirVentana("utilidad/gerencial.html",1200,1000)
                 }
-            },{
+            },
+            {
+                label:"Imprimir Presupuesto",
+                click(){
+                    abrirVentana("utilidad/imprimirPresupuesto.html",600,500)
+                }
+            },
+            {
                 label:"Cargar Factura",
                 click(){
                     abrirVentana("utilidad/cargarFactura.html",800,900);
