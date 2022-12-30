@@ -127,7 +127,7 @@ aceptar.addEventListener('click',async e=>{
     }else{
         try {
             await axios.post(`${URL}tarjetas`,tarjeta);
-            window.close();
+            location.reload();
         } catch (error) {
             console.log(error)
             await sweet.fire({

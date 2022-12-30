@@ -90,8 +90,22 @@ provedor.addEventListener('keypress',e=>{
                 botones:false
             }
         })
+    }else if(e.keyCode === 13 && provedor.value === "0"){
+        codigo.value = "0000";
+        provedor.value = "Provedor Eventual";
+        cuentaCorriente.parentNode.classList.add('none');
+        provedor.removeAttribute('disabled');
+        cuit.removeAttribute('disabled');
+        cond_iva.removeAttribute('disabled');
+        cond_iva.focus();
     }
-})
+});
+
+cond_iva.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        cuit.focus();
+    }
+});
 
 puntoVenta.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
