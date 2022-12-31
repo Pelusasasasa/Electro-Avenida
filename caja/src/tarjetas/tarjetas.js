@@ -13,8 +13,6 @@ const buscador = document.querySelector('#buscador');
 const totalInput = document.querySelector('#total');
 
 const agregar = document.querySelector('.agregar');
-const modificar = document.querySelector('.modificar');
-const borrar = document.querySelector('.borrar');
 const salir = document.querySelector('.salir');
 
 let total = 0;
@@ -38,13 +36,8 @@ agregar.addEventListener('click',e=>{
         path:"./tarjetas/agregarTarjeta.html",
         width:500,
         height:600,
+        reinicio:true
     });
-});
-
-modificar.addEventListener('click',async e=>{
-    if (seleccionado) {
-        
-    }
 });
 
 tbody.addEventListener('click',async e=>{

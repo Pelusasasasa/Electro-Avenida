@@ -40,8 +40,8 @@ window.addEventListener('load',async e=>{
 
     const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
 
-    arregloEgresos = movimientos.filter(mov => mov.tMov === "Egreso");
-    arregloIngresos = movimientos.filter(mov => mov.tMov === "Ingreso");
+    arregloEgresos = movimientos.filter(mov => mov.tMov === "E");
+    arregloIngresos = movimientos.filter(mov => mov.tMov === "I");
     arregloEgresos.length !== 0 && listar(arregloEgresos,tbodyEgreso);
     arregloIngresos.length !== 0 && listar(arregloIngresos,tbodyIngreso);
 
@@ -81,21 +81,19 @@ const listar = async(lista,tbody)=>{
         const tdDescripcion = document.createElement('td');
         const tdTipo = document.createElement('td');
         const tdImporte = document.createElement('td');
-        const inputImporte = document.createElement('input');
-        inputImporte.type = "number";
-        
-        inputImporte.classList.add('text-right');
+
+        tdImporte.classList.add('text-right');
 
         tdNumero.innerHTML = mov.nro_comp;
         tdDescripcion.innerHTML = mov.desc;
         tdTipo.innerHTML = mov.cuenta;
-        inputImporte.value = mov.imp.toFixed(2);
-        tdImporte.appendChild(inputImporte)
+        tdImporte.innerHTML = mov.imp.toFixed(2);
 
         tr.appendChild(tdNumero);
         tr.appendChild(tdDescripcion);
         tr.appendChild(tdTipo);
         tr.appendChild(tdImporte);
+
         tbody.appendChild(tr);
     }
     ponerTotal(total,cuenta,tbody)

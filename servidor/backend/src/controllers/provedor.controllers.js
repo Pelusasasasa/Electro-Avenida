@@ -11,7 +11,6 @@ provedorCTRL.post = async(req,res)=>{
 
 provedorCTRL.id = async(req,res)=>{
     const ultimo = await Provedor.find().sort({$natural:-1}).limit(1);
-    console.log(ultimo)
     const id = ultimo.length !== 0 ? ultimo[0].codigo : 0;
     res.send(`${parseInt(id) + 1}`);
 }

@@ -7,6 +7,10 @@
     padding: 1rem;
 }
 
+.cuentas #codigo, #tipo{
+    width: 10rem;
+}
+
 .cuentas h1{
     text-align: center;
 }
@@ -36,7 +40,7 @@
 }
 
 .provedores .tabla{
-    height: 80vh;
+    height: 70vh;
     background-color: white;
 }
 
