@@ -29,34 +29,6 @@ const templateMenu = [
         label: "Datos",
         submenu: [
             {
-                label: "Productos",
-                submenu:[
-                    
-                    {
-                        label:"Listado de Stock",
-                        click(){
-                            abrirVentana("productos/listadoStock.html",1000,900)
-                        }
-                    },
-                    {
-                        label: "Cambio de codigo",
-                        click(){
-                            abrirVentana("productos/cambioCodigo.html",400,300)
-                        }
-                    },{
-                        label: "Aum porcentaje",
-                        click(){
-                            abrirVentana("./productos/aumPorcentaje.html",600,200);
-                        }
-                    },{
-                        label: "Listado Por Marca",
-                        click(){
-                            abrirVentana("./productos/listadoPorMarca.html",1200,1000)
-                        }
-                    }
-                ]
-            },
-            {
                 label: "Rubros",
                 submenu: [
                     {
@@ -110,6 +82,34 @@ const templateMenu = [
         ]
     },
     {
+        label: "Productos",
+        submenu:[
+            
+            {
+                label:"Listado de Stock",
+                click(){
+                    abrirVentana("productos/listadoStock.html",1000,900)
+                }
+            },
+            {
+                label: "Cambio de codigo",
+                click(){
+                    abrirVentana("productos/cambioCodigo.html",400,300)
+                }
+            },{
+                label: "Aum porcentaje",
+                click(){
+                    abrirVentana("./productos/aumPorcentaje.html",600,200);
+                }
+            },{
+                label: "Listado Por Marca",
+                click(){
+                    abrirVentana("./productos/listadoPorMarca.html",1200,1000)
+                }
+            }
+        ]
+    },
+    {
         label: "Listado",
         submenu:[
             {
@@ -156,7 +156,7 @@ const templateMenu = [
             {
                 label:"Imprimir Presupuesto",
                 click(){
-                    abrirVentana("utilidad/imprimirPresupuesto.html",600,500)
+                    abrirVentana("utilidad/imprimirPresupuesto.html",400,200)
                 }
             },
             {

@@ -384,6 +384,26 @@ const verificarUsuarios = async()=>{
         }
     })
     return vendedor
+};
+
+const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,desc)=>{
+    const movimiento = {};
+    movimiento.fecha = fecha;
+    movimiento.tMov = tMov;
+    movimiento.nro_comp = nro_comp;
+    movimiento.cuenta = cuenta;
+    movimiento.idCuenta = idCuenta;
+    movimiento.imp = imp;
+    movimiento.desc = desc;
+    console.log(movimiento)
+    try {
+        await axios.post(`${URL}movCajas`,movimiento);
+    } catch (error) {
+        console.log(errero)
+        await sweet.fire({
+            title:"no se pudo cargar el movimiento de caja"
+        });
+    }
 }
 
-module.exports = {redondear,abrirVentana,copiar,recorrerFlechas,inputOptions,cerrarVentana,botonesSalir,subirAAfip,verCodComp,ultimasFacturas,verificarUsuarios}
+module.exports = {redondear,abrirVentana,copiar,recorrerFlechas,inputOptions,cerrarVentana,botonesSalir,subirAAfip,verCodComp,ultimasFacturas,verificarUsuarios,generarMovimientoCaja}
