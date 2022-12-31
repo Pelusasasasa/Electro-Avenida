@@ -3,7 +3,7 @@ const { ipcRenderer } = require("electron");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const {botonesSalir, cerrarVentana} = require('../funciones');
+const {botonesSalir, cerrarVentana, verificarUsuarios} = require('../funciones');
 
 const fecha = document.querySelector('#fecha');
 const tarjetas = document.querySelector('#tarjetas');
@@ -25,9 +25,13 @@ month = month<10 ? `0${month}` : month;
 
 fecha.value = `${year}-${month}-${date}`;
 
+let vendedor;
+
 window.addEventListener('load',async e=>{
     botonesSalir();
     cerrarVentana();
+    vendedor = await verificarUsuarios();
+    usuario.value = vendedor.nombre;
 
     const tipoTajertas = (await axios.get(`${URL}tipoTarjetas`)).data;
     for await(let tipo of tipoTajertas){
@@ -41,7 +45,7 @@ window.addEventListener('load',async e=>{
 });
 
 ipcRenderer.on('informacion',(e,args)=>{
-    const {imp,vendedor} = JSON.parse(args)
+    const {imp,vendedor} = args ? JSON.parse(args) : "";
     importe.value = imp;
     usuario.value = vendedor;
 });

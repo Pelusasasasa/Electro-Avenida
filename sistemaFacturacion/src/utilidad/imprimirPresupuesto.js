@@ -45,5 +45,11 @@ numero.addEventListener('keypress',e=>{
 });
 
 cancelar.addEventListener('click',e=>{
-    window.close()
-})
+    window.close();
+});
+
+document.addEventListener('keyup',e=>{
+    if (e.keyCode === 27) {
+        window.close();
+    }
+});

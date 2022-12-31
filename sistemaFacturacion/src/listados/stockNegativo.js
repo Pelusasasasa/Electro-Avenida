@@ -16,11 +16,14 @@ body.addEventListener('keydown',e=>{
     if (e.key === "Escape") {
         window.close()
     }
-})
+});
 
-const promesaStockNegativo = async()=>{
-    let productos = await axios(`${URL}productos/stockNegativo`)
-    productos = productos.data
+window.addEventListener('load',async e=>{
+    let productos = (await axios(`${URL}productos/stockNegativo`)).data;
+    listarStockNegativo(productos)
+});
+
+const listarStockNegativo = async(productos)=>{
     productos.sort((a,b)=>{
         if (a.descripcion > b.descripcion) {
             return 1
@@ -32,9 +35,6 @@ const promesaStockNegativo = async()=>{
     })
     listarProductos(productos)
 }
-promesaStockNegativo()
-
-
 
 function listarProductos(lista) {
     lista.forEach(producto => {
@@ -43,7 +43,7 @@ function listarProductos(lista) {
                 <td>${producto._id}</td>
                 <td>${producto.descripcion}</td>
                 <td>${producto.marca}</td>
-                <td>${producto.stock}</td>
+                <td class=text-end>${parseFloat(producto.stock).toFixed(2)}</td>
             </tr>
         `
         inputseleccionado(tbody.firstElementChild)

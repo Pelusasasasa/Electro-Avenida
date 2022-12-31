@@ -13,7 +13,7 @@ const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const { copiar, verCodComp, redondear } = require('../funciones');
+const { copiar, verCodComp, redondear, generarMovimientoCaja } = require('../funciones');
 
 
 const hoy = new Date();
@@ -425,6 +425,7 @@ const hacerRecibo = async()=>{
         
         await axios.put(`${URL}clientes/${recibo.cliente}`,clienteTraido);
         await axios.post(`${URL}ventas`,recibo);
+        await generarMovimientoCaja(recibo.fecha,"I",recibo.nro_comp,recibo.tipo_comp,"RC",recibo.precioFinal,recibo.tipo_comp);
 
         //Hacemos que los productos sean las cuentas conpensadas
         recibo.productos = arregloParaImprimir;

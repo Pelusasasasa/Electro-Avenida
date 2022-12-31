@@ -61,13 +61,6 @@ hasta.addEventListener('keypress',async e=>{
     }
 });
 
-
-const inicio = async()=>{
-   
-};
-
-inicio();   
-
 contado.addEventListener('click',e=>{
     totalFactura = 0;
     totalPresupuesto = 0;

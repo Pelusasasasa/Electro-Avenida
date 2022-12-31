@@ -85,9 +85,14 @@ descargar.addEventListener('click',e=>{
             Author: "Electro Avenida"
         };
 
+        clientes.forEach(cliente=>{
+            cliente.saldo = parseFloat(cliente.saldo);
+            cliente.saldo_p = parseFloat(cliente.saldo_p);
+        })
+
         let newWS = XLSX.utils.json_to_sheet(clientes);
 
-        XLSX.utils.book_append_sheet(wb,newWS,'LibroVentas');
+        XLSX.utils.book_append_sheet(wb,newWS,'Saldos');
         XLSX.writeFile(wb,path + "." + extencion);
     })
 })
@@ -105,8 +110,8 @@ const mostrarLista = (clientes)=>{
             tbody.innerHTML += `
             <tr>
                 <td class = "id">${cliente._id}</td>
-                <td class ="inicio">${cliente.cliente}</td>
-                <td class ="inicio">${cliente.direccion}</td>
+                <td class ="inicio cliente">${cliente.cliente}</td>
+                <td class ="inicio">${cliente.direccion.slice(0,25)}</td>
                 <td class ="inicio">${cliente.cond_iva}</td>
                 <td class ="inicio">${cliente.telefono}</td>
                 <td>${cliente.saldo}</td>

@@ -48,27 +48,11 @@
 
 //Imprimir
 @import "imprimir/imprimir";
-@import "listados/imprimirListado";
 @import "imprimir/imprimir-ticket.scss";
 
 //datos
 @import "datos/rubros.scss";
 @import "datos/grafico.scss";
-
-//Listado
-@import "listados/porComprobante";
-@import "listados/presupuesto";
-@import "listados/stockNegativo";
-@import "listados/buscarVentas";
-
-//utilidad
-@import "utilidad/gerencial";
-@import "utilidad/verRegristros";
-@import "utilidad/cargarFactura";
-@import "utilidad/cargarTarjeta";
-@import "utilidad/agregarCheque";
-@import "utilidad/ultimasVentas";
-
 
 //libro ventas
 @import "libroVentas/libroVentas"
