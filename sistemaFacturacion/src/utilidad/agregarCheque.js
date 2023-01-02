@@ -21,18 +21,23 @@ let vendedor;
 window.addEventListener('load',async e=>{
     cerrarVentana();
     botonesSalir();
-    vendedor = await verificarUsuarios();
-    usuario.value = vendedor.nombre;
 });
 
 
-ipcRenderer.on('informacion',(e,args)=>{
-    const {imp,vendedor,loc,dom,cliente,tel} = JSON.parse(args);
-    importe.value = imp;
-    telefono.value = tel;
-    entregadoPor.value = cliente;
-    domicilio.value = dom + " - " + loc;
-    usuario.value = vendedor
+ipcRenderer.on('informacion',async(e,args)=>{
+    const {imp,vendedor:ven,loc,dom,cliente,tel} = args ? JSON.parse(args) : "";
+    if (args) {
+        importe.value = imp;
+        telefono.value = tel;
+        entregadoPor.value = cliente;
+        domicilio.value = dom + " - " + loc;
+        usuario.value = ven;
+    }else{
+    if (usuario.value === "") {
+        vendedor = await verificarUsuarios();
+        usuario.value = vendedor.nombre;
+    }
+    }
 })
 
 numeroCheque.addEventListener('keypress',async e=>{
