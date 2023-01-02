@@ -240,6 +240,7 @@ const abrirVentanaImprimir = async(texto,width,height,reinicio,show=false)=>{
         modal:true,
         width: width,
         height: height,
+        show:false,
         webPreferences: {
             contextIsolation: false,
             nodeIntegration: true

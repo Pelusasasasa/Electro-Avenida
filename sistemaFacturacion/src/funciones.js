@@ -434,7 +434,7 @@ const verTipoPago = async(vendedor)=>{
     }else if(retorno === "Cheque") {
         ipcRenderer.send('abrir-ventana-tarjeta',{
             path:"./utilidad/agregarCheque.html",
-            height:500,
+            height:600,
             width:500,
             reinicio:"noReinician",
             informacion: JSON.stringify({

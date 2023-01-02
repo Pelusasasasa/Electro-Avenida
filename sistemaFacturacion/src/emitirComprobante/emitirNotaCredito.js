@@ -375,9 +375,11 @@ factura.addEventListener('click',async e=>{
                 await actualizarNroCom(venta.nro_comp,venta.cod_comp);
 
                 //mandamos para que sea compensada
-                venta.tipo_pago === "CC" &&  ponerEnCuentaCorrienteCompensada(venta,true);
+                venta.tipo_pago === "CC" &&  await ponerEnCuentaCorrienteCompensada(venta,true);
                 //Mandamos par que sea historica
-                venta.tipo_pago === "CC" && ponerEnCuentaCorrienteHistorica(venta,true,saldo.value);
+                venta.tipo_pago === "CC" && await ponerEnCuentaCorrienteHistorica(venta,true,saldo.value);
+                //abrimos para poner si es trajeta o cheque
+                venta.tipo_pago === "CD" && await verTipoPago();
                 
                 //mandamos la venta
                 nuevaVenta = await axios.post(`${URL}ventas`,venta);
