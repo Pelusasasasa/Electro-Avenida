@@ -64,3 +64,20 @@
     display: inline-block;
     width: 15rem;
 }
+
+.imprimirPresupuesto main{
+    display: flex;
+    gap: 2rem;
+}
+
+.imprimirPresupuesto main #puntoVenta{
+    width: 25%;
+}
+
+.imprimirPresupuesto main #numero{
+    width: 50%;
+}
+
+.imprimirPresupuesto .botones{
+    margin: 5rem;
+}

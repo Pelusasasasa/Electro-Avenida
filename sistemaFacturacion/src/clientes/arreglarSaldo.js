@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
-const { cerrarVentana, botonesSalir } = require("../funciones");
+const { cerrarVentana, botonesSalir,verificarUsuarios } = require("../funciones");
 
 require("dotenv").config;
 const URL = process.env.URL;
@@ -23,7 +23,19 @@ ipcRenderer.on('acceso',(e,args)=>{
     }
 });
 
-window.addEventListener('load',e=>{
+window.addEventListener('load',async e=>{
+    const vendedor = await verificarUsuarios();
+    if (vendedor === "") {
+        await sweet.fire({
+            title:"Contraseña Incorrecta",
+        });
+        location.reload();
+    }else if(vendedor.acceso !== "0"){
+        await sweet.fire({
+            title:"Acceso denegado"
+        });
+        window.close();
+    }
     cerrarVentana();
     botonesSalir();
 });

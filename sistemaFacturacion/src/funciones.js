@@ -384,6 +384,83 @@ const verificarUsuarios = async()=>{
         }
     })
     return vendedor
-}
+};
 
-module.exports = {redondear,abrirVentana,copiar,recorrerFlechas,inputOptions,cerrarVentana,botonesSalir,subirAAfip,verCodComp,ultimasFacturas,verificarUsuarios}
+const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,desc)=>{
+    const movimiento = {};
+    movimiento.fecha = fecha;
+    movimiento.tMov = tMov;
+    movimiento.nro_comp = nro_comp;
+    movimiento.cuenta = cuenta;
+    movimiento.idCuenta = idCuenta;
+    movimiento.imp = imp;
+    movimiento.desc = desc;
+    console.log(movimiento)
+    try {
+        await axios.post(`${URL}movCajas`,movimiento);
+    } catch (error) {
+        console.log(errero)
+        await sweet.fire({
+            title:"no se pudo cargar el movimiento de caja"
+        });
+    }
+};
+
+const verTipoPago = async(vendedor)=>{
+    let retorno;
+    await sweet.fire({
+        title:"Contado",
+        input:"radio",
+        inputOptions:inputOptions,
+        inputValue:"Efectivo",
+        showCancelButton:true,
+        confirmButtonText:"Aceptar"
+    }).then(({isConfirmed,value})=>{
+        if (isConfirmed) {
+            retorno = value;
+        }
+    });
+    if (retorno === "Tarjeta") {
+        ipcRenderer.send('abrir-ventana-tarjeta',{
+            path:"./utilidad/cargarTarjeta.html",
+            height:500,
+            width:500,
+            reinicio:"noReinician",
+            informacion: JSON.stringify({
+                imp:parseFloat(total.value),
+                vendedor:vendedor
+            })
+        });    
+    }else if(retorno === "Cheque") {
+        ipcRenderer.send('abrir-ventana-tarjeta',{
+            path:"./utilidad/agregarCheque.html",
+            height:500,
+            width:500,
+            reinicio:"noReinician",
+            informacion: JSON.stringify({
+                imp:parseFloat(total.value),
+                vendedor:vendedor,
+                cliente:nombre.value,
+                dom:direccion.value,
+                tel:telefono.value,
+                loc:localidad.value
+            })
+        });
+    }
+};
+
+module.exports = {
+    redondear,
+    abrirVentana,
+    copiar,
+    recorrerFlechas,
+    inputOptions,
+    cerrarVentana,
+    botonesSalir,
+    subirAAfip,
+    verCodComp,
+    ultimasFacturas,
+    verificarUsuarios,
+    generarMovimientoCaja,
+    verTipoPago
+}

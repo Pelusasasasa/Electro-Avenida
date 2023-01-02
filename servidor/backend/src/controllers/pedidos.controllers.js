@@ -12,7 +12,7 @@ pedidosCTRL.crearPedido = async(req,res)=>{
     req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const pedido = new Pedidos(req.body)
     pedido.save()
-    console.log(`Pedido ${req.body.producto} Guardado`)
+    console.log(`Pedido ${req.body.producto} Guardado a la hora ${req.body.fecha}`)
     res.send("Pedido Guardado")
 }
 

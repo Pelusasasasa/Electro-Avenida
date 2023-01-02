@@ -29,34 +29,6 @@ const templateMenu = [
         label: "Datos",
         submenu: [
             {
-                label: "Productos",
-                submenu:[
-                    
-                    {
-                        label:"Listado de Stock",
-                        click(){
-                            abrirVentana("productos/listadoStock.html",1000,900)
-                        }
-                    },
-                    {
-                        label: "Cambio de codigo",
-                        click(){
-                            abrirVentana("productos/cambioCodigo.html",400,300)
-                        }
-                    },{
-                        label: "Aum porcentaje",
-                        click(){
-                            abrirVentana("./productos/aumPorcentaje.html",600,200);
-                        }
-                    },{
-                        label: "Listado Por Marca",
-                        click(){
-                            abrirVentana("./productos/listadoPorMarca.html",1200,1000)
-                        }
-                    }
-                ]
-            },
-            {
                 label: "Rubros",
                 submenu: [
                     {
@@ -96,15 +68,9 @@ const templateMenu = [
                 }
             },
             {
-                label:"Imprimir Presupuesto",
-                click(){
-                    abrirVentana("clientes/imprimirPresupuesto.html",600,500)
-                }
-            },
-            {
                 label: "Arreglar Saldo",
                 click(){
-                    validarUsuario("arreglarSaldo")
+                    abrirVentana('clientes/arreglarSaldo.html',600,500)
                 }
             },
             {
@@ -116,12 +82,40 @@ const templateMenu = [
         ]
     },
     {
+        label: "Productos",
+        submenu:[
+            
+            {
+                label:"Listado de Stock",
+                click(){
+                    abrirVentana("productos/listadoStock.html",1000,900)
+                }
+            },
+            {
+                label: "Cambio de codigo",
+                click(){
+                    abrirVentana("productos/cambioCodigo.html",400,300)
+                }
+            },{
+                label: "Aum porcentaje",
+                click(){
+                    abrirVentana("./productos/aumPorcentaje.html",600,200);
+                }
+            },{
+                label: "Listado Por Marca",
+                click(){
+                    abrirVentana("./productos/listadoPorMarca.html",1200,1000)
+                }
+            }
+        ]
+    },
+    {
         label: "Listado",
         submenu:[
             {
                 label: "PorComprobante",
                 click(){
-                    abrirVentana("listados/porComrpobante.html",1200,1000)
+                    abrirVentana("listados/porComrpobante.html",1200,600)
                 }
             },
             {
@@ -145,7 +139,7 @@ const templateMenu = [
             {
                 label: "Libro Ventas",
                 click(){
-                    abrirVentana("libroVentas/libroVentas.html",1100,500)
+                    abrirVentana("listados/libroVentas.html",1100,1000)
                 }
             }
         ]
@@ -158,7 +152,14 @@ const templateMenu = [
                 click(){
                     abrirVentana("utilidad/gerencial.html",1200,1000)
                 }
-            },{
+            },
+            {
+                label:"Imprimir Presupuesto",
+                click(){
+                    abrirVentana("utilidad/imprimirPresupuesto.html",400,200)
+                }
+            },
+            {
                 label:"Cargar Factura",
                 click(){
                     abrirVentana("utilidad/cargarFactura.html",800,900);

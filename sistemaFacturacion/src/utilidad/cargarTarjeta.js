@@ -30,8 +30,6 @@ let vendedor;
 window.addEventListener('load',async e=>{
     botonesSalir();
     cerrarVentana();
-    vendedor = await verificarUsuarios();
-    usuario.value = vendedor.nombre;
 
     const tipoTajertas = (await axios.get(`${URL}tipoTarjetas`)).data;
     for await(let tipo of tipoTajertas){
@@ -44,10 +42,16 @@ window.addEventListener('load',async e=>{
     }
 });
 
-ipcRenderer.on('informacion',(e,args)=>{
-    const {imp,vendedor} = args ? JSON.parse(args) : "";
+ipcRenderer.on('informacion',async (e,args)=>{
+    const {imp,vendedor:ven} = args ? JSON.parse(args) : "";
     importe.value = imp;
-    usuario.value = vendedor;
+    console.log(JSON.parse(args))
+    usuario.value = ven;
+
+    if (!args) {
+        vendedor = await verificarUsuarios();
+        usuario.value = vendedor.nombre;
+    }
 });
 
 const sweet = require('sweetalert2');

@@ -30,7 +30,7 @@ movProductosCTRL.cargarMovimientoProducto = async(req,res)=>{
         id = id + 1;
         const nuevoMovimiento = new movProducto(movimiento);
         await nuevoMovimiento.save();
-        console.log(`Movimiento con el id: ${movimiento._id} --- ${movimiento.descripcion} Cargado`);
+        console.log(`Movimiento con el id: ${movimiento._id} --- ${movimiento.descripcion} Cargado a la hora ${movimiento.fecha}`);
     }
     res.send("movimientos guardado");
 }

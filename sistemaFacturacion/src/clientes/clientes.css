@@ -25,3 +25,22 @@
 .listadoSaldo .tabla table thead tr th{
     border: .1rem solid black;
 }
+
+.arreglarSaldo main{
+    margin: 2rem 0;
+}
+
+.arreglarSaldo label{
+    display: inline-block;
+    width: 10rem;
+}
+
+.saldos{
+    display: flex;
+    gap: 2rem;
+}
+
+.saldos main{
+    display: flex;
+    flex-direction: column;
+}

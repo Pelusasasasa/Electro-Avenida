@@ -9,7 +9,7 @@ cuentaHistoricaCTRL.cargarHistorica = async(req,res)=>{
     let id = (await CuentaHisto.find().sort({$natural:-1}).limit(1))[0];
     historica._id = id ? id._id + 1 : 1;
     historica.save();
-    console.log(`Historica ${req.body.nro_comp} del cliente ${req.body.cliente} Guardada`);
+    console.log(`Historica ${req.body.nro_comp} del cliente ${req.body.cliente} Guardada a la hora ${req.body.fecha}`);
     res.send(`Historica ${req.body.nro_comp} Guardada`);
 }
 
