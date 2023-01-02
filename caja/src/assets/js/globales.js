@@ -32,7 +32,27 @@ const cerrarVentana = ()=>{
             window.close();
         }
     });
-}
+};
+
+const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,desc)=>{
+    const movimiento = {};
+    movimiento.fecha = fecha;
+    movimiento.tMov = tMov;
+    movimiento.nro_comp = nro_comp;
+    movimiento.cuenta = cuenta.toUpperCase();
+    movimiento.idCuenta = idCuenta;
+    movimiento.imp = imp;
+    movimiento.desc = desc.toUpperCase();
+    console.log(movimiento)
+    try {
+        await axios.post(`${URL}movCajas`,movimiento);
+    } catch (error) {
+        console.log(errero)
+        await sweet.fire({
+            title:"no se pudo cargar el movimiento de caja"
+        });
+    }
+};
 
 const recorrerFlechas =  async(code) => {
     if (code === 40 && seleccionado.nextElementSibling) {
@@ -95,4 +115,4 @@ const recorrerFlechas =  async(code) => {
     })
 };
 
-module.exports = {alerta,cerrarVentana,copiar,redondear}
+module.exports = {alerta,cerrarVentana,copiar,redondear,generarMovimientoCaja}

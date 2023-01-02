@@ -29,6 +29,7 @@ window.addEventListener('load',async e=>{
     periodo.innerHTML = hasta.value
 
     const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
+    console.log(datos)
     listarDatos(datos)
 });
 

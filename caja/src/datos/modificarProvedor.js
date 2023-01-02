@@ -46,7 +46,7 @@ const llenarinputs = async(provedor)=>{
     telefono.value = provedor.telefono;
     email.value = provedor.mail;
     cuit.value = provedor.cuit;
-    condIva.value = provedor.condIva;
+    condIva.value = provedor.situa;
     condDGR.value = provedor.dgr;
     nroDGR.value = provedor.nro_dgr ? provedor.nro_dgr : "";
     observaciones.value = provedor.observaciones;

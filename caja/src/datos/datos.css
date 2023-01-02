@@ -42,6 +42,7 @@
 .provedores .tabla{
     height: 70vh;
     background-color: white;
+    overflow: scroll;
 }
 
 .provedores table{

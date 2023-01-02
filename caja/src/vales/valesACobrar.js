@@ -161,6 +161,12 @@ sumar.addEventListener('click',async e=>{
     }
 });
 
+document.addEventListener('keyup',e=>{
+    if (e.keyCode === 27) {
+        location.href = '../index.html';
+    }
+});
+
 //salimos de la ventana
 salir.addEventListener('click',e=>{
     location.href = '../index.html';

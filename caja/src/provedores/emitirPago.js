@@ -37,6 +37,8 @@ const totalCheque = document.getElementById('totalCheque');
 const aceptar = document.getElementById('aceptar');
 const cancelar = document.getElementById('cancelar');
 
+let listaCheques = [];
+
 
 window.addEventListener('load',async e=>{
     let numero = (await axios.get(`${URL}tipoVenta/name/Ultimo Pago`)).data;
@@ -187,6 +189,7 @@ numeroCheque.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
         if (numeroCheque.value !== "") {
             const cheque = (await axios.get(`${URL}cheques/numero/${numeroCheque.value}`)).data;
+            console.log(cheque)
             if (cheque && !cheque.entreg_a) {
                 const fechaCheque = cheque.f_cheque.slice(0,10).split('-',3);
                 banco.value = cheque.banco;
@@ -198,6 +201,8 @@ numeroCheque.addEventListener('keypress',async e=>{
                     title:`Cheque Entregado a ${cheque.entreg_a}`
                 });
                 numeroCheque.value = "";
+            }else{
+                banco.focus();
             }
         }else{
             banco.focus();
@@ -231,21 +236,36 @@ const agregarCheque = ()=>{
 
     const tdNumero = document.createElement('td');
     const tdBanco = document.createElement('td');
+    const tdFechaCheque = document.createElement('td');
     const tdImporteCheque = document.createElement('td');
     const tdEliminar = document.createElement('td');
 
     tdNumero.innerHTML = numeroCheque.value;
     tdBanco.innerHTML = banco.value.toUpperCase();
+    tdFechaCheque.innerHTML = fecha.value;
     tdImporteCheque.innerHTML = importeCheque.value;
     tdEliminar.appendChild(button)
 
     tr.appendChild(tdNumero);
     tr.appendChild(tdBanco);
+    tr.appendChild(tdFechaCheque);
     tr.appendChild(tdImporteCheque);
     tr.appendChild(tdEliminar);
 
     tbodyCheque.appendChild(tr);
     totalCheque.value = redondear(parseFloat(totalCheque.value) + parseFloat(importeCheque.value),2);
+
+    const cheque = {};
+    cheque.f_cheque = new Date();
+    cheque.n_cheque = numeroCheque.value;
+    cheque.banco = banco.value.toUpperCase();
+    cheque.f_cheque = fecha.value;
+    cheque.i_cheque = importeCheque.value;
+    cheque.tipo = "P";
+    cheque.vendedor;
+    cheque.entreg_a = provedor.value;
+
+    listaCheques.push(cheque);
 
     numeroCheque.value = "";
     banco.value = "";
@@ -284,6 +304,10 @@ aceptar.addEventListener('click',async e=>{
         await ponerEnCuentaCorriente();
         await descontarSaldoProvedor();
         await sumarNumeroPago();
+
+        for await(let elem of listaCheques){
+            generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entre_a)   
+        }
 
         location.reload();
     }

@@ -51,7 +51,6 @@ const listar = async(lista,tbody)=>{
     tbody.innerHTML = '';
     totalEgresos = 0;
     totalIngresos = 0;
-    let cuenta = lista[0].cuenta;
     let total = 0;
     lista.sort((a,b)=>{
         if (a.cuenta > b.cuenta) {
@@ -61,6 +60,7 @@ const listar = async(lista,tbody)=>{
         }
         return 0
     })
+    let cuenta = lista[0].cuenta;
     for await(let mov of lista){
         if (tbody.classList.contains('tbodyEgreso')) {
             totalEgresos += mov.imp;
@@ -151,7 +151,6 @@ const ponerTotal = (total,cuenta,tbody)=>{
     
     tdCuenta.innerHTML = cuenta;
     tdTotal.innerHTML = total.toFixed(2)
-    
     tr.appendChild(tdCuenta)
     tr.appendChild(td)
     tr.appendChild(td1)

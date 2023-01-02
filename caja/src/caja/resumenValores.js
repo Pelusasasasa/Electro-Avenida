@@ -5,6 +5,8 @@ const { redondear } = require("../assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
+const sweet = require('sweetalert2');
+
 const efectivoCaja = document.querySelector('#efectivoCaja');
 const cheques = document.querySelector('#cheques');
 const cien = document.querySelector('#cien');
@@ -43,6 +45,7 @@ window.addEventListener('load',async e=>{
     incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`)).data.toFixed(2);
     facturasCobrar.value = (await axios.get(`${URL}vales/totalPrice/F`)).data.toFixed(2);
     tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`)).data.toFixed(2);
+    caja1.value = (await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"];
 
     totalVales.value = redondear(parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value) + parseFloat(facturasCobrar.value),2);
     ultimos = (await axios.get(`${URL}ultimos`)).data;
@@ -53,21 +56,29 @@ window.addEventListener('load',async e=>{
     //traemos el total el movimiento de caja
 });
 
-window.addEventListener('beforeunload',async e=>{
-    ultimos.efectivoCaja = efectivoCaja.value;
-    ultimos.cheques = cheques.value;
-    ultimos.cien = cien.value;
-    ultimos.cincuenta = cincuenta.value;
-    ultimos.veinte = veinte.value;
-    ultimos.diez = diez.value;
-    ultimos.monedas = monedas.value;
-    ultimos.guardado = guardado.value;
-    ultimos.uno = uno.value;
-    ultimos.cambioCaja = cambioCaja.value;
-    ultimos.ceroVeinticinco = ceroVeinticinco.value;
-    ultimos.ceroCincuenta = ceroCincuenta.value;
-    ultimos.maleta = maleta.value;
-    await axios.put(`${URL}ultimos`,ultimos);
+document.addEventListener('keyup',async e=>{
+    if ((e.keyCode === 27)) {
+        ultimos.efectivoCaja = efectivoCaja.value;
+        ultimos.cheques = cheques.value;
+        ultimos.cien = cien.value;
+        ultimos.cincuenta = cincuenta.value;
+        ultimos.veinte = veinte.value;
+        ultimos.diez = diez.value;
+        ultimos.monedas = monedas.value;
+        ultimos.guardado = guardado.value;
+        ultimos.uno = uno.value;
+        ultimos.cambioCaja = cambioCaja.value;
+        ultimos.ceroVeinticinco = ceroVeinticinco.value;
+        ultimos.ceroCincuenta = ceroCincuenta.value;
+        ultimos.maleta = maleta.value;
+    
+        try {
+            await axios.put(`${URL}ultimos`,ultimos);
+            window.close();
+        } catch (error) {
+            console.log(error)
+        }
+    }
 });
 
 const ponerValores = (obj) =>{
@@ -90,7 +101,7 @@ const ponerValores = (obj) =>{
         totalValesCheques+= (obj.efectivoCaja + obj.cheques + obj.cien + obj.cincuenta + obj.veinte + obj.diez + obj.monedas + obj.guardado + obj.uno + obj.cambioCaja + obj.ceroVeinticinco + obj.ceroCincuenta + obj.maleta);
         chequesEfectivo.value = redondear(totalValesCheques,2);
 
-        valesEfectivo.value = parseFloat(chequesEfectivo.value) + parseFloat(totalVales.value);
+        valesEfectivo.value = redondear(parseFloat(chequesEfectivo.value) + parseFloat(totalVales.value),2);
 
         diferencia.value = redondear(parseFloat(caja1.value) - parseFloat(valesEfectivo.value),2);
     }
@@ -172,19 +183,27 @@ ceroCincuenta.addEventListener('keypress',e=>{
     };
 });
 
-salir.addEventListener('click',e=>{
-    window.close();
-})
+salir.addEventListener('click',async e=>{
+    ultimos.efectivoCaja = efectivoCaja.value;
+    ultimos.cheques = cheques.value;
+    ultimos.cien = cien.value;
+    ultimos.cincuenta = cincuenta.value;
+    ultimos.veinte = veinte.value;
+    ultimos.diez = diez.value;
+    ultimos.monedas = monedas.value;
+    ultimos.guardado = guardado.value;
+    ultimos.uno = uno.value;
+    ultimos.cambioCaja = cambioCaja.value;
+    ultimos.ceroVeinticinco = ceroVeinticinco.value;
+    ultimos.ceroCincuenta = ceroCincuenta.value;
+    ultimos.maleta = maleta.value;
 
-document.addEventListener('keyup',e=>{
-    if (e.keyCode === 27) {
+    try {
+        await axios.put(`${URL}ultimos`,ultimos);
         window.close();
+    } catch (error) {
+        console.log(error)
     }
-});
-
-ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    const saldo = (await axios.get(`${URL}movCajas/price/${args.desde}/${args.hasta}`)).data;
-    caja1.value = saldo;
 });
 
 
@@ -242,6 +261,5 @@ maleta.addEventListener('change',e=>{
 
 const cambiarTotales = (input)=>{
     ultimos[input.id] = parseFloat(input.value)
-    console.log(ultimos)
     ponerValores(ultimos);
 }

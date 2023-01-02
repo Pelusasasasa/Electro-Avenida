@@ -45,7 +45,6 @@ window.addEventListener('load',async e=>{
 ipcRenderer.on('informacion',async (e,args)=>{
     const {imp,vendedor:ven} = args ? JSON.parse(args) : "";
     importe.value = imp;
-    console.log(JSON.parse(args))
     usuario.value = ven;
 
     if (!args) {

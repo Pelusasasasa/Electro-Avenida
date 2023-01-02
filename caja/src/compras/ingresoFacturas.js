@@ -69,7 +69,7 @@ month = month < 10 ? `0${month}` : month;
 
 window.addEventListener('load',async e=>{
     fechaComp.value = `${year}-${month}-${day}`;
-    fechaImput.value  = `${year}-${month}-${day}`;
+    fechaImput.value  = `${year}-${month}`;
     fechaVencimiento.value = `${year}-${month}-${day}`;
     fechaVencimientoCAI.value = `${year}-${month}-${day}`;
 
@@ -504,7 +504,7 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
     provedorTraido = (await axios.get(`${URL}provedor/codigo/${args}`)).data;
     provedor.value = provedorTraido.provedor;
     codigo.value = provedorTraido.codigo;
-    cond_iva.value = provedorTraido.condIva
+    cond_iva.value = provedorTraido.situa
     cuit.value = provedorTraido.cuit;
     puntoVenta.focus(); 
 });

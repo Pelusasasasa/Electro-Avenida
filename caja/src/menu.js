@@ -80,7 +80,11 @@ ipcRenderer.on('saldoInicial',async (e,args)=>{
     }).then(async ({isConfirmed,value})=>{
         if (isConfirmed && parseFloat(value) !== saldo) {
             numeros["saldo Inicial"] = value
-            await axios.put(`${URL}tipoVenta`,numeros)
+            try {
+                await axios.put(`${URL}tipoVenta`,numeros)
+            } catch (error) {
+                console.log(error)
+            }
         }
     });
 });

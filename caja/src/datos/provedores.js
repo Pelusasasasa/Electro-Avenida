@@ -57,7 +57,6 @@ const listar = (lista)=>{
 
         const tdCodigo = document.createElement('td');
         const tdCliente = document.createElement('td');
-        const tdRazonSocial = document.createElement('td');
         const tdDireccion = document.createElement('td');
         const tdLocalidad = document.createElement('td');
         const tdAcciones = document.createElement('td');
@@ -65,8 +64,7 @@ const listar = (lista)=>{
         tdAcciones.classList.add('acciones')
 
         tdCodigo.innerHTML = elem.codigo;
-        tdCliente.innerHTML = elem.nombre;
-        tdRazonSocial.innerHTML = elem.provedor;
+        tdCliente.innerHTML = elem.provedor;
         tdDireccion.innerHTML = elem.direccion;
         tdLocalidad.innerHTML = elem.localidad;
         tdAcciones.innerHTML = `
@@ -82,7 +80,6 @@ const listar = (lista)=>{
 
         tr.appendChild(tdCodigo);
         tr.appendChild(tdCliente);
-        tr.appendChild(tdRazonSocial);
         tr.appendChild(tdDireccion);
         tr.appendChild(tdLocalidad);
         tr.appendChild(tdAcciones);

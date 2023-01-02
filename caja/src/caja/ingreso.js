@@ -121,30 +121,16 @@ const listar = async(lista)=>{
         const tdNumero = document.createElement('td');
         const tdDescripcion = document.createElement('td');
         const tdImporte = document.createElement('td');
-        const tdAcciones = document.createElement('td');
-
-        tdAcciones.classList.add('acciones');
         
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         tdNumero.innerHTML = elem.nro_comp;
         tdDescripcion.innerHTML = elem.desc;
         tdImporte.innerHTML = elem.imp.toFixed(2);
-        tdAcciones.innerHTML = `
-            <div class=tool>
-                <span class=material-icons>edit</span>
-                <p class=tooltip>Modificar</p>
-            </div>
-            <div class=tool>
-                <span class=material-icons>delete</span>
-                <p class=tooltip>Eliminar</p>
-            </div>
-        `
 
         tr.appendChild(tdFecha);
         tr.appendChild(tdNumero);
         tr.appendChild(tdDescripcion);
         tr.appendChild(tdImporte);
-        tr.appendChild(tdAcciones);
 
         tdImporte.classList.add('text-right');
 
@@ -197,24 +183,6 @@ tbody.addEventListener('click',e=>{
 
     seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
-
-
-    if (e.target.innerHTML === "delete") {
-        sweet.fire({
-            title:"Eliminar Movimiento Caja",
-            confirmButtonText:"Aceptar",
-            showCancelButton:true,
-        }).then(async ({isConfirmed})=>{
-            if (isConfirmed) {
-                await axios.delete(`${URL}movCajas/id/${seleccionado.id}`);
-                tbody.removeChild(seleccionado);
-                totalInput.value = redondear(parseFloat(totalInput.value) - parseFloat(seleccionado.children[3].innerHTML),2);
-            }
-        });
-    }else if(e.target.innerHTML === "edit"){
-        location.href = `./movCaja.html?informacion=${seleccionado.id}`;
-    }
-
 });
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{

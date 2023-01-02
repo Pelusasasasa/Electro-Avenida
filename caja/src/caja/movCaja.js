@@ -132,7 +132,7 @@ aceptar.addEventListener('click',async e=>{
         movimientoCaja.imp = importe.value;
         movimientoCaja.cuenta = document.querySelector('option[value = ' + tipoCuenta.value + ']').innerHTML;
         movimientoCaja.idCuenta = tipoCuenta.value;
-        movimientoCaja.desc = descripcion.value.toUpperCase();
+        movimientoCaja.desc = descripcion.value;
         movimientoCaja.tMov = tipoMovimiento.value;
         movimientoCaja.nro_comp = punto.value.padStart(4,'0') + "-" + numero.value.padStart(8,'0');
         try {
@@ -147,11 +147,11 @@ aceptar.addEventListener('click',async e=>{
 modificar.addEventListener('click',async e=>{
     const movimiento = {};
     movimiento.fecha = fecha.value;
-    movimiento.nro_comp = `${punto.value.padStart(4,'0')} - ${numero.value.padStart(8,'0')}`;
+    movimiento.nro_comp =  punto.value.padStart(4,'0') + "-" + numero.value.padStart(8,'0');
     movimiento.tMov = tipoMovimiento.value;
     movimiento.idCuenta = tipoCuenta.value;
-    movimiento.cuenta = tipoCuenta.innerText;
-    movimiento.desc = descripcion.value.toUpperCase();
+    movimiento.cuenta = document.querySelector('option[value = ' + tipoCuenta.value + ']').innerHTML;
+    movimiento.desc = descripcion.value;
     movimiento.imp = importe.value;
     try {
         await axios.put(`${URL}movCajas/id/${modificar.id}`,movimiento);
