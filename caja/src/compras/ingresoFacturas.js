@@ -30,10 +30,9 @@ const factura = document.getElementById('Factura');
 const notaCredito = document.getElementById('Nota Credito');
 const presupuesto = document.getElementById('Presupuesto');
 
+//Fechas
 const fechaComp = document.getElementById('fechaComp');
 const fechaImput = document.getElementById('fechaImput');
-const fechaVencimiento = document.getElementById('fechaVencimiento');
-const fechaVencimientoCAI = document.getElementById('fechaVencimientoCAI');
 
 const netoNoGravado = document.getElementById('netoNoGravado');
 const netoGravado = document.getElementById('netoGravado');
@@ -70,8 +69,6 @@ month = month < 10 ? `0${month}` : month;
 window.addEventListener('load',async e=>{
     fechaComp.value = `${year}-${month}-${day}`;
     fechaImput.value  = `${year}-${month}`;
-    fechaVencimiento.value = `${year}-${month}-${day}`;
-    fechaVencimientoCAI.value = `${year}-${month}-${day}`;
 
     if (numeroParaModifcar) {
         const factura = (await axios.get(`${URL}dat_comp/id/${numeroParaModifcar}`)).data;
@@ -147,21 +144,9 @@ fechaComp.addEventListener('keypress',e=>{
 
 fechaImput.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
-        fechaVencimiento.focus();
-    }
-});
-
-fechaVencimiento.addEventListener('keypress',e=>{
-    if (e.keyCode === 13) {
-        fechaVencimientoCAI.focus();
-    }
-});
-
-fechaVencimientoCAI.addEventListener('keypress',e=>{
-    if (e.keyCode === 13) {
         netoNoGravado.focus();
     }
-}); 
+});
 
 netoNoGravado.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
@@ -373,6 +358,7 @@ aceptar.addEventListener('click',async e=>{
     dat_comp.total = neto.value;
 
     if (cuentaCorriente.checked) {
+        await actualizarCuentasPosterioreres(parseFloat(dat_comp.total),parseFloat(descuento.value));
         await ponerEnCuentaCorrienteProvedor(dat_comp);
         await ponerSaldoAlProvedor(dat_comp);
 
@@ -403,7 +389,6 @@ const ponerEnCuentaCorrienteProvedor = async(datos)=>{
     cuenta.haber = 0;
     cuenta.saldo = parseFloat(total.value) + provedorTraido.saldo;
     cuenta.emp = datos.empresa;
-    console.log(cuenta)
     try {
         await axios.post(`${URL}ctactePro`,cuenta);
     } catch (error) {
@@ -412,6 +397,8 @@ const ponerEnCuentaCorrienteProvedor = async(datos)=>{
             title:"No se pudo cargar a cuenta corriente provedor"
         });
     }
+
+    asdasd
 
 };
 
@@ -424,9 +411,6 @@ const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
     cuenta.nro_comp = datos.nro_comp;
     cuenta.debe = 0;
     cuenta.haber = descuento.value;
-    console.log(provedorTraido.saldo);
-    console.log(total.value);
-    console.log(descuento.value)
     cuenta.saldo = (parseFloat(provedorTraido.saldo) - parseFloat(descuento.value));
     console.log(cuenta.saldo)
     cuenta.emp = datos.empresa;
@@ -448,6 +432,26 @@ const ponerSaldoAlProvedor = async(datos)=>{
         sweet.fire({title:"No se pudo modificar el saldo del provedor"})
     }
 }
+
+const actualizarCuentasPosterioreres = async(total,descuento)=>{
+    const cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${codigo.value}/${fechaComp.value}`)).data;
+    let aux = total - descuento;
+    for await(let cuenta of cuentas){
+        if (cuenta.haber === 0) {
+            cuenta.saldo = redondear(aux + cuenta.debe,2);
+            aux = parseFloat(cuenta.saldo);
+            // try {
+            //     await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+            // } catch (error) {
+            //     console.log(error)
+            //     sweet.fire({
+            //         title:"No se pudo ordenar las cuentas corriente"
+            //     })
+            // }
+        }
+    }
+};
+
 
 const verTipoComprobante = ()=>{
     const radios =  document.querySelectorAll('input[name=tipoComprobante]')
