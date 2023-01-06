@@ -189,10 +189,13 @@ numeroCheque.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
         if (numeroCheque.value !== "") {
             const cheque = (await axios.get(`${URL}cheques/numero/${numeroCheque.value}`)).data;
-            console.log(cheque)
             if (cheque && !cheque.entreg_a) {
                 const fechaCheque = cheque.f_cheque.slice(0,10).split('-',3);
-                banco.value = cheque.banco;
+                const option = document.createElement('option');
+                option.value = cheque.banco;
+                option.text = cheque.banco;
+                banco.appendChild(option);
+                banco.value = option.value;
                 fecha.value = `${fechaCheque[0]}-${fechaCheque[1]}-${fechaCheque[2]}`;
                 importeCheque.value = redondear(cheque.i_cheque,2);
                 banco.focus();
@@ -212,6 +215,7 @@ numeroCheque.addEventListener('keypress',async e=>{
 
 banco.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
+        e.preventDefault();
         fecha.focus();
     }
 });
@@ -224,7 +228,9 @@ fecha.addEventListener('keypress',e=>{
 
 importeCheque.addEventListener('keypress',e=>{
    if (e.keyCode === 13) {
-    agregarCheque();
+    if (banco.value !== "efectivo") {
+        agregarCheque();
+    }
    }
 });
 
@@ -263,9 +269,11 @@ const agregarCheque = ()=>{
     cheque.i_cheque = importeCheque.value;
     cheque.tipo = "P";
     cheque.vendedor;
-    cheque.entreg_a = provedor.value;
+    cheque.entreg_a = provedor.provedor;
 
-    listaCheques.push(cheque);
+    if (banco.value === "BANCO DE ENTRE RIOS") {
+        listaCheques.push(cheque);
+    }
 
     numeroCheque.value = "";
     banco.value = "";
@@ -292,6 +300,7 @@ tbodyCheque.addEventListener('click',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
+    await cargarChequesPropios(listaCheques) //Se hace bien
     await ponerEnComprobantePagos();
     if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
         const comprobante = {};
@@ -313,24 +322,31 @@ aceptar.addEventListener('click',async e=>{
     }
 });
 
+const cargarChequesPropios = async(lista)=>{
+    console.log(lista)
+    lista.forEach(async cheque => {
+        await axios.post(`${URL}cheques`,cheque);
+    });
+}
+
 const ponerEnComprobantePagos = async() =>{
     const trComprobantes = document.querySelectorAll('#tbodyComprobante tr');
     const trValores = document.querySelectorAll('#tbodyCheque tr');
 
     for (let i = 0; i < trComprobantes.length; i++) {
         const comp_pago = {};
+
         comp_pago.codProv = codigo.value;
         comp_pago.rSocial = provedores.innerText;
         if (trValores[i]) {
-            console.log("a")
             comp_pago.n_cheque = trValores[i].children[0].innerHTML;
             comp_pago.banco = trValores[i].children[1].innerHTML;
             comp_pago.imp_cheque = trValores[i].children[2].innerHTML;
         }else{
             comp_pago.imp_cheque = 0.00
         }
-        comp_pago.n_comp = trComprobantes[i].children[0].innerHTML;
-        comp_pago.t_comp = trComprobantes[i].children[1].innerHTML;
+        comp_pago.nrm_comp = trComprobantes[i].children[0].innerHTML;
+        comp_pago.tipo_comp = trComprobantes[i].children[1].innerHTML;
         comp_pago.imp_Fact = trComprobantes[i].children[3].innerHTML;
         comp_pago.n_opago = numeroVenta.value;
         await axios.post(`${URL}compPagos`,comp_pago);

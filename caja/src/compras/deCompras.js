@@ -29,7 +29,14 @@ window.addEventListener('load',async e=>{
     periodo.innerHTML = hasta.value
 
     const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
-    console.log(datos)
+    datos.sort((a,b)=>{
+        if (a.fecha_comp>b.fecha_comp) {
+            return 1
+        }else if(a.fecha_comp<b.fecha_comp){
+            return -1
+        }
+        return 0
+    });
     listarDatos(datos)
 });
 
@@ -85,7 +92,7 @@ const listarDatos = (lista)=>{
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         tdTipoComp.innerHTML = elem.tipo_comp;
         tdNumComp.innerHTML = elem.nro_comp;
-        tdEmpresa.innerHTML = elem.empresa;
+        tdEmpresa.innerHTML = elem.provedor;
         tdCuit.innerHTML = elem.cuit;
         tdGravado.innerHTML = elem.netoGravado.toFixed(2);
         tdNoGravado.innerHTML = elem.netoNoGravado.toFixed(2);
@@ -149,6 +156,8 @@ const listarDatos = (lista)=>{
     const tdPIVA = document.createElement('td');
     const tdRIVA = document.createElement('td');
     const tdTotal = document.createElement('td');
+
+    tr.classList.add('bold')
 
     tdGravado.innerHTML = gravado.toFixed(2);
     tdIva.innerHTML = iva.toFixed(2);

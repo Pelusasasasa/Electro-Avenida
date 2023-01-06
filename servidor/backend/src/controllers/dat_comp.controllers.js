@@ -37,7 +37,7 @@ datCompCTRL.getFechaImpt = async(req,res)=>{
     const {desde,hasta} = req.params;
     const desdeSim = desde.split('-',2);
     const hastaSim = hasta.split('-',2);
-    const mes = new Date(desdeSim[0],parseFloat(desdeSim[1])-1,1,0,0,0)
+    const mes = new Date(desde + "-01T00:00:00.000Z")
     const mesSig = new Date(hastaSim[0],parseFloat(hastaSim[1]),1,0,0,0);
     const compras = await DatComp.find({$and:[
         {fecha_imput:{$gte:mes}},

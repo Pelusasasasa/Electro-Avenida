@@ -13,10 +13,14 @@ ctateCTRL.post = async(req,res)=>{
 
 ctateCTRL.getdesdeDate = async(req,res)=>{
     const {codigo,desde} = req.params;
+    const now = new Date();//creamos la fecha de hoy y la guadamos
+    const fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();//sacamos la hora excacta en argentina
+    const date = new Date(desde + "T" + fecha.slice(11));//creamos una constante que tenga la fecha que recibimos y la hora actual
+
     const historicas = await CtatePro.find({
         $and:[
             {codProv:codigo},
-            {fecha:{$gt:desde}}
+            {fecha:{$gt:date}}
         ]
     });
     res.send(historicas);

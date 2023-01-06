@@ -358,8 +358,8 @@ aceptar.addEventListener('click',async e=>{
     dat_comp.total = neto.value;
 
     if (cuentaCorriente.checked) {
-        await actualizarCuentasPosterioreres(parseFloat(dat_comp.total),parseFloat(descuento.value));
-        await ponerEnCuentaCorrienteProvedor(dat_comp);
+        const aDescontar = await actualizarCuentasPosterioreres(parseFloat(dat_comp.total),parseFloat(descuento.value));
+        await ponerEnCuentaCorrienteProvedor(dat_comp,aDescontar);
         await ponerSaldoAlProvedor(dat_comp);
 
         if (parseFloat(descuento.value) !== 0) {
@@ -378,7 +378,7 @@ aceptar.addEventListener('click',async e=>{
     console.log(dat_comp)
 });
 
-const ponerEnCuentaCorrienteProvedor = async(datos)=>{
+const ponerEnCuentaCorrienteProvedor = async(datos,aDescontar = 0)=>{
     const cuenta = {};
     cuenta.fecha = datos.fecha_comp;
     cuenta.codProv = datos.codProv;
@@ -387,7 +387,7 @@ const ponerEnCuentaCorrienteProvedor = async(datos)=>{
     cuenta.nro_comp = datos.nro_comp;
     cuenta.debe = datos.total;
     cuenta.haber = 0;
-    cuenta.saldo = parseFloat(total.value) + provedorTraido.saldo;
+    cuenta.saldo = redondear(aDescontar + parseFloat(datos.total),2);
     cuenta.emp = datos.empresa;
     try {
         await axios.post(`${URL}ctactePro`,cuenta);
@@ -397,9 +397,6 @@ const ponerEnCuentaCorrienteProvedor = async(datos)=>{
             title:"No se pudo cargar a cuenta corriente provedor"
         });
     }
-
-    asdasd
-
 };
 
 const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
@@ -412,7 +409,6 @@ const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
     cuenta.debe = 0;
     cuenta.haber = descuento.value;
     cuenta.saldo = (parseFloat(provedorTraido.saldo) - parseFloat(descuento.value));
-    console.log(cuenta.saldo)
     cuenta.emp = datos.empresa;
     try {
         await axios.post(`${URL}ctactePro`,cuenta);
@@ -434,22 +430,37 @@ const ponerSaldoAlProvedor = async(datos)=>{
 }
 
 const actualizarCuentasPosterioreres = async(total,descuento)=>{
+    let retorno = 0;
     const cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${codigo.value}/${fechaComp.value}`)).data;
-    let aux = total - descuento;
+    cuentas.sort((a,b)=>{
+        if (a.fecha < b.fecha) {
+            return -1
+        }else if (a.fecha > b.fecha) {
+            return 1
+        }
+        return 0
+    });
+    let saldoAnterior = 0
+    provedorTraido.saldo - cuentas.forEach(cuenta => {
+        saldoAnterior += cuenta.debe;    
+    });
+    let aux =  provedorTraido.saldo - saldoAnterior + total - descuento;//penmos en una varaible el total menos el descuento:
+    retorno = provedorTraido.saldo - saldoAnterior;
     for await(let cuenta of cuentas){
         if (cuenta.haber === 0) {
             cuenta.saldo = redondear(aux + cuenta.debe,2);
             aux = parseFloat(cuenta.saldo);
-            // try {
-            //     await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
-            // } catch (error) {
-            //     console.log(error)
-            //     sweet.fire({
-            //         title:"No se pudo ordenar las cuentas corriente"
-            //     })
-            // }
+            try {
+                await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+            } catch (error) {
+                console.log(error)
+                sweet.fire({
+                    title:"No se pudo ordenar las cuentas corriente"
+                })
+            }
         }
-    }
+    } 
+    return retorno
 };
 
 
@@ -508,7 +519,7 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
     provedorTraido = (await axios.get(`${URL}provedor/codigo/${args}`)).data;
     provedor.value = provedorTraido.provedor;
     codigo.value = provedorTraido.codigo;
-    cond_iva.value = provedorTraido.situa
+    cond_iva.value = provedorTraido.condIva;
     cuit.value = provedorTraido.cuit;
     puntoVenta.focus(); 
 });

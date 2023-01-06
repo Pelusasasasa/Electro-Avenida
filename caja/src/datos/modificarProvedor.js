@@ -6,7 +6,6 @@ const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
 
 const codigo = document.querySelector('#codigo');
-const nombre = document.querySelector('#nombre');
 const inputProvedor = document.querySelector('#provedor');
 const localidad = document.querySelector('#localidad');
 const direccion = document.querySelector('#direccion');
@@ -37,7 +36,6 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
 
 const llenarinputs = async(provedor)=>{
     codigo.value = provedor.codigo;
-    nombre.value = provedor.nombre;
     inputProvedor.value = provedor.provedor;
     localidad.value = provedor.localidad;
     direccion.value = provedor.direccion;
@@ -52,7 +50,7 @@ const llenarinputs = async(provedor)=>{
     observaciones.value = provedor.observaciones;
     codigoPostal.value = provedor.codigoPostal;
     localidadPostal.value = provedor.localidadPostal;
-    provinciaPostal.value = provedor.provinciaPostal;
+    provinciaPostal.value = provedor.provinciaPosta;
     direccionPostal.value = provedor.direccionPostal
 };
 
@@ -84,7 +82,6 @@ consultar.addEventListener('click',e=>{
 modificar.addEventListener('click',async e=>{
     const provedorModificado = {};
     provedorModificado.codigo = codigo.value;
-    provedorModificado.nombre = nombre.value;
     provedorModificado.provedor = inputProvedor.value;
     provedorModificado.direccion = direccion.value;
     provedorModificado.localidad = localidad.value;
