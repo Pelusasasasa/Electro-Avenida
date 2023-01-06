@@ -1,4 +1,4 @@
-const {redondear} = require('../assets/js/globales');
+const {redondear, generarMovimientoCaja} = require('../assets/js/globales');
 
 const sweet = require('sweetalert2');
 
@@ -300,8 +300,8 @@ tbodyCheque.addEventListener('click',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
-    await cargarChequesPropios(listaCheques) //Se hace bien
-    await ponerEnComprobantePagos();
+    //await cargarChequesPropios(listaCheques) //Se hace bien
+    //await ponerEnComprobantePagos(); //Anda bien
     if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
         const comprobante = {};
 
@@ -310,15 +310,15 @@ aceptar.addEventListener('click',async e=>{
         comprobante.rSocial = provedores.value;
         comprobante.n_cheque = numeroCheque.value;
 
-        await ponerEnCuentaCorriente();
-        await descontarSaldoProvedor();
-        await sumarNumeroPago();
-
+        //await ponerEnCuentaCorriente();//se hace bien
+        //await descontarSaldoProvedor();//se hace bien
+        //await sumarNumeroPago();//Se hace bien
         for await(let elem of listaCheques){
-            generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entre_a)   
-        }
+            //await generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)//Se hace bien 
+        };
+        await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,"FACTURA PROVEDORES")
 
-        location.reload();
+        // location.reload();
     }
 });
 
@@ -341,7 +341,7 @@ const ponerEnComprobantePagos = async() =>{
         if (trValores[i]) {
             comp_pago.n_cheque = trValores[i].children[0].innerHTML;
             comp_pago.banco = trValores[i].children[1].innerHTML;
-            comp_pago.imp_cheque = trValores[i].children[2].innerHTML;
+            comp_pago.imp_cheque = trValores[i].children[3].innerHTML;
         }else{
             comp_pago.imp_cheque = 0.00
         }
@@ -349,15 +349,22 @@ const ponerEnComprobantePagos = async() =>{
         comp_pago.tipo_comp = trComprobantes[i].children[1].innerHTML;
         comp_pago.imp_Fact = trComprobantes[i].children[3].innerHTML;
         comp_pago.n_opago = numeroVenta.value;
-        await axios.post(`${URL}compPagos`,comp_pago);
+        try {
+            await axios.post(`${URL}compPagos`,comp_pago);
+        } catch (error) {
+            await sweet.fire({
+                title:"No se pudo cargar la venta"
+            });
+            console.log(error)
+        }
     }
 }
 
 const ponerEnCuentaCorriente = async()=>{
     const cuenta = {}
-    cuenta.fecha = new Date();
+    cuenta.fecha = (new Date()).toISOString().slice(0,10);
     cuenta.codProv = codigo.value;
-    cuenta.provdeor = provedores.value;
+    cuenta.provedor = provedor.provedor;
     cuenta.tipo_comp = "Pago";
     cuenta.nro_comp = numeroVenta.value;
     cuenta.debe = 0;
