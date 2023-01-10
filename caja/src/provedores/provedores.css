@@ -121,3 +121,34 @@ table button:hover{
     width: 9rem;
     display: inline-block;
 }
+
+
+.cuentaCorriente .buscador{
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem;
+}
+
+.cuentaCorriente .buscador main{
+    display: flex;
+    flex-direction: column;
+}
+
+.cuentaCorriente .buscador input,.cuentaCorriente .buscador select,.cuentaCorriente .buscador label{
+    font-size: 2rem;
+}
+
+.table{
+    height: 75vh;
+    background-color: white;
+    overflow: scroll;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cuentaCorriente #saldo,.cuentaCorriente #codigo{
+    width: 10rem;
+}

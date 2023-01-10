@@ -248,6 +248,12 @@ const templateMenu = [
         click(){
           abrirVentana('provedores/ingresarVarios.html',400,500)
         }
+      },
+      {
+        label:"Cuenta Corriente",
+        click(){
+          abrirVentana('provedores/cuentaCorriente.html',1200,1000)
+        }
       }
     ]
   },
@@ -255,7 +261,15 @@ const templateMenu = [
     label:"Bancos",
     submenu:[
       {
-        label:"Cheques No Cobrados"
+        label:"Cheques No Cobrados",
+        click(){
+          abrirVentana("bancos/chequesNoCobrados.html",1000,1000)
+        }
+      },{
+        label:"Ingresar Pago Cheques Propios",
+        click(){
+          abrirVentana("bancos/ingresarPagoCheques.html",600,400)
+        }
       }
     ]
   },

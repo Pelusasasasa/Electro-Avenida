@@ -458,6 +458,17 @@ const actualizarCuentasPosterioreres = async(total,descuento)=>{
                     title:"No se pudo ordenar las cuentas corriente"
                 })
             }
+        }else{
+            cuenta.saldo = redondear(aux - cuenta.debe,2);
+            aux = parseFloat(cuenta.saldo);
+            try {
+                await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+            } catch (error) {
+                console.log(error)
+                sweet.fire({
+                    title:"No se pudo ordenar las cuentas corrientes"
+                })
+            }
         }
     } 
     return retorno
