@@ -62,14 +62,18 @@ const nuevaCantidad = document.querySelector('#nuevaCantidad');
 //tipo ventas
 const tiposVentas = document.querySelectorAll('input[name="tipoVenta"]');
 const remito = document.querySelector('.remito');
+const presupuesto = document.querySelector('.presupuesto');
 const ticketFactura = document.querySelector('.ticketFactura')
 
+//botonones finales
 const borrarProducto = document.querySelector('.borrarProducto')
 const inputEmpresa = document.querySelector('#empresa');
 const alerta = document.querySelector('.alerta');
 const cancelar = document.querySelector('.cancelar');
 
-const presupuesto = document.querySelector('.presupuesto');
+//variables para caundo usamos el facturar varias facturas
+let listaNumeros;
+let variasFacturas = false;
 
 inputEmpresa.value = empresa;
 
@@ -777,7 +781,7 @@ ticketFactura.addEventListener('click',async (e) =>{
                     //Le mandamos al servidor que cree un pdf con los datos
                     await axios.post(`${URL}crearPdf`,[venta,cliente,afip]);
                         
-                    if(!borraNegro){
+                    if(!borraNegro && !variasFacturas){
                         for(let producto of venta.productos){
                             if (venta.tipo_pago !== "PP") {
                                 producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
@@ -807,10 +811,27 @@ ticketFactura.addEventListener('click',async (e) =>{
                         await descontarSaldo(ventaAnterior.cliente,ventaAnterior.precioFinal,ventaAnterior.nro_comp,venta.nro_comp);
                         await borrarCuentaHistorica(ventaAnterior.nro_comp,ventaAnterior.cliente,ventaAnterior.tipo_comp);
                         await borrarVenta(ventaAnterior.nro_comp)
+
+                    }else if(variasFacturas){
+
+                        for await(let numero of listaNumeros){
+                            //traemos los movimientos de productos de la venta anterior y lo modificamos a la nueva venta
+                            const movimientosViejos = (await axios.get(`${URL}movProductos/${numero}/Presupuesto`)).data;
+                            for await (let mov of movimientosViejos){
+                                mov.nro_comp = venta.nro_comp;
+                                mov.tipo_comp = "Ticket Factura";
+                            }
+                            await axios.put(`${URL}movProductos`,movimientosViejos);
+                            await borrrarCuentaCompensada(numero)
+                            await borrarCuentaHistorica(numero,codigoC.value,"Presupuesto");
+                            await borrarVenta(numero)
+                        };
+                        await descontarSaldo(codigoC.value,total.value);
+                        
                     };
                     !borraNegro ? (window.location = '../index.html') : window.close();
                 } catch (error) {
-                        await sweet.fire({title:"No se puedo generar la Venta"})
+                        await sweet.fire({title:"No se puedo generar la Venta"});
                         console.log(error)
                     }finally{
                         alerta.classList.add('none')
@@ -1018,7 +1039,6 @@ let ventaAnterior;
 ipcRenderer.once('venta',async (e,args)=>{
     borraNegro = true;
     const [usuario,numero,empresa] = JSON.parse(args);
-    console.log(JSON.parse(args))
     inputEmpresa.value = empresa;
     ventaDeCtaCte = numero;
     textoUsuario.innerHTML = usuario;
@@ -1031,15 +1051,42 @@ ipcRenderer.once('venta',async (e,args)=>{
     })
 });
 
+ipcRenderer.on('informacion',async (e,args)=>{
+    const [vendedor,numeros,empresa,codigoCliente] = args;
+    inputEmpresa.value = empresa;
+    textoUsuario.innerHTML = vendedor;
+    variasFacturas = true;
+
+    listaNumeros = numeros.split('\n');
+    let cliente = (await axios.get(`${URL}clientes/id/${codigoCliente}`)).data;
+    ponerInputsClientes(cliente);
+    let ventas = [];
+    for await (let numero of listaNumeros){
+        ventas.push((await axios.get(`${URL}presupuesto/${numero}`)).data);
+    };
+
+    for await(let venta of ventas){
+        venta.productos.forEach(producto=>{
+            mostrarVentas(producto.objeto,producto.cantidad)
+        });
+    };
+});
+
 //descontamos el saldo del cliente
-const descontarSaldo = async(codigo,precio,numero,venta)=>{
-    console.log("a")
+const descontarSaldo = async(codigo,precio,numero="",venta="")=>{
     const cliente = (await axios.get(`${URL}clientes/id/${codigo}`)).data;
     const index = cliente.listaVentas.indexOf(numero);
     cliente.listaVentas.splice(index);
     cliente.listaVentas = venta;
     cliente.saldo_p = parseFloat(cliente.saldo_p) - precio;
-    await axios.put(`${URL}clientes/${codigo}`,cliente);
+    try {
+        await axios.put(`${URL}clientes/${codigo}`,cliente);
+    } catch (error) {
+        console.log(error)
+        await sweet.fire({
+            title:"No se puede descontar el saldo del cliente"
+        })
+    }
 };
 
 const borrrarCuentaCompensada = async(numero)=>{

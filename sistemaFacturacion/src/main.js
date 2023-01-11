@@ -155,17 +155,17 @@ ipcMain.on('imprimir',(e,args)=>{
 })
 
 ipcMain.on('abrir-ventana-emitir-comprobante',(e,args)=>{
-    console.log(args)
     const[vendedor,numeroVenta,empresa] = args
     abrirVentana("emitirComprobante/emitirComprobante.html",1000,1000)
     nuevaVentanaDos.on('ready-to-show',async ()=>{
         nuevaVentanaDos.webContents.send('venta',JSON.stringify([vendedor,numeroVenta,empresa]))
     })
-})
+});
 
+ipcMain.on('facturar_varios',(e,args)=>{
+    abrirVentana("emitirComprobante/emitirComprobante.html",1200,1000,true,args)
+});
 
-    ipcMain.on('eliminar-venta',async(e,id)=>{
-    })
 //FIN VENTAS
 
 //Abrir ventana para modificar un producto

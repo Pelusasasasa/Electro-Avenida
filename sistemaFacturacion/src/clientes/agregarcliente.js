@@ -124,21 +124,21 @@ botonEnviar.addEventListener('click',async e =>{
     }
     
     const cliente = {
-        cliente: nombre.value,
-        localidad: localidad.value,
-        direccion: direccion.value,
-        provincia: provincia.value,
+        cliente: nombre.value.toUpperCase(),
+        localidad: localidad.value.toUpperCase(),
+        direccion: direccion.value.toUpperCase(),
+        provincia: provincia.value.toUpperCase(),
         cod_postal: cod_postal.value,
         telefono: telefono.value,
         cuit: dnicuit.value,
-        mail: email.value,
+        mail: email.value.toUpperCase(),
         cond_iva: conIva.value,
         saldo: saldo.value,
         limite: limite.value,
         condicion: condicion,
         saldo_p: saldo_p.value,
         cond_fact: condicionFacturacion.value,
-        observacion: observaciones.value,
+        observacion: observaciones.value.toUpperCase(),
         listaVenta: listaVenta.value
     }
     const inicial = ((nombre.value)[0]).toUpperCase();
