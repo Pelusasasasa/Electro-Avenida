@@ -167,17 +167,21 @@ function abrirVentana(texto,width,height,reinicio,informacion = ""){
               contextIsolation: false,
               nodeIntegration: true
           }
-      })
+      });
       nuevaVentanaDos.loadURL(url.format({
           pathname: path.join(__dirname, `./${texto}`),
           protocol: 'file',
           slashes: true
       }));
-      nuevaVentanaDos.setMenuBarVisibility(false)
-      nuevaVentanaDos.on('close',e=>{
-          nuevaVentanaDos = null;
-          reinicio !== "noReinician" && ventanaPrincipal.reload()
-      })
+    nuevaVentanaDos.on('ready-to-show',()=>{
+        nuevaVentanaDos.webContents.send('informacion',informacion)
+    });
+    nuevaVentanaDos.setMenuBarVisibility(false)
+    nuevaVentanaDos.on('close',e=>{
+        nuevaVentanaDos = null;
+        reinicio !== "noReinician" && ventanaPrincipal.reload()
+    });
+
   }else if(texto.includes("usuarios")){
       const a = texto.split('?')[1];
       nuevaVentana = new BrowserWindow({

@@ -372,7 +372,6 @@ botonFacturar.addEventListener('click',() =>{
             if (isConfirmed && value !== "") {
                 let vendedor = (await axios.get(`${URL}usuarios/${value}`)).data;
                 if (vendedor !== "") {
-                    console.log(vendedor)
                     ipcRenderer.send('abrir-ventana-emitir-comprobante',[vendedor.nombre,seleccionado.id,vendedor.empresa]);
                 }
             }
@@ -382,6 +381,31 @@ botonFacturar.addEventListener('click',() =>{
     }else{
         sweet.fire({title:'Venta no seleccionada'});
     }
+});
+
+facturarVarios.addEventListener('click',async e=>{
+    await sweet.fire({
+        title:"Contraseña",
+        input:"password",
+        showCancelButton:true,
+        confirmButtonText:"Aceptar"
+    }).then(async ({isConfirmed,value})=>{
+        if(isConfirmed && value !== ""){
+            let vendedor = (await axios.get(`${URL}usuarios/${value}`)).data;
+            if (vendedor !== "") {
+                await sweet.fire({
+                    title:"Poner numeros de facturas",
+                    input:"textarea",
+                    confirmButtonText:"Aceptar",
+                    showCancelButton:true
+                }).then(({value,isConfirmed})=>{
+                    if (isConfirmed) {
+                        ipcRenderer.send('facturar_varios',[vendedor.nombre,value,vendedor.empresa,codigoCliente.value])
+                    }
+                })
+            }
+        }
+    })
 });
 
 document.addEventListener('keydown',e=>{
@@ -416,26 +440,6 @@ detalle.addEventListener('click',e=>{
     subSeleccionado.classList.add('subSeleccionado')
 });
 
-// document.addEventListener('keydown',e=>{
-//     if (e.keyCode === 17) {
-//         listar.addEventListener('click',event=>{
-//             facturarVarios.classList.remove('none');
-//             event.target.parentNode.classList.toggle('seleccionadoParaFacturar');
-//         },{once:true});
-//     }
-// });
-
-// facturarVarios.addEventListener('click',e=>{
-//     const facturas = document.querySelectorAll('.seleccionadoParaFacturar');
-//     const idFacturas = [];
-//     for(let tr of facturas){
-//         idFacturas.push(tr.id);
-//     }
-//     //abrimos la ventana de emitir Comprobante para facturar vairos facturar varios
-//     ipcRenderer.send('facturarVarios',idFacturas);
-//     location.href = '../emitirComprobante/emitirComprobante.html';
-// })
-
 detalle.addEventListener('click',e=>{
     seleccionado && seleccionado.classList.remove('seleccionado');
     seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
@@ -445,3 +449,4 @@ detalle.addEventListener('click',e=>{
     subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
     subSeleccionado.classList.add('subSeleccionado');
 });
+
