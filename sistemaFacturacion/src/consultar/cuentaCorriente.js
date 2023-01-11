@@ -88,34 +88,32 @@ const labes = document.querySelectorAll('label')
 //Ocultado lo que tenemos en negro
 const ocultarNegro = ()=>{
     labes.forEach(label=>label.classList.remove('blanco'));
-    const saldo = document.querySelector('#saldo')
     const saldo_p = document.querySelector('#saldo_p')
-    const botonFacturar = document.querySelector('#botonFacturar')
     const body = document.querySelector('.consultaCtaCte');
     const botones = document.querySelector('.botones');
     const buscador = document.querySelector('.buscador')
-    buscador.classList.remove("mostrarNegro")
-    botones.classList.remove("mostrarNegro")
-    saldo.classList.remove('none')
-    saldo_p.classList.add('none')
-    botonFacturar.classList.add('none')
-    body.classList.remove('mostrarNegro')
-    actualizar.classList.add('none')
+    buscador.classList.remove("mostrarNegro");
+    botones.classList.remove("mostrarNegro");
+    saldo.classList.remove('none');
+    saldo_p.classList.add('none');
+    botonFacturar.classList.add('none');
+    facturarVarios.classList.add('none');
+    body.classList.remove('mostrarNegro');
+    actualizar.classList.add('none');
 }
 
 //mostramos lo que tenemos en negro
 const mostrarNegro = ()=>{
-    labes.forEach(label=>label.classList.add('blanco'));
-    const saldo = document.querySelector('#saldo')
+    labes.forEach(label=>label.classList.add('blanco'));    
     const saldo_p = document.querySelector('#saldo_p')
-    const botonFacturar = document.querySelector('#botonFacturar')
     const body = document.querySelector('.consultaCtaCte');
     const botones = document.querySelector('.botones');
     const buscador = document.querySelector('.buscador')
     buscador.classList.add("mostrarNegro")
     botones.classList.add("mostrarNegro")
     saldo.classList.add('none')
-    botonFacturar.classList.remove('none')
+    botonFacturar.classList.remove('none');
+    facturarVarios.classList.remove('none');
     saldo_p.classList.remove('none')
     body.classList.add('mostrarNegro')
     actualizar.classList.remove('none')
