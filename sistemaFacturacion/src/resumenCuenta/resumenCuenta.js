@@ -138,7 +138,6 @@ function listarVentas(ventas,situacion,saldoAnterior,saldoAnterior_P) {
         tbody.innerHTML += `<tr><td></td><td></td><td></td><td></td><td>Saldo Anterior</td><td>${saldoAnteriorFinal.toFixed(2)}</td></tr>`
         listaAux = situacion==="negro" ? listaAux.filter(venta=> (venta.tipo_comp !== "Recibos_P" || venta.haber !== 0)) : listaAux.filter(venta=> (venta.tipo_comp !== "Recibos" || venta.haber !== 0))
         listaAux.forEach(venta => {
-            console.log(venta.fecha)
             const fecha = venta.fecha.slice(0,10).split('-',3);
             const dia = fecha[2];
             const mes = fecha[1]

@@ -1,0 +1,24 @@
+h1{
+    text-align: center;
+}
+
+.cliente{
+    display: flex;
+    justify-content: space-around;
+}
+
+.table{
+    background-color: white;
+    height: 70vh;
+    overflow: scroll;
+}
+
+table thead tr th,table tbody tr td{
+    border: .1rem solid black;
+}
+
+.observaciones{
+    width: 100%;
+}
+
+
