@@ -11,7 +11,7 @@ const buscador = document.querySelector('#buscador');
 const tbody = document.querySelector('.tbody');
 const imprimir = document.querySelector('.imprimir')
 const desde = document.querySelector('#desde')
-const ocultar = document.querySelector('.seccion-buscador')
+const ocultar = document.querySelector('.buscador')
 
 const saldoImprimir = document.querySelector('.saldoImprimir');
 const nombreCliente = document.querySelector('#nombreCliente');
@@ -69,22 +69,14 @@ document.addEventListener('keydown',(event) =>{
                situacion = 'negro'
                saldo = "saldo_p"
                listarVentas(listaVentas,situacion,saldoAnterior,saldoAnterior_P)
-           }
+           }else if (e.key === "F8" && situacion === "negro") {
+            ocultarNegro();
+            situacion = 'blanco'
+            saldo = "saldo"
+            listarVentas(listaVentas,situacion,saldoAnterior,saldoAnterior_P)
+        }
        })
    }
-})
-
-document.addEventListener('keydown',(event) =>{
-   if (event.key === "Alt") {
-        document.addEventListener('keydown',(e) =>{
-          if (e.key === "F3" && situacion === "negro") {
-              ocultarNegro();
-              situacion = 'blanco'
-              saldo = "saldo"
-              listarVentas(listaVentas,situacion,saldoAnterior,saldoAnterior_P)
-          }
-        })
-  }
 })
 
 const ocultarNegro = ()=>{
@@ -138,8 +130,8 @@ function listarVentas(ventas,situacion,saldoAnterior,saldoAnterior_P) {
         })
     }else{
         listaAux = listaAux.filter(e=>{
-            return (e.tipo_comp === aux || e.tipo_comp === "Recibos" || e.tipo_comp === "Nota Credito")
-        })
+            return (e.tipo_comp === aux || e.tipo_comp === "Recibos" || e.tipo_comp === "Nota Credito");
+        });
     };
     
     let saldoAnteriorFinal = situacion === "blanco" ? saldoAnterior : saldoAnterior_P;
@@ -166,14 +158,13 @@ function listarVentas(ventas,situacion,saldoAnterior,saldoAnterior_P) {
                     <td>${dia}/${mes}/${anio}</td>
                     <td>${comprobante}</td>
                     <td>${venta.nro_comp}</td>
-                    <td>${(venta.debe === 0.00) ?  "" : venta.debe.toFixed(2)}</td>
-                    <td>${(venta.haber === 0.00) ? "" : venta.haber.toFixed(2)}</td>
-                    <td>${(venta.saldo).toFixed(2)}</td>
+                    <td class=text-end>${(venta.debe === 0.00) ?  "" : venta.debe.toFixed(2)}</td>
+                    <td class=text-end>${(venta.haber === 0.00) ? "" : venta.haber.toFixed(2)}</td>
+                    <td class=text-end>${(venta.saldo).toFixed(2)}</td>
                 </tr>
             `
 
         });
-        console.log(cliente)
         if (cliente[saldo] === undefined) {
             saldoImprimir.innerHTML = "0.00"
         }else{
@@ -182,11 +173,9 @@ function listarVentas(ventas,situacion,saldoAnterior,saldoAnterior_P) {
 }
 
 imprimir.addEventListener('click',e=>{
-    const header = document.querySelector('header')
-    volver.classList.add('disable');
-    ocultar.classList.add('disable');
-    header.classList.add('m-0');
-    header.classList.add('p-0');
+    //lo que hacemos es poner en none  para que no salgan en la impresio
+    volver.classList.add('none');
+    ocultar.classList.add('none');
     window.print()
     location.reload();
 });
