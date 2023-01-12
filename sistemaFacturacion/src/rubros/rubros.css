@@ -1,0 +1,34 @@
+.rubros{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.agregar label{
+    width: 10rem;
+    display: inline-block;
+}
+
+.tabla{
+    height: 90vh;
+    background-color: white;
+}
+
+table{
+    width: 100%;
+}
+
+table thead tr th{
+    border: .1rem solid black;
+}
+
+.grafico .inputs{
+    display: flex;
+    justify-content: space-around;
+}
+
+.grafico table{
+    height: 80vh;
+    background-color: white;
+    margin: 1rem
+}
