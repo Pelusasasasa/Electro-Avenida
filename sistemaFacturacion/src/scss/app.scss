@@ -7,8 +7,6 @@
 @import "layout/fechas";
 
 
-@import "pedido/pedido";
-
 //Cliente
 @import "seccionCliente/clientes";
 @import "seccionCliente/agregarCliente";
@@ -39,9 +37,6 @@
 //emitirRecibo
 @import "emitirRecibo/emitirRecibo";
 
-//resumen cuenta
-@import "resumenCuenta/resumenCuenta";
-
 //Movimiento de producto
 @import "movProdcutos/movProductos";
 @import "movProdcutos/infoMovProductos";
@@ -49,10 +44,3 @@
 //Imprimir
 @import "imprimir/imprimir";
 @import "imprimir/imprimir-ticket.scss";
-
-//datos
-@import "datos/rubros.scss";
-@import "datos/grafico.scss";
-
-//libro ventas
-@import "libroVentas/libroVentas"

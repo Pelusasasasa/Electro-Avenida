@@ -98,7 +98,19 @@ tbody.addEventListener('dblclick',e=>{
             })
         }
     })
-})
+});
+
+codigo.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        nombre.focus();
+    }
+});
+
+nombre.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        guardar.focus();
+    }
+});
 
 salir.addEventListener('click',e=>{
     window.close();
@@ -108,4 +120,12 @@ document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {
         window.close();
     }
+});
+
+codigo.addEventListener('focus',e=>{
+    codigo.select();
+});
+
+nombre.addEventListener('focus',e=>{
+    nombre.select();
 });

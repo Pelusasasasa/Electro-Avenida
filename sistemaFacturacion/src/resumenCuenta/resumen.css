@@ -1,0 +1,76 @@
+.buscador{
+    display: flex;
+    justify-content: space-around;
+    margin: .5rem;
+}
+
+.imagen{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+.imagen h3,.imagen p{
+    margin: 0;
+}
+
+.cliente{
+    background-color: white;
+    padding-bottom: 1rem;
+}
+
+.cliente p{
+    margin: 0;
+}
+
+.table{
+    background-color: white;
+    height: 50vh;
+    overflow: scroll;
+}
+
+table thead tr th{
+    border: .1rem solid black;
+}
+
+.saldoActual{
+    padding-top: 1rem;
+    background-color: white;
+    display: flex;
+    justify-content: flex-end;
+    font-weight: bold;
+}
+
+.saldoActual p{
+    margin: 0;
+    font-size: 2rem;
+}
+
+.informacion{
+    background-color: white;
+    padding-bottom: 1.5rem;
+}
+
+.informacion p{
+    margin: 0;
+}
+
+@media print{
+    .table{
+        overflow: auto;
+    }
+}
+
+@media (height: 800px){
+    .table{
+        height: 45vh;
+    }
+}
+
+@media(height: 1000px){
+    .table{
+        height: 55vh;
+    }
+}

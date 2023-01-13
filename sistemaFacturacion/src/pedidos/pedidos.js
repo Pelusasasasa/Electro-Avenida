@@ -19,32 +19,19 @@ const codigo = document.querySelector("#codigo");
 const cantidad = document.querySelector('#cantidad');
 const descripcion = document.querySelector('#descripcion')
 const tbody = document.querySelector('#tbody');
-
-//al precionar enter le damos el foco a numero
-nombre.addEventListener('keypress',e=>{
-    if(e.key === 'Enter'){
-        numero.focus()
-    }
-})
-
-//al precionar enter le damos el foco a codigo
-numero.addEventListener('keypress',e=>{
-    if(e.key === 'Enter'){
-        codigo.focus()
-    }
-})
+const grabar = document.querySelector(".grabar");
+const volver = document.getElementById("volver");
 
 codigo.addEventListener('keypress', async (e) => {
     if (e.key === 'Enter') {
         if (codigo.value === "") {
-            ipcRenderer.send('abrir-ventana',"productos")
+            ipcRenderer.send('abrir-ventana',"productos");
         }else if(codigo.value === "999-999"){
             cantidad.classList.remove('none')
             descripcion.classList.remove('none')
             descripcion.focus();
         }else{
-            let producto = await axios.get(`${URL}productos/${codigo.value}`)
-            producto = producto.data;
+            let producto = (await axios.get(`${URL}productos/${codigo.value}`)).data;
                 if (producto !== "") {
                     sweet.fire({
                         title:"Cantidad",
@@ -90,13 +77,13 @@ cantidad.addEventListener('keypress',e=>{
         codigo.focus();
     }
     
-})
+});
 
 ipcRenderer.on('mando-el-producto',async(e,args) => {
     const {id,cantidad} = JSON.parse(args);
     const producto = (await axios.get(`${URL}productos/${id}`)).data;
     mostrarVentas(producto,cantidad)
-})
+});
 
 function mostrarVentas(objeto,cantidad) {
     const marca = objeto.marca ? objeto.marca : "";
@@ -104,17 +91,16 @@ function mostrarVentas(objeto,cantidad) {
     tbody.innerHTML += `
         <tr>
         <td>${objeto._id}</td>
-        <td>${parseFloat(cantidad).toFixed(2)}</td>
+        <td class=text-end>${parseFloat(cantidad).toFixed(2)}</td>
         <td>${objeto.descripcion}  ${marca}  ${codfabrica}</td>
-        <td>${nombre.value}</td>
+        <td>${nombre.value.toUpperCase()}</td>
         <td>${numero.value}</td>
-        <td>${objeto.stock}</td>
-        <td><input type:"text" id=${objeto._id}></td>
+        <td class=text-end>${objeto.stock}</td>
+        <td><input type:"text" class=observaciones id=${objeto._id}></td>
         </tr>
     `
-}
+};
 
-const grabar = document.querySelector(".grabar");
 grabar.addEventListener('click', async e =>{
     //Mandar Pedido a La Base de Datos
     const trs = document.querySelectorAll('#tbody tr');
@@ -129,14 +115,38 @@ grabar.addEventListener('click', async e =>{
         Pedido.stock = td.children[5].innerHTML;
         Pedido.observacion = td.children[6].children[0].value.toUpperCase();
         Pedido.vendedor = vendedor;
-        await axios.post(`${URL}pedidos`,Pedido)
+        try {
+            await axios.post(`${URL}pedidos`,Pedido);
+        } catch (error) {
+            await sweet.fire({
+                title:"No se pudo cargar el pedido"
+            });
+            console.log(error)
+        }
     })
     window.location.href = '../index.html'
-})
+});
 
+//al precionar enter le damos el foco a numero
+nombre.addEventListener('keypress',e=>{
+    if(e.key === 'Enter'){
+        numero.focus()
+    }
+});
+
+//al precionar enter le damos el foco a codigo
+numero.addEventListener('keypress',e=>{
+    if(e.key === 'Enter'){
+        codigo.focus()
+    }
+});
+
+volver.addEventListener('click',e=>{
+    location.href = '../index.html';
+});
 
 document.addEventListener('keydown',e=>{
     if(e.key === "Escape"){
-        window.history.go(-1)
+        location.href = '../index.html';
     }
-})
+});

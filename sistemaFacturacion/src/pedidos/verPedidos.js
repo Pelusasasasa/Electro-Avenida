@@ -6,15 +6,13 @@ const URL = process.env.URL;
 const {copiar, recorrerFlechas, redondear, botonesSalir} = require('../funciones');
 
 const tbody = document.querySelector("tbody");
+const eliminarPedido = document.querySelector('.eliminarPedido');
 const salir = document.querySelector('.salir');
 
-
 let arreglo;
-let id;
 let seleccionado;
 let subSeleccionado
 let inputSeleccionado;
-
 
 //Mandamos a llamar a pedidos
 window.addEventListener('load',async e=>{
@@ -86,7 +84,6 @@ window.addEventListener('load',async e=>{
     arreglo = await pedidos
 });
 
-
 tbody.addEventListener("click" , e=>{
     seleccionado &&  seleccionado.classList.remove('seleccionado');
     seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target.parentNode.parentNode;
@@ -124,7 +121,6 @@ tbody.addEventListener("click" , e=>{
 
 
 //Eliminar un pedido
-const eliminarPedido = document.querySelector('.eliminarPedido');
 eliminarPedido.addEventListener("click", async e =>{
     seleccionado = document.querySelector('.seleccionado');
         if (seleccionado) {
@@ -141,8 +137,6 @@ eliminarPedido.addEventListener("click", async e =>{
         }
 });
 
-
-
 document.addEventListener('keydown',async e=>{
     if(e.key === "Escape"){
         location.href = "../index.html";
@@ -155,7 +149,6 @@ document.addEventListener('keydown',async e=>{
         behavior:"smooth"
     })
 });
-
 
 salir.addEventListener('click',e=>{
     location.href = '../index.html';
