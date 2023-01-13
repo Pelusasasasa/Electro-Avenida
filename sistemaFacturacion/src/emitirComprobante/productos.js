@@ -41,8 +41,11 @@ body.addEventListener('keydown',e=>{
 //si la tecla es escape se cierra la pagina
 body.addEventListener('keyup',async e=>{
     if (e.key === "Escape") {
-        window.close()
-    }
+        if (!document.activeElement.classList.contains('swal2-input') && !document.activeElement.classList.contains('swal2-modal')) {
+            window.close();
+        }
+    };
+
     subSeleccionado = await recorrerFlechas(e);
     seleccionado = subSeleccionado && subSeleccionado.parentNode;
 
@@ -109,6 +112,10 @@ select.addEventListener('keydown',(e) =>{
     if (e.keyCode === 39) {
         e.preventDefault();
         buscarProducto.focus();
+    }else if(e.keyCode === 40){
+        //Quitamos para que cuando el select este en focus y usamos la fleacha de abajo pierda el foco
+        e.preventDefault();
+        select.blur();
     }
 });
 
@@ -148,7 +155,7 @@ buscarProducto.addEventListener('keyup',e=>{
             select.focus();   
         };
     }
-})
+});
 
 async function cantidad(e) {
     sweet.fire({
