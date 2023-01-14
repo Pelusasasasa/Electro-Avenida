@@ -1,7 +1,6 @@
 const desde = document.getElementById('desde');
 const hasta = document.getElementById('hasta');
 
-const { ipcRenderer } = require('electron');
 const sweet = require('sweetalert2');
 
 const axios = require('axios');
@@ -38,7 +37,18 @@ window.addEventListener('load',async e=>{
     listarCompras(facturas)
 });
 
+desde.addEventListener('change',async e=>{
+    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`)).data;
+    listarCompras(facturas)
+});
+
+hasta.addEventListener('change',async e=>{
+    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`)).data;
+    listarCompras(facturas)
+});
+
 const listarCompras = async(lista)=>{
+    tbody.innerHTML = "";
     for(let elem of lista){
         const tr = document.createElement('tr');
         tr.id = elem._id;

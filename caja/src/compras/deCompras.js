@@ -26,8 +26,6 @@ window.addEventListener('load',async e=>{
     desde.value = `${year}-${month}`;
     hasta.value = `${year}-${month}`;
 
-    periodo.innerHTML = hasta.value
-
     const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
     datos.sort((a,b)=>{
         if (a.fecha_comp>b.fecha_comp) {
@@ -48,6 +46,7 @@ desde.addEventListener('change',async e=>{
 
 hasta.addEventListener('change',async e=>{
     const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
+    console.log(datos)
     listarDatos(datos);
 });
 
@@ -197,6 +196,12 @@ const listarDatos = (lista)=>{
     retencionBrutosCompras.innerHTML = rdgr.toFixed(2);
     retencionIvaCompras.innerHTML = riva.toFixed(2);
 };
+
+desde.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        hasta.focus();
+    }
+});
 
 document.addEventListener('keydown',e=>{
     if(e.keyCode === 27){

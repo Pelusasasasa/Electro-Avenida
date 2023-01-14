@@ -130,9 +130,9 @@ tbody tr:hover{
     margin: 2rem;
 }
 
-.deCompras header{
+.deCompras header main{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .deCompras p{
