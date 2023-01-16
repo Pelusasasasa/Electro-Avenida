@@ -32,9 +32,9 @@ const cerrarVentana = ()=>{
             window.close();
         }
     });
-    document.getElementById('salir').addEventListener('click',e=>{
+    document.getElementById('salir') && document.getElementById('salir').addEventListener('click',e=>{
         window.close();
-    })
+    });
 };
 
 const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,desc)=>{

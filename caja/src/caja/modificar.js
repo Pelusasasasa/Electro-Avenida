@@ -33,7 +33,46 @@ window.addEventListener('load',async e=>{
     listar(movimientos);
 });
 
+desde.addEventListener('change',async e=>{
+        const fecha = hasta.value.split('-',3);
+        let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
+        nextDay.setDate(nextDay.getDate() + 1);
+
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
+
+        movimientos.sort((a,b)=>{
+            if (a.fecha > b.fecha) {
+                return 1
+            }else if(a.fecha < b.fecha){
+                return -1
+            };
+            return 0
+        });
+
+        listar(movimientos);
+})
+
+hasta.addEventListener('change',async e=>{
+        const fecha = hasta.value.split('-',3);
+        let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
+        nextDay.setDate(nextDay.getDate() + 1);
+
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
+
+        movimientos.sort((a,b)=>{
+            if (a.fecha > b.fecha) {
+                return 1
+            }else if(a.fecha < b.fecha){
+                return -1
+            };
+            return 0
+        });
+
+        listar(movimientos)
+})
+
 const listar = (lista)=>{
+    tbody.innerHTML = "";
     for(let mov of lista){
         const tr = document.createElement('tr');
         tr.id = mov._id;
@@ -147,4 +186,10 @@ document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {
         location.href = '../index.html';
     }
-})
+});
+
+desde.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        hasta.focus();
+    }
+});
