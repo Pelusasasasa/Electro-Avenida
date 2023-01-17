@@ -49,4 +49,14 @@ chequesCTRL.getForNumero = async(req,res)=>{
     res.send(cheque);
 }
 
+chequesCTRL.sinFechaPagoYPropios = async(req,res)=>{
+    const cheques = await Cheque.find({
+        $and:[
+            {fechaPago:{$exists:false}},
+            {tipo:"P"}
+        ]
+    });
+    res.send(cheques)
+}
+
 module.exports = chequesCTRL;

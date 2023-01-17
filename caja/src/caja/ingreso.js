@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { ipcRenderer } = require('electron/renderer');
-const { cerrarVentana, copiar, redondear } = require('../assets/js/globales');
+const { cerrarVentana, copiar } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -38,7 +38,6 @@ window.addEventListener('load',async e=>{
     
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
-
 });
 
 select.addEventListener('change',async e=>{
@@ -60,13 +59,12 @@ const listarRubros = async(cuentasConTipo)=>{
     nextDay.setDate(today.getDate() + 1);
 
     const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data;
-    
     listar(ingresos.filter(ingreso => ingreso.tMov === tipo))
 }
 
 const listar = async(lista)=>{
-    console.log(lista)
-    const listaOrdenada = lista.sort((a,b)=>{//la usamos para ordenar la lsita
+    const listaOrdenada = lista.filter(elem=>elem.tMov === tipo);
+    listaOrdenada.sort((a,b)=>{//la usamos para ordenar la lsita
         if (a.idCuenta>b.idCuenta) {
             return 1
         }else if(a.idCuenta<b.idCuenta){
@@ -149,19 +147,22 @@ select.addEventListener('keypress',e=>{
     }
 });
 
-desde.addEventListener('keypress',e=>{
-    if (e.keyCode === 13) {
-        hasta.focus();
-    }
+desde.addEventListener('keypress',async e=>{
+    const fecha = hasta.value.split('-',3);
+    let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data
+    listar(ingresos);
 });
 
-hasta.addEventListener('keypress',async e=>{
-    if (e.keyCode === 13) {
-        let nextDay = new Date(hasta.value);
-        nextDay.setDate(today.getDate() + 1);
+hasta.addEventListener('change',async e=>{
+        const fecha = hasta.value.split('-',3);
+        let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
+        nextDay.setDate(nextDay.getDate() + 1);
+
         const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data
         listar(ingresos);
-    }
 });
 
 //cuando hacemos click en la tabla seleccioonamos el tr y subseleccionamos el td
@@ -188,6 +189,7 @@ tbody.addEventListener('click',e=>{
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
     cuentas = (await axios.get(`${URL}cuentas`)).data;
     tipo = args;
+    
     if (tipo === "I") {
         titulo.innerHTML = "Ingreso de Caja";
         cuentasConTipo = cuentas.filter(cuenta=>cuenta.tipo === tipo);
@@ -197,3 +199,9 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
     }
     listarRubros(cuentasConTipo)
 });
+
+desde.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        hasta.focus();
+    }
+})

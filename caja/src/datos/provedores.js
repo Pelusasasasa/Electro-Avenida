@@ -8,14 +8,18 @@ const sweet = require('sweetalert2');
 let seleccionado;
 let subSeleccionado;
 
+const nombre = document.getElementById('nombre');
+const codigo = document.getElementById('codigo');
+
 const tbody = document.querySelector('tbody');
 const agregar = document.querySelector('.agregar');
 const salir = document.querySelector('.salir');
 
 let botones = true;
+let provedores
 
 window.addEventListener('load',async e=>{
-    const provedores = (await axios.get(`${URL}provedor`)).data;
+    provedores = (await axios.get(`${URL}provedor`)).data;
     await listar(provedores);
 
     seleccionado = tbody.firstElementChild;
@@ -26,6 +30,16 @@ window.addEventListener('load',async e=>{
     
 });
 
+
+nombre.addEventListener('keyup',async e=>{
+    const listaAux = provedores.filter(provedor=>provedor.provedor.startsWith(nombre.value.toUpperCase()));
+    await listar(listaAux)
+});
+
+codigo.addEventListener('keyup',async e=>{
+    const listaAux = provedores.filter(provedor=>provedor.codigo === codigo.value);
+    await listar(listaAux);
+});
 
 agregar.addEventListener('click',e=>{
     ipcRenderer.send('abrir-ventana',{
@@ -52,6 +66,7 @@ document.addEventListener('keyup',e=>{
 });
 
 const listar = (lista)=>{
+    tbody.innerHTML = "";
     for (let elem of lista){
         const tr = document.createElement('tr');
 

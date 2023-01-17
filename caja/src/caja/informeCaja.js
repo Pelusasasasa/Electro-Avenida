@@ -45,6 +45,8 @@ window.addEventListener('load',async e=>{
     arregloEgresos.length !== 0 && listar(arregloEgresos,tbodyEgreso);
     arregloIngresos.length !== 0 && listar(arregloIngresos,tbodyIngreso);
 
+
+
 });
 
 const listar = async(lista,tbody)=>{
@@ -168,12 +170,17 @@ desde.addEventListener('keypress',e=>{
 hasta.addEventListener('keypress', async e=>{
     if (e.key === "Enter") {
         const fecha = hasta.value.split('-',3);
-        
         let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
         nextDay.setDate(nextDay.getDate() + 1);
+
         const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
-        arregloEgresos = movimientos.filter(elem => elem.tMov === "Egreso")
-        arregloIngresos = movimientos.filter(elem => elem.tMov === "Ingreso")
+
+        arregloEgresos = movimientos.filter(elem => elem.tMov === "E");
+        arregloIngresos = movimientos.filter(elem => elem.tMov === "I");
+
+        tbodyEgreso.innerHTML = "";
+        tbodyIngreso.innerHTML = "";
+
         arregloEgresos.length !== 0 && listar(arregloEgresos,tbodyEgreso);
         arregloIngresos.length !== 0 && listar(arregloIngresos,tbodyIngreso);
     }
@@ -192,7 +199,6 @@ tbodyEgreso.addEventListener('click',e=>{
         e.target.select()
     } 
 });
-
 
 document.addEventListener('keyup',e=>{
         recorrerConFlechas(e);

@@ -44,6 +44,15 @@ window.addEventListener('load',async e=>{
     let numero = (await axios.get(`${URL}tipoVenta/name/Ultimo Pago`)).data;
     numeroVenta.value = numero + 1;
     let provedores = (await axios.get(`${URL}provedor`)).data;
+    provedores.sort((a,b)=>{
+        if (a.provedor > b.provedor) {
+            return 1
+        }else if(a.provedor < b.provedor){
+            return -1
+        }
+        return 0;
+    });
+
     listarProductos(provedores);
 });
 
