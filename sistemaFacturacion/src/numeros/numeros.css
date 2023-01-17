@@ -1,0 +1,10 @@
+.inputs{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.inputs label{
+    display: inline-block;
+    width: 20rem;
+}

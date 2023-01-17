@@ -7,7 +7,10 @@ const URL = process.env.URL;
 
 const codigo = document.querySelector('#codigo')
 const descripcion = document.querySelector('#descripcion')
-const stock = document.querySelector('#stock')
+const stock = document.querySelector('#stock');
+const compra = document.querySelector('#Compra');
+const suma = document.querySelector('#Suma');
+const resta = document.querySelector('#Resta');
 const tipoOperacion = document.querySelectorAll('input[name="operacion"]')
 const cantidad = document.querySelector('#cantidad')
 const nuevoStock = document.querySelector('#nuevoStock')
@@ -25,11 +28,7 @@ ipcRenderer.on('movimiento-producto-abrir',async(e,args)=>{
     vendedor = usuario;
 })
 
-cantidad.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        aceptar.focus()
-    }
-});
+
 
 let operacion = "Compra"
 function verTipoDeOperacion(tipo){
@@ -70,15 +69,51 @@ aceptar.addEventListener('click', async (e) => {
       await axios.put(`${URL}productos/${movProducto.codProd}`,producto)
       ipcRenderer.send('productoModificado',producto);
       window.close()
-})
+});
+
+codigo.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        descripcion.focus()
+    }
+});
+
+descripcion.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        compra.focus();
+    }
+});
+
+compra.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        suma.focus();
+    }
+});
+
+suma.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        resta.focus();
+    }
+});
+
+resta.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        cantidad.focus();
+    }
+});
+
+cantidad.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        aceptar.focus()
+    }
+});
 
 
 volver.addEventListener('click',e=>{
-    window.close()
+    window.close();
 })
 
 document.addEventListener('keydown',e=>{
     if (e.key === "Escape") {
-        window.close()
+        window.close();
     }
 })

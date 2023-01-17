@@ -16,9 +16,6 @@
 @import "seccionCliente/imprimirPresupuesto";
 @import "seccionCliente/arreglarCompensada";
 
-//numero
-@import "numeros/numeros";
-
 //usuarios
 @import "vendedores/venedores";
 
@@ -36,10 +33,6 @@
 
 //emitirRecibo
 @import "emitirRecibo/emitirRecibo";
-
-//Movimiento de producto
-@import "movProdcutos/movProductos";
-@import "movProdcutos/infoMovProductos";
 
 //Imprimir
 @import "imprimir/imprimir";
