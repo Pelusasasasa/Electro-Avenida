@@ -635,6 +635,24 @@ presupuesto.addEventListener('click',async (e)=>{
                         await ponerEnCuentaCorrienteHistorica(venta,valorizado.checked,saldo_p.value);
                     }
 
+                    //si la venta es distinta de presupuesto sacamos el stock y movimiento de producto 
+                    for(let producto of venta.productos){
+                        if(venta.tipo_pago !== "PP"){
+                            producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
+                        }
+                        await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente,venta.tipo_pago);
+                    };
+
+                    if (venta.tipo_pago !== "PP") {
+                       await axios.put(`${URL}productos`,arregloProductosDescontarStock);
+                    };
+
+                    await axios.post(`${URL}movProductos`,arregloMovimiento);
+                    
+                    arregloMovimiento = [];
+                    arregloProductosDescontarStock = [];
+                    venta.tipo_pago === "CD" && await verTipoPago(vendedor);
+
                     if(impresion.checked) {
                         let cliente = {
                             id:codigoC.value,
@@ -649,22 +667,7 @@ presupuesto.addEventListener('click',async (e)=>{
                         }else{
                             await ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,listaSinDescuento])
                         }
-                    }   
-                    //si la venta es distinta de presupuesto sacamos el stock y movimiento de producto
-                     
-                    for(let producto of venta.productos){
-                        if(venta.tipo_pago !== "PP"){
-                            producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
-                        }
-                        await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente,venta.tipo_pago);
-                    };
-                    if (venta.tipo_pago !== "PP") {
-                       await axios.put(`${URL}productos`,arregloProductosDescontarStock);
-                    };
-                    await axios.post(`${URL}movProductos`,arregloMovimiento);
-                    arregloMovimiento = [];
-                    arregloProductosDescontarStock = [];
-                    venta.tipo_pago === "CD" && await verTipoPago(vendedor);
+                    } 
 
                     window.location = "../index.html";  
                 } catch (error) {
