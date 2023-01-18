@@ -1,5 +1,6 @@
 const axios = require('axios');
 const sweet = require('sweetalert2');
+const { redondear } = require('../funciones');
 
 require('dotenv').config();
 const URL = process.env.URL;
@@ -101,7 +102,7 @@ utilidad.addEventListener('blur', (e) => {
 })
 
 precioVenta.addEventListener('focus', (e) =>{
-    precioVenta.value = parseFloat((precioV+parseFloat(costoTotal.value)).toFixed(2))
+    precioVenta.value = redondear(precioV+parseFloat(costoTotal.value),2)
 })
 
 agregar.addEventListener('click' ,async  (e) =>{
@@ -172,23 +173,6 @@ document.addEventListener('keydown',e=>{
         window.close()
     }
 })
-
-function selecciona_value(idInput) {
-    valor_input = document.getElementById(idInput).value;
-    longitud = valor_input.length;
-    var selectionEnd = 0 + 1;
-    if (document.getElementById(idInput).setSelectionRange) {
-    document.getElementById(idInput).focus();
-    document.getElementById(idInput).setSelectionRange (0, longitud);
-    }
-    else if (input.createTextRange) {
-    var range = document.getElementById(idInput).createTextRange() ;
-    range.collapse(true);
-    range.moveEnd('character', 0);
-    range.moveStart('character', longitud);
-    range.select();
-    }
-}
 
 codigo.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
@@ -283,51 +267,51 @@ precioVenta.addEventListener('keypress',e=>{
 });
 
 utilidad.addEventListener('focus',e=>{
-    selecciona_value(utilidad.id)
+    utilidad.select();
 });
 
 costoPesos.addEventListener('focus',e=>{
-    selecciona_value(costoPesos.id)
+    costoPesos.select();
 });
 
 costoDolares.addEventListener('focus',e=>{
-    selecciona_value(costoDolares.id)
+    costoDolares.select();
 });
 
 marca.addEventListener('focus',e=>{
-    selecciona_value(marca.id)
+    marca.select();
 });
 
 stock.addEventListener('focus',e=>{
-    selecciona_value(stock.id)
+    stock.select();
 });
 
 provedor.addEventListener('focus',e=>{
-    selecciona_value(provedor.id)
+    provedor.select();
 });
 
 descripcion.addEventListener('focus',e=>{
-    selecciona_value(descripcion.id)
+    descripcion.select();
 });
 
 codigo.addEventListener('focus',e=>{
-    selecciona_value(codigo.id)
+    codigo.select();
 });
 
 codFabrica.addEventListener('focus',e=>{
-    selecciona_value(codFabrica.id)
+    codFabrica.select();
 });
 
 ivaImp.addEventListener('focus',e=>{
-    selecciona_value(ivaImp.id)
+    ivaImp.select();
 });
 
 costoTotal.addEventListener('focus',e=>{
-    selecciona_value(costoTotal.id)
+    costoTotal.select();
 });
 
 observaciones.addEventListener('focus',e=>{
-    selecciona_value(observaciones.id)
+    observaciones.select();
 });
 
 salir.addEventListener('click',e=>{

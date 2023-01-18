@@ -20,7 +20,7 @@ const templateMenu = [
         {
             label: 'Ventas',
             click() {
-                abrirVentana('fechas/fechas.html',400,300);
+                abrirVentana('fechas/fechas.html',600,200);
 
             }
         }]
@@ -94,7 +94,7 @@ const templateMenu = [
             {
                 label: "Cambio de codigo",
                 click(){
-                    abrirVentana("productos/cambioCodigo.html",400,300)
+                    abrirVentana("productos/cambioCodigo.html",700,300)
                 }
             },{
                 label: "Aum porcentaje",

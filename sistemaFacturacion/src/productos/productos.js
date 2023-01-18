@@ -97,6 +97,10 @@ const ponerProductos = productos =>{
         const tdcodFabrica = document.createElement('td');
         const tdObservacion = document.createElement('td');
 
+        tdPrecio.classList.add('text-end');
+        tdStock.classList.add('text-end');
+        tdcodFabrica.classList.add('text-end');
+
         tdId.innerHTML = producto._id;
         tdDscripcion.innerHTML = producto.descripcion;
         tdPrecio.innerHTML = parseFloat(producto.precio_venta).toFixed(2);

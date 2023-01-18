@@ -5,23 +5,25 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Listado Precio</title>
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./productos.css">
   </head>
   <body class="listadoStock">
-    <div class="buscador">
-      <div>
+    <section class="buscador">
+      <main>
         <label for="desde">Desde</label>
         <input type="text" autofocus name="desde" id="desde" />
-      </div>
-      <div>
+      </main>
+
+      <main>
         <label for="Hasta">Hasta</label>
         <input type="text" name="hasta" id="hasta" />
-      </div>
+      </main>
 
-      <div>
+      <main class="button">
         <button class="buscar">Buscar</button>
-      </div>
-    </div>
+      </main>
+    </section>
 
     <div class="botones">
       <div class="imprimir">
@@ -34,9 +36,6 @@
 
     <div class="listar">
       <table>
-        <caption>
-          Lista de Stock
-        </caption>
         <thead>
           <tr>
             <th>Codigo</th>

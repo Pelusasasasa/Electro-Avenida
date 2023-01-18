@@ -5,30 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fechas</title>
-    <link rel="stylesheet" href="../../build/css/app.css">
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./fechas.css">
 </head>
 <body class="fechasVentana">
-    <main class="fechas">
-        <section class="desde">
+    <section class="fechas">
+        <main class="desde">
             <label for="desde">Desde</label>
             <input type="date" autofocus name="desde" id="desde">
-        </section>
-        <section class="hasta">
+        </main>
+        <main class="hasta">
             <label for="hasta">Hasta</label>
             <input type="date" name="hasta" id="hasta">
-        </section>
-    </main>
+        </main>
+    </section>
 
-    <main class="hora">
+    <section class="hora">
         <select name="hora" id="hora">
             <option value="TODO">TODO</option>
             <option value="PM">PM</option>
             <option value="AM">AM</option>
         </select>
-    </main>
-    <main class="botones">
+    </section>
+    <section class="botones">
         <button class="aceptar">Aceptar</button>
         <button class="cancelar">Cancelar</button>
-    </main>
+    </section>
 </body><script src="./fechas.js"></script>
 </html>

@@ -2,11 +2,14 @@ const { ipcRenderer } = require("electron");
 require('dotenv').config();
 const URL = process.env.URL;
 const axios = require("axios");
+const { cerrarVentana } = require("../funciones");
 
 const select = document.querySelector('#marcas');
 const tbody = document.querySelector('tbody');
 
-const traerMarcas = async()=>{
+
+window.addEventListener('load',async e=>{
+    cerrarVentana();
     const marcas = (await axios.get(`${URL}productos`)).data;
     marcas.sort((a,b)=>{
         if (a>b) {
@@ -15,14 +18,14 @@ const traerMarcas = async()=>{
             return -1
         }
         return 0
-    })
+    });
     for await(let marca of marcas){
         const option = document.createElement('option');
         option.value = marca;
         option.text = marca;
         select.appendChild(option);
     }
-};
+});
 
 select.addEventListener('keyup',async e=>{
     tbody.innerHTML = "";
@@ -41,12 +44,11 @@ const listar = async ()=>{
             <tr>
                 <td>${_id}</td>
                 <td>${descripcion}</td>
-                <td>${stock}</td>
-                <td>$${precio_venta}</td>
+                <td class=text-end>${parseFloat(stock).toFixed(2)}</td>
+                <td class=text-end>$${precio_venta}</td>
                 <td>${observacion.slice(0,13)}</td>
 
             </tr>
         `
-    }
-}
-traerMarcas();
+    };
+};

@@ -4,24 +4,26 @@ const porcentajeInput = document.querySelector('#porcentaje');
 const modificar = document.querySelector('.modificar');
 
 const axios = require("axios");
+const { cerrarVentana } = require('../funciones');
 require("dotenv").config;
 const URL = process.env.URL;
 
 let marcas;
 let dolar;
-const traerMarcas = async()=>{
-        dolar = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
-        marcas = await axios(`${URL}productos`);
-        marcas = marcas.data
-        marcas.sort();
-        marcas.forEach(marca => {
-            const option = document.createElement('option')
-            option.text = marca;
-            option.value = marca
-            select.appendChild(option)
-        });
-    }
-traerMarcas()
+
+window.addEventListener('load',async e=>{
+    cerrarVentana();
+    dolar = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
+    marcas = await axios(`${URL}productos`);
+    marcas = marcas.data
+    marcas.sort();
+    marcas.forEach(marca => {
+        const option = document.createElement('option')
+        option.text = marca;
+        option.value = marca
+        select.appendChild(option)
+    });
+});
 
 
 modificar.addEventListener('click',async e=>{

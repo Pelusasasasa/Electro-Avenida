@@ -5,14 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Electro Avenida</title>
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./productos.css">
   </head>
-  <body>
-    <div class=" productos">
-      <fieldset>
+  <body class="productos">
+      <fieldset class="buscador">
         <legend>Buscador</legend>
-        <div class="buscador">
-          <div class="productos-codigo">
+          <main class="productos-codigo">
             <label for="">Seleccion</label>
             <select class="" name="seleccion" id="seleccion">
               <option value="codigo">Codigo</option>
@@ -21,23 +20,18 @@
               <option value="provedor">Provedor</option>
               <option value="cod_fabrica">Fabrica</option>
             </select>
+          </main>
 
-          </div>
-
-          <div class="buscador-producto">
+          <main class="buscador-producto">
             <label for="buscarProducto" class="">Buscar Producto</label>
             <input type="search" name="buscarProducto" id="buscarProducto" autofocus class="fs-2 form-control"
             />
-          </div>
+          </main>
 
-          <div class="imagen">
-            
-          </div>
-        </div>
+          <main class="imagen"></main>
       </fieldset>
 
-      <div class="listar-productos">
-        <div class="m-0">
+        <section class="m-0 lista">
           <table class="tabla-productos">
             <thead>
               <tr>
@@ -52,25 +46,16 @@
             </thead>
             <tbody id="resultado" class="tbody"></tbody>
           </table>
-        </div>
-      </div>
+        </section>
 
-      <div class="botones">
-
+      <section class="botones">
           <button class="agregarProducto">Agregar Producto</button>
-
           <button class="modificar">Consultar/Modificar Producto</button>
-        
           <button class="movimiento">Movimiento Producto</button>
-        
           <button class="ingresar">Ingresar Mov. Producto</button>
-        
           <button class="eliminar">Eliminar Producto</button>
-        
           <button class="volver">Volver</button>
-        </div>
-      </div>
-    </div>
+      </section>
 
     <script src="productos.js"></script>
   </body>

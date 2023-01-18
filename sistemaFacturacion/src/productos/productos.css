@@ -1,0 +1,134 @@
+.listadoPorMarca .marcas{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.listadoPorMarca .lista{
+    height: 80vh;
+    background-color: white;
+    overflow: scroll;
+}
+
+.listadoPorMarca .lista table,.listadoStock .listar table{
+    width: 100%;
+}
+
+.listadoPorMarca .lista table tr th,.listadoPorMarca .lista table tr td,.listadoStock .listar table tr th,.listadoStock .listar table tr td{
+    border: .1rem solid black;
+}
+
+.aumentoPorcentaje .inputs{
+    display: flex;
+    gap: 2rem;
+}
+
+.aumentoPorcentaje .inputs main{
+    display: flex;
+    flex-direction: column;
+}
+
+.seccionCambioCodigo .inputs,.seccionCambioCodigo .inputs main{
+    display: flex;
+    flex-direction: column;
+}
+
+
+.seccionCambioCodigo #codigo,.seccionCambioCodigo #nuevoCodigo{
+    width: 30%;
+}
+
+.listadoStock .buscador{
+    display: flex;
+    justify-content: space-around;
+}
+
+.listadoStock .buscador main{
+    display: flex;
+    flex-direction: column;
+}
+
+.listadoStock .buscador .button{
+    align-self: flex-end;
+}
+
+.listadoStock .listar{
+    background-color: white;
+    height: 70vh;
+    overflow: scroll;
+}
+
+
+.productos .buscador{
+    display: flex;
+    gap: 2rem;
+}
+
+.productos .buscador main{
+    display: flex;
+    flex-direction: column;
+
+}
+
+.productos select,.productos .buscador input{
+    font-size: 3rem;
+}
+
+.productos .buscador .buscador-producto{
+    width: 70%;
+}
+
+.productos .lista{
+    background-color: white;
+    overflow: scroll;
+    height: 65vh;
+}
+
+.productos .lista tr th,.productos .lista tr td{
+    border: .1rem solid black;
+}
+
+.agregarProducto .codigos,.modificar .codigos{
+    display: flex;
+    justify-content: space-around;
+}
+
+.agregarProducto main{
+    display: flex;
+    flex-direction: column;
+}
+
+.agregarProducto .unidad{
+    display: flex;
+    justify-content: space-around;
+}
+
+.agregarProducto .marcaProvedor{
+    display: flex;
+    justify-content: space-around;
+}
+
+.agregarProducto .precio{
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+.agregarProducto section{
+    margin: 1.2rem auto;
+}
+
+.agregarProducto input{
+    font-size: 1.6rem;
+}
+
+.agregarProducto .observaciones{
+    display: flex;
+    justify-content: center;
+}
+
+.agregarProducto .precioFinal{
+    display: flex;
+    justify-content: space-around;
+} 
