@@ -53,7 +53,7 @@ const templateMenu = [
             },{
                 label: "Vendedores",
                 click(){
-                    validarUsuario("ValidarUsuario")
+                    abrirVentana("usuarios/usuarios.html",800,400)
                 }
             }
         ]

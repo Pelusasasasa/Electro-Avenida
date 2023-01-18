@@ -181,31 +181,6 @@ function abrirVentana(texto,width,height,reinicio,informacion = ""){
         nuevaVentanaDos = null;
         reinicio !== "noReinician" && ventanaPrincipal.reload()
     });
-
-  }else if(texto.includes("usuarios")){
-      const a = texto.split('?')[1];
-      nuevaVentana = new BrowserWindow({
-          width: 500,
-          parent:ventanaPrincipal,
-          modal:true,
-          height: 450,
-          webPreferences: {
-              contextIsolation: false,
-              nodeIntegration: true
-          }
-      })
-      nuevaVentana.loadURL(url.format({
-          pathname: path.join(__dirname, `usuarios/usuarios.html`),
-          protocol: 'file',
-          slashes: true
-      }));
-      nuevaVentana.setMenuBarVisibility(false)
-      nuevaVentana.on('close',e=>{
-          nuevaVentana = null
-      })
-      nuevaVentana.on('ready-to-show',()=>{
-          nuevaVentana.webContents.send('acceso',JSON.stringify(a));
-      });
   }else{
       nuevaVentana = new BrowserWindow({
           parent:ventanaPrincipal,
@@ -260,8 +235,7 @@ const botonesSalir = async()=>{
     salir.addEventListener('click',e=>{
         window.close();
     });
-}
-
+};
 
 const verCodComp = (tipoComp,condicionIva) =>{
     if(tipoComp === "Recibos"){
@@ -466,5 +440,5 @@ module.exports = {
     ultimasFacturas,
     verificarUsuarios,
     generarMovimientoCaja,
-    verTipoPago
+    verTipoPago,
 }

@@ -146,9 +146,7 @@ ipcRenderer.on("validarUsuario",(e,args)=>{
                 if (usuario !== "") {
                     vendedor = usuario.nombre;
                     acceso = usuario.acceso;
-                    if (JSON.parse(args) === "ValidarUsuario") {
-                        ipcRenderer.send('abrir-ventana',`usuarios?${acceso}?${vendedor}`)
-                    }else if(JSON.parse(args) === "aumPorPorcentaje"){
+                    if(JSON.parse(args) === "aumPorPorcentaje"){
                         (acceso === "0") ? ipcRenderer.send('abrir-ventana',`conexion?${acceso}`) : await sweet.fire({title:"No tiene permisos"})
                     }else if(JSON.parse(args) === "arreglarSaldo"){
                         if (acceso !== "0") {
