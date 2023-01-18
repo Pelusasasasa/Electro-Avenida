@@ -7,9 +7,12 @@ const cambiar = document.querySelector('.cambiarBoton')
 const impirmir = document.querySelector('.imprimirBoton')
 
 const axios = require("axios");
+const { verificarUsuarios } = require('../funciones');
 require("dotenv").config;
 const URL = process.env.URL;
-let seleccionado
+
+let seleccionado;
+let vendedor;
 
 
 body.addEventListener('keydown',e=>{
@@ -19,6 +22,17 @@ body.addEventListener('keydown',e=>{
 });
 
 window.addEventListener('load',async e=>{
+    vendedor = await verificarUsuarios();
+
+    if(vendedor === ""){
+        await sweet.fire({
+            title:"Contraseña Incorrecta"
+        });
+        location.reload();
+    }else if (!vendedor) {
+        window.close();
+    };
+
     let productos = (await axios(`${URL}productos/stockNegativo`)).data;
     listarStockNegativo(productos)
 });
@@ -75,7 +89,11 @@ cambiar.addEventListener('click',async e=>{
             await crearMovimiento(producto,value);
             producto.stock = value;
             await axios.put(`${URL}productos/${seleccionado.id}`,producto);
-            location.reload()    
+            if (parseFloat(producto.stock) > 0 ) {
+                tbody.removeChild(seleccionado);
+            }else{
+                seleccionado.children[3].innerHTML = parseFloat(producto.stock).toFixed(2);
+            }
         }
     })
 });
@@ -87,6 +105,7 @@ const crearMovimiento = async(producto,stock)=>{
     movimiento.descripcion = producto.descripcion;
     movimiento.ingreso = parseFloat(stock) - parseFloat(producto.stock);
     movimiento.stock = stock;
+    movimiento.vendedor = vendedor.nombre;
     movimiento.tipo_comp = "+";
     movimiento.precio_unitario = producto.precio_venta;
     await axios.post(`${URL}movProductos`,[movimiento]);

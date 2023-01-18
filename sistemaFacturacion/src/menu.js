@@ -48,7 +48,7 @@ const templateMenu = [
             {
                 label: "Numeros",
                 click(){
-                    abrirVentana("numeros/numeros.html",500,1000)
+                    abrirVentana("numeros/numeros.html",600,1000)
                 }
             },{
                 label: "Vendedores",

@@ -36,17 +36,24 @@ ipcRenderer.on('datos-movimiento-producto',async (e,args)=>{
         const tdTotal = document.createElement('td');
         const tdVendedor = document.createElement('td');
 
+        tdTipoComp.classList.add('text-center');
+        tdIngreso.classList.add('text-end');
+        tdEgreso.classList.add('text-end');
+        tdStock.classList.add('text-end');
+        tdPrecioUnitario.classList.add('text-end');
+        tdTotal.classList.add('text-end');
+
         tdFecha.innerHTML = `${fecha.getUTCDate()}/${fecha.getUTCMonth()+1}/${fecha.getUTCFullYear()}`;
         tdcodCliente.innerHTML = movProducto.codCliente;
         tdCliente.innerHTML = movProducto.cliente;
         tdTipoComp.innerHTML = movProducto.tipo_comp;
         tdTipoVenta.innerHTML = movProducto.tipo_pago;
         tdNroComp.innerHTML = movProducto.nro_comp;
-        tdIngreso.innerHTML = movProducto.ingreso;
-        tdEgreso.innerHTML = movProducto.egreso;
-        tdStock.innerHTML = movProducto.stock;
-        tdPrecioUnitario.innerHTML = movProducto.precio_unitario;
-        tdTotal.innerHTML = movProducto.total;
+        tdIngreso.innerHTML = movProducto.ingreso.toFixed(2);
+        tdEgreso.innerHTML = movProducto.egreso.toFixed(2);
+        tdStock.innerHTML = movProducto.stock.toFixed(2);
+        tdPrecioUnitario.innerHTML = movProducto.precio_unitario.toFixed(2);
+        tdTotal.innerHTML = movProducto.total.toFixed(2);
         tdVendedor.innerHTML = movProducto.vendedor;
 
         tr.appendChild(tdFecha);

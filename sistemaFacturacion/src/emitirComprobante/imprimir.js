@@ -40,7 +40,7 @@ const { ipcRenderer } = require("electron");
             numero.innerHTML=venta.nro_comp;
             clientes.innerHTML = cliente.cliente;
             venta.observaciones !== "" ? clientes.innerHTML += ` (${venta.observaciones})` : "";
-            idCliente.innerHTML = cliente._id;
+            idCliente.innerHTML = cliente.id;
             vendedor.innerHTML = venta.vendedor;
             cuit.innerHTML = cliente.cuit;
             direccion.innerHTML = cliente.direccion;

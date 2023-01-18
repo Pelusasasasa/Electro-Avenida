@@ -35,8 +35,6 @@ const creditoA = document.querySelector('#creditoA');
 const creditoB = document.querySelector('#creditoB');
 const reciboA = document.querySelector('#reciboA');
 const reciboB = document.querySelector('#reciboB');
-const debitoA = document.querySelector('#debitoA');
-const debitoB = document.querySelector('#debitoB');
 const recibo = document.querySelector('#recibo');
 const presupuesto= document.querySelector('#presupuesto');
 const remito= document.querySelector('#remito');
@@ -53,8 +51,6 @@ async function guardarDatos() {
         "Ultima Recibo A":reciboA.value,
         "Ultima Recibo B":reciboB.value,
         "Ultima N Credito B":creditoB.value,
-        "Ultima N Debito A":debitoA.value,
-        "Ultima N Debito B":debitoB.value,
         "Ultimo Recibo": recibo.value,
         "Ultimo Presupuesto":presupuesto.value,
         "Ultimo Remito": remito.value,
@@ -87,8 +83,6 @@ const ponerInpusnumero = async(objeto)=>{
     creditoB.value = numeros["Ultima N Credito B"];
     reciboA.value =numeros["Ultima Recibo A"];
     reciboB.value =numeros["Ultima Recibo B"];
-    debitoA.value =numeros["Ultima N Debito A"];
-    debitoB.value =numeros["Ultima N Debito B"];
     recibo.value =numeros["Ultimo Recibo"];
     presupuesto.value =numeros["Ultimo Presupuesto"];
     remito.value =numeros["Ultimo Remito"];
