@@ -171,7 +171,7 @@ ipcMain.on('facturar_varios',(e,args)=>{
 //Abrir ventana para modificar un producto
 ipcMain.on('abrir-ventana-modificar-producto',  (e, args) => {
     const [id,acceso,texto,seleccion] = args
-    abrirVentana('productos/modificarProducto.html',1000,600,'noReinician')
+    abrirVentana('productos/modificarProducto.html',1100,500,'noReinician')
     nuevaVentana.on('ready-to-show',async ()=>{
     nuevaVentana.webContents.send('id-producto', id)
     nuevaVentana.webContents.send('acceso', JSON.stringify(acceso))

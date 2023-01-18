@@ -94,41 +94,41 @@
     justify-content: space-around;
 }
 
-.agregarProducto main{
+.agregarProducto main, .modificar main{
     display: flex;
     flex-direction: column;
 }
 
-.agregarProducto .unidad{
+.agregarProducto .unidad, .modificar .unidad{
     display: flex;
     justify-content: space-around;
 }
 
-.agregarProducto .marcaProvedor{
+.agregarProducto .marcaProvedor,.modificar .marca{
     display: flex;
     justify-content: space-around;
 }
 
-.agregarProducto .precio{
+.agregarProducto .precio,.modificar .costos{
     display: flex;
     justify-content: space-around;
     gap: 2rem;
 }
 
-.agregarProducto section{
+.agregarProducto section,.modificar section{
     margin: 1.2rem auto;
 }
 
-.agregarProducto input{
+.agregarProducto input,.modificar input{
     font-size: 1.6rem;
 }
 
-.agregarProducto .observaciones{
+.agregarProducto .observaciones,.modificar .observaciones{
     display: flex;
     justify-content: center;
 }
 
-.agregarProducto .precioFinal{
+.agregarProducto .precioFinal,.modificar .precioFinal{
     display: flex;
     justify-content: space-around;
 } 

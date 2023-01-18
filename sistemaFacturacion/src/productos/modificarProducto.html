@@ -6,9 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Modificar Producto</title>
     <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./productos.css">
   </head>
   <body class="modificar">
-      <section class="codigo">
+      <section class="codigos">
         <main>
           <label class="" for="codigo">Codigo</label>
           <input disabled class="" type="text" name="codigo" id="codigo" placeholder="codigo"/>
@@ -20,15 +21,15 @@
         </main>
       </section>
 
-      <section>
+      <section class="descripcion">
         <main> 
           <label class="" for="descripcion">Descripcion</label>
           <input disabled type="text" name="descripcion" id="descripcion" placeholder="descripcion" />
         </main>
       </section>
 
-      <section>
-        <main class="unidad formulario__campo">
+      <section class="unidad">
+        <main class="">
           <label for="unidad">Unidad</label>
           <select name="unidad" id="unidad" disabled>
             <option value="U">Unidad</option>
@@ -42,14 +43,14 @@
         </main>
 
         <main>
-          <label class="" for="stock">Stock</label>
+          <label for="stock">Stock</label>
           <input disabled type="text" name="stock" id="stock" placeholder="stock"/>
         </main>
       </section>
 
       <section class="marca">
-        <main>class=""
-          <label class="" for="provedor">Provedor</label>
+        <main>
+          <label for="provedor">Provedor</label>
           <input disabled type="text" name="provedor" id="provedor" placeholder="provedor" />
         </main>
 
@@ -97,9 +98,9 @@
         </main>
       </section>
 
-      <section>
+      <section class="observaciones">
         <main>
-          <label for="">Oservaciones</label>
+          <label for="observaciones">Oservaciones</label>
           <input disabled type="text" id="observaciones" name="observaciones" placeholder="Observaciones" />
         </main>
       </section>
@@ -120,7 +121,7 @@
     <section class="botones">
       <button class="modificar">modificar</button>
 
-      <button class="guardar disable">Guardar</button>
+      <button class="guardar none">Guardar</button>
 
       <button class="salir">Salir</button>
     </section>
