@@ -25,8 +25,8 @@ mesDeHoy = (mesDeHoy === 0) ? 1 : mesDeHoy;
 mesDeHoy = (mesDeHoy<10) ? `0${mesDeHoy}`: mesDeHoy;
 diaDeHoy = (diaDeHoy<10) ? `0${diaDeHoy}`: diaDeHoy;
 
-const body = document.querySelector('body')
-const informacionCliente = document.querySelector('.informacionCliente')
+const body = document.querySelector('body');
+const informacionCliente = document.querySelector('.cliente')
 const botones = document.querySelector('.botones')
 const pagado = document.querySelector('.pagado')
 const alerta = document.querySelector('.alerta')
@@ -92,8 +92,8 @@ const ocultarNegro = ()=>{
     pagado.classList.remove('mostrarNegro')
     informacionCliente.classList.remove('mostrarNegro')
     botones.classList.remove('mostrarNegro')
-    saldo.classList.remove('none')
-    saldo_p.classList.add('none')
+    saldo.parentNode.classList.remove('none')
+    saldo_p.parentNode.classList.add('none')
     body.classList.remove('mostrarNegro')
 }
 
@@ -102,9 +102,8 @@ const mostrarNegro = ()=>{
     pagado.classList.add('mostrarNegro')
     informacionCliente.classList.add('mostrarNegro')
     botones.classList.add('mostrarNegro')
-    const body = document.querySelector('.contenedorEmitirRecibo')
-    saldo.classList.add('none')
-    saldo_p.classList.remove('none')
+    saldo.parentNode.classList.add('none');
+    saldo_p.parentNode.classList.remove('none');
     body.classList.add('mostrarNegro')
 };
 

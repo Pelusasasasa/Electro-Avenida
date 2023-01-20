@@ -79,3 +79,12 @@ select{
 .text-end{
   text-align: end;
 }
+
+.mostrarNegro{
+  background-color: black;
+  color: white;
+}
+
+.mostrarNegro table{
+  color: black;
+}

@@ -1,0 +1,55 @@
+.emitirRecibo .cliente{
+    display: flex;
+    justify-content: space-around;
+    flex-direction: column;
+}
+
+.emitirRecibo .cliente main{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 5rem;
+    margin-bottom: 1rem;
+}
+
+.emitirRecibo .cliente main input,.emitirRecibo .cliente main label{
+    font-size: 1.5rem;
+}
+
+.emitirRecibo .cliente .nombre{
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr 1fr;
+    gap: 2rem;
+}
+
+.emitirRecibo .cliente .nombre div,.emitirRecibo .cliente .direccion div,.emitirRecibo .cliente .cuit div{
+    display: flex;
+    flex-direction: column;
+}
+
+.emitirRecibo .cliente .direccion div{
+    width: 100%;   
+}
+
+.tabla{
+    background-color: white;
+    height: 50vh;
+    overflow: scroll;
+}
+
+.tabla table tr th,.tabla table tr td{
+    border: .1rem solid black;
+}
+
+.tabla table tr td input{
+    width: 100%;
+}
+
+.emitirRecibo .pagado{
+    display: flex;
+    justify-content: space-around;
+}
+
+
+.emitirRecibo .pagado main h3{
+    margin: 0;
+}

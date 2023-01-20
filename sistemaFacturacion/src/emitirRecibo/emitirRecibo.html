@@ -4,30 +4,35 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <!-- <link rel="stylesheet" href="../../build/css/app.css" /> -->
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./recibo.css">
     <title>Emitir recibo</title>
   </head>
-  <body class="contenedorEmitirRecibo">
+  <body class="emitirRecibo">
 
-      <div class="informacionCliente">
-        <div class="nombre">
+      <section class="cliente">
+        <main class="nombre">
           <div>
-            <label for="">Cliente:</label>
+            <label for="codigo">Cliente</label>
             <input autofocus type="text" id="codigo" name="codigo" />
           </div>
+            <div>
+              <label for="nombre">Nombre</label>
+              <input type="text" disabled id="nombre" name="nombre" />
+            </div>
+            <div>
+              <label for="saldo">Saldo</label>
+              <input type="text" id="saldo" name="saldo" placeholder="0" />
+            </div>
+            <div class="saldo_p none">
+              <label for="saldo_p">Saldo_P</label>
+              <input type="text" name="saldo_p" id="saldo_p" placeholder="0">
+            </div>
 
-          <div>
-            <input type="text" disabled id="nombre" name="nombre" />
-          </div>
+        </main>
 
-
-            <input type="text" id="saldo" name="saldo" placeholder="0" />
-
-
-            <input type="text" class="none" name="saldo_p" id="saldo_p" placeholder="0">
-
-        </div>
-        <div class="direccion">
+        <main class="direccion">
           <div>
             <label for="direccion">Direccion</label>
             <input type="text" disabled name="direccion" id="direccion" />
@@ -38,20 +43,24 @@
             <input type="text" disabled name="localidad" id="localidad" />
           </div>
 
-          <input type="date" id="fecha" name="fecha" />
-        </div>
-        <div class="cuit">
+          <div>
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha" name="fecha" />
+          </div>
+        </main>
+
+        <main class="cuit">
           <div>
             <label for="cond_iva">Cond iva:</label>
             <input type="text" disabled name="cond_iva" id="cond_iva" />
           </div>
 
           <div>
-            <label for="cuit">Cuit:</label>
+            <label for="cuit">CUIT:</label>
             <input type="text" disabled name="cuit" id="cuit" />
           </div>
-        </div>
-      </div>
+        </main>
+      </section>
 
       <section class="tabla">
         <table>
@@ -71,30 +80,24 @@
         </table>
       </section>
 
-      <div class="pagado">
-        <div class="saldoAFavor">
+      <section class="pagado">
+        <main class="saldoAFavor">
           <h3>Saldo a favor</h3>
           <input type="text" id="saldoAFavor" value="0.00" class="text-right" name="saldoAFavor" />
-        </div>
+        </main>
 
-        <div class="total">
+        <main class="total">
           <h3>Total</h3>
-          <input
-            type="number"
-            placeholder="0.00"
-            id="total"
-            name="total"
-            disabled
-          />
-        </div>
-      </div>
+          <input type="number" placeholder="0.00" id="total" name="total" disabled />
+        </main>
+      </section>
 
-      <div class="botones">
+      <section class="botones">
         <button class="todo">Pagar Todo</button>
         <button class="cancelar">Cancelar</button>
         <button class="imprimir">Imprimir</button>
         <div class="vendedor"></div>
-      </div>
+      </section>
 
       <div class="alerta none">
         <div class="spinner"></div>

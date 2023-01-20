@@ -73,7 +73,6 @@
 .agregarCliente .tipo,.modificarCliente .tipo{
     display: flex;
     justify-content: space-around;
-    /* text-align: center; */
 }
 
 .agregarCliente .tipo input, .modificarCliente .tipo input{
