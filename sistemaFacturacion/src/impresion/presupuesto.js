@@ -3,7 +3,7 @@ const { ipcRenderer } = require("electron");
         const fecha = document.querySelector('.fecha');
         const numero = document.querySelector('.numero');
         const vendedor = document.querySelector('.vendedor');
-        const clientes = document.querySelector('.cliente');
+        const clientes = document.querySelector('.nombreCliente');
         const idCliente = document.querySelector('.idCliente');
         const cuit = document.querySelector('.cuit');
         const direccion = document.querySelector('.direccion');
@@ -14,7 +14,7 @@ const { ipcRenderer } = require("electron");
         const precioFinal = document.querySelector('.precioFinal');
         const tipoPago = document.querySelector('.tipoPago');
         const tbody = document.querySelector('.tbody');
-        const presupuesto = document.querySelector('.presupuesto');
+        const presupuesto = document.querySelector('#presupuesto');
         const tipoFactura = document.querySelector('.tipoFactura');
         const descuento = document.querySelector('.descuento');
 
@@ -52,7 +52,6 @@ const { ipcRenderer } = require("electron");
             tipoPago.innerHTML= venta.tipo_pago;
             tipoFactura.innerHTML = venta.tipo_pago === "PP" ? "X" : "R";
             presupuesto.innerHTML = venta.tipo_pago === "PP" ? "Comprobante no valido como Factura" : "";    
-
             descuento.innerHTML = venta.descuento;
     
             if ((venta.tipo_pago === "CC" && valorizado !== "valorizado") || valorizado === "no valorizado") {

@@ -1,0 +1,161 @@
+@page{
+    margin: 0;
+}
+
+body{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+    font-size: 1.3rem;
+}
+  
+html {
+    box-sizing: border-box;
+    font-size: 62.5%;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+.ticket .w-10{
+    width: 18rem;
+}
+.ticket .w-12{  
+    width: 12rem;
+}
+.ticket .logo{
+    display: flex;
+    justify-content: center;
+}
+
+.ticket .infoFactura{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: flex-start;
+}
+
+.ticket .factura,.ticket .fecha{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.ticket .infoProducto div{
+    display: flex;
+    justify-content: space-between;
+}
+
+.ticket .afip{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+.ticket .afipCae{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.ticket .cae,.venciCae{
+    display: flex;
+    flex-direction: column;
+}
+
+.ticket .texto-final{
+    text-align: end;
+}
+.ticket .texto-grande{
+    font-size: 1.5rem;
+}
+.ticket .texto-bold{
+    font-weight: bold;
+}
+
+.ticket .texto-center{
+    text-align: center  ;
+}
+
+.ticket p{
+    margin: 0;
+}
+
+.ticket .discriminadorIva{
+    margin: 2rem 0;
+}
+
+.ticket .discriminadorIva .margin-1-t{
+    margin-top: 1rem;
+}
+
+.ticket .cantidad,.ticket .descripcionProducto,.ticket .discriminadorIva div{
+    display: flex;
+    justify-content: space-between;
+}
+
+.ticket .version{
+    font-size: 1rem;
+    padding: 2rem 0;
+}
+
+.ticket .none{
+    display: none;
+}
+
+.presupuesto .informacion .tipoFactura{
+    border: .1rem solid black;
+    width: initial;
+    justify-self: center;
+    font-size: 2rem;
+    display: flex;
+    align-items: center;
+    padding: 0 .5rem;
+    font-weight: bold;
+}
+
+.presupuesto .informacion,.presupuesto .cliente{
+    display: flex;
+    flex-direction: column;
+    border: .1rem solid black;
+}
+
+.presupuesto .informacion main,.presupuesto .cliente main{
+    margin: auto 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.presupuesto .informacion p{
+    margin: .3rem;
+}
+
+svg{
+    width: 1rem;
+}
+
+.presupuesto .tabla{
+    min-height: 50vh;
+    height: auto;
+}
+
+.presupuesto table{
+    width: 100%;
+    border-collapse: collapse;
+}
+.presupuesto .cliente p,.presupuesto .cliente h4{
+    margin: 0;
+}
+
+.presupuesto table thead tr{
+    border: .1rem solid black;
+}
+.presupuesto .total{
+    display: flex;
+    border: .1rem solid black;
+    justify-content: space-around;
+}

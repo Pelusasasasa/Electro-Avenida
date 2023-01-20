@@ -124,9 +124,9 @@ ipcMain.on('imprimir-venta',async(e,args)=>{
     }else if(tipo === "Recibos"){
         abrirVentanaImprimir("emitirComprobante/imprimirTicket.html",800,200,"noReinician",show);
     }else if(tipo === "Ticket Factura"){
-        abrirVentanaImprimir("impresionTicket/index.html",1000,900,"noReinician",false)
+        abrirVentanaImprimir("impresion/ticket.html",1000,900,"noReinician",false)
     }else{
-        abrirVentanaImprimir("emitirComprobante/imprimir.html",1000,500,"noReinician",show);
+        abrirVentanaImprimir("impresion/presupuesto.html",1000,500,"noReinician",show);
     };
     const pasar = [venta,cliente,calculo,lista,options]
     await imprimir(pasar);
@@ -240,7 +240,7 @@ const abrirVentanaImprimir = async(texto,width,height,reinicio,show=false)=>{
         modal:true,
         width: width,
         height: height,
-        show:false,
+        show:true,
         webPreferences: {
             contextIsolation: false,
             nodeIntegration: true
