@@ -5,21 +5,6 @@
 @import "layout/emitirComprobante";
 @import "layout/notaCredito";
 
-
-//Cliente
-@import "seccionCliente/clientes";
-@import "seccionCliente/agregarCliente";
-@import "seccionCliente/buscarCliente";
-@import "seccionCliente/modificarCliente";
-@import "seccionCliente/listadoSaldo";
-@import "seccionCliente/imprimirPresupuesto";
-@import "seccionCliente/arreglarCompensada";
-
-//productos
-@import "productos/agregarProductos";
-@import "productos/modificarProducto";
-
-
 //Consultar
 @import "consultar/consultarCTCTE";
 

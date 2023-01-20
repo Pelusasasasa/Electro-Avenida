@@ -17,45 +17,11 @@ const limite = document.querySelector('#limite')
 const moroso = document.querySelectorAll('input[name="moroso"]')
 const conFact = document.querySelector('#conFact')
 const observaciones = document.querySelector('#observaciones')
-const saldo = document.querySelector('#saldo')
-const saldo_p = document.querySelector('#saldo_p')
+
 let _id = ""
 let condicion
 let acceso
 let situacion = "blanco"
-
-document.addEventListener('keydown',(event) =>{
-    if (event.key === "Alt") {
-       document.addEventListener('keydown',(e) =>{
-           if (e.key === "F9" && situacion === "blanco") {
-               mostrarNegro();
-               situacion = "negro"
-           }
-       })
-   }
-})
-
-document.addEventListener('keydown',(event) =>{
-    if (event.key === "Alt") {
-       document.addEventListener('keydown',(e) =>{
-           if (e.key === "F3" && situacion === "negro") {
-               ocultarNegro();
-               situacion = "blanco"
-           }
-       })
-   }
-});
-
-const mostrarNegro = ()=>{
-    const saldo_pDIV = document.querySelector('.saldo_p')
-    saldo_pDIV.classList.remove('none')
-}
-
-const ocultarNegro = ()=>{
-    const saldo_pDIV = document.querySelector('.saldo_p')
-    saldo_pDIV.classList.add('none')
-}
-
 
 ipcRenderer.on('datos-clientes',async(e,args)=>{
     cliente = (await axios.get(`${URL}clientes/id/${JSON.parse(args)[0]}`)).data;
@@ -80,10 +46,8 @@ ipcRenderer.on('datos-clientes',async(e,args)=>{
     moroso.value = condicion
     conFact.value = cliente.cond_fact
     observaciones.value = cliente.observacion
-    conIva.value = cliente.cond_iva
-    saldo.value = cliente.saldo;
-    saldo_p.value = cliente.saldo_p;
-})
+    conIva.value = cliente.cond_iva;
+});
 
 
 const modificar = document.querySelector('.modificar')
@@ -113,20 +77,19 @@ guardar.addEventListener('click',async e =>{
     }
     e.preventDefault()
     nuevoCliente._id = _id
-    nuevoCliente.cliente = nombre.value 
-    nuevoCliente.direccion = direccion.value    
-    nuevoCliente.localidad =  localidad.value 
-    nuevoCliente.telefono = telefono.value 
-    nuevoCliente.provincia = provincia.value 
-    nuevoCliente.mail = email.value 
-    nuevoCliente.cod_postal = cod_postal.value 
-    nuevoCliente.cuit =  dnicuit.value 
-    nuevoCliente.cond_iva = conIva.value 
-    nuevoCliente.observacion = observaciones.value
-    nuevoCliente.condicion = condicion
-    nuevoCliente.cond_fact = conFact.value 
-    nuevoCliente.lim_compra = parseFloat(limite.value) 
-    console.log(nuevoCliente)
+    nuevoCliente.cliente = nombre.value.toUpperCase();
+    nuevoCliente.direccion = direccion.value.toUpperCase();
+    nuevoCliente.localidad =  localidad.value.toUpperCase();
+    nuevoCliente.telefono = telefono.value;
+    nuevoCliente.provincia = provincia.value.toUpperCase();
+    nuevoCliente.mail = email.value;
+    nuevoCliente.cod_postal = cod_postal.value;
+    nuevoCliente.cuit =  dnicuit.value;
+    nuevoCliente.cond_iva = conIva.value ;
+    nuevoCliente.observacion = observaciones.value.toUpperCase();
+    nuevoCliente.condicion = condicion;
+    nuevoCliente.cond_fact = conFact.value;
+    nuevoCliente.lim_compra = parseFloat(limite.value) ;
     await axios.put(`${URL}clientes/${nuevoCliente._id}`,nuevoCliente);
     window.close();
 })

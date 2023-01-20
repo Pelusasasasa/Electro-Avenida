@@ -5,156 +5,111 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Modifcar Cliente</title>
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./clientes.css">
   </head>
-  <body class="contenedor-modificar">
-      <div class="formulario__campo nombre">
-        <label class="" for="nombre">Nombre</label>
-        <input
-          disabled
-          class=""
-          type="text"
-          name="nombre"
-          id="nombre"
-        />
-      </div>
-      <div class="g-3">
-        <div class="formulario__campo">
-          <label class="" for="conIva">Cond IVA</label>
-          <select name="conIva" disabled id="conIva">
-            <option value="Consumidor Final">Consumidor Final</option>
-            <option value="Monotributista">Monotributista</option>
-            <option value="Inscripto">Inscripto</option>
-            <option value="Exento">Exento</option>
-          </select>
-        </div>
+  <body class="modificarCliente">
+      <main class="nombre">
+        <label for="nombre">Nombre</label>
+        <input disabled type="text" name="nombre" id="nombre" />
+      </main>
 
-        <div class="formulario__campo">
-          <label class="" for="direccion">Direccion</label>
-          <input
-            disabled
-            class=""
-            type="text"
-            name="direccion"
-            id="direccion"
-          />
-        </div>
+      <section class="inputs">
+        <main>
+          <label for="conIva">Cond IVA</label>
+            <select name="conIva" disabled id="conIva">
+              <option value="Consumidor Final">Consumidor Final</option>
+              <option value="Monotributista">Monotributista</option>
+              <option value="Inscripto">Inscripto</option>
+              <option value="Exento">Exento</option>
+            </select>
+        </main>
+  
+          <main>
+            <label for="direccion">Direccion</label>
+            <input disabled type="text" name="direccion" id="direccion"/>
+          </main>
+  
+  
+          <main>
+            <label for="localidad">Localidad</label>
+            <input disabled type="text" name="localidad" id="localidad"/>
+          </main>
+      </section>
 
+        <section class="inputs">
+          <main>
+            <label for="provincia">Provincia</label>
+            <input disabled type="text" name="provincia" id="provincia"/>
+          </main>
+  
+          <main>
+            <label for="cod_postal">Cod. Postal</label>
+            <input disabled type="text" name="cod_postal" id="cod_postal"/>
+          </main>
+  
+          <main>
+            <label for="dnicuit">Dni o Cuit</label>
+            <input disabled type="text" name="dnicuit" id="dnicuit"/>
+          </main>
+        </section>
 
-        <div class="formulario__campo">
-          <label class="" for="localidad">Localidad</label>
-          <input
-            disabled
-            class=""
-            type="text"
-            name="localidad"
-            id="localidad"
-          />
-        </div>
+        <section class="inputs">
+          <main>
+            <label for="email">Email</label>
+            <input disabled type="mail" name="email" id="email" />
+          </main>
+  
+          <main>
+            <label for="telefono">Telefono</label>
+            <input type="tel" disabled name="telefono" id="telefono" />
+          </main>
+  
+          <main>
+            <label for="limite">Lim. Comp.</label>
+            <input type="Number" disabled name="limite" id="limite" />
+          </main>
+        </section>
 
-        <div class="formulario__campo">
-          <label class="" for="provincia">Provincia</label>
-          <input
-            disabled
-            class=""
-            type="text"
-            name="provincia"
-            id="provincia"
-          />
-        </div>
-        <div class="formulario__campo">
-          <label class="" for="cod_postal">Cod. Postal</label>
-          <input
-            disabled
-            class=""
-            type="text"
-            name="cod_postal"
-            id="cod_postal"
-          />
-        </div>
-
-
-        <div class="formulario__campo">
-          <label class="" for="dnicuit">Dni o Cuit</label>
-          <input
-            disabled
-            class=""
-            type="text"
-            name="dnicuit"
-            id="dnicuit"
-          />
-        </div>
-
-        <div class="formulario__campo">
-          <label class="" for="email">Email</label>
-          <input disabled class="" type="mail" name="email" id="email" />
-        </div>
-
-        <div class="formulario__campo">
-          <label class="" for="telefono">Telefono</label>
-          <input class="" type="tel" disabled name="telefono" id="telefono" />
-        </div>
-
-        <div class="formulario__campo">
-          <label for="limite">Lim. Comp.</label>
-          <input type="Number" disabled name="limite" id="limite" />
-        </div>
-
-        <div class="formulario__campo">
-          <label for="conFact">Cond. Fact.</label>
-          <select name="conFact" disabled id="conFact">
-            <option value="1">1- Ctu. Cte. Normal</option>
-            <option value="4">4- Contado</option>
-          </select>
-        </div>
-        
-        <div class="formulario__campo">
-          <div class="moroso">
-            <label for="normal">Normal</label>
-            <input
-              disabled
-              type="radio"
-              name="moroso"
-              id="moroso/normal"
-              value="N"
-            />
+        <section class="inputs">
+          <main>
+            <label for="conFact">Cond. Fact.</label>
+            <select name="conFact" disabled id="conFact">
+              <option value="1">1- Ctu. Cte. Normal</option>
+              <option value="4">4- Contado</option>
+            </select>
+          </main>
+          
+          <div class="tipo">
+            <main class="moroso">
+              <label for="normal">Normal</label>
+              <input disabled type="radio" name="moroso" id="moroso/normal" value="N"/>
+            </main>
+  
+            <main class="moroso">
+              <label for="moroso">Moroso</label>
+              <input disabled type="radio" name="moroso" id="moroso/normal" value="M"/>
+            </main>
           </div>
+        </section>
 
-          <div class="moroso">
-            <label for="moroso">Moroso</label>
-            <input
-              disabled
-              type="radio"
-              name="moroso"
-              id="moroso/normal"
-              value="M"
-            />
-          </div>
-        </div>
-
-        <div class="formulario__campo">
-          <label for="observaciones">Observaciones</label>
-          <input type="text" name="observaciones" id="observaciones" disabled />
-        </div>
+        <section>
+          <main>
+            <label for="observaciones">Observaciones</label>
+            <input type="text" name="observaciones" id="observaciones" disabled />
+          </main>
+        </section>
     </div>
-    <div class="saldos">
-      <div>
-        <label for="">Saldo</label>
-        <input type="text" disabled name="saldo" id="saldo">
-      </div>
-      <div class="none saldo_p">
-        <label for="">Saldo_p</label>
-        <input type="text" disabled name="saldo_p" id="saldo_p">
-      </div>
-    </div>
-    <div class="botones">
-      <button class="boton-modificar modificar">Modificar</button>
 
-      <button type="submit" class="boton-modificar guardar">Guardar</button>
+    <section class="botones">
+      <button class="modificar">Modificar</button>
 
-      <button class="boton-modificar salir">Salir</button>
-    </div>
+      <button class="guardar">Guardar</button>
+
+      <button class="salir">Salir</button>
+    </section>
 
     <script src="./modificarCliente.js"></script>
   </body>
 </html>
+ 

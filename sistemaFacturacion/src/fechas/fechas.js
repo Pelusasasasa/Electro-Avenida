@@ -28,8 +28,8 @@ day = day<10 ? `0${day}` : day;
 month = month<10 ? `0${month}` : month;
 month = month===13 ? 1 : month;
 
-desde.value = `${year}-${month}-${20}`
-hasta.value = `${year}-${month}-${20}`
+desde.value = `${year}-${month}-${day}`;
+hasta.value = `${year}-${month}-${day}`;
 
 aceptar.addEventListener('click',async e=>{
     ipcRenderer.send('elegirPath');

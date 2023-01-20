@@ -44,3 +44,44 @@
     display: flex;
     flex-direction: column;
 }
+
+.clientes .buscador{
+    margin: 2rem;
+}
+
+.clientes .tabla{
+    background-color: white;
+    height: 75vh;
+    overflow: scroll;
+}
+
+
+.clientes .tabla tr th,.clientes .tabla tr td{
+    border: .1rem solid black;
+    white-space: nowrap;
+    font-size: 2rem;
+}
+
+/*Agregar clientes*/
+
+.agregarCliente main, .modificarCliente main{
+    display: flex;
+    flex-direction: column;
+    margin: .5rem .5rem;  
+}
+
+.agregarCliente .tipo,.modificarCliente .tipo{
+    display: flex;
+    justify-content: space-around;
+    /* text-align: center; */
+}
+
+.agregarCliente .tipo input, .modificarCliente .tipo input{
+    transform: scale(2);
+    align-self: center;
+}
+
+.agregarCliente .inputs,.modificarCliente .inputs{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}

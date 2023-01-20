@@ -5,136 +5,108 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agregar Cliente</title>
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./clientes.css">
   </head>
-  <body class="seccionAgregarCliente">
-      <div class="formulario__campo nombre">
+  <body class="agregarCliente">
+
+    <section class="nombre">
+      <main>
         <label for="nombre">Nombre</label>
         <input autofocus type="text" name="nombre" id="nombre" placeholder="Nombre"/>
-      </div>
+      </main>
+    </section>
 
-      <div class="g-3">
-        <div class="formulario__campo">
-          <label for="conIva">Cond IVA</label>
-          <select name="conIva" id="conIva">
-            <option value="Consumidor Final">Consumidor Final</option>
-            <option value="Monotributista">Monotributista</option>
-            <option value="Inscripto">Inscripto</option>
-            <option value="Exento">Exento</option>
-          </select>
-        </div>
-        
-        <div class="formulario__campo">
-          <label for="direccion">Direccion</label>
-          <input type="text" name="direccion" id="direccion" placeholder="Direccion"/>
-        </div>
-        <div class="formulario__campo">
-          <label class="" for="localidad">Localidad</label>
-          <input type="text" name="localidad" id="localidad" placeholder="Localidad"/>
-        </div>
+    <section class="inputs">
+      <main>
+        <label for="conIva">Cond IVA</label>
+        <select name="conIva" id="conIva">
+          <option value="Consumidor Final">Consumidor Final</option>
+          <option value="Monotributista">Monotributista</option>
+          <option value="Inscripto">Inscripto</option>
+          <option value="Exento">Exento</option>
+        </select>
+      </main>
+      
+      <main>
+        <label for="direccion">Direccion</label>
+        <input type="text" name="direccion" id="direccion" placeholder="Direccion"/>
+      </main>
 
-        <div class="formulario__campo">
-          <label class="" for="provincia">Provincia</label>
-          <input
-            class=""
-            type="text"
-            name="provincia"
-            id="provincia"
-            placeholder="Provincia"
-          />
-        </div>
+      <main>
+        <label for="localidad">Localidad</label>
+        <input type="text" name="localidad" id="localidad" placeholder="Localidad"/>
+      </main>
+    </section>
 
-        <div class="formulario__campo">
-          <label class="" for="cod_postal">Codigo Postal</label>
-          <input
-            class=""
-            type="text"
-            name="cod_postal"
-            id="cod_postal"
-            placeholder="Codigo Postal"
-          />
-        </div>
+    <section class="inputs">
+      <main>
+        <label for="provincia">Provincia</label>
+        <input type="text" name="provincia" id="provincia" placeholder="Provincia" />
+      </main>
 
+      <main>
+        <label for="cod_postal">Codigo Postal</label>
+        <input type="text" name="cod_postal" id="cod_postal" placeholder="Codigo Postal" />
+      </main>
 
+      <main>
+        <label for="dnicuit">Dni o Cuit</label>
+        <input type="text" name="dnicuit" id="dnicuit" placeholder="Dni o Cuit" />
+      </main>
+    </section>
 
-        <div class="formulario__campo">
-          <label class="" for="dnicuit">Dni o Cuit</label>
-          <input
-            class=""
-            type="text"
-            name="dnicuit"
-            id="dnicuit"
-            placeholder="Dni o Cuit"
-          />
-        </div>
+    <section class="inputs">
+      <main>
+        <label for="email">Email</label>
+        <input type="mail" name="email" id="email" placeholder="Correo@correo.com" />
+      </main>
 
-        <div class="formulario__campo">
-          <label class="" for="email">Email</label>
-          <input
-            class=""
-            type="mail"
-            name="email"
-            id="email"
-            placeholder="Correo@correo.com"
-          />
-        </div>
+      <main>
+        <label for="telefono">Telefono</label>
+        <input type="tel" name="telefono" id="telefono" placeholder="Telefono" />
+      </main>
 
-        <div class="formulario__campo">
-          <label class="" for="telefono">Telefono</label>
-          <input
-            class=""
-            type="tel"
-            name="telefono"
-            id="telefono"
-            placeholder="Telefono"
-          />
-        </div>
+      <main>
+        <label for="limite">Limite de compra</label>
+        <input type="Number" name="limite" id="limite" placeholder="15000" />
+      </main>
+    </section>
 
-        <div class="formulario__campo">
-          <label for="limite">Limite de compra</label>
-          <input type="Number" name="limite" id="limite" placeholder="15000" />
-        </div>
+    <section class="inputs">
+      <main>
+        <label for="condicionFacturacion">Condicion de Factura</label>
+        <select disabled name="conFac" id="conFac" >
+          <option value="1">1- Cte. Cte Normal</option>
+          <option value="4" selected>4- Contado</option>
+        </select>
+      </main>
 
-        <div class="formulario__campo">
-          <label for="condicionFacturacion">Condicion de Factura</label>
-          <select disabled name="conFac" id="conFac" >
-            <option value="1">1- Cte. Cte Normal</option>
-            <option value="4" selected>4- Contado</option>
-          </select>
-        </div>
+      <section class="tipo">
+        <main class="moroso">
+          <label for="normal">Normal</label>
+          <input type="radio" checked name="moroso" id="moroso/normal" value="N" />
+        </main>
 
+        <main class="moroso">
+          <label for="moroso">Moroso</label>
+          <input type="radio" name="moroso" id="moroso/normal" value="M" />
+        </main>
+      </section>
+    </section>
 
-
-        <div class="formulario__campo tipo">
-          <div class="moroso">
-            <label for="normal">Normal</label>
-            <input type="radio" checked name="moroso" id="moroso/normal" value="N" />
-          </div>
-
-          <div class="moroso">
-            <label for="moroso">Moroso</label>
-            <input type="radio" name="moroso" id="moroso/normal" value="M" />
-          </div>
-        </div>
-
-        <div class="formulario__campo">
+        <main>
           <label for="observaciones">Observaciones</label>
-          <input
-            type="text"
-            name="observaciones"
-            id="observaciones"
-            placeholder="Observaciones"
-          />
-        </div>
-    </div>
-    <div class="botones-clientes">
-      <button id="boton-enviar" class="boton-cliente" type="submit">
-        Registrar
-      </button>
+          <input type="text" name="observaciones" id="observaciones" placeholder="Observaciones" />
+        </main>
 
-      <a class="boton-cliente salir">Salir</a>
-    </div>
+    <section class="botones">
+      <button id="boton-enviar" >Registrar</button>
+
+      <button class="salir">Salir</button>
+    </section>
 
     <script src="./agregarcliente.js"></script>
   </body>
 </html>
+   

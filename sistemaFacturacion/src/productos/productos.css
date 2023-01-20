@@ -127,6 +127,9 @@
     display: flex;
     justify-content: center;
 }
+.agregarProducto .observaciones main,.modificar .observaciones main{
+    width: 70%;
+}
 
 .agregarProducto .precioFinal,.modificar .precioFinal{
     display: flex;

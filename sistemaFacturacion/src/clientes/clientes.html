@@ -5,18 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Electro Avenida</title>
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./clientes.css">
   </head>
-  <body class="Cliente">
-    <div class="buscador">
-      <label for="buscarCliente" class="buscarClientelabel"
-        >Buscar Cliente</label
-      >
-      <input autofocus type="search" name="buscarCliente" id="buscarCliente" />
-    </div>
+  <body class="clientes">
 
-    <div class="contenedor-tabla">
-      <table class="tabla">
+    <section class="buscador">
+      <label for="buscarCliente" class="buscarCliente">Buscar Cliente</label>
+      <input autofocus type="search" name="buscarCliente" id="buscarCliente"/>
+    </section>
+
+    <section class="tabla">
+      <table>
         <thead>
           <tr>
             <th>Cod</th>
@@ -31,7 +31,7 @@
         </thead>
         <tbody id="resultado"></tbody>
       </table>
-    </div>
+    </section>
 
     <section class="botones">
       <button class="agregar">Agregar</button>
@@ -39,6 +39,7 @@
       <button class="eliminar">Eliminar</button>
       <button class="salir">Salir</button>
     </section>
+
     <script src="./clientes.js"></script>
   </body>
 </html>
