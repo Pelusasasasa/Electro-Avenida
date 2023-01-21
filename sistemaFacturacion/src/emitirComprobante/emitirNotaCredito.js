@@ -385,7 +385,7 @@ factura.addEventListener('click',async e=>{
                 nuevaVenta = await axios.post(`${URL}ventas`,venta);
 
                 //mandamos el movimiento de caja
-                await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 3 ? "Nota Credito A" : "Nota Credito B",venta.cod_comp === 3 ? "NTA" : "NTB",redondear(venta.precioFinal * -1,2),venta.cod_comp === 3 ? "Nota Credito A" : "Nota Credito B" );
+                await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 3 ? "Nota Credito A" : "Nota Credito B",venta.cod_comp === 3 ? "NTA" : "NTB",redondear(venta.precioFinal * -1,2),venta.cod_comp === 3 ? "Nota Credito A" : "Nota Credito B",venta.cliente,venta.nombreCliente,venta.vendedor);
 
                 //Imprimos el ticket
                 ipcRenderer.send('imprimir-venta',[venta,afip,true,1,'Ticket Factura']);

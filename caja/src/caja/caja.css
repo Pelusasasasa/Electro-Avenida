@@ -183,23 +183,57 @@
     text-align: center;
 }
 
-.listado .tabla{
+.listado .tabla,.cobtranzaFacturas .tabla{
     height: 60vh;
     background-color: white;
     border: .1rem solid black;
     overflow: scroll;
 }
 
-.listado table{
+.listado table,.cobtranzaFacturas table{
     width: 100%;
     border-collapse: collapse;
 }
 
-.listado table th{
+.listado table th,.cobtranzaFacturas table th,.cobtranzaFacturas table td{
     border: .1rem solid black;
 }
 
-.listado table tbody tr:hover{
+.listado table tbody tr:hover,.cobtranzaFacturas table tbody tr:hover{
     background-color: gray;
     cursor: pointer;
+}
+
+.cobtranzaFacturas .inputs{
+    display: flex;
+    justify-content: space-around;
+}
+
+.cobtranzaFacturas .inputs main{
+    margin: 2rem;
+}
+
+.cobtranzaFacturas .inputs main{
+    width: 20rem;
+    gap: 3rem;
+}
+
+.cobtranzaFacturas .inputs main input{
+    width: 100%;
+}
+
+.cobtranzaFacturas .inputs .radio{
+    border: .1rem solid black;
+}
+
+.cobtranzaFacturas .inputs .radio div{
+    margin: 1rem 0;
+}
+
+.cobtranzaFacturas .inputs .radio input{
+    transform: scale(1.5);
+}
+
+.radio div{
+    display: flex;
 }

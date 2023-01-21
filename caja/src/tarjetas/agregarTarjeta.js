@@ -4,7 +4,7 @@ require('dotenv').config();
 const URL = process.env.URL;
 const sweet = require('sweetalert2');
 
-const {redondear} = require('../assets/js/globales');
+const {redondear, cerrarVentana} = require('../assets/js/globales');
 
 const selectTarjeta = document.querySelector('#tarjeta');
 const selectVendedor = document.querySelector('#vendedor');
@@ -14,6 +14,8 @@ const importe = document.querySelector('#importe');
 const aceptar = document.querySelector('.aceptar');
 const modificar = document.querySelector('.modificar');
 const salir = document.querySelector('.salir');
+
+let cerrar = false;
 
 const hoy = new Date();
 let date = hoy.getDate();
@@ -81,7 +83,12 @@ selectVendedor.addEventListener('keypress',e=>{
     }
 });
 
+ipcRenderer.on('cerrar-ventana',async(e,args)=>{
+    cerrar = args;
+});
+
 ipcRenderer.on('recibir-informacion',async(e,args)=>{
+    console.log(args)
     tarjeta = (await axios.get(`${URL}tarjetas/id/${args}`)).data;
     modificar.classList.remove('none');
     aceptar.classList.add('none');
@@ -90,7 +97,6 @@ ipcRenderer.on('recibir-informacion',async(e,args)=>{
 });
 
 const listarTarjeta = (tarjeta)=>{
-    console.log(tarjeta.fecha)
     const date = tarjeta.fecha.slice(0,10).split('-',3);
     fecha.value = `${date[0]}-${date[1]}-${date[2]}`;
     selectTarjeta.value = tarjeta.tarjeta;
@@ -127,14 +133,21 @@ aceptar.addEventListener('click',async e=>{
     }else{
         try {
             await axios.post(`${URL}tarjetas`,tarjeta);
-            location.reload();
+            if (cerrar) {
+                ipcRenderer.send('enviar-info-ventana-principal',"tarjeta cargada");
+                window.close();
+            }else{
+                location.reload();
+            }
+            
         } catch (error) {
             console.log(error)
             await sweet.fire({
                 title:"No se pudo cargar la tarjeta"
             });
         };
-    }
+    };
+
 });
 
 modificar.addEventListener('click',async e=>{

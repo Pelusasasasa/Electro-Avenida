@@ -25,7 +25,24 @@ const MovCaja = new Schema({
     obs:{
         type:String,
         default:""
+    },
+    pasado:{
+        type:Boolean,
+        default:false
+    },
+    codigo:{
+        type:String,
+        default:"0000"
+    },
+    cliente:{
+        type:String,
+        default:""
+    },
+    vendedor:{
+        type:String,
+        default:""
     }
+
 
 });
 

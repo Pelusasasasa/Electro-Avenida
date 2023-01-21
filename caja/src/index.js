@@ -7,7 +7,7 @@ if (require('electron-squirrel-startup')) {
 let ventanaPrincipal
 let nuevaVentana
 
-const abrirVentana = (direccion,width,height,reinicio,informacion)=>{
+const abrirVentana = (direccion,width,height,reinicio,informacion,cerrarVentana=false)=>{
   nuevaVentana = new BrowserWindow({
     width: width,
     height: height,
@@ -22,6 +22,11 @@ const abrirVentana = (direccion,width,height,reinicio,informacion)=>{
 
   nuevaVentana.once('ready-to-show',()=>{
     nuevaVentana.show();
+
+    if (cerrarVentana) {
+      nuevaVentana.webContents.send('cerrar-ventana',cerrarVentana);
+    }
+    
     if (informacion) {
       console.log(informacion)
       nuevaVentana.webContents.send('recibir-informacion',informacion);
@@ -71,8 +76,8 @@ app.on('activate', () => {
 });
 
 ipcMain.on('abrir-ventana',(e,args)=>{
-  const {path,width,height,reinicio,informacion} = args;
-  abrirVentana(path,width,height,reinicio,informacion);
+  const {path,width,height,reinicio,informacion,cerrarVentana} = args;
+  abrirVentana(path,width,height,reinicio,informacion,cerrarVentana);
 }); 
 
 // Lo usamos para cuando alla un cambio en la aplicacion se reinicie
@@ -85,6 +90,8 @@ if (process.env.NODE_ENV !== 'production') {
 ipcMain.on('enviar-info-ventana-principal',(e,args)=>{
   ventanaPrincipal.webContents.send('recibir-informacion',args);
 });
+
+
 
 const templateMenu = [
 
@@ -130,7 +137,10 @@ const templateMenu = [
     label:"Caja",
     submenu:[
       {
-        label:"Cobranza Facturas"
+        label:"Cobranza Facturas",
+        click(){
+          ventanaPrincipal.send('cobranzaFacturas')
+        }
       },
       {
         label:"Ingreso - Egreso",
@@ -281,6 +291,7 @@ const templateMenu = [
     }
   }
 ];
+
 
 const mainMenu = Menu.buildFromTemplate(templateMenu);
 Menu.setApplicationMenu(mainMenu);

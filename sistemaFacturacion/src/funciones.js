@@ -364,7 +364,7 @@ const verificarUsuarios = async()=>{
     return vendedor
 };
 
-const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,desc)=>{
+const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,desc,codigo,cliente,vendedor)=>{
     const movimiento = {};
     movimiento.fecha = fecha;
     movimiento.tMov = tMov;
@@ -373,7 +373,9 @@ const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,des
     movimiento.idCuenta = idCuenta;
     movimiento.imp = imp;
     movimiento.desc = desc.toUpperCase();
-    console.log(movimiento)
+    movimiento.codigo = codigo,
+    movimiento.cliente = cliente;
+    movimiento.vendedor
     try {
         await axios.post(`${URL}movCajas`,movimiento);
     } catch (error) {

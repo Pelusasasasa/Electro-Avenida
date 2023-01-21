@@ -46,7 +46,7 @@ const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,des
     movimiento.idCuenta = idCuenta;
     movimiento.imp = imp;
     movimiento.desc = desc.toUpperCase();
-    console.log(movimiento)
+    movimiento.pasado = true;
     try {
         await axios.post(`${URL}movCajas`,movimiento);
     } catch (error) {

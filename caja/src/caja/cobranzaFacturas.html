@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cobranza de facturas</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./caja.css">
+</head>
+<body class="cobtranzaFacturas">
+    <section class="tabla">
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Codigo</th>
+                    <th>Cliente</th>
+                    <th>Comprob</th>
+                    <th>Nº Comprob</th>
+                    <th>Importe</th>
+                    <th>Vendedor</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+    <section class="inputs">
+        <main class="radio">
+            <div>
+                <label for="efectivo">Efectivo</label>
+                <input type="radio" name="tipo" id="efectivo">
+            </div>
+            <div>
+                <label for="cheque">Cheque</label>
+                <input type="radio" name="tipo" id="cheque">
+            </div>
+            <div>
+                <label for="tarjeta">Tarjeta</label>
+                <input type="radio" name="tipo" id="tarjeta">
+            </div>
+        </main>
+        <main>
+            <label for="total">Total</label>
+            <input type="number" class="text-right" value="0.00" disabled name="total" id="total">
+        </main>
+        <main>
+            <label for="cobrado">Cobrado</label>
+            <input type="number" class="text-right" value="0.00" name="cobrado" id="cobrado">
+        </main>
+        <main>
+            <label for="descuento">Descuento</label>
+            <input type="number" class="text-right" value="0.00" name="descuento" id="descuento">
+        </main>
+    </section>
+    <section class="botones">
+        <button id="aceptar">Aceptar</button>
+        <button id="salir">Salir</button>
+    </section>
+    <script src="./cobranzaFacturas.js"></script>
+</body>
+</html>

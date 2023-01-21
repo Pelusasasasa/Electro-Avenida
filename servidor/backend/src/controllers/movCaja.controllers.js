@@ -98,4 +98,9 @@ movCajaCTRL.deleteForID = async(req,res)=>{
     res.end();
 }
 
+movCajaCTRL.getForNotPased = async(req,res)=>{
+    const movimientos = await MovCaja.find({pasado:false});
+    res.send(movimientos);
+}
+
 module.exports = movCajaCTRL; 

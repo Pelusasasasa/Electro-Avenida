@@ -135,6 +135,7 @@ aceptar.addEventListener('click',async e=>{
         movimientoCaja.desc = descripcion.value;
         movimientoCaja.tMov = tipoMovimiento.value;
         movimientoCaja.nro_comp = punto.value.padStart(4,'0') + "-" + numero.value.padStart(8,'0');
+        movimientoCaja.pasado = true;
         try {
             await axios.post(`${URL}movCajas`,movimientoCaja);
             window.close();

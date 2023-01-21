@@ -89,7 +89,6 @@ ipcRenderer.on('saldoInicial',async (e,args)=>{
     });
 });
 
-
 const fechaHoy = (id)=>{
     const input = document.getElementById(id);
 
@@ -171,4 +170,6 @@ ipcRenderer.on('emitirPago',(e,args)=>{
     location.href = "provedores/emitirPago.html";
 });
 
-
+ipcRenderer.on('cobranzaFacturas',(e,args)=>{
+    location.href = "caja/cobranzaFacturas.html"
+});
