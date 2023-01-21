@@ -582,8 +582,19 @@ const sacarIdentificadorTabla = (arreglo)=>{
 
 presupuesto.addEventListener('click',async (e)=>{
     e.preventDefault();
+    let seguro;
+    await sweet.fire({
+        title:"Presupuesto?",
+        confirmButtonText:"Aceptar",
+        showCancelButton:true
+    }).then(async({isConfirmed})=>{
+        if (isConfirmed) {
+            seguro = true;
+        }
+    })
+    if(!seguro){
 
-    if (listaProductos.length===0) {
+    }else if (listaProductos.length===0) {
         //Avisamos que no se puede hacer una venta sin productos
         sweet.fire({title:"Cargar Productos"});
     }else if((parseFloat(descuento.value) < -10 || parseFloat(descuento.value) > 10) && codigoC.value !== "L082" && vendedor!=="ELBIO"){
@@ -650,8 +661,7 @@ presupuesto.addEventListener('click',async (e)=>{
                     await axios.post(`${URL}movProductos`,arregloMovimiento);
                     
                     arregloMovimiento = [];
-                    arregloProductosDescontarStock = [];
-                    venta.tipo_pago === "CD" && await verTipoPago(vendedor);
+                    arregloProductosDescontarStock = []
 
                     if(impresion.checked) {
                         let cliente = {
@@ -770,7 +780,6 @@ ticketFactura.addEventListener('click',async (e) =>{
                     venta.tipo_pago === "CC" && ponerEnCuentaCorrienteCompensada(venta,true);
                     venta.tipo_pago === "CC" && ponerEnCuentaCorrienteHistorica(venta,true,saldo.value);
                     venta.tipo_pago === "CD" && generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 1 ? "Factura A" : "Factura B",venta.cod_comp === 1 ? "FA" : "FB",venta.precioFinal,venta.cod_comp === 1 ? "Factura A" : "Factura B");
-                    venta.tipo_pago === "CD" && await verTipoPago(vendedor);
 
                     await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
                     nuevaVenta = await axios.post(`${URL}ventas`,venta);
