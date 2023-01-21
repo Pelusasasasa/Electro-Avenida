@@ -6,6 +6,7 @@ body{
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
     font-size: 1.3rem;
+    margin: 2rem;
 }
   
 html {
@@ -130,6 +131,14 @@ html {
     grid-template-columns: 1fr 1fr 1fr;
 }
 
+.presupuesto .informacion .img{
+    display: flex;
+}
+
+.presupuesto .informacion .img p{
+    margin-right: 15rem;
+}
+
 .presupuesto .informacion p{
     margin: .3rem;
 }
@@ -139,7 +148,7 @@ svg{
 }
 
 .presupuesto .tabla{
-    min-height: 20vh;
+    min-height: 25vh;
     height: auto;
 }
 
