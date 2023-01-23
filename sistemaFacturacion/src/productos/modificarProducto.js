@@ -126,8 +126,8 @@ precioVenta.addEventListener('focus',e=>{
 
 const modificar = document.querySelector('.modificar')
 modificar.addEventListener('click',e=>{
-    modificar.classList.add('disable');
-    guardar.classList.remove('disable');
+    modificar.classList.add('none');
+    guardar.classList.remove('none');
     codFabrica.removeAttribute("disabled");
     descripcion.removeAttribute("disabled"); 
     provedor.removeAttribute("disabled");
@@ -288,7 +288,7 @@ function resultado(numero1,numero2,dolar=1) {
     
     precioVenta.addEventListener('keypress',e=>{
         if (e.key === "Enter") {
-            guardar.focus()
+            guardar.focus();
         }
     })
 
