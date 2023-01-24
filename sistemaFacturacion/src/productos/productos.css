@@ -89,49 +89,49 @@
     border: .1rem solid black;
 }
 
-.agregarProducto .codigos,.modificar .codigos{
+.agregarProducto .codigos,.modificarProducto .codigos{
     display: flex;
     justify-content: space-around;
 }
 
-.agregarProducto main, .modificar main{
+.agregarProducto main, .modificarProducto main{
     display: flex;
     flex-direction: column;
 }
 
-.agregarProducto .unidad, .modificar .unidad{
+.agregarProducto .unidad, .modificarProducto .unidad{
     display: flex;
     justify-content: space-around;
 }
 
-.agregarProducto .marcaProvedor,.modificar .marca{
+.agregarProducto .marcaProvedor,.modificarProducto .marca{
     display: flex;
     justify-content: space-around;
 }
 
-.agregarProducto .precio,.modificar .costos{
+.agregarProducto .precio,.modificarProducto .costos{
     display: flex;
     justify-content: space-around;
     gap: 2rem;
 }
 
-.agregarProducto section,.modificar section{
+.agregarProducto section,.modificarProducto section{
     margin: 1.2rem auto;
 }
 
-.agregarProducto input,.modificar input{
+.agregarProducto input,.modificarProducto input{
     font-size: 1.6rem;
 }
 
-.agregarProducto .observaciones,.modificar .observaciones{
+.agregarProducto .observaciones,.modificarProducto .observaciones{
     display: flex;
     justify-content: center;
 }
-.agregarProducto .observaciones main,.modificar .observaciones main{
+.agregarProducto .observaciones main,.modificarProducto .observaciones main{
     width: 70%;
 }
 
-.agregarProducto .precioFinal,.modificar .precioFinal{
+.agregarProducto .precioFinal,.modificarProducto .precioFinal{
     display: flex;
     justify-content: space-around;
 } 
