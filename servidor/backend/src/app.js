@@ -52,4 +52,6 @@ app.use('/api/dat_comp',require('./routes/dat_comp'));
 app.use('/api/rubros',require('./routes/rubros'));
 //Cuenta Corriente provedor
 app.use('/api/ctactePro',require('./routes/ctatePro'));
+//Recibos
+app.use('/api/recibos',require('./routes/recibo'));
 module.exports = app

@@ -3,8 +3,7 @@ const {ipcRenderer} = require('electron')
 ipcRenderer.on('info-para-imprimir',(e,args)=>{
     const [Venta,Cliente,arreglo,total,opciones] = JSON.parse(args)
     listar(Venta,Cliente,arreglo,total,opciones);
-    console.log(arreglo)
-})
+});
 
 const listar = async(venta,Cliente,lista,precio,opciones)=>{
 
@@ -58,20 +57,20 @@ for(let objeto of lista){
     tbody.appendChild(tr);
 };
 
-if (venta.abonado !== "") {
-    console.log(venta.abonado)
+if (venta.saldoAFavor !== 0) {
     const tr = document.createElement('tr');
 
     const tdFecha = document.createElement('td');
-    tdFecha.innerHTML = fecha.innerHTML;
     const tdComprobante  = document.createElement('td');
-    tdComprobante.innerHTML = "Pago A Cuenta";
     const tdNumero = document.createElement('td');
-    tdNumero.innerHTML = "";
     const tdPagado  = document.createElement('td');
-    tdPagado.innerHTML = venta.abonado;
     const tdSaldo = document.createElement('td');
-    tdSaldo.innerHTML = venta.abonado;
+    
+    tdFecha.innerHTML = fecha.innerHTML;
+    tdComprobante.innerHTML = "Pago A Cuenta";
+    tdNumero.innerHTML = "";
+    tdPagado.innerHTML = venta.saldoAFavor.toFixed(2);
+    tdSaldo.innerHTML = venta.saldoAFavor.toFixed(2);
 
     tr.appendChild(tdFecha);
     tr.appendChild(tdComprobante);

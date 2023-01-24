@@ -38,19 +38,20 @@ aceptar.addEventListener('click',async e=>{
     let hastafecha = DateTime.fromISO(hasta.value).endOf('day');
     const tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hastafecha}`)).data;
     const presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`)).data;
+    const recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hastafecha}`)).data;
+    //Sacamos los tickes que se hicieron en el dia y son contados
         let ticketsDelDia = tickets.filter(ticket =>{
             if ((ticket.tipo_comp === "Ticket Factura" || ticket.tipo_comp === "Nota Credito") && ticket.tipo_pago==="CD") {
                 return ticket;
-            }else if(ticket.tipo_comp === "Recibos" || ticket.tipo_comp === "Recibos_P"){
-                return ticket;
             }
         });
+    //Sacamos los presupuesto que se hicieron en el dia y son contados
         let presupuestosDelDia = presupuesto.filter(presu =>{
             if(presu.tipo_pago === "CD"){
                 return presu
             }
         });
-        let arreglo = [...ticketsDelDia,...presupuestosDelDia];
+        let arreglo = [...ticketsDelDia,...presupuestosDelDia,...recibos];
         if (select.value === "AM") {
             arreglo = arreglo.filter(venta=>parseFloat(venta.fecha.slice(11,13))<14);
         }else if(select.value === "PM"){

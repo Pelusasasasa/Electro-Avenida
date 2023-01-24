@@ -240,7 +240,7 @@ const abrirVentanaImprimir = async(texto,width,height,reinicio,show=false)=>{
         modal:true,
         width: width,
         height: height,
-        show:false,
+        show:true,
         webPreferences: {
             contextIsolation: false,
             nodeIntegration: true
@@ -251,6 +251,13 @@ const abrirVentanaImprimir = async(texto,width,height,reinicio,show=false)=>{
         protocol: 'file',
         slashes: true
     }));
+
+    ventanaImprimir.on('ready-to-show',e=>{
+        if ((ventanaPrincipal.webContents.getURL()).includes('consultar/cuentaCorriente.html')) {
+            ventanaImprimir.show();
+        }
+    })
+
     ventanaImprimir.setMenuBarVisibility(false)
     ventanaImprimir.on('close',e=>{
         ventanaImprimir = null;

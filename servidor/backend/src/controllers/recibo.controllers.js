@@ -1,0 +1,35 @@
+const reciboCTRL = {};
+
+const Recibo = require('../models/Recibo');
+
+reciboCTRL.post = async(req,res)=>{
+    const now = new Date();
+    const p = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+    req.body.fecha = new Date(req.body.fecha.slice(0,10) + "T" + p.slice(11));
+    const recibo = new Recibo(req.body);
+    await recibo.save();
+    console.log(`Recibo de ${req.body.cliente} cargado a la hora ${req.body.fecha}`);
+    res.end();
+};
+
+
+reciboCTRL.getForCliente = async(req,res)=>{
+    const {codigo} = req.params;
+    const recibos = await Recibo.find({codigo:codigo});
+    res.send(recibos);
+}
+
+reciboCTRL.getbetweenDates = async(req,res)=>{
+    const {desde,hasta} = req.params;
+    console.log(desde);
+    console.log(hasta)
+    const recibos = await Recibo.find({
+        $and:[
+            {fecha:{$gte:desde}},
+            {fecha:{$lte:hasta}}
+        ]
+    });
+    res.send(recibos)
+}
+
+module.exports = reciboCTRL;

@@ -385,33 +385,27 @@ const hacerRecibo = async()=>{
     };
 
      const recibo = {}
-     recibo.cod_comp = verCodComp("Recibos",cond_iva.value)
-     recibo.dnicuit = cuit.value;
      recibo.fecha = new Date();
-     recibo.cliente = codigo.value;
-     recibo.nombreCliente = nombre.value;
+     recibo.codigo = codigo.value;
+     recibo.cliente = nombre.value;
      recibo.vendedor = Vendedor;
-     recibo.direccion = direccion.value;
-     recibo.localidad = localidad.value;
-     recibo.condIva = cond_iva.value;
-     recibo.descuento = 0;
      recibo.tipo_comp = (situacion === "blanco" ? "Recibos" : "Recibos_P" );
      const aux = (situacion === "negro") ? "saldo_p" : "saldo"
      let saldoFavor = 0;
      saldoFavor = (saldoAfavor.value !== "") && parseFloat(saldoAFavor.value);
-     recibo.abonado = saldoAfavor.value;
+     recibo.saldoAFavor = saldoFavor;
      recibo.precioFinal = parseFloat(total.value);
      const saldoNuevo = redondear(parseFloat(cliente[aux]) - parseFloat(total.value),2);
 
      //Tomamos el cliente y modificamos su saldo
-     let clienteTraido = (await axios.get(`${URL}clientes/id/${recibo.cliente}`)).data;
+     let clienteTraido = (await axios.get(`${URL}clientes/id/${recibo.codigo}`)).data;
      clienteTraido[aux] = parseFloat(saldoNuevo);
      try {
         //modificamos las ventas en cuentas compensada
         await modificarVentas(nuevaLista);
 
 
-        //modificamos el  numero del recibo
+        //modificamos el numero del recibo
         recibo.nro_comp = await traerUltimoNroRecibo();
         const numeroAModificar = parseFloat(recibo.nro_comp.split('-')[1])
         await modifcarNroRecibo(numeroAModificar,recibo.tipo_comp,clienteTraido.cond_iva);
@@ -422,9 +416,9 @@ const hacerRecibo = async()=>{
         //Ponemos en la compensada si le queda saldo a favor
         saldoAfavor.value !== "" && await ponerEnCuentaCorrienteCompensada(recibo);
         
-        await axios.put(`${URL}clientes/${recibo.cliente}`,clienteTraido);
-        await axios.post(`${URL}ventas`,recibo);
-        await generarMovimientoCaja(recibo.fecha,"I",recibo.nro_comp,recibo.tipo_comp,"RC",recibo.precioFinal,recibo.tipo_comp,recibo.cliente,recibo.nombreCliente,recibo.vendedor);
+        await axios.put(`${URL}clientes/${recibo.codigo}`,clienteTraido);
+        await axios.post(`${URL}recibos`,recibo);
+        await generarMovimientoCaja(recibo.fecha,"I",recibo.nro_comp,recibo.tipo_comp,"RC",recibo.precioFinal,recibo.tipo_comp,recibo.codigo,recibo.cliente,recibo.vendedor);
         await verTipoPago(Vendedor)
         //Hacemos que los productos sean las cuentas conpensadas
         recibo.productos = arregloParaImprimir;
@@ -508,7 +502,7 @@ todo.addEventListener('click',e=>{
 
 const ponerEnCuentaCorrienteCompensada = async(recibo)=>{
     const cuenta = {};
-    cuenta.codigo = recibo.cliente;
+    cuenta.codigo = recibo.codigo;
     cuenta.cliente = cliente.cliente;
     cuenta.tipo_comp = recibo.tipo_comp;
     cuenta.nro_comp = recibo.nro_comp;
@@ -520,7 +514,7 @@ const ponerEnCuentaCorrienteCompensada = async(recibo)=>{
 const ponerEnCuentaCorrienteHistorica = async(recibo)=>{
     console.log(recibo)
     const cuenta = {};
-    cuenta.codigo = recibo.cliente;
+    cuenta.codigo = recibo.codigo;
     cuenta.cliente = cliente.cliente;
     cuenta.tipo_comp = recibo.tipo_comp;
     cuenta.nro_comp = recibo.nro_comp;
