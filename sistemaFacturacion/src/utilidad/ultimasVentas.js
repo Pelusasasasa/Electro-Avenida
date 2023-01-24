@@ -81,7 +81,6 @@ tbody.addEventListener('click',e=>{
 
 const listar = async(lista)=>{
     //filtramos las ventas solo para ver ticket o notas de credito
-    lista = lista.filter(elem=>elem.tipo_comp === "Ticket Factura" || elem.tipo_comp === "Nota Credito");
 
     for await(let venta of lista){
         const tr = document.createElement('tr');
