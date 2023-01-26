@@ -232,8 +232,6 @@ ipcMain.on('abrir-ventana-tarjeta', (e, args) => {
     abrirVentana(args.path,args.width,args.height,args.reinicio,args.informacion)
 })
 
-
-
 const abrirVentanaImprimir = async(texto,width,height,reinicio,show=false)=>{
     ventanaImprimir = new BrowserWindow({
         parent:ventanaPrincipal,
