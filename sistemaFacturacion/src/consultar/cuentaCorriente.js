@@ -39,8 +39,8 @@ copiar();
 
 //mostramos la base de datos cuenta historica del cliente
 historica.addEventListener('click',e=>{
-    historica.classList.add("disable")
-    compensada.classList.remove('disable')
+    historica.classList.add("none")
+    compensada.classList.remove('none')
     tipo = "historica"
     listarLista(listaHistorica,situacion,tipo)
 });
@@ -48,8 +48,8 @@ historica.addEventListener('click',e=>{
 
 //mostramos la base de datos cuenta compensada del cliente
 compensada.addEventListener('click',e=>{
-    compensada.classList.add("disable")
-    historica.classList.remove('disable')
+    compensada.classList.add("none")
+    historica.classList.remove('none')
     tipo = "compensada"
     listarLista(listaCompensada,situacion,tipo)
 });
@@ -448,3 +448,8 @@ detalle.addEventListener('click',e=>{
     subSeleccionado.classList.add('subSeleccionado');
 });
 
+document.addEventListener('keyup',e=>{
+    if (e.keyCode === 27) {
+        location.href = '../index.html'
+    }
+});

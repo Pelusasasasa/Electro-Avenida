@@ -5,25 +5,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Consultar Cuenta Corriente</title>
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./corriente.css">
   </head>
   <body class="consultaCtaCte">
     <section class="buscador">
 
       <main class="codigoCliente">
-        <label for="">Cod. Cliente</label>
+        <label for="codigoCliente">Cod. Cliente</label>
         <input type="text" autofocus placeholder="Codigo" name="codigoCliente" id="codigoCliente">
       </main>
 
-     <main class="cliente">
-      <label for="">Buscar Cliente</label>
-      <input
-        autofocus
-        type="text"
-        placeholder="Cliente"
-        id="buscador"
-        name="buscador"
-      />
+     <main class="cliente"> 
+      <label for="buscador">Cliente</label>
+      <input autofocus type="text" placeholder="Cliente" id="buscador" name="buscador"/>
      </main>
       <main>
         <label for="">Saldo</label>
@@ -31,13 +26,13 @@
         <input type="text" class="none" placeholder="Saldo_p" id="saldo_p" name="saldo_p" disabled />
       </main>
       <main class="botones">
-        <button class="compensada disable">Compensada</button>
-        <button class="historica ">Historica</button>
+        <button class="compensada none">Compen</button>
+        <button class="historica ">Histor</button>
         <button class="actualizar none">Actualizar</button>
       </main>
     </section>
 
-    <div class="listarventas">
+    <section class="listarventas">
       <table>
         <thead>
           <th>Fecha</th>
@@ -51,7 +46,7 @@
 
         <tbody class="listar"></tbody>
       </table>
-    </div>
+    </section>
 
     <div class="listarDetalleVenta">
       <table>
