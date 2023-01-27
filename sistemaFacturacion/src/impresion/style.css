@@ -139,12 +139,16 @@ html {
 
 .presupuesto .informacion .img{
     display: flex;
+    justify-content: space-around;
 }
 
-.presupuesto .informacion .img p{
-    margin-right: 10rem;
+.presupuesto .informacion .img p:first-child{
+    margin-right: auto;
 }
 
+.presupuesto .informacion .img p:last-child{
+    margin-right: auto;
+}
 .presupuesto .informacion p{
     margin: .3rem;
 }
@@ -173,4 +177,8 @@ svg{
     display: flex;
     border: .1rem solid black;
     justify-content: space-around;
+}
+
+.negrita{
+    font-weight: bold;
 }
