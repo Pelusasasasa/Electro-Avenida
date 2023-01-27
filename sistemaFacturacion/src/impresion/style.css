@@ -119,6 +119,8 @@ html {
     font-weight: bold;
 }
 
+
+
 .presupuesto .informacion,.presupuesto .cliente{
     display: flex;
     flex-direction: column;
@@ -131,12 +133,16 @@ html {
     grid-template-columns: 1fr 1fr 1fr;
 }
 
+.presupuesto #marina{
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
 .presupuesto .informacion .img{
     display: flex;
 }
 
 .presupuesto .informacion .img p{
-    margin-right: 15rem;
+    margin-right: 10rem;
 }
 
 .presupuesto .informacion p{
