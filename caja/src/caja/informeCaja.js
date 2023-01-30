@@ -42,10 +42,9 @@ window.addEventListener('load',async e=>{
 
     arregloEgresos = movimientos.filter(mov => mov.tMov === "E");
     arregloIngresos = movimientos.filter(mov => mov.tMov === "I");
+    console.log(movimientos)
     arregloEgresos.length !== 0 && listar(arregloEgresos,tbodyEgreso);
     arregloIngresos.length !== 0 && listar(arregloIngresos,tbodyIngreso);
-
-
 
 });
 

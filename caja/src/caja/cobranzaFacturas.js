@@ -24,7 +24,6 @@ let subSeleccionado;
 let movimientos;
 
 window.addEventListener('load',async e=>{
-    cerrarVentana();
     movimientos = (await axios.get(`${URL}movCajas/forPased`)).data;
     listar(movimientos);
 });
@@ -137,6 +136,15 @@ tarjeta.addEventListener('click',e=>{
     });
 });
 
+cheque.addEventListener('click',e=>{
+    ipcRenderer.send('abrir-ventana',{
+        path:"cheques/agregar-modificarCheques.html",
+        width:500,
+        height:600,
+        cerrarVentana:true
+    });
+});
+
 cobrado.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
         if (parseFloat(cobrado.value) !== parseFloat(total.value)) {
@@ -160,9 +168,20 @@ descuento.addEventListener('focus',e=>{
     descuento.select();
 });
 
-
 ipcRenderer.on('recibir-informacion',(e,args)=>{
     if(args === "tarjeta cargada"){
         aceptar.click();
+    }else if(args === "Cheque cargado"){
+        aceptar.click();
     }
-})
+});
+
+salir.addEventListener('click',e=>{
+    location.href = '../index.html'
+});
+
+document.addEventListener('keydown',e=>{
+    if (e.keyCode === 27) {
+        location.href = '../index.html';
+    }
+});

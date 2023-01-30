@@ -7,6 +7,8 @@ const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
 
+let cerrar = false
+
 const f_entrega = document.getElementById('f_entrega');
 const n_cheque = document.getElementById('n_cheque');
 const banco = document.getElementById('banco');
@@ -54,10 +56,33 @@ agregar.addEventListener('click',async e=>{
     
     try {
         await axios.post(`${URL}cheques`,cheque);
-        window.close();
+        await sweet.fire({
+            title:"Otro Cheque?",
+            confirmButtonText:"Aceptar",
+            showCancelButton:true
+        })
+        .then(({isConfirmed})=>{
+            if (isConfirmed) {
+                n_cheque.value = "";
+                banco.value = "";
+                plaza.value = "";
+                i_cheque.value = "";
+                ent_por.value = "";
+                entre_a.value = "";
+                domicilio.value = "";
+                telefono.value = "";
+                n_cheque.focus();
+            }else{
+                if (cerrar) {
+                    ipcRenderer.send('enviar-info-ventana-principal',"Cheque cargado")
+                }    
+                window.close();
+            }
+        });
     } catch (error) {
+        console.log(error)
     await sweet.fire({
-            title:"No se pudo agregar Cheuqe"
+            title:"No se pudo agregar Cheque"
         })
         
     }
@@ -111,6 +136,10 @@ function listarCheque(cheque) {
     domicilio.value = cheque.domicilio;
     telefono.value = cheque.telefono;
 }
+
+ipcRenderer.on('cerrar-ventana',(e,args)=>{
+    cerrar = args;
+})
 
 salir.addEventListener('click',e=>{
     window.close();

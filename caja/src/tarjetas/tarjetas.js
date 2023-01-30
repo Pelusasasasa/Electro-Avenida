@@ -126,7 +126,7 @@ const listar = async(tarjetas)=>{
 
         const fecha = tarjeta.fecha.slice(0,10).split('-',3);
         
-        tdFecha.innerHTML = `${fecha[0]}/${fecha[1]}/${fecha[2]}`
+        tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`
         tdTarjeta.innerHTML = tarjeta.tarjeta;
         tdImporte.innerHTML = (tarjeta.imp).toFixed(2);
         tdVendedor.innerHTML = tarjeta.vendedor;
