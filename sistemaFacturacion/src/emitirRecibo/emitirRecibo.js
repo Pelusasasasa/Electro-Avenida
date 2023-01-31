@@ -13,7 +13,7 @@ const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const { copiar, verCodComp, redondear, generarMovimientoCaja, verTipoPago } = require('../funciones');
+const { copiar, verCodComp, redondear, generarMovimientoCaja } = require('../funciones');
 
 
 const hoy = new Date();
@@ -390,6 +390,10 @@ const hacerRecibo = async()=>{
      recibo.cliente = nombre.value;
      recibo.vendedor = Vendedor;
      recibo.tipo_comp = (situacion === "blanco" ? "Recibos" : "Recibos_P" );
+     recibo.localidad = localidad.value;
+     recibo.direccion = direccion.value;
+     recibo.condIva = cond_iva.value;
+     recibo.dnicuit = cuit.value;
      const aux = (situacion === "negro") ? "saldo_p" : "saldo"
      let saldoFavor = 0;
      saldoFavor = (saldoAfavor.value !== "") && parseFloat(saldoAFavor.value);
@@ -419,15 +423,14 @@ const hacerRecibo = async()=>{
         await axios.put(`${URL}clientes/${recibo.codigo}`,clienteTraido);
         await axios.post(`${URL}recibos`,recibo);
         await generarMovimientoCaja(recibo.fecha,"I",recibo.nro_comp,recibo.tipo_comp,"RC",recibo.precioFinal,recibo.tipo_comp,recibo.codigo,recibo.cliente,recibo.vendedor);
-        await verTipoPago(Vendedor)
         //Hacemos que los productos sean las cuentas conpensadas
         recibo.productos = arregloParaImprimir;
         // arregloParaImprimir contiene todos las ventas que tiene pagadas y total contiene el total del recibo
         alerta.children[1].children[0].innerHTML = "Imprimiendo Recibo";
-        recibo.tipo_comp === "Recibos_P" ? await ipcRenderer.send('imprimir-venta',[recibo,cliente,false,1,recibo.tipo_comp,arregloParaImprimir,total.value]) : await ipcRenderer.send('imprimir-venta',[recibo,,true,1,"Ticket Factura"]);
+        recibo.tipo_comp === "Recibos_P" ? await ipcRenderer.send('imprimir-venta',[recibo,cliente,false,1,recibo.tipo_comp,arregloParaImprimir,total.value]) : await ipcRenderer.send('imprimir-venta',[recibo,clienteTraido,true,1,"Recibos"]);
         //Mandar Recibo para que se guarde como pdf
         recibo.tipo_comp === "Recibos" && (alerta.children[1].children[0].innerHTML = "Guardando Recibo Como PDF");
-        recibo.tipo_comp === "Recibos" && await axios.post(`${URL}crearPdf`,[recibo,cliente,{}]);
+       // recibo.tipo_comp === "Recibos" && await axios.post(`${URL}crearPdf`,[recibo,cliente,{}]);
         location.href = "../index.html";
     } catch (error) {
         console.log(error)

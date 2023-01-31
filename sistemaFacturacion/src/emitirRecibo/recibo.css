@@ -49,7 +49,78 @@
     justify-content: space-around;
 }
 
-
 .emitirRecibo .pagado main h3{
     margin: 0;
+}
+
+
+.imprimir .grid-3{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.imprimir .informacion{
+    border: .1rem solid black;
+    padding: 1rem;
+}
+
+.imprimir .informacion main{
+    display: flex;
+    justify-content: space-around;
+}
+
+.informacion main h3,.informacion main p{
+    margin: 0;
+}
+
+.imprimir .informacion main h3,.imprimir .informacion main p{
+    margin-right: auto;
+}
+
+
+.imprimir .informacionCliente{
+    border: .1rem solid black;
+    padding: 1rem;
+}
+
+.imprimir .informacionCliente main{
+    display: flex;
+    justify-content: space-around;
+}
+
+.imprimir .informacionCliente main p,.imprimir .informacionCliente main h4{
+    margin: 0;
+}
+
+.imprimir .informacionCliente .nombre h4,.imprimir .informacionCliente .nombre p,.imprimir .informacionCliente .domicilio h4,.imprimir .informacionCliente .domicilio p{
+    margin-right: auto;
+}
+
+.imprimir .parrafo p{
+    margin: 0;
+}
+
+.imprimir .detalle{
+    height: 40vh;
+    margin-top: 1rem;
+}
+
+.imprimir .detalle table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.imprimir .detalle table thead tr{
+    border-bottom: .1rem solid black;
+    border-top: .1rem solid black;
+}
+
+.imprimir .detalle table tbody td{
+    text-align: center;
+}
+
+
+.totalRecibo{
+    display: flex;
+    justify-content: flex-end;
 }

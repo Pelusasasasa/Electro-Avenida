@@ -7,10 +7,11 @@ ipcRenderer.on('info-para-imprimir',(e,args)=>{
 
 const listar = async(venta,Cliente,lista,precio,opciones)=>{
 
-const numero = document.querySelector('.numero')
+const numero = document.querySelector('.numero');
 const fecha = document.querySelector('.fecha');
-const cliente = document.querySelector('.cliente')
-const cuit = document.querySelector('.cuit')
+const cliente = document.querySelector('.cliente');
+const idCliente = document.querySelector('.idCliente');
+const cuit = document.querySelector('.cuit');
 const localidad = document.querySelector('.localidad')
 const direccion = document.querySelector('.direccion')
 const iva = document.querySelector('.cond_iva')
@@ -27,6 +28,7 @@ hoy = (hoy<10) ? `0${hoy}` : hoy;
 const cond_iva = (Cliente.iva === undefined) && "Consumidor Final";
 fecha.innerHTML = `${hoy}/${mes}/${anio}`;
 numero.innerHTML = venta.nro_comp;
+idCliente.innerHTML = venta.codigo;
 cliente.innerHTML = Cliente.cliente;
 cuit.innerHTML = Cliente.cuit;
 localidad.innerHTML=Cliente.localidad;
@@ -45,8 +47,8 @@ for(let objeto of lista){
     tdFecha.innerHTML = objeto.fecha;
     tdComprobante.innerHTML = objeto.comprobante;
     tdNumero.innerHTML = objeto.numero;
-    tdPagado.innerHTML = objeto.pagado;
-    tdSaldo.innerHTML = objeto.saldo;
+    tdPagado.innerHTML = parseFloat(objeto.pagado).toFixed(2);
+    tdSaldo.innerHTML = parseFloat(objeto.saldo).toFixed(2);
 
     tr.appendChild(tdFecha);
     tr.appendChild(tdComprobante);
@@ -81,6 +83,7 @@ if (venta.saldoAFavor !== 0) {
     tbody.appendChild(tr);
 }
 total.value = precio;
+
 await ipcRenderer.send('imprimir',JSON.stringify(opciones));
 }
 

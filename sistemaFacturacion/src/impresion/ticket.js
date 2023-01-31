@@ -1,3 +1,7 @@
+const axios = require("axios");
+require('dotenv').config();
+const URL = process.env.URL;
+
 const { ipcRenderer } = require("electron");
 const qrcode = require('qrcode');
 
@@ -37,12 +41,19 @@ const cae = document.querySelector('.cae');
 const venciCae = document.querySelector('.venciCae');
 
 
- ipcRenderer.on('info-para-imprimir',(e,args)=>{
-     [venta,afip,,,opciones] = JSON.parse(args)
-    listar(venta,afip,opciones);
+ ipcRenderer.on('info-para-imprimir',async (e,args)=>{
+    [venta,afip,,,opciones] = JSON.parse(args);
+    let cliente;
+
+    if (venta.tipo_comp === "Recibos") {
+        cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`)).data;
+    }
+
+    listar(venta,afip,opciones,cliente);
  });
 
- const listar = async (venta,afip,opciones)=>{
+const listar = async (venta,afip,opciones,cliente)=>{
+
     //fecha y hora
     let date = new Date(venta.fecha);
     let day = date.getDate();
@@ -60,14 +71,14 @@ const venciCae = document.querySelector('.venciCae');
     seconds = seconds < 10 ? `0${seconds}` : seconds;
 
     const tipoFactura = verTipoFactura(venta.cod_comp)
-
+    console.log(venta)
     codFactura.innerHTML = "0"+venta.cod_comp;
     tipo.innerHTML = tipoFactura;
-    numeroFactura.innerHTML = venta.nro_comp
+    numeroFactura.innerHTML = venta.nro_comp;
 
     fecha.innerHTML = `${day}/${month}/${year}`;
     hora.innerHTML = `${hour}:${minuts}:${seconds}`;
-    nombre.innerHTML = venta.nombreCliente;
+    nombre.innerHTML = venta.nombreCliente || venta.cliente;
     cuit.innerHTML = venta.dnicuit.length === 11 ? `CUIT:${venta.dnicuit}` : `DNI : ${venta.dnicuit}`;
     condIva.innerHTML = venta.condIva.toUpperCase();
     direccion.innerHTML = venta.direccion + " - " + venta.localidad;
@@ -100,7 +111,7 @@ const venciCae = document.querySelector('.venciCae');
                 <div class=cantidad>
                     <p>${producto.fecha}</p>
                     <p>${producto.numero}</p>
-                    <p>${producto.pagado}</p>
+                    <p>${parseFloat(producto.pagado).toFixed(2)}</p>
                 </div>
             `
         }
@@ -132,16 +143,17 @@ const venciCae = document.querySelector('.venciCae');
         }
     }
 
-    descuento.innerHTML = parseFloat(venta.descuento).toFixed(2);
+    descuento.innerHTML = venta.descuento ? parseFloat(venta.descuento).toFixed(2) : "0.00";
     total.innerHTML = parseFloat(venta.precioFinal).toFixed(2);
     tipoVenta.innerHTML = (venta.tipo_pago !== "CC" || venta.cliente === "M122" || venta.cliente === "A029") ? `Contado: ${parseFloat(venta.precioFinal).toFixed(2)}` : "Cuenta Corriente";
-    if (afip) {
+    if (afip && venta.tipo_comp !== "Recibos") {
         qr.children[0].src = afip.QR;
         cae.innerHTML = afip.cae;
         venciCae.innerHTML = afip.vencimientoCae;
     }else{
         divAfip.classList.add('none');
     }
+    asd
     await ipcRenderer.send('imprimir',JSON.stringify(opciones));
  }
 
@@ -158,6 +170,8 @@ const venciCae = document.querySelector('.venciCae');
     }else if(codigo === 4){
         return "Recibos"
     }else if(codigo === 9){
+        return "Recibos"
+    }else{
         return "Recibos"
     }
  };

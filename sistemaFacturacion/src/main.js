@@ -121,14 +121,12 @@ ipcMain.on('imprimir-venta',async(e,args)=>{
     }
     if (tipo === "Recibos_P") {
         abrirVentanaImprimir("emitirRecibo/imprimirRecibo.html",1000,900,"noReinician",show);
-    }else if(tipo === "Recibos"){
-        abrirVentanaImprimir("emitirComprobante/imprimirTicket.html",800,200,"noReinician",show);
-    }else if(tipo === "Ticket Factura"){
+    }else if(tipo === "Ticket Factura" || tipo === "Recibos"){
         abrirVentanaImprimir("impresion/ticket.html",1000,900,"noReinician",false)
     }else{
         abrirVentanaImprimir("impresion/presupuesto.html",1000,500,"noReinician",show);
     };
-    const pasar = [venta,cliente,calculo,lista,options]
+    const pasar = [venta,cliente,calculo,lista,options];
     await imprimir(pasar);
 })
 

@@ -13,6 +13,22 @@ const Recibo = new Schema({
         type:String,
         default: "A Consumidor Final"
     },
+    direccion:{
+        type:String,
+        default:""
+    },
+    localidad:{
+        type:String,
+        default:""
+    },
+    dnicuit:{
+        type:String,
+        default:""
+    },
+    condIva:{
+        type:String,
+        default:""
+    },
     precioFinal:{
         type:Number,
         required:true
