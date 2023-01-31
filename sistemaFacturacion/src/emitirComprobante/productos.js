@@ -39,15 +39,19 @@ body.addEventListener('keydown',e=>{
 
 
 //si la tecla es escape se cierra la pagina
-body.addEventListener('keyup',async e=>{
+body.addEventListener('keydown',async e=>{
     if (e.key === "Escape") {
         if (!document.activeElement.classList.contains('swal2-input') && !document.activeElement.classList.contains('swal2-modal')) {
             window.close();
         }
     };
 
-    subSeleccionado = await recorrerFlechas(e);
-    seleccionado = subSeleccionado && subSeleccionado.parentNode;
+    if (document.activeElement.nodeName !== "SELECT") {
+        subSeleccionado = await recorrerFlechas(e);
+        seleccionado = subSeleccionado && subSeleccionado.parentNode;    
+    }
+
+    
 
     subSeleccionado && subSeleccionado.scrollIntoView({
         block:"center",
@@ -112,10 +116,6 @@ select.addEventListener('keydown',(e) =>{
     if (e.keyCode === 39) {
         e.preventDefault();
         buscarProducto.focus();
-    }else if(e.keyCode === 40){
-        //Quitamos para que cuando el select este en focus y usamos la fleacha de abajo pierda el foco
-        e.preventDefault();
-        select.blur();
     }
 });
 
@@ -142,7 +142,7 @@ seleccionarTBody.addEventListener('click',e=>{
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
     subSeleccionado = (e.target.nodeName === "TD" || e.target.nodeName === "TH") ? e.target : e.target.children[0];
     subSeleccionado.classList.add('subSeleccionado');
-})
+});
 
 seleccionarTBody.addEventListener('dblclick',(e) =>{
     seleccionado = document.querySelector('.seleccionado');

@@ -72,7 +72,7 @@ const listar = async (venta,afip,opciones,cliente)=>{
 
     const tipoFactura = verTipoFactura(venta.cod_comp)
     console.log(venta)
-    codFactura.innerHTML = "0"+venta.cod_comp;
+    codFactura.innerHTML = venta.cod_comp ?  "0"+venta.cod_comp : "06";
     tipo.innerHTML = tipoFactura;
     numeroFactura.innerHTML = venta.nro_comp;
 
