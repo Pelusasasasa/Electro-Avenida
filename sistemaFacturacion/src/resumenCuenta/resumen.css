@@ -35,14 +35,15 @@ body{
 
 .table{
     background-color: white;
-    height: 50vh;
+    min-height: 50vh;
+    height: auto;
     overflow: scroll;
 }
 
 @media print{
     .table{
         overflow: hidden;
-        height: 25vh;
+        min-height: 25vh;
     }
 }
 
