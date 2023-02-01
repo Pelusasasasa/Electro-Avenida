@@ -53,7 +53,7 @@ const venciCae = document.querySelector('.venciCae');
  });
 
 const listar = async (venta,afip,opciones,cliente)=>{
-
+    
     //fecha y hora
     let date = new Date(venta.fecha);
     let day = date.getDate();
@@ -71,7 +71,6 @@ const listar = async (venta,afip,opciones,cliente)=>{
     seconds = seconds < 10 ? `0${seconds}` : seconds;
 
     const tipoFactura = verTipoFactura(venta.cod_comp)
-    console.log(venta)
     codFactura.innerHTML = venta.cod_comp ?  "0"+venta.cod_comp : "06";
     tipo.innerHTML = tipoFactura;
     numeroFactura.innerHTML = venta.nro_comp;
@@ -153,7 +152,6 @@ const listar = async (venta,afip,opciones,cliente)=>{
     }else{
         divAfip.classList.add('none');
     }
-    asd
     await ipcRenderer.send('imprimir',JSON.stringify(opciones));
  }
 

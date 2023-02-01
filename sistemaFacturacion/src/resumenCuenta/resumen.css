@@ -1,7 +1,7 @@
 .buscador{
     display: flex;
     justify-content: space-around;
-    margin: .5rem;
+    margin: 0 .5rem;
 }
 
 .imagen{
@@ -10,6 +10,14 @@
     justify-content: center;
     align-items: center;
     background-color: white;
+}
+
+img{
+    width: 20rem;
+}
+
+body{
+    font-size: 1.2rem;
 }
 
 .imagen h3,.imagen p{
@@ -29,6 +37,13 @@
     background-color: white;
     height: 50vh;
     overflow: scroll;
+}
+
+@media print{
+    .table{
+        overflow: hidden;
+        height: 25vh;
+    }
 }
 
 table thead tr th{

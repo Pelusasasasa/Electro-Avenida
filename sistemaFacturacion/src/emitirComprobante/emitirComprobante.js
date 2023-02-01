@@ -861,11 +861,11 @@ ticketFactura.addEventListener('click',async (e) =>{
     let gravado105 = 0 
     ventas.forEach(({objeto,cantidad}) =>{
         if (objeto.iva === "N") {
-            gravado21 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta)/1.21) 
-            totalIva21 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta)-(parseFloat(objeto.precio_venta))/1.21)
+            gravado21 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta)/1.21) ;
+            totalIva21 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta)/1.21) * 21 / 100;
         }else{
-            gravado105 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta/1.105))
-            totalIva105 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta)-(parseFloat(objeto.precio_venta))/1.105)
+            gravado105 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta/1.105));
+            totalIva105 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta/1.105)) * 10.5 / 100;
         }
     })
     let cantIva = 1

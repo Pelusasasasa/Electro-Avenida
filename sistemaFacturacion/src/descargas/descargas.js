@@ -41,13 +41,18 @@ const ventas = (Ventas,path)=>{
         delete venta.observaciones
         delete venta.__v
         delete venta.abonado
-        delete venta.cliente
         delete venta.condIva
         delete venta.gravado21
         delete venta.iva21
         delete venta.gravado105
         delete venta.iva105
-        delete venta.cant_iva
+        delete venta.cant_iva;
+
+        //borramos lo que sean del recibo que no van
+        (venta.tipo_comp !== "Recibos" && venta.tipo_comp !== "Recibos_P") && delete venta.cliente;
+        (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") && delete venta.codigo;
+        (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") && delete venta.localidad;
+        (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") && delete venta.saldoAFavor;
     });
 
     //Lo que hacemos es ordenar el array por fechas
@@ -73,6 +78,9 @@ const ventas = (Ventas,path)=>{
         dia = dia < 10 ? `0${dia}` : dia;
         mes = mes < 10 ? `0${mes}` : mes;
         mes = mes === 13 ? 1 : mes;
+        if (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") {
+             venta.nombreCliente = venta.cliente;
+        }
         venta.precioSinDescuento = venta.descuento ? parseFloat(venta.precioFinal) + parseFloat(venta.descuento) : venta.precioFinal;
         venta.fecha = `${dia}/${mes}/${anio} - ${hora}:${minuts}:${secons}`;
     });
