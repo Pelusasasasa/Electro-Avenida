@@ -74,6 +74,9 @@ table thead tr th{
 }
 
 @media print{
+    body{
+        font-weight: bold;
+    }
     .table{
         overflow: auto;
     }

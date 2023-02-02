@@ -636,7 +636,7 @@ presupuesto.addEventListener('click',async (e)=>{
                     
                     await axios.post(`${URL}presupuesto`,venta)
                         
-                    venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,"Presupuesto","PP",venta.precioFinal,"Presupuesto",venta.cliente,venta.nombreCliente,venta.vendedor);
+                    venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,"Presupuesto","PP",venta.precioFinal,venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor);
                             
                     await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp)
                      //si la venta es CC Sumamos un saldo al cliente y ponemos en cuenta corriente compensada y historica
@@ -779,7 +779,7 @@ ticketFactura.addEventListener('click',async (e) =>{
                     venta.tipo_pago === "CC" && sumarSaldoAlCliente(venta.precioFinal,venta.cliente,venta.nro_comp);
                     venta.tipo_pago === "CC" && ponerEnCuentaCorrienteCompensada(venta,true);
                     venta.tipo_pago === "CC" && ponerEnCuentaCorrienteHistorica(venta,true,saldo.value);
-                    venta.tipo_pago === "CD" && generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 1 ? "Factura A" : "Factura B",venta.cod_comp === 1 ? "FA" : "FB",venta.precioFinal,venta.cod_comp === 1 ? "Factura A" : "Factura B",venta.cliente,venta.nombreCliente,venta.vendedor);
+                    venta.tipo_pago === "CD" && generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 1 ? "Factura A" : "Factura B",venta.cod_comp === 1 ? "FA" : "FB",venta.precioFinal,venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor);
 
                     await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
                     nuevaVenta = await axios.post(`${URL}ventas`,venta);

@@ -67,6 +67,16 @@ document.addEventListener('keyup',e=>{
 
 const listar = (lista)=>{
     tbody.innerHTML = "";
+
+    lista.sort((a,b)=>{
+        if (a.provedor > b.provedor) {
+            return 1;
+        }else if(a.provedor < b.provedor){
+            return -1;
+        }
+        return 0;
+    });
+
     for (let elem of lista){
         const tr = document.createElement('tr');
 

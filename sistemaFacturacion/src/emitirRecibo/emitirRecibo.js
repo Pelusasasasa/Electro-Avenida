@@ -422,7 +422,7 @@ const hacerRecibo = async()=>{
         
         await axios.put(`${URL}clientes/${recibo.codigo}`,clienteTraido);
         await axios.post(`${URL}recibos`,recibo);
-        await generarMovimientoCaja(recibo.fecha,"I",recibo.nro_comp,recibo.tipo_comp,"RC",recibo.precioFinal,recibo.tipo_comp,recibo.codigo,recibo.cliente,recibo.vendedor);
+        await generarMovimientoCaja(recibo.fecha,"I",recibo.nro_comp,recibo.tipo_comp,"RC",recibo.precioFinal,recibo.cliente,recibo.codigo,recibo.cliente,recibo.vendedor);
         //Hacemos que los productos sean las cuentas conpensadas
         recibo.productos = arregloParaImprimir;
         // arregloParaImprimir contiene todos las ventas que tiene pagadas y total contiene el total del recibo
