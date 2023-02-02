@@ -60,7 +60,9 @@ hasta.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
     await alerta.classList.remove('none');
     ventas = (await axios.get(`${URL}ventas/${desde.value}/${nextDay}`)).data;
+    recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desde.value}/${nextDay}`)).data;
     listar(ventas);
+    listarRecibos(recibos);
     }
 })
 
@@ -121,8 +123,42 @@ const listar = async(lista)=>{
     alerta.classList.add('none');
 };
 
+const listarRecibos = async(recibos)=>{
+    for await(let recibo of recibos){
+        const tr = document.createElement('tr');
 
+        const tdFecha = document.createElement('td');
+        const tdCliente = document.createElement('td');
+        const tdTipo = document.createElement('td');
+        const tdNumero = document.createElement('td');
+        const tdImporte = document.createElement('td');
+        const tdImprimir = document.createElement('td');
+        const button = document.createElement('button');
 
+        tdFecha.innerHTML = recibo.fecha.slice(11,19);
+        tdCliente.innerHTML = recibo.cliente;
+        tdTipo.innerHTML = recibo.tipo_comp;
+        tdNumero.innerHTML = recibo.nro_comp;
+        tdImporte.innerHTML = recibo.precioFinal.toFixed(2);
+        button.innerHTML = "Re-Imprimir"
+        tdImprimir.appendChild(button);
+
+        tdImporte.classList.add('text-right');
+        tdImporte.classList.add('text-bold');
+
+        button.classList.add('imprimir');
+
+        tr.appendChild(tdFecha);
+        tr.appendChild(tdCliente);
+        tr.appendChild(tdTipo);
+        tr.appendChild(tdNumero);
+        tr.appendChild(tdImporte);
+        tr.appendChild(tdImprimir);
+
+        tbody.appendChild(tr)
+        
+    }
+}
 
 const verTipoComp = (numero)=>{
     if (numero === 1) {

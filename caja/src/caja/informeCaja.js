@@ -14,6 +14,7 @@ const modificar = document.querySelector('.modificar');
 
 const today = new Date();
 
+let saldoAnterior = 0
 let totalIngresos = 0;
 let totalEgresos = 0;
 
@@ -40,9 +41,8 @@ window.addEventListener('load',async e=>{
 
     const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
 
-    arregloEgresos = movimientos.filter(mov => mov.tMov === "E");
-    arregloIngresos = movimientos.filter(mov => mov.tMov === "I");
-    console.log(movimientos)
+    arregloEgresos = movimientos.filter(mov => mov.tMov === "E" && mov.pasado === true);
+    arregloIngresos = movimientos.filter(mov => mov.tMov === "I" && mov.pasado === true);
     arregloEgresos.length !== 0 && listar(arregloEgresos,tbodyEgreso);
     arregloIngresos.length !== 0 && listar(arregloIngresos,tbodyIngreso);
 
@@ -124,12 +124,13 @@ const listar = async(lista,tbody)=>{
     tdTotal.classList.add('bold');
 
     tbody.appendChild(tr);
+    document.querySelector('.saldoAnterior').innerHTML = (await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"];
     if (tbody.classList.contains('tbodyEgreso')) {
         document.querySelector('.totalEgresos').innerHTML = totalEgresos.toFixed(2);
     }else{
         document.querySelector('.totalIngresos').innerHTML = totalIngresos.toFixed(2);
     }
-    document.querySelector('.saldoFinal').innerHTML = (totalIngresos-totalEgresos).toFixed(2)
+    document.querySelector('.saldoFinal').innerHTML = (totalIngresos-totalEgresos + (await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"]);
     
 };
 

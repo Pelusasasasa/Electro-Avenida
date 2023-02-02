@@ -38,17 +38,43 @@ let desde;
 let hasta;
 
 let ultimos = {};
+let total = 0;
 
 window.addEventListener('load',async e=>{
+    
+    ipcRenderer.on('recibir-informacion',async (e,args)=>{
+        let aux = args.hasta.split('-',3);
+        desde = args.desde;
+        hasta = new Date(`${aux[1]}/${aux[2]}/${aux[0]}`);
+
+        let nextDay = new Date(hasta);
+        nextDay.setDate(hasta.getDate() + 1);
+        const movimientos = (await axios.get(`${URL}movCajas/${desde}/${nextDay}`)).data;
+
+        for await(let mov of movimientos){
+            if (mov.pasado) {
+                if (mov.tMov === "I") {
+                    total += mov.imp;
+                }else{
+                    total -= mov.imp;
+                }
+            }
+        };  
+    });
+
+
+
     valesCobrar .value = (await axios.get(`${URL}vales/totalPrice/C`)).data.toFixed(2);
     personal.value = (await axios.get(`${URL}vales/totalPrice/P`)).data.toFixed(2);
     incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`)).data.toFixed(2);
     facturasCobrar.value = (await axios.get(`${URL}vales/totalPrice/F`)).data.toFixed(2);
     tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`)).data.toFixed(2);
-    caja1.value = (await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"];
+    caja1.value = (await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"] + total;
 
     totalVales.value = redondear(parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value) + parseFloat(facturasCobrar.value),2);
     ultimos = (await axios.get(`${URL}ultimos`)).data;
+
+
 
     ponerValores(ultimos);
 
