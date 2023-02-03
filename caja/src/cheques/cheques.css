@@ -68,3 +68,8 @@ table{
 .agregarModificarCheque main{
     padding: .7rem;
 }
+
+
+.agregarModificarCheque main input[type=checkbox]{
+    transform: scale(1.9);
+}

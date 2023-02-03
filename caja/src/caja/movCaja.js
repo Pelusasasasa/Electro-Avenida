@@ -138,7 +138,8 @@ aceptar.addEventListener('click',async e=>{
         movimientoCaja.pasado = true;
         try {
             await axios.post(`${URL}movCajas`,movimientoCaja);
-            window.close();
+            // window.close();
+            location.reload();
         } catch (error) {
             alerta("No se pudo cargar el movimiento")
         }

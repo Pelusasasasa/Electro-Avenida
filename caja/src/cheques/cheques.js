@@ -103,7 +103,7 @@ salir.addEventListener('click',async e=>{
 
 const listarCheques = async(cheques)=>{
     tbody.innerHTML = "";
-    for await(let {_id,f_recibido,n_cheque,banco,f_cheque,plaza,i_cheque,ent_por,entreg_a,domicilio,telefono} of cheques){
+    for await(let {_id,f_recibido,n_cheque,banco,f_cheque,plaza,i_cheque,ent_por,entreg_a,domicilio,telefono,tipo} of cheques){
         const fechaCorta = f_recibido.slice(0,10).split('-',3);
         const fechaCheque = f_cheque.slice(0,10).split('-',3);
         
@@ -123,6 +123,7 @@ const listarCheques = async(cheques)=>{
         const tdEntreg_a = document.createElement('td');
         const tdDomicilio = document.createElement('td');
         const tdTelefono = document.createElement('td');
+        const tdPropio = document.createElement('td');
         const tdAcciones = document.createElement('td');
 
         tdAcciones.classList.add('acciones');
@@ -137,6 +138,7 @@ const listarCheques = async(cheques)=>{
         tdEntreg_a.innerHTML = entreg_a;
         tdDomicilio.innerHTML = domicilio;
         tdTelefono.innerHTML = telefono;
+        tdPropio.innerHTML = tipo;
 
         tdAcciones.innerHTML = `
             <div class=tool>
@@ -159,6 +161,7 @@ const listarCheques = async(cheques)=>{
         tr.appendChild(tdEntreg_a);
         tr.appendChild(tdDomicilio);
         tr.appendChild(tdTelefono);
+        tr.appendChild(tdPropio);
         tr.appendChild(tdAcciones);
 
         tbody.appendChild(tr)

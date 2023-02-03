@@ -19,6 +19,7 @@ const ent_por = document.getElementById('ent_por');
 const entre_a = document.getElementById('entre_a');
 const domicilio = document.getElementById('domicilio');
 const telefono = document.getElementById('telefono');
+const propio = document.getElementById('propio');
 
 const agregar = document.querySelector('.agregar');
 const modificar = document.querySelector('.modificar');
@@ -53,6 +54,7 @@ agregar.addEventListener('click',async e=>{
     cheque.entreg_a = entre_a.value.toUpperCase();
     cheque.domicilio = domicilio.value.toUpperCase();
     cheque.telefono = telefono.value;
+    cheque.tipo = propio.value ? "P" : "";
     
     try {
         await axios.post(`${URL}cheques`,cheque);
@@ -101,6 +103,8 @@ modificar.addEventListener('click',async e=>{
     cheque.entreg_a = entre_a.value.toUpperCase();
     cheque.domicilio = domicilio.value.toUpperCase();
     cheque.telefono = telefono.value;
+    cheque.tipo = propio.value ? "P" : "";
+    
     try {
         await axios.put(`${URL}cheques/id/${modificar.id}`,cheque);
         window.close();
