@@ -499,7 +499,7 @@ async function movimientoProducto(cantidad,objeto,idCliente,cliente,tipo_pago){
     movProducto.tipo_comp = venta.tipo_comp
     movProducto.nro_comp=venta.nro_comp
     movProducto.egreso = cantidad
-    movProducto.stock = parseFloat((parseFloat(objeto.stock) - cantidad).toFixed(2))
+    movProducto.stock = tipo_pago === "PP" ? objeto.stock : parseFloat((parseFloat(objeto.stock) - cantidad).toFixed(2));
     movProducto.precio_unitario=objeto.precio_venta
     movProducto.total=(parseFloat(movProducto.egreso)*parseFloat(movProducto.precio_unitario)).toFixed(2)
     movProducto.vendedor = venta.vendedor;
