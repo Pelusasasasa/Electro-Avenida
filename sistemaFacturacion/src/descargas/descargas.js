@@ -48,8 +48,13 @@ const ventas = (Ventas,path)=>{
         delete venta.iva105
         delete venta.cant_iva;
 
+        //si es unn recibo o un recibo_p le pasamos al nombrecliente el cliente
+        if (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") {
+            venta.nombreCliente = venta.cliente;
+       }
+
         //borramos lo que sean del recibo que no van
-        (venta.tipo_comp !== "Recibos" && venta.tipo_comp !== "Recibos_P") && delete venta.cliente;
+        delete venta.cliente;
         (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") && delete venta.codigo;
         (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") && delete venta.localidad;
         (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") && delete venta.saldoAFavor;
@@ -62,7 +67,6 @@ const ventas = (Ventas,path)=>{
         }else if(a.fecha < b.fecha){
             return -1
         }
-
         return 0
     });
 
@@ -75,12 +79,8 @@ const ventas = (Ventas,path)=>{
         let hora = horas[0];
         let minuts = horas[1];
         let secons = horas[2];
-        dia = dia < 10 ? `0${dia}` : dia;
-        mes = mes < 10 ? `0${mes}` : mes;
         mes = mes === 13 ? 1 : mes;
-        if (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") {
-             venta.nombreCliente = venta.cliente;
-        }
+
         venta.precioSinDescuento = venta.descuento ? parseFloat(venta.precioFinal) + parseFloat(venta.descuento) : venta.precioFinal;
         venta.fecha = `${dia}/${mes}/${anio} - ${hora}:${minuts}:${secons}`;
     });
@@ -91,7 +91,7 @@ const ventas = (Ventas,path)=>{
     let extencion = "xlsx";
 
     extencion = path.split('.')[1] ? path.split('.')[1] : extencion;
-        path = path.split('.')[0];
+    path = path.split('.')[0];
     XLSX.writeFile(wb,path + "." + extencion)
 }
 

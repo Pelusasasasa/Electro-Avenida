@@ -20,7 +20,7 @@ const templateMenu = [
         {
             label: 'Ventas',
             click() {
-                abrirVentana('fechas/fechas.html',600,200);
+                abrirVentana('fechas/fechas.html',600,300);
 
             }
         }]

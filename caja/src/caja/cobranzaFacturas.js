@@ -107,6 +107,9 @@ aceptar.addEventListener('click',async e=>{
     };
 
     movimiento.pasado = true;
+    const now = new Date();
+    const p = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+    movimiento.fecha = p;
     try {
         await axios.put(`${URL}movCajas/id/${movimiento._id}`,movimiento);
         tbody.removeChild(seleccionado);
@@ -124,6 +127,7 @@ aceptar.addEventListener('click',async e=>{
 
 efectivo.addEventListener('click',e=>{
     total.value = seleccionado.children[5].innerHTML;
+    cobrado.value = total.value;
     cobrado.focus();
 });
 
