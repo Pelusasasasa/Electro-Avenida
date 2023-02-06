@@ -636,7 +636,7 @@ presupuesto.addEventListener('click',async (e)=>{
                     
                     await axios.post(`${URL}presupuesto`,venta)
                         
-                    venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,"Presupuesto","PP",venta.precioFinal,venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor);
+                    venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,"Presupuesto","PP",venta.precioFinal,venta.nombreCliente ,venta.cliente,venta.nombreCliente,venta.vendedor);
                             
                     await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp)
                      //si la venta es CC Sumamos un saldo al cliente y ponemos en cuenta corriente compensada y historica
@@ -1069,11 +1069,11 @@ ipcRenderer.on('informacion',async (e,args)=>{
     textoUsuario.innerHTML = vendedor;
     variasFacturas = true;
 
-    listaNumeros = numeros.split('\n');
+    
     let cliente = (await axios.get(`${URL}clientes/id/${codigoCliente}`)).data;
     ponerInputsClientes(cliente);
     let ventas = [];
-    for await (let numero of listaNumeros){
+    for await (let numero of numeros){
         ventas.push((await axios.get(`${URL}presupuesto/${numero}`)).data);
     };
 

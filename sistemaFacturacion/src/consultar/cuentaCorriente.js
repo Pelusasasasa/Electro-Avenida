@@ -390,17 +390,33 @@ facturarVarios.addEventListener('click',async e=>{
     }).then(async ({isConfirmed,value})=>{
         if(isConfirmed && value !== ""){
             let vendedor = (await axios.get(`${URL}usuarios/${value}`)).data;
+            let cuentas = listaCompensada;
+            let htmlCuentas = "";
+            for(let cuenta of cuentas){
+                htmlCuentas += `
+                    <div>
+                        <input type="checkbox" id="${cuenta.nro_comp}" name="${cuenta.nro_comp}"/>
+                        <label for="${cuenta.nro_comp}">${cuenta.nro_comp}</label>
+                    </div>
+                `
+            }
             if (vendedor !== "") {
                 await sweet.fire({
-                    title:"Poner numeros de facturas",
-                    input:"textarea",
+                    title:"Facturar Varios",
+                    html:htmlCuentas,
                     confirmButtonText:"Aceptar",
                     showCancelButton:true
-                }).then(({value,isConfirmed})=>{
-                    if (isConfirmed) {
-                        ipcRenderer.send('facturar_varios',[vendedor.nombre,value,vendedor.empresa,codigoCliente.value])
+                }).then(({isConfirmed})=>{
+                    if(isConfirmed){
+                        const inputscheckeados = document.querySelectorAll("input[type=checkbox]");
+                        let value = [];
+                        inputscheckeados.forEach(elem=>{
+                            elem.checked && value.push(elem.id);
+                        });
+                        console.log(value)
+                        ipcRenderer.send('facturar_varios',[vendedor.nombre,value,vendedor.empresa,codigoCliente.value]);
                     }
-                })
+                });
             }
         }
     })

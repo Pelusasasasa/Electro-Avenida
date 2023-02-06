@@ -161,7 +161,7 @@ ipcMain.on('abrir-ventana-emitir-comprobante',(e,args)=>{
 });
 
 ipcMain.on('facturar_varios',(e,args)=>{
-    abrirVentana("emitirComprobante/emitirComprobante.html",1200,1000,true,args)
+    abrirVentana("emitirComprobante/emitirComprobante.html",1200,1000,true,args);
 });
 
 //FIN VENTAS
