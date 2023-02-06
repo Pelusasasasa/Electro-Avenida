@@ -30,17 +30,30 @@ window.addEventListener('load',async e=>{
     hasta.value = `${year}-${month}-${day}`;
 
     const movimientos = (await axios.get(`${URL}movCajas`)).data;
-    listar(movimientos);
+    const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
+
+    movimientosPasados.sort((a,b)=>{
+        if (a.fecha > b.fecha) {
+            return 1
+        }else if(a.fecha < b.fecha){
+            return -1
+        };
+        return 0
+    });
+    
+    listar(movimientosPasados);
 });
 
-desde.addEventListener('change',async e=>{
+desde.addEventListener('keypress',async e=>{
+    if (e.keyCode === 13) {
         const fecha = hasta.value.split('-',3);
         let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
         nextDay.setDate(nextDay.getDate() + 1);
 
         const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
+        const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
-        movimientos.sort((a,b)=>{
+        movimientosPasados.sort((a,b)=>{
             if (a.fecha > b.fecha) {
                 return 1
             }else if(a.fecha < b.fecha){
@@ -49,17 +62,21 @@ desde.addEventListener('change',async e=>{
             return 0
         });
 
-        listar(movimientos);
-})
+        listar(movimientosPasados);
+        hasta.focus();
+    }
+});
 
-hasta.addEventListener('change',async e=>{
+hasta.addEventListener('keypress',async e=>{
+    if(e.keyCode === 27){
         const fecha = hasta.value.split('-',3);
         let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
         nextDay.setDate(nextDay.getDate() + 1);
 
         const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
+        const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
-        movimientos.sort((a,b)=>{
+        movimientosPasados.sort((a,b)=>{
             if (a.fecha > b.fecha) {
                 return 1
             }else if(a.fecha < b.fecha){
@@ -68,8 +85,9 @@ hasta.addEventListener('change',async e=>{
             return 0
         });
 
-        listar(movimientos)
-})
+        listar(movimientosPasados);
+    }
+});
 
 const listar = (lista)=>{
     tbody.innerHTML = "";
@@ -188,8 +206,3 @@ document.addEventListener('keyup',e=>{
     }
 });
 
-desde.addEventListener('keypress',e=>{
-    if (e.keyCode === 13) {
-        hasta.focus();
-    }
-});

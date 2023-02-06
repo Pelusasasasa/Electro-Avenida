@@ -43,6 +43,7 @@ const listar = async(lista)=>{
         const tdVendedor = document.createElement('td');
 
         const fecha = elem.fecha.slice(0,10).split('-',3);
+        console.log(elem.fecha)
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         tdCodigo.innerHTML = elem.codigo;
         tdCliente.innerHTML = elem.cliente;

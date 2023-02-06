@@ -85,7 +85,7 @@ const listar = async(lista,tbody)=>{
         const tdImporte = document.createElement('td');
 
         tdImporte.classList.add('text-right');
-
+        console.log(mov.fecha)
         const fecha = mov.fecha.slice(0,10).split('-',3);
 
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`

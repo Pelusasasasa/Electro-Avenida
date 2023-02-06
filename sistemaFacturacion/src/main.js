@@ -79,7 +79,7 @@ ipcMain.on('mando-el-producto', async (e, args) => {
 
 //Abrir ventana para modificar un cliente
 ipcMain.on('abrir-ventana-modificar-cliente', (e, args) => {
-    abrirVentana("clientes/modificarCliente.html",1100,450)
+    abrirVentana("clientes/modificarCliente.html",1100,600)
     const [idCliente,acceso] = args
     nuevaVentana.on('ready-to-show',async ()=>{
         nuevaVentana.webContents.send('datos-clientes', JSON.stringify([idCliente,acceso]))
