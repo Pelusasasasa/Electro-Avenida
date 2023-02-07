@@ -13,6 +13,14 @@ const buttonAgregar = document.getElementById('buttonAgregar');
 
 window.addEventListener('load',async e=>{
     const tarjetas  = (await axios.get(`${URL}tipoTarjetas`)).data;
+    tarjetas.sort((a,b)=>{
+        if(a.nombre > b.nombre){
+            return 1
+        }else if(b.nombre > a.nombre){
+            return -1
+        }
+        return 0
+    })
     listarTarjetas(tarjetas)
 });
 

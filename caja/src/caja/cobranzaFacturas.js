@@ -43,14 +43,13 @@ const listar = async(lista)=>{
         const tdVendedor = document.createElement('td');
 
         const fecha = elem.fecha.slice(0,10).split('-',3);
-        console.log(elem.fecha)
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         tdCodigo.innerHTML = elem.codigo;
         tdCliente.innerHTML = elem.cliente;
         tdComprob.innerHTML = elem.cuenta;
         tdNumero.innerHTML = elem.nro_comp;
-        tdImporte.innerHTML = elem.imp;
-        tdVendedor.innerHTML = elem.vendedor
+        tdImporte.innerHTML = elem.imp.toFixed(2);
+        tdVendedor.innerHTML = elem.vendedor;
 
         tdImporte.classList.add('text-right')
 
@@ -137,7 +136,11 @@ tarjeta.addEventListener('click',e=>{
         path:"tarjetas/agregarTarjeta.html",
         width:500,
         height:400,
-        cerrarVentana:true
+        cerrarVentana:true,
+        informacionAgregar:JSON.stringify({
+            imp: parseFloat(seleccionado.children[5].innerHTML),
+            vendedor: seleccionado.children[6].innerHTML
+        })
     });
 });
 

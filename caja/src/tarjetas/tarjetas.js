@@ -13,6 +13,7 @@ const buscador = document.querySelector('#buscador');
 const totalInput = document.querySelector('#total');
 
 const agregar = document.querySelector('.agregar');
+const sumar = document.querySelector('#sumar');
 const salir = document.querySelector('.salir');
 
 let total = 0;
@@ -154,3 +155,18 @@ const listar = async(tarjetas)=>{
     }
     totalInput.value = total.toFixed(2);
 };
+
+sumar.addEventListener('click',e=>{
+    if(seleccionado){
+        let tarjetaSumar = seleccionado.children[1].innerHTML;
+        let total = 0;
+        tarjetas.forEach(tarjeta=>{
+            if(tarjeta.tarjeta ===  tarjetaSumar){
+                total += tarjeta.imp;
+            }
+        }) 
+        sweet.fire({
+            title:`Total de tarjeta ${tarjetaSumar}: $${total}`
+        })
+    };
+});

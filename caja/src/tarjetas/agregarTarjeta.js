@@ -88,12 +88,17 @@ ipcRenderer.on('cerrar-ventana',async(e,args)=>{
 });
 
 ipcRenderer.on('recibir-informacion',async(e,args)=>{
-    console.log(args)
     tarjeta = (await axios.get(`${URL}tarjetas/id/${args}`)).data;
     modificar.classList.remove('none');
     aceptar.classList.add('none');
     modificar.id = args;
     listarTarjeta(tarjeta)
+});
+
+ipcRenderer.on('informacionAgregar',(e,args)=>{
+    const {imp,vendedor} = JSON.parse(args);
+    importe.value = imp.toFixed(2);
+    selectVendedor.value = vendedor;
 });
 
 const listarTarjeta = (tarjeta)=>{

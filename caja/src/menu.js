@@ -48,6 +48,7 @@ ipcRenderer.on('fechas',async e=>{
     fechaHoy('hasta')
     primeroDelMes('desde')
 });
+
 ipcRenderer.on('fecha',(e,args)=>{
     sweet.fire({
         html:"<input id='fecha' type='date'>",
@@ -118,16 +119,13 @@ const primeroDelMes = (id)=>{
 }
 
 ipcRenderer.on('modificar',async e=>{
-    await sweet.fire({
-        title:"Contraseña",
-        input:"password",
-        confirmButtonText:"Aceptar",
-        showCancelButton:true
-    }).then(({isConfirmed,value})=>{
-        if (isConfirmed && value === "54321") {
-            location.href = 'caja/modificar.html'
-        }
-    })
+    const a = await reingresarContraseña();
+    if (a) {
+        location.href = './caja/modificar.html';
+    }else{
+        console.log(a)
+        // reingresarContraseña();
+    }
 });
 
 ipcRenderer.on('facturas',(e,args)=>{
@@ -173,3 +171,20 @@ ipcRenderer.on('emitirPago',(e,args)=>{
 ipcRenderer.on('cobranzaFacturas',(e,args)=>{
     location.href = "caja/cobranzaFacturas.html"
 });
+
+const reingresarContraseña = async()=>{
+    let retorno = false
+    await sweet.fire({
+        title:"Contraseña",
+        input:"password",
+        confirmButtonText:"Aceptar",
+        showCancelButton:true
+    }).then(({isConfirmed,value})=>{
+        if (isConfirmed && value === "54321") {
+            retorno = true;
+        }else if(isConfirmed && value === "54321"){
+            retorno = false;
+        }
+    });
+    return retorno
+};

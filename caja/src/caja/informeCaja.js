@@ -3,7 +3,8 @@ require('dotenv').config();
 const URL = process.env.URL;
 
 const {clipboard} = require('electron')
-const sweet = require('sweetalert2')
+const sweet = require('sweetalert2');
+const { redondear } = require('../assets/js/globales');
 
 const desde = document.querySelector('#desde');
 const hasta = document.querySelector('#hasta');
@@ -41,8 +42,8 @@ window.addEventListener('load',async e=>{
 
     const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
 
-    arregloEgresos = movimientos.filter(mov => mov.tMov === "E" && mov.pasado === true);
-    arregloIngresos = movimientos.filter(mov => mov.tMov === "I" && mov.pasado === true);
+    arregloEgresos = movimientos.filter(mov => (mov.pasado && mov.tMov === "E") && mov.pasado === true);
+    arregloIngresos = movimientos.filter(mov => (mov.pasado && mov.tMov === "I") && mov.pasado === true);
     arregloEgresos.length !== 0 && listar(arregloEgresos,tbodyEgreso);
     arregloIngresos.length !== 0 && listar(arregloIngresos,tbodyIngreso);
 
@@ -85,7 +86,6 @@ const listar = async(lista,tbody)=>{
         const tdImporte = document.createElement('td');
 
         tdImporte.classList.add('text-right');
-        console.log(mov.fecha)
         const fecha = mov.fecha.slice(0,10).split('-',3);
 
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`
@@ -135,7 +135,7 @@ const listar = async(lista,tbody)=>{
     }else{
         document.querySelector('.totalIngresos').innerHTML = totalIngresos.toFixed(2);
     }
-    document.querySelector('.saldoFinal').innerHTML = (totalIngresos-totalEgresos + (await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"]);
+    document.querySelector('.saldoFinal').innerHTML = redondear(totalIngresos-totalEgresos + (await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"],2);
     
 };
 
@@ -165,7 +165,6 @@ const ponerTotal = (total,cuenta,tbody)=>{
     tbody.appendChild(tr);
 };
 
-
 desde.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         hasta.focus();
@@ -175,13 +174,11 @@ desde.addEventListener('keypress',e=>{
 hasta.addEventListener('keypress', async e=>{
     if (e.key === "Enter") {
         const fecha = hasta.value.split('-',3);
-        let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
-        nextDay.setDate(nextDay.getDate() + 1);
+        let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2],20,59,59);
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay.toISOString()}`)).data;
 
-        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
-
-        arregloEgresos = movimientos.filter(elem => elem.tMov === "E");
-        arregloIngresos = movimientos.filter(elem => elem.tMov === "I");
+        arregloEgresos = movimientos.filter(elem => (elem.pasado && elem.tMov === "E"));
+        arregloIngresos = movimientos.filter(elem => (elem.pasado & elem.tMov === "I"));
 
         tbodyEgreso.innerHTML = "";
         tbodyIngreso.innerHTML = "";
@@ -268,7 +265,7 @@ const recorrerConFlechas = (e)=>{
         subSeleccionado = subSeleccionado.nextElementSibling;
         subSeleccionado.classList.add('subSeleccionado');
     }
-}
+};
 
 //hacer pintar el tr y el td de colores para saber que ese es el seleccionado
 const seleccionarTr = (e)=>{
@@ -280,7 +277,6 @@ const seleccionarTr = (e)=>{
     subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.parentNode;
     subSeleccionado.classList.add('subSeleccionado');
 };
-
 
 modificar.addEventListener('click',async e=>{
     const arreglo = [];
@@ -306,7 +302,7 @@ modificar.addEventListener('click',async e=>{
         });
     }
 
-})
+});
 
 salir.addEventListener('click',e=>{
     window.close();

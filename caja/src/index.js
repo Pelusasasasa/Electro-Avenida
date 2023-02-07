@@ -7,7 +7,7 @@ if (require('electron-squirrel-startup')) {
 let ventanaPrincipal
 let nuevaVentana
 
-const abrirVentana = (direccion,width,height,reinicio,informacion,cerrarVentana=false)=>{
+const abrirVentana = (direccion,width,height,reinicio,informacion,cerrarVentana=false,informacionAgregar)=>{
   nuevaVentana = new BrowserWindow({
     width: width,
     height: height,
@@ -28,9 +28,13 @@ const abrirVentana = (direccion,width,height,reinicio,informacion,cerrarVentana=
     }
     
     if (informacion) {
-      console.log(informacion)
       nuevaVentana.webContents.send('recibir-informacion',informacion);
     }
+
+    if(informacionAgregar){
+      nuevaVentana.webContents.send('informacionAgregar',informacionAgregar)
+    }
+
   });
 
   nuevaVentana.on('closed',()=>{
@@ -76,8 +80,8 @@ app.on('activate', () => {
 });
 
 ipcMain.on('abrir-ventana',(e,args)=>{
-  const {path,width,height,reinicio,informacion,cerrarVentana} = args;
-  abrirVentana(path,width,height,reinicio,informacion,cerrarVentana);
+  const {path,width,height,reinicio,informacion,cerrarVentana,informacionAgregar} = args;
+  abrirVentana(path,width,height,reinicio,informacion,cerrarVentana,informacionAgregar);
 }); 
 
 // Lo usamos para cuando alla un cambio en la aplicacion se reinicie

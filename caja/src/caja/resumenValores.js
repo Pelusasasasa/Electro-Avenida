@@ -69,7 +69,7 @@ window.addEventListener('load',async e=>{
     incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`)).data.toFixed(2);
     facturasCobrar.value = (await axios.get(`${URL}vales/totalPrice/F`)).data.toFixed(2);
     tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`)).data.toFixed(2);
-    caja1.value = (await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"] + total;
+    caja1.value = redondear((await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"] + total,2);
 
     totalVales.value = redondear(parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value) + parseFloat(facturasCobrar.value),2);
     ultimos = (await axios.get(`${URL}ultimos`)).data;
@@ -129,7 +129,7 @@ const ponerValores = (obj) =>{
 
         valesEfectivo.value = redondear(parseFloat(chequesEfectivo.value) + parseFloat(totalVales.value),2);
 
-        diferencia.value = redondear(parseFloat(caja1.value) - parseFloat(valesEfectivo.value),2);
+        diferencia.value = redondear(-parseFloat(caja1.value) + parseFloat(valesEfectivo.value),2);
     }
 };
 
