@@ -375,7 +375,7 @@ const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,des
     movimiento.desc = desc.toUpperCase();
     movimiento.codigo = codigo,
     movimiento.cliente = cliente;
-    movimiento.vendedor
+    movimiento.vendedor = vendedor;
     try {
         await axios.post(`${URL}movCajas`,movimiento);
     } catch (error) {
