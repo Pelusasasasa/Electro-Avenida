@@ -64,7 +64,7 @@ provedores.addEventListener('keypress',async e=>{
         provedor = (await axios.get(`${URL}provedor/codigo/${provedores.value}`)).data;
         codigo.value = provedor.codigo;
         saldo.value = provedor.saldo;
-        condIva.value = provedor.condIva
+        condIva.value = provedor.situa;
         cuit.value = provedor.cuit;
         puntoVenta.focus();
     }
@@ -237,9 +237,7 @@ fecha.addEventListener('keypress',e=>{
 
 importeCheque.addEventListener('keypress',e=>{
    if (e.keyCode === 13) {
-    if (banco.value !== "efectivo") {
         agregarCheque();
-    }
    }
 });
 
@@ -266,7 +264,7 @@ const agregarCheque = ()=>{
     tr.appendChild(tdFechaCheque);
     tr.appendChild(tdImporteCheque);
     tr.appendChild(tdEliminar);
-
+    console.log(tr)
     tbodyCheque.appendChild(tr);
     totalCheque.value = redondear(parseFloat(totalCheque.value) + parseFloat(importeCheque.value),2);
 
