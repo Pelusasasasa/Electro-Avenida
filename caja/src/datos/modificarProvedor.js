@@ -7,6 +7,7 @@ const sweet = require('sweetalert2');
 
 const codigo = document.querySelector('#codigo');
 const inputProvedor = document.querySelector('#provedor');
+const saldo = document.querySelector('#saldo');
 const localidad = document.querySelector('#localidad');
 const direccion = document.querySelector('#direccion');
 const codPostal = document.querySelector('#codPostal');
@@ -37,9 +38,10 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
 const llenarinputs = async(provedor)=>{
     codigo.value = provedor.codigo;
     inputProvedor.value = provedor.provedor;
+    saldo.value = provedor.saldo.toFixed(2);
     localidad.value = provedor.localidad;
     direccion.value = provedor.direccion;
-    codPostal.value = provedor.codPostal;
+    codPostal.value = provedor.codpostal;
     provincia.value = provedor.provincia;
     telefono.value = provedor.telefono;
     email.value = provedor.mail;

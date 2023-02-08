@@ -139,7 +139,8 @@ tarjeta.addEventListener('click',e=>{
         cerrarVentana:true,
         informacionAgregar:JSON.stringify({
             imp: parseFloat(seleccionado.children[5].innerHTML),
-            vendedor: seleccionado.children[6].innerHTML
+            vendedor: seleccionado.children[6].innerHTML,
+            cliente:seleccionado.children[2].innerHTML
         })
     });
 });

@@ -27,6 +27,7 @@ month = month===13 ? 1 : month;
 month = month<10 ? `0${month}` : month;
 fecha.value = `${year}-${month}-${date}`;
 
+let vendedorForSelect;
 let tarjeta;
 
 window.addEventListener('load',async e=>{
@@ -37,13 +38,17 @@ window.addEventListener('load',async e=>{
         option.value = usuario.nombre;
         option.text = usuario.nombre.toUpperCase();
         selectVendedor.appendChild(option);
-        usuario.nombre === "ELBIO" && (selectVendedor.value = "ELBIO");
+        // usuario.nombre === "ELBIO" && (selectVendedor.value = "ELBIO");
     }
     for await(let tipo of tipos){
         const option = document.createElement('option');
         option.value = tipo.nombre;
         option.text = tipo.nombre.toUpperCase();
         selectTarjeta.appendChild(option);
+    }
+
+    if(vendedorForSelect){
+        selectVendedor.value = vendedorForSelect;
     }
     tarjeta && listarTarjeta(tarjeta);
 });
@@ -97,9 +102,10 @@ ipcRenderer.on('recibir-informacion',async(e,args)=>{
 });
 
 ipcRenderer.on('informacionAgregar',(e,args)=>{
-    const {imp,vendedor} = JSON.parse(args);
+    const {imp,vendedor,cliente: clienteTraido} = JSON.parse(args);
+    cliente.value = clienteTraido;
     importe.value = imp.toFixed(2);
-    selectVendedor.value = vendedor;
+    vendedorForSelect = vendedor;
 });
 
 const listarTarjeta = (tarjeta)=>{

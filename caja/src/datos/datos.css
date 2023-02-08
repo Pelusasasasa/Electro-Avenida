@@ -70,6 +70,7 @@
     display: grid;
 }
 
+
 .agregarProvedor .inputs input{
     font-size: 1.5rem;
     padding: .5rem;
@@ -80,6 +81,11 @@
 }
 .agregarProvedor .inputs .igual{
     grid-template-columns: 1fr 1fr;
+}
+
+.agregarProvedor .inputs .tres{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 .agregarProvedor .inputs label{

@@ -35,7 +35,7 @@ window.addEventListener('load',async e=>{
         }
         return 0
     });
-    listarDatos(datos)
+    listarDatos(datos.filter(dato=>dato.tipo_comp !== "Presupuesto"))
 });
 
 

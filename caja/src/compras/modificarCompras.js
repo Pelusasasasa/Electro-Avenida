@@ -8,8 +8,9 @@ const { redondear, copiar, cerrarVentana } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
-const modificar = document.querySelector('.modificar');
-const salir = document.querySelector('.salir');
+const modificar = document.getElementById('modificar');
+const eliminar = document.getElementById('eliminar');
+const salir = document.getElementById('salir');
 
 const tbody = document.querySelector('tbody');
 
@@ -129,6 +130,25 @@ modificar.addEventListener('click',e=>{
         })
     }
 });
+
+eliminar.addEventListener('click',e=>{
+    sweet.fire({
+        title:"Eliminar compra?",
+        confirmButtonText:"Aceptar",
+        showCancelButton:true
+    }).then(async ({isConfirmed})=>{
+        if(isConfirmed){
+            try {
+                await axios.delete(`${URL}dat_comp/id/${seleccionado.id}`)
+            } catch (error) {
+                console.log(error);
+                sweet.fire({
+                    title:"No se pudo eliminar la compra"
+                })
+            }
+        }
+    })
+})
 
 salir.addEventListener('click',e=>{
     location.href = '../index.html';

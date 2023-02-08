@@ -23,6 +23,13 @@ datCompCTRL.putForId = async(req,res)=>{
     res.end();
 }
 
+datCompCTRL.deleteForId = async(req,res)=>{
+    const {id} = req.params;
+    await DatComp.findByIdAndDelete({_id:id});
+    console.log(`Comprobante ${id} Eliminado`);
+    res.end();
+}
+
 datCompCTRL.getBetween = async(req,res)=>{
     const {desde,hasta} = req.params;
 

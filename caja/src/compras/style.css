@@ -119,6 +119,7 @@
 
 .table table th,.table table td{
     border: .1rem solid black;
+    white-space: nowrap;
 }
 
 tbody tr:hover{
