@@ -135,3 +135,43 @@
     display: flex;
     justify-content: space-around;
 } 
+
+/* cambio de precios */
+
+h1{
+    text-align: center;
+}
+
+.entradas{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.entradas main{
+    display: flex;
+    flex-direction: column;
+}
+
+.tablas{
+    display: flex;
+    justify-content: space-around;
+}
+
+.tablaNuevo{
+    border-left: .1rem solid black;
+}
+
+.tablaViejo{
+    border-right: .1rem solid black;
+}
+
+.tablaViejo,.tablaNuevo{
+    width: 100%;
+    background-color: white;
+    height: 50vh;
+}
+
+table tr th{
+    border: .1rem solid black;
+}

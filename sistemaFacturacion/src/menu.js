@@ -106,6 +106,12 @@ const templateMenu = [
                 click(){
                     abrirVentana("./productos/listadoPorMarca.html",1200,1000)
                 }
+            },
+            {
+                label: "Cambiar Precios con lista",
+                click(){
+                    abrirVentana("./productos/cambiarPrecios.html",1200,1100);
+                }
             }
         ]
     },
