@@ -12,6 +12,8 @@ const tbody = document.querySelector('.tbody');
 const buscador = document.querySelector('#buscador');
 const totalInput = document.querySelector('#total');
 
+const hoy = document.querySelector('#hoy');
+
 const agregar = document.querySelector('.agregar');
 const sumar = document.querySelector('#sumar');
 const salir = document.querySelector('.salir');
@@ -21,6 +23,18 @@ let tarjetas = [];
 let seleccionado
 let subSeleccionado
 
+let date = new Date();
+
+hoy.addEventListener('change',e=>{
+    if(hoy.checked){
+        const tarjetasHoy = tarjetas.filter(tarjeta => tarjeta.fecha.slice(0,10) === date.toISOString().slice(0,10));
+        total = 0;
+        listar(tarjetasHoy);
+    }else{
+        total = 0;
+        listar(tarjetas);
+    }
+});
 
 window.addEventListener('load',async e=>{
     copiar();
@@ -121,6 +135,7 @@ const listar = async(tarjetas)=>{
 
         const tdFecha = document.createElement('td');
         const tdTarjeta = document.createElement('td');
+        const tdCliente = document.createElement('td');
         const tdImporte = document.createElement('td');
         const tdVendedor = document.createElement('td');
         const tdAcciones = document.createElement('td');
@@ -129,16 +144,15 @@ const listar = async(tarjetas)=>{
         
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`
         tdTarjeta.innerHTML = tarjeta.tarjeta;
+        tdCliente.innerHTML = tarjeta.cliente
         tdImporte.innerHTML = (tarjeta.imp).toFixed(2);
         tdVendedor.innerHTML = tarjeta.vendedor;
         tdAcciones.innerHTML = `
             <div id=edit class=tool>
                 <span class=material-icons>edit</span>
-                <p class=tooltip>Modificar</p>
             </div>
             <div id=delete class=tool>
                 <span class=material-icons>delete</span>
-                <p class=tooltip>Eliminar</p>
             </div>
         `
 
@@ -146,6 +160,7 @@ const listar = async(tarjetas)=>{
         total += tarjeta.imp;
 
         tr.appendChild(tdFecha);
+        tr.appendChild(tdCliente)
         tr.appendChild(tdTarjeta);
         tr.appendChild(tdImporte);
         tr.appendChild(tdVendedor);

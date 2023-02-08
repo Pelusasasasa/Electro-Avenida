@@ -15,6 +15,11 @@
     font-size: 1.5rem;
 }
 
+#hoy{
+    margin-top: 1.5rem;
+    transform: scale(2);
+}
+
 .encabezado input{
     padding: .5rem;
     font-size: 1.5rem;

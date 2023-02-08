@@ -138,6 +138,10 @@ table button:hover{
     font-size: 2rem;
 }
 
+#desde,#hasta{
+    font-size: 1.5rem;
+}
+
 .table{
     height: 75vh;
     background-color: white;
@@ -149,6 +153,10 @@ table{
     border-collapse: collapse;
 }
 
-.cuentaCorriente #saldo,.cuentaCorriente #codigo{
+.cuentaCorriente #codigo{
     width: 10rem;
+}
+
+.cuentaCorriente #saldo{
+    width: 20rem;
 }

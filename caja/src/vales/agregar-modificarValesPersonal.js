@@ -51,7 +51,7 @@ const ponerPersonal = (lista) => {
 
     for(let elem of lista){
         const option = document.createElement('option');
-        option.value = elem._id;
+        option.value = elem.nombre;
         option.text = elem.nombre;
 
         rSocial.appendChild(option);
@@ -156,6 +156,6 @@ concepto.addEventListener('focus',e=>{
     concepto.select();
 });
 
-imp.addEventListener('focus',e=>{
-    imp.select();
-});
+// imp.addEventListener('focus',e=>{
+//     imp.select();
+// });

@@ -97,10 +97,6 @@ tbody.addEventListener('click',async e=>{
     }
 });
 
-salir.addEventListener('click',async e=>{
-    location.href = "../index.html";
-});
-
 const listarCheques = async(cheques)=>{
     tbody.innerHTML = "";
     for await(let {_id,f_recibido,n_cheque,banco,f_cheque,plaza,i_cheque,ent_por,entreg_a,domicilio,telefono,tipo} of cheques){
@@ -133,7 +129,7 @@ const listarCheques = async(cheques)=>{
         tdBanco.innerHTML = banco;
         tdF_cheque.innerHTML = F_cheque;
         tdPLaza.innerHTML = plaza;
-        tdImporte.innerHTML = i_cheque.toFixed(2);
+        tdImporte.innerHTML = i_cheque;
         tdEntrePor.innerHTML = ent_por;
         tdEntreg_a.innerHTML = entreg_a;
         tdDomicilio.innerHTML = domicilio;
@@ -166,4 +162,14 @@ const listarCheques = async(cheques)=>{
 
         tbody.appendChild(tr)
     }
-}
+};
+
+salir.addEventListener('click',async e=>{
+    location.href = "../index.html";
+});
+
+document.addEventListener('keyup',e=>{
+    if(e.keyCode === 27){
+        location.href = "../index.html";
+    }
+})

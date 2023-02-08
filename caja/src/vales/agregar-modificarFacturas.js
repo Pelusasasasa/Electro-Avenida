@@ -107,9 +107,6 @@ concepto.addEventListener('focus',e=>{
     concepto.select();
 });
 
-imp.addEventListener('focus',e=>{
-    imp.select();
-});
 
 ipcRenderer.on('recibir-informacion',async(e,args)=>{
     h1.innerHTML = "MODIFICAR FACTURA";

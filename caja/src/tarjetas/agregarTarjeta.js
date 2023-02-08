@@ -8,6 +8,7 @@ const {redondear, cerrarVentana} = require('../assets/js/globales');
 
 const selectTarjeta = document.querySelector('#tarjeta');
 const selectVendedor = document.querySelector('#vendedor');
+const cliente = document.querySelector('#cliente');
 const fecha = document.querySelector('#fecha');
 const importe = document.querySelector('#importe');
 
@@ -121,6 +122,7 @@ aceptar.addEventListener('click',async e=>{
     tarjeta.fecha = new Date(pasarFecha[0],pasarFecha[1] - 1, pasarFecha[2],"08","24","00")
     tarjeta.tarjeta = selectTarjeta.value;
     tarjeta.imp = importe.value;
+    tarjeta.cliente = cliente.value;
     tarjeta.vendedor = selectVendedor.value;
 
     if (selectTarjeta.value  === "") {
@@ -161,6 +163,7 @@ modificar.addEventListener('click',async e=>{
     tarjeta.tarjeta = selectTarjeta.value;
     tarjeta.imp = redondear(importe.value,2);
     tarjeta.vendedor = selectVendedor.value;
+    tarjeta.cliente = cliente.value;
     try {
         await axios.put(`${URL}tarjetas/id/${modificar.id}`,tarjeta);
         window.close();

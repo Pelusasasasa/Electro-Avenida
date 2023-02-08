@@ -19,14 +19,24 @@ const tbody = document.querySelector('tbody');
 const date = ((new Date()).toISOString()).slice(0,10);
 const dateSeparado = date.split('-',3)
 let mesAnterior = parseFloat(dateSeparado[1]-1);
-mesAnterior = mesAnterior === 0 ? 12 : mesAnterior
+mesAnterior = mesAnterior === 0 ? 12 : mesAnterior;
+mesAnterior = mesAnterior < 10 ? `0${mesAnterior}` : mesAnterior;
 let anioAnterior = mesAnterior === 12 ? parseFloat(dateSeparado[0]) - 1 : dateSeparado[0];
+console.log(anioAnterior)
 desde.value = `${anioAnterior}-${mesAnterior}-${dateSeparado[2]}`;
 hasta.value = date;
 
 window.addEventListener('load',async e=>{
     cerrarVentana();
     provedores = (await axios.get(`${URL}provedor`)).data;
+    provedores.sort((a,b)=>{
+        if (a.provedor < b.provedor) {
+            return -1;
+        } else if(a.provedor>b.provedor) {
+            return 1;
+        }
+        return 0
+    });
     await listarProvedores(provedores);
     const cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
     listarCuentas(cuentas);
@@ -79,5 +89,7 @@ const listarCuentas = (lista) => {
 select.addEventListener('change',async e=>{
     const provedor = provedores.find(provedor=>provedor.codigo === select.value);
     const cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
-    listarCuentas(cuentas)
+    listarCuentas(cuentas);
+    codigo.value = provedor.codigo;
+    saldo.value = provedor.saldo;
 });

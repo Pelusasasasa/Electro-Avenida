@@ -98,10 +98,6 @@ descripcion.addEventListener('focus',e=>{
     descripcion.select();
 });
 
-importe.addEventListener('focus',e=>{
-    importe.select();
-});
-
 window.addEventListener('load',async e=>{
     const informacion = getParameterByName("informacion");
     if (informacion) {

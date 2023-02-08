@@ -10,8 +10,6 @@ const tbody = document.querySelector('tbody');
 const inputTotal = document.getElementById('total');
 
 const agregar = document.querySelector('.agregar');
-const modificar = document.querySelector('.modificar');
-const borrar = document.querySelector('.borrar');
 const sumar = document.querySelector('.sumar');
 const salir = document.querySelector('.salir');
 
@@ -23,6 +21,17 @@ let subSeleccionado;
 window.addEventListener('load',async e=>{
     copiar();
     vales = (await axios.get(`${URL}vales/personal`)).data;
+
+    vales.sort((a,b)=>{
+        console.log(a)
+        if(a.rsoc < b.rsoc){
+            return 1
+        }else if(a.rsoc > b.rsoc){
+            return -1
+        }
+        return 0
+    })
+
     listarVales(vales);
 });
 
@@ -127,12 +136,6 @@ agregar.addEventListener('click',e=>{
         height:500,
         reinicio:true
     })
-});
-
-borrar.addEventListener('click',async e=>{
-    if (seleccionado) {
-
-    }
 });
 
 sumar.addEventListener('click',async e=>{
