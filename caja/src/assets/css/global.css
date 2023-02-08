@@ -70,9 +70,16 @@ tbody tr:hover{
   justify-content: space-around;
 }
 
+.tool{
+  position: relative;
+  /* color: blue; */
+}
+
 .tooltip{
   position: absolute;
   border: .1rem solid black;
+  right: 2.5rem;
+  top: -1rem;
   background-color: gray;
   color: white;
 }
