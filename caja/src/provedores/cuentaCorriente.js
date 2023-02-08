@@ -55,6 +55,7 @@ const listarProvedores = (lista)=>{
 };
 
 const listarCuentas = (lista) => {
+    tbody.innerHTML = "";
     lista.forEach(cuenta => {
         const tr = document.createElement('tr');
         const fecha = cuenta.fecha.slice(0,10).split('-',3);

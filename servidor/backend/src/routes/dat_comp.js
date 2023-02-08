@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const router = Router();
 
-const {post, getBetween, getForId, putForId, getFechaImpt, getForNumeroComp} = require('../controllers/dat_comp.controllers');
+const {post, getBetween, getForId, putForId, getFechaImpt, getForNumeroComp, deleteForId} = require('../controllers/dat_comp.controllers');
 
 router.route('/')
     .post(post)

@@ -71,17 +71,18 @@ ipcRenderer.on('fecha',(e,args)=>{
 ipcRenderer.on('saldoInicial',async (e,args)=>{
     const numeros = (await axios.get(`${URL}tipoVenta`)).data;
     const saldo = numeros["saldo Inicial"];
+    console.log(saldo)
     sweet.fire({
-        // html:"<input id='saldoInicial' type:number>",
         title:"Saldo Inicial",
-        input:"number",
-        inputValue:`${saldo.toFixed(2)}`,
+        html:`<input id='saldoInicial' value=${saldo} type:number>`,
         confirmButtonText:"Guardar",
         showCancelButton:true,
     }).then(async ({isConfirmed,value})=>{
-        if (isConfirmed && parseFloat(value) !== saldo) {
-            numeros["saldo Inicial"] = value
+        const saldoNuevo = parseFloat(document.getElementById('saldoInicial').value)
+        if (isConfirmed && saldoNuevo !== saldo) {
+            numeros["saldo Inicial"] = saldoNuevo
             try {
+                console.log(numeros)
                 await axios.put(`${URL}tipoVenta`,numeros)
             } catch (error) {
                 console.log(error)
