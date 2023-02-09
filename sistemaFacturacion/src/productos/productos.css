@@ -169,7 +169,8 @@ h1{
 .tablaViejo,.tablaNuevo{
     width: 100%;
     background-color: white;
-    height: 50vh;
+    height: 70vh;
+    overflow: scroll;
 }
 
 table tr th{

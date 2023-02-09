@@ -62,8 +62,6 @@ window.addEventListener('load',async e=>{
         };  
     });
 
-
-
     valesCobrar .value = (await axios.get(`${URL}vales/totalPrice/C`)).data.toFixed(2);
     personal.value = (await axios.get(`${URL}vales/totalPrice/P`)).data.toFixed(2);
     incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`)).data.toFixed(2);
@@ -84,19 +82,19 @@ window.addEventListener('load',async e=>{
 
 document.addEventListener('keyup',async e=>{
     if ((e.keyCode === 27)) {
-        ultimos.efectivoCaja = efectivoCaja.value;
-        ultimos.cheques = cheques.value;
-        ultimos.cien = cien.value;
-        ultimos.cincuenta = cincuenta.value;
-        ultimos.veinte = veinte.value;
-        ultimos.diez = diez.value;
-        ultimos.monedas = monedas.value;
-        ultimos.guardado = guardado.value;
-        ultimos.uno = uno.value;
-        ultimos.cambioCaja = cambioCaja.value;
-        ultimos.ceroVeinticinco = ceroVeinticinco.value;
-        ultimos.ceroCincuenta = ceroCincuenta.value;
-        ultimos.maleta = maleta.value;
+        ultimos.efectivoCaja = efectivoCaja.value === "" ? 0 : efectivoCaja.value;
+        ultimos.cheques = cheques.value === "" ? 0 : cheques.value;
+        ultimos.cien = cien.value === "" ? 0 : cien.value;
+        ultimos.cincuenta = cincuenta.value === "" ? 0 : cincuenta.value;
+        ultimos.veinte = veinte.value === "" ? 0 : veinte.value;
+        ultimos.diez = diez.value === "" ? 0 : diez.value;
+        ultimos.monedas = monedas.value === "" ? 0 : monedas.value;
+        ultimos.guardado = guardado.value === "" ? 0 : guardado.value;
+        ultimos.uno = uno.value === "" ? 0 : uno.value;
+        ultimos.cambioCaja = cambioCaja.value === "" ? 0 : cambioCaja.value;
+        ultimos.ceroVeinticinco = ceroVeinticinco.value === "" ? 0 : ceroVeinticinco.value;
+        ultimos.ceroCincuenta = ceroCincuenta.value === "" ? 0 : ceroCincuenta.value;
+        ultimos.maleta = maleta.value === "" ? 0 : maleta.value;
     
         try {
             await axios.put(`${URL}ultimos`,ultimos);
@@ -210,19 +208,19 @@ ceroCincuenta.addEventListener('keypress',e=>{
 });
 
 salir.addEventListener('click',async e=>{
-    ultimos.efectivoCaja = efectivoCaja.value;
-    ultimos.cheques = cheques.value;
-    ultimos.cien = cien.value;
-    ultimos.cincuenta = cincuenta.value;
-    ultimos.veinte = veinte.value;
-    ultimos.diez = diez.value;
-    ultimos.monedas = monedas.value;
-    ultimos.guardado = guardado.value;
-    ultimos.uno = uno.value;
-    ultimos.cambioCaja = cambioCaja.value;
-    ultimos.ceroVeinticinco = ceroVeinticinco.value;
-    ultimos.ceroCincuenta = ceroCincuenta.value;
-    ultimos.maleta = maleta.value;
+    ultimos.efectivoCaja = efectivoCaja.value === "" ? 0 : efectivoCaja.value;
+    ultimos.cheques = cheques.value === "" ? 0 : cheques.value;
+    ultimos.cien = cien.value === "" ? 0 : cien.value;
+    ultimos.cincuenta = cincuenta.value === "" ? 0 : cincuenta.value;
+    ultimos.veinte = veinte.value === "" ? 0 : veinte.value;
+    ultimos.diez = diez.value === "" ? 0 : diez.value;
+    ultimos.monedas = monedas.value === "" ? 0 : monedas.value;
+    ultimos.guardado = guardado.value === "" ? 0 : guardado.value;
+    ultimos.uno = uno.value === "" ? 0 : uno.value;
+    ultimos.cambioCaja = cambioCaja.value === "" ? 0 : cambioCaja.value;
+    ultimos.ceroVeinticinco = ceroVeinticinco.value === "" ? 0 : ceroVeinticinco.value;
+    ultimos.ceroCincuenta = ceroCincuenta.value === "" ? 0 : ceroCincuenta.value;
+    ultimos.maleta = maleta.value === "" ? 0 : maleta.value;
 
     try {
         await axios.put(`${URL}ultimos`,ultimos);

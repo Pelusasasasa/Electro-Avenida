@@ -8,6 +8,14 @@ const archivo = document.getElementById('archivo');
 
 window.addEventListener('load',async e=>{
     const marcas = (await axios.get(`${URL}productos`)).data;
+    marcas.sort((a,b)=>{
+        if(a<b){
+            return -1
+        }else if(a>b){
+            return 1
+        }
+        return 0
+    })
     rellenarStock(marcas);
 });
 
@@ -30,8 +38,16 @@ archivo.addEventListener('change',e=>{
             type:"binary"
         });
         let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["IMPORTACIÓN"]);
+        let productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`)).data;
         for await(let dato of datos){
-            console.log(dato.Id)
+            for await(let producto of productos){
+                if(producto.cod_fabrica === dato.Id){
+                    productosEncontrados.push({
+                        producto,
+                        dato
+                    })
+                }
+            }
         }
     }
     fileReader.readAsBinaryString(selectedFile);
