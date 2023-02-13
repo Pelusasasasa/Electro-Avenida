@@ -23,7 +23,7 @@ let seleccionado;
 let subSeleccionado;
 let movimientos;
 
-window.addEventListener('load',async e=>{
+window.addEventListener('load',async e=>{  
     movimientos = (await axios.get(`${URL}movCajas/forPased`)).data;
     listar(movimientos);
 });
@@ -48,8 +48,8 @@ const listar = async(lista)=>{
         tdCliente.innerHTML = elem.cliente;
         tdComprob.innerHTML = elem.cuenta;
         tdNumero.innerHTML = elem.nro_comp;
-        tdImporte.innerHTML = elem.imp.toFixed(2);
-        tdVendedor.innerHTML = elem.vendedor;
+        tdImporte.innerHTML = elem.imp;
+        tdVendedor.innerHTML = elem.vendedor
 
         tdImporte.classList.add('text-right')
 
@@ -136,12 +136,7 @@ tarjeta.addEventListener('click',e=>{
         path:"tarjetas/agregarTarjeta.html",
         width:500,
         height:400,
-        cerrarVentana:true,
-        informacionAgregar:JSON.stringify({
-            imp: parseFloat(seleccionado.children[5].innerHTML),
-            vendedor: seleccionado.children[6].innerHTML,
-            cliente:seleccionado.children[2].innerHTML
-        })
+        cerrarVentana:true
     });
 });
 
