@@ -87,6 +87,7 @@ modificar.addEventListener('click',async e=>{
     provedorModificado.codigo = codigo.value;
     provedorModificado.provedor = inputProvedor.value;
     provedorModificado.direccion = direccion.value;
+    provedorModificado.saldo = saldo.value;
     provedorModificado.localidad = localidad.value;
     provedorModificado.codPostal = codPostal.value;
     provedorModificado.telefono = telefono.value;
@@ -104,7 +105,7 @@ modificar.addEventListener('click',async e=>{
     try {
         await axios.put(`${URL}provedor/codigo/${provedorModificado.codigo}`,provedorModificado);
         await sweet.fire({
-            title:`Provedor ${provedorModificado.nombre} Modificado`
+            title:`Provedor ${provedorModificado.provedor} Modificado`
         });
         window.close();
     } catch (error) {
@@ -112,4 +113,8 @@ modificar.addEventListener('click',async e=>{
             title:"No se pudo modificar el provedor"
         });
     }
+});
+
+saldo.addEventListener('focus',e=>{
+    saldo.select();
 });
