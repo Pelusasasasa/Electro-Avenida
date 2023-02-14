@@ -63,8 +63,8 @@ provedores.addEventListener('keypress',async e=>{
         e.preventDefault();
         provedor = (await axios.get(`${URL}provedor/codigo/${provedores.value}`)).data;
         codigo.value = provedor.codigo;
-        saldo.value = provedor.saldo;
-        condIva.value = provedor.situa;
+        saldo.value = provedor.saldo.toFixed(2);
+        condIva.value = provedor.condIva;
         cuit.value = provedor.cuit;
         puntoVenta.focus();
     }
@@ -323,7 +323,7 @@ aceptar.addEventListener('click',async e=>{
         for await(let elem of listaCheques){
             await generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)//Se hace bien 
         };
-        await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,"FACTURA PROVEDORES")
+        await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,provedor.provedor)
 
         location.reload();
     }

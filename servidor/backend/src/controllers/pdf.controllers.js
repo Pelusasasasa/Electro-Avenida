@@ -91,7 +91,7 @@ pdfCTRL.crearPdf = async(req,res)=>{
     html = venta.condIva === "" ? html.replace('{{condIva}}',"Consumidor Final") : html.replace('{{condIva}}',venta.condIva)
     html = html.replace('{{direccion}}',venta.direccion);
     html = html.replace('{{localidad}}',venta.localidad);
-    html = (venta.tipo_pago !== "CC" || venta.cliente === "M122") ? html.replace('{{condVenta}}',"Contado") : html.replace('{{condVenta}}',"Cuenta Corriente")
+    html = (venta.tipo_pago !== "CC" || venta.cliente === "M122" || venta.cliente === "A029") ? html.replace('{{condVenta}}',"Contado") : html.replace('{{condVenta}}',"Cuenta Corriente")
     html = html.replace('{{}}',);
 
     //encabezado

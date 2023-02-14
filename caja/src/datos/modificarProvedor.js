@@ -41,7 +41,7 @@ const llenarinputs = async(provedor)=>{
     saldo.value = provedor.saldo.toFixed(2);
     localidad.value = provedor.localidad;
     direccion.value = provedor.direccion;
-    codPostal.value = provedor.codpostal;
+    codPostal.value = provedor.codPostal;
     provincia.value = provedor.provincia;
     telefono.value = provedor.telefono;
     email.value = provedor.mail;
@@ -87,6 +87,7 @@ modificar.addEventListener('click',async e=>{
     provedorModificado.provedor = inputProvedor.value;
     provedorModificado.direccion = direccion.value;
     provedorModificado.localidad = localidad.value;
+    provedorModificado.saldo = saldo.value;
     provedorModificado.codPostal = codPostal.value;
     provedorModificado.telefono = telefono.value;
     provedorModificado.mail = email.value;
@@ -101,9 +102,9 @@ modificar.addEventListener('click',async e=>{
     provedorModificado.provinciaPostal = provinciaPostal.value;
 
     try {
-        await axios.put(`${URL}provedor/${provedorModificado.codigo}`,provedorModificado);
+        await axios.put(`${URL}provedor/codigo/${provedorModificado.codigo}`,provedorModificado);
         await sweet.fire({
-            title:`Provedor ${provedorModificado.nombre} Modificado`
+            title:`Provedor ${provedorModificado.provedor} Modificado`
         });
         window.close();
     } catch (error) {
@@ -111,4 +112,8 @@ modificar.addEventListener('click',async e=>{
             title:"No se pudo modificar el provedor"
         });
     }
+});
+
+saldo.addEventListener('focus',e=>{
+    saldo.select();
 });

@@ -334,7 +334,6 @@ document.addEventListener('keyup',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
-    
     const dat_comp = {};
 
     dat_comp.provedor = provedor.value;
@@ -355,7 +354,7 @@ aceptar.addEventListener('click',async e=>{
     dat_comp.p_iva_c = percepcionIVA.value;
     dat_comp.r_dgr_c = retencionDGR.value;
     dat_comp.r_iva_c = retencionIVA.value;
-    dat_comp.total = neto.value;
+    dat_comp.total = total.value;
 
     if (cuentaCorriente.checked) {
         const aDescontar = await actualizarCuentasPosterioreres(parseFloat(dat_comp.total),parseFloat(descuento.value));
@@ -366,7 +365,6 @@ aceptar.addEventListener('click',async e=>{
             await ponerEnCuentaCorrienteProvedorDescuento(dat_comp);
         }
     }
-
     try {
         await axios.post(`${URL}dat_comp`,dat_comp);
         location.reload();
@@ -385,9 +383,9 @@ const ponerEnCuentaCorrienteProvedor = async(datos,aDescontar = 0)=>{
     cuenta.provedor = datos.provedor;
     cuenta.tipo_comp = datos.tipo_comp;
     cuenta.nro_comp = datos.nro_comp;
-    cuenta.debe = datos.total;
+    cuenta.debe = datos.tipo_comp === "Nota Credito" ? "-" + datos.total  : datos.total;
     cuenta.haber = 0;
-    cuenta.saldo = redondear(aDescontar + parseFloat(datos.total),2);
+    cuenta.saldo = datos.tipo_comp === "Nota Credito" ? redondear(aDescontar - parseFloat(datos.total),2) : redondear(aDescontar + parseFloat(datos.total),2);
     cuenta.emp = datos.empresa;
     try {
         await axios.post(`${URL}ctactePro`,cuenta);
@@ -421,7 +419,7 @@ const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
 }
 
 const ponerSaldoAlProvedor = async(datos)=>{
-    provedorTraido.saldo = redondear(provedorTraido.saldo + parseFloat(datos.total),2)
+    provedorTraido.saldo = datos.tipo_comp === "Nota Credito" ? redondear(provedorTraido.saldo - parseFloat(datos.total0),2) : redondear(provedorTraido.saldo + parseFloat(datos.total),2);
     try {
         await axios.put(`${URL}provedor/codigo/${datos.codProv}`,provedorTraido);
     } catch (error) {
@@ -519,23 +517,20 @@ modificar.addEventListener('click',async e=>{
             title:"No se Puedo modificar la factura"
         })
     }
-})
+});
 
 cancelar.addEventListener('click',e=>{
     location.href = "../index.html"
 });
 
-
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
     provedorTraido = (await axios.get(`${URL}provedor/codigo/${args}`)).data;
     provedor.value = provedorTraido.provedor;
     codigo.value = provedorTraido.codigo;
-    cond_iva.value = provedorTraido.situa;
+    cond_iva.value = provedorTraido.condIva;
     cuit.value = provedorTraido.cuit;
     puntoVenta.focus(); 
 });
-
-
 
 const listarFactura = async(factura)=>{
     const fecha_comp = factura.fecha_comp.slice(0,10).split('-',3);
@@ -572,4 +567,4 @@ const listarFactura = async(factura)=>{
 
     modificar.classList.remove('none');
     aceptar.classList.add('none');
-}
+};
