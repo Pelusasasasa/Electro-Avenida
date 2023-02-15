@@ -93,17 +93,42 @@ numero.addEventListener('keypress',async e=>{
     const num = numero.value.padStart(8,'0');
     if (e.keyCode === 13) {
         const datoCompras = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}`)).data;
+    
+        let totalInput = 0;
+
         if (datoCompras) {
-            const {total,tipo_comp} = datoCompras;
-            if (tipo_comp) {
-                const option = document.createElement('option');
-                option.value = tipo_comp;
-                option.text = tipo_comp;
-                tipo.appendChild(option);
-                tipo.value = tipo_comp;
+            for await(let  {_id,nro_comp,total,tipo_comp} of datoCompras){
+
+            const tr = document.createElement('tr');
+            tr.id = _id;
+
+            const button = document.createElement('button');
+            button.innerText = "Eliminar";
+
+            const tdNumero = document.createElement('td');
+            const tdTipo = document.createElement('td');
+            const tdImporte = document.createElement('td');
+            const tdDescuento = document.createElement('td');
+            const tdAciones = document.createElement('td');
+
+            tdNumero.innerHTML = nro_comp;
+            tdTipo.innerHTML = tipo_comp;
+            tdImporte.innerHTML = total.toFixed(2);
+            tdDescuento.innerHTML = "0.00";
+            tdAciones.appendChild(button)
+
+            tr.appendChild(tdNumero);
+            tr.appendChild(tdTipo);
+            tr.appendChild(tdDescuento);
+            tr.appendChild(tdImporte);
+            tr.appendChild(tdAciones);
+
+            tbodyComprobante.appendChild(tr);
+
+            totalInput += total; 
             }
-            importe.value = total;
         }
+        total.value = totalInput
         tipo.focus();
     }
 });

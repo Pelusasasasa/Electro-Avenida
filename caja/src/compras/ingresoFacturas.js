@@ -363,6 +363,7 @@ aceptar.addEventListener('click',async e=>{
 
         if (parseFloat(descuento.value) !== 0) {
             await ponerEnCuentaCorrienteProvedorDescuento(dat_comp);
+            await ponerDatoComprobanteDescuento(dat_comp);
         }
     }
     try {
@@ -375,6 +376,36 @@ aceptar.addEventListener('click',async e=>{
     }
     console.log(dat_comp)
 });
+
+const ponerDatoComprobanteDescuento = async()=>{
+    const datos = {};
+    datos.provedor = provedor.value;
+    datos.codProv = codigo.value;
+    datos.cuit = cuit.value;
+    datos.nro_comp = puntoVenta.value.padStart(4,'0') + "-" + numero.value.padStart(8,'0');
+    datos.tipo_comp = "Descuento";
+    datos.empresa = empresa.value;
+
+    datos.fecha_comp = fechaComp.value;
+    datos.fecha_imput = fechaImput.value;
+    
+    datos.netoNoGravado = 0.0
+    datos.netoGravado = 0
+    datos.tasaIva = 0
+    datos.iva = 0
+    datos.p_dgr_c = 0
+    datos.p_iva_c = 0
+    datos.r_dgr_c = 0
+    datos.r_iva_c = 0
+    datos.total = redondear(parseFloat(descuento.value) * -1,2);
+    try {
+        await axios.post(`${URL}dat_comp`,datos);
+    } catch (error) {
+        await sweet.fire({
+            title:"No se pudo cargar le descuento"
+        })
+    }
+};
 
 const ponerEnCuentaCorrienteProvedor = async(datos,aDescontar = 0)=>{
     const cuenta = {};
@@ -419,7 +450,7 @@ const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
 }
 
 const ponerSaldoAlProvedor = async(datos)=>{
-    provedorTraido.saldo = datos.tipo_comp === "Nota Credito" ? redondear(provedorTraido.saldo - parseFloat(datos.total0),2) : redondear(provedorTraido.saldo + parseFloat(datos.total),2);
+    provedorTraido.saldo = datos.tipo_comp === "Nota Credito" ? redondear(provedorTraido.saldo - parseFloat(neto.value),2) : redondear(provedorTraido.saldo + parseFloat(neto.value),2);
     try {
         await axios.put(`${URL}provedor/codigo/${datos.codProv}`,provedorTraido);
     } catch (error) {
