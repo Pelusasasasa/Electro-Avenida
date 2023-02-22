@@ -15,6 +15,14 @@ window.addEventListener('load',async e=>{
 });
 
 listarCheques = (lista)=>{
+    lista.sort((a,b)=>{
+        if (a.f_cheque > b.f_cheque) {
+            return 1
+        }else if(a.f_cheque < b.f_cheque){
+            return -1
+        }
+        return 0
+    })
     let total = 0;
     lista.forEach(cheque => {
         const fechaRecibido = cheque.f_recibido.slice(0,10).split('-',3);

@@ -82,6 +82,12 @@ footer  main{
     justify-content: space-around;
 }
 
+.botonFalso{
+    text-align: center;
+    background-color: rgb(179, 179, 179);
+    border: .1rem solid black;
+}
+
 table button{
     padding: 0;
     width: 100%;

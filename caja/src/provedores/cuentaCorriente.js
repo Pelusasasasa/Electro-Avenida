@@ -3,7 +3,10 @@ const { cerrarVentana } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
+const sweet = require('sweetalert2');
+
 let provedores;
+let cuentas;
 
 const select = document.getElementById('provedores');
 const desde = document.getElementById('desde');
@@ -38,7 +41,7 @@ window.addEventListener('load',async e=>{
         return 0
     });
     await listarProvedores(provedores);
-    const cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
+    cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
     listarCuentas(cuentas);
     const provedor = provedores.find(provedor=>provedor.codigo === select.value);
     saldo.value = provedor.saldo.toFixed(2);
@@ -66,6 +69,10 @@ const listarCuentas = (lista) => {
         const tdHaber = document.createElement('td');
         const tdSaldo = document.createElement('td');
         const tdComPago = document.createElement('td');
+        const tdObservaciones = document.createElement('td');
+
+        tdObservaciones.classList.add('botonFalso');
+        tdObservaciones.id = cuenta._id;
 
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         tdConcepto.innerHTML = cuenta.tipo_comp;
@@ -74,6 +81,7 @@ const listarCuentas = (lista) => {
         tdHaber.innerHTML = cuenta.haber.toFixed(2);
         tdSaldo.innerHTML = cuenta.saldo.toFixed(2);
         tdComPago.innerHTML = cuenta.com_pago;
+        tdObservaciones.innerHTML = cuenta.observaciones ? cuenta.observaciones : "Agregar", //Aca vamos a poner lo que diga la observacion
 
         tr.appendChild(tdFecha);
         tr.appendChild(tdConcepto);
@@ -82,10 +90,36 @@ const listarCuentas = (lista) => {
         tr.appendChild(tdHaber);
         tr.appendChild(tdSaldo);
         tr.appendChild(tdComPago);
+        tr.appendChild(tdObservaciones);
         tbody.appendChild(tr)
     });
 
 }
+
+tbody.addEventListener('click',async e=>{
+    if (e.target) {
+        if (e.target.classList.contains("botonFalso")) {
+            await sweet.fire({
+                title:"Observaciones",
+                input:"text",
+                confirmButtonText:"Aceptar",
+                showCancelButton:true,
+
+            }).then(async ({isConfirmed,value})=>{
+                if (isConfirmed) {
+                    const cuenta = cuentas.find(cuenta=>cuenta._id === e.target.id);
+                    cuenta.observaciones = value.toUpperCase();
+                    try {
+                        await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+                        e.target.innerHTML = cuenta.observaciones
+                    } catch (error) {
+                        console.log(error)
+                    }
+                }
+            })
+        }
+    }
+});
 
 select.addEventListener('change',async e=>{
     const provedor = provedores.find(provedor=>provedor.codigo === select.value);
