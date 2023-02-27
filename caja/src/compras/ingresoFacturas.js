@@ -254,19 +254,19 @@ netoGravado.addEventListener('change',e=>{
 });
 
 percepcionIVA.addEventListener('change',e=>{
-    total.value = parseFloat(total.value) + parseFloat(percepcionIVA.value)
+    total.value = parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value);
 });
 
 retencionDGR.addEventListener('change',e=>{
-    total.value = parseFloat(total.value) + parseFloat(retencionDGR.value)
+    total.value = parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value);
 });
 
 percepcionDGR.addEventListener('change',e=>{
-    total.value = parseFloat(percepcionDGR.value) + parseFloat(total.value);
+    total.value = parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value)
 });
 
 retencionIVA.addEventListener('change',e=>{
-    total.value = parseFloat(retencionIVA.value) + parseFloat(total.value);
+    total.value = parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value)
 });
 
 puntoVenta.addEventListener('focus',e=>{
