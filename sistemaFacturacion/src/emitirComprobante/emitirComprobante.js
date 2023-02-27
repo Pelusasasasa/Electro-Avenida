@@ -825,7 +825,6 @@ ticketFactura.addEventListener('click',async (e) =>{
                         await borrarVenta(ventaAnterior.nro_comp)
 
                     }else if(variasFacturas){
-
                         for await(let numero of listaNumeros){
                             //traemos los movimientos de productos de la venta anterior y lo modificamos a la nueva venta
                             const movimientosViejos = (await axios.get(`${URL}movProductos/${numero}/Presupuesto`)).data;
@@ -1068,6 +1067,7 @@ ipcRenderer.on('informacion',async (e,args)=>{
     inputEmpresa.value = empresa;
     textoUsuario.innerHTML = vendedor;
     variasFacturas = true;
+    listaNumeros = numeros
 
     
     let cliente = (await axios.get(`${URL}clientes/id/${codigoCliente}`)).data;
