@@ -7,6 +7,7 @@ const sweet = require('sweetalert2');
 const { redondear, copiar } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
+const buscador = document.getElementById('buscador');
 const inputTotal = document.getElementById('total');
 
 const agregar = document.querySelector('.agregar');
@@ -35,7 +36,13 @@ window.addEventListener('load',async e=>{
     listarVales(vales);
 });
 
+buscador.addEventListener('keyup',e=>{
+    const valeFiltrado = vales.filter(vale=>vale.rsoc.startsWith(e.target.value.toUpperCase()));
+    listarVales(valeFiltrado)
+});
+
 const listarVales = (vales)=>{
+    tbody.innerHTML = "";
     for(let vale of vales){
     const tr = document.createElement('tr');
     tr.id = vale._id;

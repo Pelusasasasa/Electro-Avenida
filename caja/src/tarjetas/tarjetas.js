@@ -160,11 +160,11 @@ const listar = async(tarjetas)=>{
         total += tarjeta.imp;
 
         tr.appendChild(tdFecha);
-        tr.appendChild(tdCliente)
         tr.appendChild(tdTarjeta);
+        tr.appendChild(tdCliente);
         tr.appendChild(tdImporte);
         tr.appendChild(tdVendedor);
-        tr.appendChild(tdAcciones)
+        tr.appendChild(tdAcciones);
 
         tbody.appendChild(tr)
     }

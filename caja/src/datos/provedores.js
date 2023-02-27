@@ -30,7 +30,6 @@ window.addEventListener('load',async e=>{
     
 });
 
-
 nombre.addEventListener('keyup',async e=>{
     const listaAux = provedores.filter(provedor=>provedor.provedor.startsWith(nombre.value.toUpperCase()));
     await listar(listaAux)

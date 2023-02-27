@@ -174,14 +174,14 @@ const reingresarContraseña = async()=>{
         input:"password",
         confirmButtonText:"Aceptar",
         showCancelButton:true
-    }).then(async ({isConfirmed,value})=>{
+    }).then(async({isConfirmed,value})=>{
         if (isConfirmed && value === "54321") {
             location.href = './caja/modificar.html';
         }else if(isConfirmed && value !== "54321"){
             await sweet.fire({
-                title:"Contraseña incorrecta"
-            });
-            reingresarContraseña()
+                title:"Contraseña Incorrecta"
+            })
+            reingresarContraseña();
         }
     });
 };
