@@ -254,19 +254,19 @@ netoGravado.addEventListener('change',e=>{
 });
 
 percepcionIVA.addEventListener('change',e=>{
-    total.value = parseFloat(total.value) + parseFloat(percepcionIVA.value)
+    total.value = parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value);
 });
 
 retencionDGR.addEventListener('change',e=>{
-    total.value = parseFloat(total.value) + parseFloat(retencionDGR.value)
+    total.value = parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value);
 });
 
 percepcionDGR.addEventListener('change',e=>{
-    total.value = parseFloat(percepcionDGR.value) + parseFloat(total.value);
+    total.value = parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value)
 });
 
 retencionIVA.addEventListener('change',e=>{
-    total.value = parseFloat(retencionIVA.value) + parseFloat(total.value);
+    total.value = parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value)
 });
 
 puntoVenta.addEventListener('focus',e=>{
@@ -334,7 +334,6 @@ document.addEventListener('keyup',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
-    
     const dat_comp = {};
 
     dat_comp.provedor = provedor.value;
@@ -355,7 +354,7 @@ aceptar.addEventListener('click',async e=>{
     dat_comp.p_iva_c = percepcionIVA.value;
     dat_comp.r_dgr_c = retencionDGR.value;
     dat_comp.r_iva_c = retencionIVA.value;
-    dat_comp.total = neto.value;
+    dat_comp.total = total.value;
 
     if (cuentaCorriente.checked) {
         const aDescontar = await actualizarCuentasPosterioreres(parseFloat(dat_comp.total),parseFloat(descuento.value));
@@ -364,9 +363,9 @@ aceptar.addEventListener('click',async e=>{
 
         if (parseFloat(descuento.value) !== 0) {
             await ponerEnCuentaCorrienteProvedorDescuento(dat_comp);
+            await ponerDatoComprobanteDescuento(dat_comp);
         }
     }
-
     try {
         await axios.post(`${URL}dat_comp`,dat_comp);
         location.reload();
@@ -378,6 +377,36 @@ aceptar.addEventListener('click',async e=>{
     console.log(dat_comp)
 });
 
+const ponerDatoComprobanteDescuento = async()=>{
+    const datos = {};
+    datos.provedor = provedor.value;
+    datos.codProv = codigo.value;
+    datos.cuit = cuit.value;
+    datos.nro_comp = puntoVenta.value.padStart(4,'0') + "-" + numero.value.padStart(8,'0');
+    datos.tipo_comp = "Descuento";
+    datos.empresa = empresa.value;
+
+    datos.fecha_comp = fechaComp.value;
+    datos.fecha_imput = fechaImput.value;
+    
+    datos.netoNoGravado = 0.0
+    datos.netoGravado = 0
+    datos.tasaIva = 0
+    datos.iva = 0
+    datos.p_dgr_c = 0
+    datos.p_iva_c = 0
+    datos.r_dgr_c = 0
+    datos.r_iva_c = 0
+    datos.total = redondear(parseFloat(descuento.value) * -1,2);
+    try {
+        await axios.post(`${URL}dat_comp`,datos);
+    } catch (error) {
+        await sweet.fire({
+            title:"No se pudo cargar le descuento"
+        })
+    }
+};
+
 const ponerEnCuentaCorrienteProvedor = async(datos,aDescontar = 0)=>{
     const cuenta = {};
     cuenta.fecha = datos.fecha_comp;
@@ -385,9 +414,9 @@ const ponerEnCuentaCorrienteProvedor = async(datos,aDescontar = 0)=>{
     cuenta.provedor = datos.provedor;
     cuenta.tipo_comp = datos.tipo_comp;
     cuenta.nro_comp = datos.nro_comp;
-    cuenta.debe = datos.total;
+    cuenta.debe = datos.tipo_comp === "Nota Credito" ? "-" + datos.total  : datos.total;
     cuenta.haber = 0;
-    cuenta.saldo = redondear(aDescontar + parseFloat(datos.total),2);
+    cuenta.saldo = datos.tipo_comp === "Nota Credito" ? redondear(aDescontar - parseFloat(datos.total),2) : redondear(aDescontar + parseFloat(datos.total),2);
     cuenta.emp = datos.empresa;
     try {
         await axios.post(`${URL}ctactePro`,cuenta);
@@ -421,7 +450,7 @@ const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
 }
 
 const ponerSaldoAlProvedor = async(datos)=>{
-    provedorTraido.saldo = redondear(provedorTraido.saldo + parseFloat(datos.total),2)
+    provedorTraido.saldo = datos.tipo_comp === "Nota Credito" ? redondear(provedorTraido.saldo - parseFloat(neto.value),2) : redondear(provedorTraido.saldo + parseFloat(neto.value),2);
     try {
         await axios.put(`${URL}provedor/codigo/${datos.codProv}`,provedorTraido);
     } catch (error) {
@@ -519,23 +548,20 @@ modificar.addEventListener('click',async e=>{
             title:"No se Puedo modificar la factura"
         })
     }
-})
+});
 
 cancelar.addEventListener('click',e=>{
     location.href = "../index.html"
 });
 
-
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
     provedorTraido = (await axios.get(`${URL}provedor/codigo/${args}`)).data;
     provedor.value = provedorTraido.provedor;
     codigo.value = provedorTraido.codigo;
-    cond_iva.value = provedorTraido.situa;
+    cond_iva.value = provedorTraido.condIva;
     cuit.value = provedorTraido.cuit;
     puntoVenta.focus(); 
 });
-
-
 
 const listarFactura = async(factura)=>{
     const fecha_comp = factura.fecha_comp.slice(0,10).split('-',3);
@@ -572,4 +598,4 @@ const listarFactura = async(factura)=>{
 
     modificar.classList.remove('none');
     aceptar.classList.add('none');
-}
+};

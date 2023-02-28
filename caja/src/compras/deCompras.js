@@ -1,4 +1,5 @@
-const axios = require('axios')
+const axios = require('axios');
+const { redondear } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -14,7 +15,6 @@ const retencionIvaCompras = document.getElementById('retencionIvaCompras');
 
 const imprimir = document.querySelector('.imprimir');
 const periodo = document.querySelector('.periodo');
-
 
 window.addEventListener('load',async e=>{
     const fecha = new Date();
@@ -37,7 +37,6 @@ window.addEventListener('load',async e=>{
     });
     listarDatos(datos.filter(dato=>dato.tipo_comp !== "Presupuesto"))
 });
-
 
 desde.addEventListener('change',async e=>{
     const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
@@ -101,7 +100,7 @@ const listarDatos = (lista)=>{
         tdRDGR.innerHTML = elem.r_dgr_c.toFixed(2);
         tdPIVA.innerHTML = elem.p_iva_c.toFixed(2);
         tdRIVA.innerHTML = elem.r_iva_c.toFixed(2);
-        tdTotal.innerHTML = elem.total.toFixed(2);
+        tdTotal.innerHTML = elem.tipo_comp === "Nota Credito" ? redondear(elem.total*-1,2) : elem.total.toFixed(2);
 
         gravado += elem.netoGravado;
         iva += elem.iva;
@@ -109,7 +108,7 @@ const listarDatos = (lista)=>{
         rdgr += elem.r_dgr_c;
         piva += elem.p_iva_c;
         riva += elem.r_iva_c;
-        total += elem.total;
+        total = elem.tipo_comp === "Nota Credito" ? total - elem.total  : total + elem.total;
 
         tdGravado.classList.add('text-right');
         tdNoGravado.classList.add('text-right');
