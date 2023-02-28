@@ -23,8 +23,6 @@ const codigoPostal = document.querySelector('#codigoPostal');
 const provinciaPostal = document.querySelector('#provinciaPostal');
 const observaciones = document.querySelector('#observaciones');
 
-
-
 const modificar = document.querySelector('.modificar');
 const consultar = document.querySelector('.consultar');
 const salir = document.querySelector('.salir');
@@ -36,6 +34,7 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
 });
 
 const llenarinputs = async(provedor)=>{
+    console.log(provedor)
     codigo.value = provedor.codigo;
     inputProvedor.value = provedor.provedor;
     saldo.value = provedor.saldo.toFixed(2);
@@ -86,6 +85,7 @@ modificar.addEventListener('click',async e=>{
     provedorModificado.codigo = codigo.value;
     provedorModificado.provedor = inputProvedor.value;
     provedorModificado.direccion = direccion.value;
+    provedorModificado.saldo = saldo.value;
     provedorModificado.localidad = localidad.value;
     provedorModificado.saldo = saldo.value;
     provedorModificado.codPostal = codPostal.value;

@@ -167,7 +167,7 @@ ipcRenderer.on('cobranzaFacturas',(e,args)=>{
     location.href = "caja/cobranzaFacturas.html"
 });
 
-const reingresarContraseña = async()=>{
+const reingresarContraseña = async()=>{ 
     let retorno = false
     await sweet.fire({
         title:"Contraseña",
@@ -184,5 +184,4 @@ const reingresarContraseña = async()=>{
             reingresarContraseña();
         }
     });
-    return retorno
 };

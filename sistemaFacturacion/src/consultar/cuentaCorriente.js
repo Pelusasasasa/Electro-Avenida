@@ -393,12 +393,14 @@ facturarVarios.addEventListener('click',async e=>{
             let cuentas = listaCompensada;
             let htmlCuentas = "";
             for(let cuenta of cuentas){
-                htmlCuentas += `
+                if (cuenta.tipo_comp === "Presupuesto") {
+                    htmlCuentas += `
                     <div>
                         <input type="checkbox" id="${cuenta.nro_comp}" name="${cuenta.nro_comp}"/>
                         <label for="${cuenta.nro_comp}">${cuenta.nro_comp}</label>
                     </div>
                 `
+                }
             }
             if (vendedor !== "") {
                 await sweet.fire({

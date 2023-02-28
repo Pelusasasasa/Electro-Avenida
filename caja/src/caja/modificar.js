@@ -112,7 +112,7 @@ const listar = (lista)=>{
         tdTipo.innerHTML = mov.tMov.slice(0,1);
         tdNumero.innerHTML = mov.nro_comp;
         tdDescripcion.innerHTML = mov.desc;
-        tdImporte.innerHTML = mov.imp.toFixed(2);
+        tdImporte.innerHTML = mov.imp ? mov.imp.toFixed(2) : "0.00";
         tdCuenta.innerHTML = mov.cuenta;
         tdEmpresa.innerHTML = "Electro Avenida";
         tdACciones.innerHTML = `
