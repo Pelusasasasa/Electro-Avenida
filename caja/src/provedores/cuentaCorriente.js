@@ -123,7 +123,7 @@ tbody.addEventListener('click',async e=>{
 
 select.addEventListener('change',async e=>{
     const provedor = provedores.find(provedor=>provedor.codigo === select.value);
-    const cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
+    cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
     listarCuentas(cuentas);
     codigo.value = provedor.codigo;
     saldo.value = provedor.saldo;

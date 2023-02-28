@@ -38,7 +38,7 @@ const aceptar = document.getElementById('aceptar');
 const cancelar = document.getElementById('cancelar');
 
 let listaCheques = [];
-
+let provedor;
 
 window.addEventListener('load',async e=>{
     let numero = (await axios.get(`${URL}tipoVenta/name/Ultimo Pago`)).data;
@@ -55,8 +55,6 @@ window.addEventListener('load',async e=>{
 
     listarProductos(provedores);
 });
-
-let provedor;
 
 provedores.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
@@ -79,7 +77,6 @@ const listarProductos = (lista)=>{
         provedores.appendChild(option);
     }
 };
-
 
 //INPUTS Y SELECT DE COMPROBANTES
 puntoVenta.addEventListener('keypress',e=>{
@@ -125,7 +122,7 @@ numero.addEventListener('keypress',async e=>{
 
             tbodyComprobante.appendChild(tr);
 
-            totalInput += total; 
+            totalInput = total; 
             }
         }
         total.value = totalInput

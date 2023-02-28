@@ -135,8 +135,13 @@ tarjeta.addEventListener('click',e=>{
     ipcRenderer.send('abrir-ventana',{
         path:"tarjetas/agregarTarjeta.html",
         width:500,
-        height:400,
-        cerrarVentana:true
+        height:600,
+        cerrarVentana:true,
+        informacionAgregar:{
+            cliente:seleccionado.children[2].innerHTML,
+            vendedor:seleccionado.children[6].innerHTML,
+            imp:parseFloat(seleccionado.children[5].innerHTML)
+        }
     });
 });
 

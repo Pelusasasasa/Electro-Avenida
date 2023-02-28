@@ -3,6 +3,7 @@ const { ipcRenderer } = require('electron/renderer');
 require('dotenv').config();
 const URL = process.env.URL;
 
+const XLSX = require('xlsx');
 const sweet = require('sweetalert2');
 const { redondear, copiar } = require('../assets/js/globales');
 
@@ -12,6 +13,7 @@ const inputTotal = document.getElementById('total');
 
 const agregar = document.querySelector('.agregar');
 const sumar = document.querySelector('.sumar');
+const exportar = document.querySelector('.exportar');
 const salir = document.querySelector('.salir');
 
 let vales = [];
@@ -155,6 +157,36 @@ sumar.addEventListener('click',async e=>{
     await sweet.fire({
         title:`La suma de ${seleccionado.children[2].innerHTML} es: $${redondear(suma,2)}`
     })
+});
+
+exportar.addEventListener('click',e=>{
+    ipcRenderer.send('elegirPath');
+    ipcRenderer.on('mandoPath',(e,args)=>{
+
+        let wb = XLSX.utils.book_new();
+        let path;
+        let extencion = "xlsx";
+
+        extencion = args.split('.')[1] ? args.split('.')[1] : extencion;
+        path = args.split('.')[0];
+
+        vales.forEach(vale=>{
+            delete vale._id;
+            delete vale.__v;
+        });
+        
+        wb.props = {
+            Title: "Vales",
+            subject: "Test",
+            Author: "Electro Avenida"
+        }
+
+        let newWs = XLSX.utils.json_to_sheet(vales);
+
+        XLSX.utils.book_append_sheet(wb,newWs,'Vales');
+        XLSX.writeFile(wb,path + "." + extencion);
+
+    });
 });
 
 salir.addEventListener('click',e=>{

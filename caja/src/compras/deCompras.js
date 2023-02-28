@@ -92,14 +92,14 @@ const listarDatos = (lista)=>{
         tdNumComp.innerHTML = elem.nro_comp;
         tdEmpresa.innerHTML = elem.provedor;
         tdCuit.innerHTML = elem.cuit;
-        tdGravado.innerHTML = elem.netoGravado.toFixed(2);
-        tdNoGravado.innerHTML = elem.netoNoGravado.toFixed(2);
-        tdTasaIva.innerHTML = elem.tasaIva.toFixed(2);
-        tdIva.innerHTML = elem.iva.toFixed(2);
-        tdPDGR.innerHTML = elem.p_dgr_c.toFixed(2);
-        tdRDGR.innerHTML = elem.r_dgr_c.toFixed(2);
-        tdPIVA.innerHTML = elem.p_iva_c.toFixed(2);
-        tdRIVA.innerHTML = elem.r_iva_c.toFixed(2);
+        tdGravado.innerHTML = elem.tipo_comp === "Nota Credito" ? redondear(elem.netoGravado*-1,2) : elem.netoGravado.toFixed(2);
+        tdNoGravado.innerHTML = elem.tipo_comp === "Nota Credito" ? redondear(elem.netoNoGravado*-1,2) : elem.netoNoGravado.toFixed(2);
+        tdTasaIva.innerHTML = elem.tipo_comp === "Nota Credito" ? redondear(elem.tasaIva*-1,2) : elem.tasaIva.toFixed(2);
+        tdIva.innerHTML = elem.tipo_comp === "Nota Credito" ? redondear(elem.iva*-1,2) : elem.iva.toFixed(2);
+        tdPDGR.innerHTML =  elem.tipo_comp === "Nota Credito" ? redondear(elem.p_dgr_c*-1,2) : elem.p_dgr_c.toFixed(2);
+        tdRDGR.innerHTML =  elem.tipo_comp === "Nota Credito" ? redondear(elem.r_dgr_c*-1,2) : elem.r_dgr_c.toFixed(2);
+        tdPIVA.innerHTML =  elem.tipo_comp === "Nota Credito" ? redondear(elem.p_iva_c*-1,2) : elem.p_iva_c.toFixed(2);
+        tdRIVA.innerHTML =  elem.tipo_comp === "Nota Credito" ? redondear(elem.r_iva_c*-1,2) : elem.r_iva_c.toFixed(2);
         tdTotal.innerHTML = elem.tipo_comp === "Nota Credito" ? redondear(elem.total*-1,2) : elem.total.toFixed(2);
 
         gravado += elem.netoGravado;

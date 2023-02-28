@@ -5,6 +5,8 @@ const { copiar,redondear } = require("../assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
+const XLSX = require('xlsx');
+
 const sweet = require('sweetalert2');
 
 const tbody = document.querySelector('.tbody');
@@ -16,6 +18,7 @@ const hoy = document.querySelector('#hoy');
 
 const agregar = document.querySelector('.agregar');
 const sumar = document.querySelector('#sumar');
+const exportar = document.querySelector('#exportar');
 const salir = document.querySelector('.salir');
 
 let total = 0;
@@ -184,4 +187,32 @@ sumar.addEventListener('click',e=>{
             title:`Total de tarjeta ${tarjetaSumar}: $${total}`
         })
     };
+});
+
+exportar.addEventListener('click',e=>{
+    ipcRenderer.send('elegirPath');
+    ipcRenderer.on('mandoPath',(e,args)=>{
+        let wb = XLSX.utils.book_new();
+        let path;
+        let extencion = "xlsx";
+
+        tarjetas.forEach(tarjeta=>{
+            delete tarjeta._id;
+            delete tarjeta.__v;
+        });
+
+        extencion = args.split('.')[1] ? args.split('.')[1] : extencion;
+        path = args.split('.')[0];
+
+        wb.props = {
+            Title: "Tarjetas",
+            subject: "Test",
+            Author: "Electro Avenida"
+        };
+
+        let newWs = XLSX.utils.json_to_sheet(tarjetas);
+
+        XLSX.utils.book_append_sheet(wb,newWs,'Tarjetas');
+        XLSX.writeFile(wb,path + "." + extencion);
+    });
 });

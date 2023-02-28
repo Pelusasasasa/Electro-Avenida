@@ -102,7 +102,8 @@ ipcRenderer.on('recibir-informacion',async(e,args)=>{
 });
 
 ipcRenderer.on('informacionAgregar',(e,args)=>{
-    const {imp,vendedor,cliente: clienteTraido} = JSON.parse(args);
+    console.log(args)
+    const {imp,vendedor,cliente: clienteTraido} = args;
     cliente.value = clienteTraido;
     importe.value = imp.toFixed(2);
     vendedorForSelect = vendedor;

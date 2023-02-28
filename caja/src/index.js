@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu,dialog } = require('electron');
 const path = require('path');
 
 if (require('electron-squirrel-startup')) {
@@ -296,7 +296,10 @@ const templateMenu = [
   }
 ];
 
-
 const mainMenu = Menu.buildFromTemplate(templateMenu);
 Menu.setApplicationMenu(mainMenu);
 
+ipcMain.on('elegirPath',async (e,args)=>{
+  const path = (await dialog.showSaveDialog()).filePath;
+  e.reply('mandoPath',path);
+});
