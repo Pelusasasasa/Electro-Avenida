@@ -5,86 +5,79 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Electro Avenida</title>
-    <link rel="stylesheet" href="../build/css/app.css">
+    <!-- <link rel="stylesheet" href="../build/css/app.css"> -->
+    <link rel="stylesheet" href="./assets/css/globales.css">
+    <link rel="stylesheet" href="./index.css">
   </head>
   <body>
 
-    <div class="contenedor menuPrincipal">
-      <div class="">
-        <a class="menu emitirComprobante">
+    <section class="contenedor">
+      <main class="emitirComprobante">
          <img src="./imagenes/emitirComprobante.webp" alt="">
-          Emitir Comprobante
-        </a>
-      </div>
+         <label for="">Emitir Comprobante</label>
+      </main>
 
-      <div class="">
-        <a class="menu notaCredito">
+      <main class="notaCredito">
          <img src="./imagenes/analisis-de-cuenta.webp" alt="">
-          Emitir Nota Credito
-        </a>
-      </div>
+         <label for="">Emitir Nota Credito</label>
+      </main>
 
-      <div class="">
-          <a class="menu clientes">
+      <main class="clientes">
            <img src="./imagenes/clientes.webp" alt="">
-            Clientes
-          </a>
-      </div>
+           <label for="">Clientes</label>
+      </main>
 
-      <div class="">
-        <a class="menu productos">
+      <main class="productos">
          <img src="./imagenes/productos.webp" alt="">
-          Productos
-        </a>
-    </div>
+         <label for="">Productos</label>
+      </main>
+    </section>
 
-  <div class="">
-    <a class="menu emitirRecibo">
-     <img src="./imagenes/venedores.webp" alt="">
-      Emitir Recibo
-    </a>
-</div>
+    <section class="contenedor">
+      <main class="emitirRecibo">
+        <img src="./imagenes/venedores.webp" alt="">
+        <label for="">Emitir Recibo</label>
+      </main>
+  
+      <main class="cuentaCorriente">
+        <img src="./imagenes/consulta.webp" alt="">
+        <label for="">Consultar Cuenta CTE.</label>
+      </main>
+  
+      <main class=" menu listaPedidos">
+          <img src="./imagenes/pedidos.webp" alt="">
+          <button class="" type="button" id="">
+            <p>Pedidos</p>
+            <span class="flecha abajo"></span>
+          </button>
+          <ul class="none handlePedidos ">
+            <li id="pedidos">
+              <a class="">Pedidos</a>
+            </li>
+            <li id="verPedidos">
+              <a href="pedidos/verPedidos.html"  class="">Ver Pedidos</a>
+            </li>
+          </ul>
+        </main>
+  
+        <main class="resumenCuenta">
+          <img src="./imagenes/reporte.webp" alt="">
+          <label for="">Resumen de Cuenta</label>
+        </main>
+    </section>
 
-<div class="">
-  <a class="menu" href="consultar/cuentaCorriente.html">
-   <img src="./imagenes/consulta.webp" alt="">
-    Consultar Cuenta CTE.
-  </a>
-</div>
-
-      <div class=" menu listaPedidos">
-        <img src="./imagenes/pedidos.webp" alt="">
-        <button class="" type="button" id="">
-          <p>Pedidos</p>
-          <span class="flecha abajo"></span>
-        <ul class="disable handlePedidos ">
-          <li id="pedidos">
-            <a class="">Pedidos <span class=""></span></a>
-          </li>
-          <li id="verPedidos">
-            <a href="pedidos/verPedidos.html"  class="">Ver Pedidos</a>
-          </li>
-        </ul>
+    <section class="abajo">
+      <main class="ayuda">
+        <h3>F1: <span>Emitir Comprobante</span></h3>
+        <h3>F2: <span>Productos</span></h3>
+        <h3>F3: <span>Clientes</span></h3>
+        <h3>F4: <span>Pedidos</span></h3>
+      </main>
+  
+      <div class="botones">
+        <button class="salir">Salir</button>
       </div>
-
-      <div class="">
-        <a class="menu resumenCuenta">
-         <img src="./imagenes/reporte.webp" alt="">
-          Resumen de Cuenta
-        </a>
-      </div>
-
-    </div>
-    <div class="ayuda">
-      <h3>F1: <span>Emitir Comprobante</span></h3>
-      <h3>F2: <span>Productos</span></h3>
-      <h3>F3: <span>Clientes</span></h3>
-      <h3>F4: <span>Pedidos</span></h3>
-    </div>
-
-    <div class="boton">
-      <button class="salir">Salir</button>
-    </div>
+    </section>
     <script src="./principal.js"></script>
   </body>
 </html>

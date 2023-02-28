@@ -35,6 +35,7 @@ const emitirComprobante = document.querySelector('.emitirComprobante')
 const pedidos = document.querySelector('#pedidos');
 const emitirRecibo = document.querySelector('.emitirRecibo');
 const resumenCuenta = document.querySelector('.resumenCuenta');
+const cuentaCorriente = document.querySelector('.cuentaCorriente');
 const notaCredito = document.querySelector('.notaCredito');
 const productos = document.querySelector('.productos');
 const clientes = document.querySelector('.clientes');
@@ -42,7 +43,7 @@ const flecha = document.querySelector('.flecha')
 
 listaPedidos.addEventListener('click', (e) =>{
     const handlePedidos = document.querySelector('.handlePedidos')
-    handlePedidos.classList.toggle('disable')
+    handlePedidos.classList.toggle('none')
     flecha.classList.toggle('abajo')
     flecha.classList.toggle('arriba')
 })
@@ -50,32 +51,36 @@ listaPedidos.addEventListener('click', (e) =>{
 
 productos.addEventListener('click',e=>{
     validacionUsuario("productos/productos.html");
-})
+});
 
 clientes.addEventListener('click',e=>{
     validacionUsuario("clientes/clientes.html")
-})
+});
 
 emitirComprobante.addEventListener('click',e=>{
     validacionUsuario("emitirComprobante/emitirComprobante.html")
-})
+});
+
+cuentaCorriente.addEventListener('click',e=>{
+    validacionUsuario("consultar/cuentaCorriente.html")
+});
 
 pedidos.addEventListener('click',e=>{
     validacionUsuario("pedidos/pedidos.html")
-})
+});
 
 emitirRecibo.addEventListener('click',e=>{
     validacionUsuario("emitirRecibo/emitirRecibo.html")
-})
+});
 
 resumenCuenta.addEventListener('click',e=>{
     window.location = 'resumenCuenta/resumenCuenta.html';
     ipcRenderer.send('cerrar-menu');
-})
+});
 
 notaCredito.addEventListener('click',e=>{
     validacionUsuario("emitirComprobante/emitirNotaCredito.html")
-})
+});
 
 
 body.addEventListener('keydown',e=>{

@@ -166,21 +166,18 @@ const templateMenu = [
                 }
             },
             {
-                label:"Cargar Factura",
-                click(){
-                    abrirVentana("utilidad/cargarFactura.html",800,900);
-                }
-            },{
                 label:"Agregar tarjeta",
                 click(){
                     abrirVentana("utilidad/cargarTarjeta.html",500,500)
                 }
-            },{
+            },
+            {
                 label:"Agregar cheque",
                 click(){
                     abrirVentana("utilidad/agregarCheque.html",500,550)
                 }
-            },{
+            },
+            {
                 label:"Ultimas Ventas",
                 click(){
                     abrirVentana("utilidad/ultimasVentas.html",1200,1000);
