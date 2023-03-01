@@ -53,9 +53,12 @@ datCompCTRL.getFechaImpt = async(req,res)=>{
     res.send(compras)
 }
 
-datCompCTRL.getForNumeroComp = async(req,res)=>{
-    const {numero} = req.params;
-    const datComp = await DatComp.find({nro_comp:numero},{total:1,tipo_comp:1,codProv:1,nro_comp:1});
+datCompCTRL.getForNumeroCompAndProv = async(req,res)=>{
+    const {numero,codProv} = req.params;
+    const datComp = await DatComp.findOne({$and:[
+        {nro_comp:numero},
+        {codProv:codProv}
+    ]},{total:1,tipo_comp:1,codProv:1,nro_comp:1});
     res.send(datComp)
 }
 module.exports = datCompCTRL;

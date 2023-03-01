@@ -126,5 +126,5 @@ select.addEventListener('change',async e=>{
     cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
     listarCuentas(cuentas);
     codigo.value = provedor.codigo;
-    saldo.value = provedor.saldo;
+    saldo.value = provedor.saldo.toFixed(2);
 });

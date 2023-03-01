@@ -1073,6 +1073,7 @@ ipcRenderer.on('informacion',async (e,args)=>{
     let cliente = (await axios.get(`${URL}clientes/id/${codigoCliente}`)).data;
     ponerInputsClientes(cliente);
     let ventas = [];
+    console.log(numeros)
     for await (let numero of numeros){
         ventas.push((await axios.get(`${URL}presupuesto/${numero}`)).data);
     };

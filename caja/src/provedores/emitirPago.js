@@ -39,6 +39,7 @@ const cancelar = document.getElementById('cancelar');
 
 let listaCheques = [];
 let provedor;
+let totalInput
 
 window.addEventListener('load',async e=>{
     let numero = (await axios.get(`${URL}tipoVenta/name/Ultimo Pago`)).data;
@@ -89,45 +90,42 @@ numero.addEventListener('keypress',async e=>{
     const punto = puntoVenta.value.padStart(4,'0');
     const num = numero.value.padStart(8,'0');
     if (e.keyCode === 13) {
-        const datoCompras = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}`)).data;
+        const {_id,nro_comp,total:precio,tipo_comp} = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}/${codigo.value}`)).data;
     
-        let totalInput = 0;
-
-        if (datoCompras) {
-            for await(let  {_id,nro_comp,total,tipo_comp} of datoCompras){
-
+        if (_id) {
             const tr = document.createElement('tr');
             tr.id = _id;
-
+    
             const button = document.createElement('button');
             button.innerText = "Eliminar";
-
+    
             const tdNumero = document.createElement('td');
             const tdTipo = document.createElement('td');
             const tdImporte = document.createElement('td');
             const tdDescuento = document.createElement('td');
             const tdAciones = document.createElement('td');
-
+    
             tdNumero.innerHTML = nro_comp;
             tdTipo.innerHTML = tipo_comp;
-            tdImporte.innerHTML = total.toFixed(2);
+            tdImporte.innerHTML = tipo_comp === "Nota Credito" ? redondear(precio * -1,2) : precio.toFixed(2);
             tdDescuento.innerHTML = "0.00";
             tdAciones.appendChild(button)
-
+    
             tr.appendChild(tdNumero);
             tr.appendChild(tdTipo);
             tr.appendChild(tdDescuento);
             tr.appendChild(tdImporte);
             tr.appendChild(tdAciones);
-
+    
             tbodyComprobante.appendChild(tr);
-
-            totalInput = total; 
-            }
+            total.value = tipo_comp === "Nota Credito" ? redondear(parseFloat(parseFloat(total.value) - precio),2) : redondear(parseFloat(parseFloat(total.value) + precio),2);
+    
+            puntoVenta.value = "0000";
+            numero.value = "00000000";
+            puntoVenta.focus();
         }
-        total.value = totalInput
-        tipo.focus();
     }
+
 });
 
 tipo.addEventListener('keypress',e=>{
