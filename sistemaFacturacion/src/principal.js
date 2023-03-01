@@ -46,8 +46,7 @@ listaPedidos.addEventListener('click', (e) =>{
     handlePedidos.classList.toggle('none')
     flecha.classList.toggle('abajo')
     flecha.classList.toggle('arriba')
-})
-
+});
 
 productos.addEventListener('click',e=>{
     validacionUsuario("productos/productos.html");
@@ -99,6 +98,9 @@ let vendedor
 let acceso
 let empresa
 const sweet = require('sweetalert2');
+const { verEstadoServidorAfip } = require("./funciones");
+
+verEstadoServidorAfip()
 async function validacionUsuario(texto) {
     sweet.fire({
                 title:"Contraseña",

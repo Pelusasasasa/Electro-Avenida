@@ -268,6 +268,10 @@ async function generarQR(texto) {
     const QR = await qrCode.toDataURL(url);
     return QR;
 }
+const verEstadoServidorAfip = async()=>{
+    const serverStatus = await afip.ElectronicBilling.getServerStatus();
+    console.log(serverStatus);
+}
 
 //funcion que hace la factura para subir a la afip directamente
 const subirAAfip = async(venta)=>{
@@ -443,4 +447,5 @@ module.exports = {
     verificarUsuarios,
     generarMovimientoCaja,
     verTipoPago,
+    verEstadoServidorAfip
 }
