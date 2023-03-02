@@ -34,9 +34,9 @@ const observaciones = document.querySelector('#observaciones');
 
 //buscador
 const codigo = document.querySelector('#codigo');
-const descripcionAgregar = document.querySelector('.parte-producto_descripcion');
-const precioAgregar = document.querySelector('.parte-producto_precio');
-const agregarIva = document.querySelector('.parte-producto_iva');
+const descripcionAgregar = document.querySelector('.descripcion');
+const precioAgregar = document.querySelector('.precio');
+const agregarIva = document.querySelector('.iva');
 const divNuevaCantidad = document.querySelector('.nuevaCantidad');
 const divNuevoPrecio = document.querySelector('.nuevoPrecio');
 
@@ -263,12 +263,12 @@ const mostrarVentas = (objeto,cantidad)=>{
     total.value = totalPrecioProductos.toFixed(2);
     resultado.innerHTML += `
         <tr id=${id}>
-        <td class="tdEnd">${(parseFloat(cantidad)).toFixed(2)}</td>
+        <td class="text-end">${(parseFloat(cantidad)).toFixed(2)}</td>
         <td>${objeto._id}</td>
         <td>${objeto.descripcion}</td>
-        <td class="tdEnd" >${(objeto.iva === "R" ? 10.50 : 21).toFixed(2)}</td>
-        <td class="tdEnd">${parseFloat(objeto.precio_venta).toFixed(2)}</td>
-        <td class="tdEnd">${(parseFloat(objeto.precio_venta)*(cantidad)).toFixed(2)}</td>
+        <td class="text-end" >${(objeto.iva === "R" ? 10.50 : 21).toFixed(2)}</td>
+        <td class="text-end">${parseFloat(objeto.precio_venta).toFixed(2)}</td>
+        <td class="text-end">${(parseFloat(objeto.precio_venta)*(cantidad)).toFixed(2)}</td>
         </tr>
     `
     objeto.identificadorTabla = `${id}`

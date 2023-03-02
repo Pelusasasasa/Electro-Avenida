@@ -29,9 +29,43 @@ main.nombre{
 
 .productos{
     display: grid;
+    grid-template-columns: 3fr 0.5fr;
     gap: 2rem;
 }
 
 .productos .parteInfo{
     display: flex;
+    justify-content: space-between;
+}
+
+.productos input{
+    font-size: 2.2rem;
+}
+
+#codigo{
+    width: 12rem;
+}
+
+.descripcion{
+    width: 70%;
+}
+
+#precio{
+    width: 10rem;
+}
+
+.empresa{
+    width: 16rem;
+    justify-self: end;
+}
+
+
+.tabla{
+    height: 40vh;
+    background-color: white;
+    border: .1rem solid black;
+}
+
+.tabla table thead tr th,.tabla table tbody tr td{
+    border: .1rem solid black;
 }

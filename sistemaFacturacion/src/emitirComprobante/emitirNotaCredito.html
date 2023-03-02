@@ -17,7 +17,7 @@
                 <div class="buscar">
                   <main class="formulario__campo">
                       <label class="" for="codigoC">Codigo</label>
-                      <input autofocus type="text" name="codigoC" id="codigoC" placeholder="" />
+                      <input  type="text" name="codigoC" id="codigoC" placeholder="" />
                   </main>
   
                   <main class="nombre formulario__campo">
@@ -86,38 +86,35 @@
           <fieldset>
             <div class="productos">
               <section class="parteInfo">
-                <main class="">
-                  <input type="text" placeholder="codigo" id="codigo" name="codigo" />
+                <main class="codigo">
+                  <input type="text"autofocus placeholder="codigo" id="codigo" name="codigo" />
                 </main>
 
-                <main class="nuevaCantidad">
-                  <label for="nuevaCantidad">Nueva Cantidad</label>
+                <main class="none nuevaCantidad">
                   <input type="text" placeholder="nuevaCantidad" id="nuevaCantidad" name="nuevaCantidad" />
                 </main>
 
-                <main class="">
+                <main class="none descripcion">
                   <input type="text" placeholder="descripcion" name="descripcion" id="descripcion">
                 </main>
 
-                <main class="">
+                <main class="none iva">
                   <select name="iva" id="iva">
                     <option value="N">21.00%</option>
                     <option value="R">10.50%</option>
                   </select>
                 </main>
 
-                <main class="nuevoPrecio">
-                  <label for="nuevoPrecio">Nuevo Precio</label>
+                <main class="none nuevoPrecio">
                   <input type="text" placeholder="nuevoPrecio" id="nuevoPrecio" name="nuevoPrecio" />
                 </main>
 
-                <main class="">
+                <main class="none precio">
                   <input type="number" placeholder="precio" name="precio" id="precio">
                 </main>
               </section>
 
               <main class="empresa">
-                <label for="">Empresa</label>
                 <select name="empresa" id="empresa">
                   <option value="Electro Avenida">Electro Avenida</option>
                   <option value="Seguridad">Seguridad</option>
@@ -128,16 +125,16 @@
 
       </div> <!--Formualrio Verde-->
 
-      <div class="contenedor listaProductos">
+      <div  class="tabla">
         <table class="table">
           <thead>
             <tr>
-              <td>Cantidad</td>
-              <td>Codigo</td>
-              <td>Descripcion</td>
-              <td>Iva</td>
-              <td>Precio</td>
-              <td>Total</td>
+              <th>Cantidad</th>
+              <th>Codigo</th>
+              <th>Descripcion</th>
+              <th>Iva</th>
+              <th>Precio</th>
+              <th>Total</th>
             </tr>
           </thead>
           <tbody id="resultado"></tbody>
