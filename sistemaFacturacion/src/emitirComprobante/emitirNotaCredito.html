@@ -5,191 +5,127 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Emitir Comprobante</title>
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <!-- <link rel="stylesheet" href="../../build/css/app.css" /> -->
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./index.css">
   </head>
   <body class="emitirNota">
-    <div class="notaCredito">
       <div class="contenedor formulario-verde">
-        <form class="formularioFactura">
           <fieldset>
-            <div class="arriba">
-              <div class="buscar">
-                <div class="formulario__campo">
-                    <label class="" for="codigoC">Codigo</label>
-                    <input
-                    autofocus
-                    class=""
-                    type="text"
-                    name="codigoC"
-                    id="codigoC"
-                    placeholder=""
-                    />
+            <div id="cliente">
+              <section class="arriba">
+                <div class="buscar">
+                  <main class="formulario__campo">
+                      <label class="" for="codigoC">Codigo</label>
+                      <input autofocus type="text" name="codigoC" id="codigoC" placeholder="" />
+                  </main>
+  
+                  <main class="nombre formulario__campo">
+                    <label class="" for="nombre">Nombre</label>
+                    <input type="text" name="nombre" id="nombre" placeholder="Nombre" />
+                  </main>
                 </div>
-
-                <div class="nombre formulario__campo">
-                  <label class="" for="nombre">Nombre</label>
-                  <input
-                    class=""
-                    type="text"
-                    name="nombre"
-                    id="nombre"
-                    placeholder="Nombre"
-                  />
-                </div>
-               </div>
-
-              <div class="formulario__campo saldo">
-                <label class="" for="saldo">Saldo</label>
-                <input
-                  disabled
-                  class=""
-                  type="text"
-                  name="saldo"
-                  id="saldo"
-                  placeholder="Saldo"
-                />
-              </div>
-
-              <div class="formulario__campo saldoNegro none">
-                <label class="" for="saldo_p">Saldo P</label>
-                <input
-                  disabled
-                  class=""
-                  type="text"
-                  name="saldo_p"
-                  id="saldo_p"
-                  placeholder="Saldo_p"
-                />
-              </div>
-
-              <div class="formulario__campo">
-                <label class="" for="telefono">Telefono</label>
-                <input
-                  class=""
-                  type="tel"
-                  name="telefono"
-                  id="telefono"
-                  placeholder="Telefono"
-                />
-              </div>
-            </div>
-
-            <div class="medio">
-              <div class="formulario__campo">
-                <label class="" for="direccion">Direccion</label>
-                <input
-                  class=""
-                  type="text"
-                  name="direccion"
-                  id="direccion"
-                  placeholder="Direccion"
-                />
-              </div>
-
-              <div class="formulario__campo">
-                <label class="" for="localidad">Localidad</label>
-                <input
-                  class=""
-                  type="text"
-                  name="localidad"
-                  id="localidad"
-                  placeholder="Localidad"
-                />
-              </div>
-
-              <div class="formulario__campo">
-                <label class="" for="provincia">Provincia</label>
-                <input
-                  class=""
-                  type="text"
-                  name="provincia"
-                  id="provincia"
-                  placeholder="Provincia"
-                />
-              </div>
-            </div>
-
-            <div class="abajo">
-              <div class="formulario__campo select">
-                <label class="" for="conIva">Cond IVA</label>
-                <select name="conIva" id="conIva">
-                  <option value="Consumidor Final">Consumidor Final</option>
-                  <option value="Monotributista">Monotributista</option>
-                  <option value="Inscripto">Inscripto</option>
-                  <option value="Exento">Exento</option>
-                </select>
-              </div>
-
-              <div class="formulario__campo">
-                <label class="" for="dnicuit">Dni o Cuit</label>
-                <input
-                  class=""
-                  type="text"
-                  name="dnicuit"
-                  id="dnicuit"
-                  placeholder="Dni o Cuit"
-                />
-              </div>
-
-              <div class="formulario__campo">
-                <label class="" for="observaciones">Observaciones</label>
-                <input
-                  class=""
-                  type="text"
-                  name="observaciones"
-                  id="observaciones"
-                  placeholder="Observaciones"
-                />
-              </div>
+  
+                <main class="formulario__campo saldo">
+                  <label class="" for="saldo">Saldo</label>
+                  <input disabled type="text" name="saldo" id="saldo" placeholder="Saldo"/>
+                </main>
+  
+                <main class="formulario__campo saldoNegro none">
+                  <label class="" for="saldo_p">Saldo P</label>
+                  <input disabled type="text" name="saldo_p" id="saldo_p" placeholder="Saldo_p"/>
+                </main>
+  
+                <main class="formulario__campo">
+                  <label class="" for="telefono">Telefono</label>
+                  <input type="tel" name="telefono" id="telefono" placeholder="Telefono"/>
+                </main>
+              </section>
+  
+              <section class="medio">
+                <main class="formulario__campo">
+                  <label class="" for="direccion">Direccion</label>
+                  <input type="text" name="direccion" id="direccion" placeholder="Direccion"/>
+                </main>
+  
+                <main class="formulario__campo">
+                  <label class="" for="localidad">Localidad</label>
+                  <input type="text" name="localidad" id="localidad" placeholder="Localidad"/>
+                </main>
+  
+                <main class="formulario__campo">
+                  <label class="" for="provincia">Provincia</label>
+                  <input type="text" name="provincia" id="provincia" placeholder="Provincia"/>
+                </main>
+              </section>
+  
+              <section class="abajo">
+                <main class="formulario__campo select">
+                  <label class="" for="conIva">Cond IVA</label>
+                  <select name="conIva" id="conIva">
+                    <option value="Consumidor Final">Consumidor Final</option>
+                    <option value="Monotributista">Monotributista</option>
+                    <option value="Inscripto">Inscripto</option>
+                    <option value="Exento">Exento</option>
+                  </select>
+                </main>
+  
+                <main class="formulario__campo">
+                  <label class="" for="dnicuit">Dni o Cuit</label>
+                  <input type="text" name="dnicuit" id="dnicuit" placeholder="Dni o Cuit"/>
+                </main>
+  
+                <main class="formulario__campo">
+                  <label class="" for="observaciones">Observaciones</label>
+                  <input type="text" name="observaciones" id="observaciones" placeholder="Observaciones"/>
+                </main>
+              </section>
             </div>
           </fieldset>
 
           <fieldset>
-            <legend>Producto</legend>
-            <div class="productos-inputs">
-              <div class="parteInfo">
-                <div class="buscadorCodigo parte-producto_codigo">
+            <div class="productos">
+              <section class="parteInfo">
+                <main class="">
                   <input type="text" placeholder="codigo" id="codigo" name="codigo" />
-                </div>
+                </main>
 
-                <div class="nuevaCantidad none">
+                <main class="nuevaCantidad">
                   <label for="nuevaCantidad">Nueva Cantidad</label>
                   <input type="text" placeholder="nuevaCantidad" id="nuevaCantidad" name="nuevaCantidad" />
-                </div>
+                </main>
 
-                
-
-                <div class="parte-producto_descripcion none">
+                <main class="">
                   <input type="text" placeholder="descripcion" name="descripcion" id="descripcion">
-                </div>
+                </main>
 
-                <div class="parte-producto_iva none">
+                <main class="">
                   <select name="iva" id="iva">
                     <option value="N">21.00%</option>
                     <option value="R">10.50%</option>
                   </select>
-                </div>
+                </main>
 
-                <div class="nuevoPrecio none">
+                <main class="nuevoPrecio">
                   <label for="nuevoPrecio">Nuevo Precio</label>
                   <input type="text" placeholder="nuevoPrecio" id="nuevoPrecio" name="nuevoPrecio" />
-                </div>
+                </main>
 
-                <div class="parte-producto_precio none">
+                <main class="">
                   <input type="number" placeholder="precio" name="precio" id="precio">
-                </div>
-              </div>
+                </main>
+              </section>
 
-              <div class="empresa">
+              <main class="empresa">
                 <label for="">Empresa</label>
                 <select name="empresa" id="empresa">
                   <option value="Electro Avenida">Electro Avenida</option>
                   <option value="Seguridad">Seguridad</option>
                 </select>
-              </div>
+              </main>
             </div>
           </fieldset>
-        </form>
+
       </div> <!--Formualrio Verde-->
 
       <div class="contenedor listaProductos">
@@ -265,7 +201,6 @@
               <p href="" class="">Ticket Factura</p>
             </button>
         </div>
-    </div>
     <div class="alerta none">
       <div class="spinner">
       </div>

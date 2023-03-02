@@ -1,0 +1,37 @@
+fieldset > #cliente{
+    display: flex;
+    flex-direction: column;
+}
+
+fieldset > #cliente section{
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 2fr 1fr 1fr;
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+}
+
+main.nombre{
+    width: 100%;
+}
+
+.buscar{
+    display: flex;
+    gap: 2rem;
+}
+
+#codigoC{
+    width: 8rem;
+}
+
+.productos{
+    display: grid;
+    gap: 2rem;
+}
+
+.productos .parteInfo{
+    display: flex;
+}
