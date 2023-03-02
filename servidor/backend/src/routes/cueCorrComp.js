@@ -1,7 +1,7 @@
 const {Router} = require("express");
 const router = Router();
 
-const {cargarCompensada,modificarCompensada,borrarCompensada,traerCompensadasPorCliente,traerCompensada, traerCompensadasPorNumero, modificarCompensadaPorNumero} = require("../controllers/cueCorrComp.controllers");
+const {cargarCompensada,modificarCompensada,borrarCompensada,modificarPorNumeroYCliente,traerCompensadasPorCliente,traerCompensada, traerCompensadasPorNumero, modificarCompensadaPorNumero} = require("../controllers/cueCorrComp.controllers");
 
 router.route('/')
     .post(cargarCompensada)
@@ -14,5 +14,7 @@ router.route('/cliente/:codigo')
 router.route('/numero/:numero')
     .get(traerCompensadasPorNumero)
     .put(modificarCompensadaPorNumero)
+router.route('/numeroYCliente/:numero/:cliente')
 
+    .put(modificarPorNumeroYCliente)
 module.exports = router

@@ -12,7 +12,7 @@ const cliente = new Schema({
     },
     direccion:{
         type:String,
-        required:true
+        default:""
     },
     cod_postal:{
         type: String,

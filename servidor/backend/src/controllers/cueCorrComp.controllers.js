@@ -51,6 +51,15 @@ cuentaCompCTRL.modificarCompensada = async(req,res)=>{
     await CuentaComp.findByIdAndUpdate({_id:id},req.body);
     console.log(`Compensada de ${req.body.cliente} con numero ${req.body.nro_comp} Modificada`);
     res.send(`Compensada de ${req.body.cliente} con numero ${req.body.nro_comp} Modificada`);
+};
 
+
+cuentaCompCTRL.modificarPorNumeroYCliente = async(req,res)=>{
+    const {numero,cliente} = req.params;
+    await CuentaComp.findOneAndUpdate({$and:[
+        {nro_comp:numero},
+        {codigo:cliente}
+    ]},req.body);
+    res.end();
 }
 module.exports = cuentaCompCTRL

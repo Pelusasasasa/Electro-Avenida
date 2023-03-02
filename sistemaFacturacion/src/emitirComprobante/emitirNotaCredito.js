@@ -209,7 +209,7 @@ agregarIva.children[0].addEventListener('keypress',e=>{
     e.preventDefault();
     if (e.key === "Enter") {
         if (precioAgregar.classList.contains('none')) {
-            divNuevoPrecio.children[1].focus();
+            divNuevoPrecio.children[0].focus();
         }else{
             precioAgregar.children[0].focus();
         }
@@ -219,7 +219,7 @@ agregarIva.children[0].addEventListener('keypress',e=>{
 precioAgregar.addEventListener('keypress',e=>{
     if (e.key === "Enter" && codigo.value !== "888-888") {
         const product = {
-            descripcion: descripcionAgregar.children[0].value,
+            descripcion: descripcionAgregar.children[0].value.toUpperCase(),
             precio_venta: parseFloat(precioAgregar.children[0].value),
             _id:codigo.value,
             marca:"",
@@ -252,10 +252,8 @@ precioAgregar.addEventListener('keypress',e=>{
 ipcRenderer.on('mando-el-producto',async(e,args)=>{
         const {id,cantidad} = JSON.parse(args);
         const producto = (await axios.get(`${URL}productos/${id}`)).data;
-        await mostrarVentas(producto,cantidad)
-
-
-})
+        await mostrarVentas(producto,cantidad);
+});
 
 let id = 1
 const mostrarVentas = (objeto,cantidad)=>{
@@ -276,14 +274,8 @@ const mostrarVentas = (objeto,cantidad)=>{
     listaProductos.push({objeto,cantidad});
 }
 
-descuento.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        facturaOriginal.focus()
-    }
-})
-descuento.addEventListener('blur',e=>{
-    verDescuento()
-})
+
+
 const contado = document.querySelector('#CD');
 
 cobrado.addEventListener('blur',e=>{
@@ -442,7 +434,7 @@ const movimientoProducto = async(objeto,cantidad,venta)=>{
     movProducto.total=(parseFloat(movProducto.ingreso)*parseFloat(movProducto.precio_unitario)).toFixed(2)
     movProducto.vendedor = venta.vendedor;
     arregloMovimiento.push(movProducto)
-}
+};
 
 //Sumamos el saldo al cluente si la venta  es Cuenta Corriente
 const sumarSaldo = async(precio,id) =>{
@@ -450,7 +442,7 @@ const sumarSaldo = async(precio,id) =>{
     saldoNuevo = parseFloat(cliente.saldo) - parseFloat(precio);
     cliente.saldo = saldoNuevo.toFixed(2);
     await axios.put(`${URL}clientes/${id}`,cliente)
-}
+};
 
 
 //Trae el numero de comrpobante dependiendo de si es nota de credito A o B
@@ -490,7 +482,6 @@ cancelar.addEventListener('click',async e=>{
     });
 })
 
-
 resultado.addEventListener('click',e=>{
     seleccionado && seleccionado.classList.remove('seleccionado')
     seleccionado = e.path[1];
@@ -502,22 +493,22 @@ resultado.addEventListener('click',e=>{
         borrarProducto.classList.remove('none');
         agregarIva.children[0].value = seleccionado.children[3].innerHTML === "10.50" ? "R" : "N";
     }
-})
+});
 
 //modificamos la cantidad del producto
-divNuevaCantidad.children[1].addEventListener('keypress',e=>{
+divNuevaCantidad.children[0].addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         agregarIva.children[0].focus();
     }
 });
 
-divNuevoPrecio.children[1].addEventListener('keypress',e=>{
+divNuevoPrecio.children[0].addEventListener('keypress',e=>{
     if(e.key === "Enter"){
         let nuevoTotal = parseFloat(total.value);
         const producto = listaProductos.find(({objeto,cantidad})=>objeto.identificadorTabla === seleccionado.id);
         nuevoTotal -= parseFloat(producto.cantidad) * parseFloat(producto.objeto.precio_venta);
-        producto.cantidad = divNuevaCantidad.children[1].value !== "" ? divNuevaCantidad.children[1].value : producto.cantidad;
-        producto.objeto.precio_venta = divNuevoPrecio.children[1].value !== "" ? divNuevoPrecio.children[1].value : producto.objeto.precio_venta;
+        producto.cantidad = divNuevaCantidad.children[0].value !== "" ? divNuevaCantidad.children[0].value : producto.cantidad;
+        producto.objeto.precio_venta = divNuevoPrecio.children[0].value !== "" ? divNuevoPrecio.children[0].value : producto.objeto.precio_venta;
         producto.objeto.iva = agregarIva.children[0].value;
         const tr = document.getElementById(`${seleccionado.id}`);
         tr.children[0].innerHTML = parseFloat(producto.cantidad).toFixed(2);
@@ -530,13 +521,12 @@ divNuevoPrecio.children[1].addEventListener('keypress',e=>{
         divNuevaCantidad.classList.add('none');
         divNuevoPrecio.classList.add('none');
         agregarIva.classList.add('none');
-        divNuevoPrecio.children[1].value = "";
-        divNuevaCantidad.children[1].value = "";
+        divNuevoPrecio.children[0].value = "";
+        divNuevaCantidad.children[0].value = "";
         agregarIva.children[0].value = "N";
         codigo.focus();
     }
-})
-
+});
 
  //lo usamos para borrar un producto de la tabla
  borrarProducto.addEventListener('click',e=>{
@@ -563,12 +553,11 @@ divNuevoPrecio.children[1].addEventListener('keypress',e=>{
     codigo.focus();
 })
 
-
 buscarCliente.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         telefono.focus()
     }
-})
+});
 
 telefono.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
@@ -617,27 +606,6 @@ dnicuit.addEventListener('blur',async e=>{
     }
 });
 
-
-telefono.addEventListener('focus',e=>{
-    telefono.select();
-})
-
-buscarCliente.addEventListener('focus',e=>{
-    buscarCliente.select();
-})
-localidad.addEventListener('focus',e=>{
-    localidad.select();
-})
-provincia.addEventListener('focus',e=>{
-    provincia.select();
-})
-direccion.addEventListener('focus',e=>{
-    direccion.select();
-})
-dnicuit.addEventListener('focus',e=>{
-   dnicuit.select();
-})
-
  //sacamos el gravado y el iva
  const gravadoMasIva = (ventas)=>{
     let totalIva105 = 0
@@ -658,8 +626,7 @@ dnicuit.addEventListener('focus',e=>{
         cantIva = 2;
     }
     return [parseFloat(totalIva21.toFixed(2)),parseFloat(totalIva105.toFixed(2)),parseFloat(gravado21.toFixed(2)),parseFloat(gravado105.toFixed(2)),cantIva]
- }
-
+}
 
 const subirAAfip = async(venta,ventaAsociada)=>{
     alerta.children[0].innerHTML = "Esperando confirmacion de la afip"
@@ -754,7 +721,7 @@ const subirAAfip = async(venta,ventaAsociada)=>{
             texto:textoQR,
             numero:ultimoElectronica + 1
         }
-}
+};
 
 //Generamos el qr
 async function generarQR(texto) {
@@ -762,7 +729,7 @@ async function generarQR(texto) {
     const url = `https://www.afip.gob.ar/fe/qr/?p=${texto}`;
     const QR = await qrCode.toDataURL(url)
     return QR;
-}
+};
 
 //Inicio Compensada
 const ponerEnCuentaCorrienteCompensada = async(venta,valorizado)=>{
@@ -776,7 +743,7 @@ const ponerEnCuentaCorrienteCompensada = async(venta,valorizado)=>{
     cuenta.saldo = valorizado ? parseFloat(venta.precioFinal) : 0.1;
     cuenta.observaciones = venta.observaciones;
     await axios.post(`${URL}cuentaComp`,cuenta)
-}
+};
 
 //inicio historica
 const ponerEnCuentaCorrienteHistorica = async(venta,valorizado,saldo)=>{
@@ -788,4 +755,38 @@ const ponerEnCuentaCorrienteHistorica = async(venta,valorizado,saldo)=>{
     cuenta.debe = valorizado ? parseFloat(venta.precioFinal) : 0.1;
     cuenta.saldo = parseFloat(saldo) - cuenta.debe;
     await axios.post(`${URL}cuentaHisto`,cuenta);
-}
+};
+
+descuento.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        facturaOriginal.focus();
+    }
+});
+
+descuento.addEventListener('blur',e=>{
+    verDescuento();
+});
+
+telefono.addEventListener('focus',e=>{
+    telefono.select();
+});
+
+buscarCliente.addEventListener('focus',e=>{
+    buscarCliente.select();
+});
+
+localidad.addEventListener('focus',e=>{
+    localidad.select();
+});
+
+provincia.addEventListener('focus',e=>{
+    provincia.select();
+});
+
+direccion.addEventListener('focus',e=>{
+    direccion.select();
+});
+
+dnicuit.addEventListener('focus',e=>{
+   dnicuit.select();
+});

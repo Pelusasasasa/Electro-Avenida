@@ -17,7 +17,7 @@
                 <div class="buscar">
                   <main class="formulario__campo">
                       <label class="" for="codigoC">Codigo</label>
-                      <input  type="text" name="codigoC" id="codigoC" placeholder="" />
+                      <input  type="text" autofocus name="codigoC" id="codigoC" placeholder="" />
                   </main>
   
                   <main class="nombre formulario__campo">
@@ -87,7 +87,7 @@
             <div class="productos">
               <section class="parteInfo">
                 <main class="codigo">
-                  <input type="text"autofocus placeholder="codigo" id="codigo" name="codigo" />
+                  <input type="text" placeholder="codigo" id="codigo" name="codigo" />
                 </main>
 
                 <main class="none nuevaCantidad">
@@ -141,32 +141,27 @@
         </table>
       </div>
 
-      <div class=" total formulario-verde">
-          <div class="descuento">
+      <section class="total">
+          <main class="descuento">
             <label for="descuento">Descuento</label>
             <input type="Number" name="descuento" id="descuento" value="0.00" />
             <input disabled type="Number" name="descuentoN" id="descuentoN" value="0.00" />
-          </div>
-          <div class="facturaOriginal">
-            <label for="original">Factura Original</label>
-            <input type="text" name=original id=original>
-          </div>
+          </main>
+
+          <main class="facturaOriginal">
+            <input type="text" placeholder="Factura Original" name=original id=original>
+          </main>
           
-          <div class="total__input">
-            <input
-              type="text"
-              disabled
-              name="total"
-              id="total"
-              placeholder="Total"
-            />
-          </div>
-        </div>
-        <div class="radioYtotal">
-          <div class="vendedor">
+          <main class="total__input">
+            <input type="text" disabled name="total" id="total" placeholder="Total"/>
+          </main>
+      </section>
+
+      <section class="radioYtotal">
+          <main class="vendedor">
             <p></p>
-          </div>
-          <div class="radios">
+          </main>
+          <main class="radios">
             <div class="radio">
               <label for="PP">Presupuesto</label>
               <input type="radio" id="PP" value="PP" name="tipo">
@@ -179,30 +174,33 @@
               <label for="CC">Cuenta Corriente</label>
               <input type="radio" id="CC" value="CC" name="tipo">
             </div>
-          </div>
-            <div class="cobrado">
-              <input type="text" name="cobrado" id="cobrado" placeholder="Cobrado">
-            </div>
-        </div>
+          </main>
+          <main class="cobrado">
+            <input type="text" name="cobrado" id="cobrado" placeholder="Cobrado">
+          </main>
+      </section>
         
-        <div class="botones">
-          <button type="submit" class="borrarProducto  seccion-enviar-boton"><img src="../imagenes/remito.webp" alt="" /><p>Borrar Producto</p></button>
-            <a class="cancelar">
-              <button class="seccion-enviar-boton">
-                <img src="../imagenes/file.webp" alt="" />
+      <div class="botones">
+          <button type="submit" class="borrarProducto  seccion-enviar-boton">
+            <img src="../imagenes/remito.webp" alt=""/>
+            <p>Borrar Producto</p>
+          </button>
+          
+          <button class="seccion-enviar-boton cancelar">
+                <img src="../imagenes/file.webp" alt=""/>
                 <p>Cancelar</p>
-              </button>
-            </a>
-            <button class="factura">
-              <img src="../imagenes/factura.webp" alt="" />
-              <p href="" class="">Ticket Factura</p>
-            </button>
-        </div>
+          </button>
+
+          <button class="factura">
+              <img src="../imagenes/factura.webp" alt=""/>
+              <p class="">Ticket Factura</p>
+          </button>
+      </div>
     <div class="alerta none">
       <div class="spinner">
       </div>
       <div class="texto">
-        <p>Generando Venta!! Aguarde</p>
+        <p>Generando Nota Credito!! Aguarde</p>
       </div>
     </div>
     <script src="./emitirNotaCredito.js"></script>

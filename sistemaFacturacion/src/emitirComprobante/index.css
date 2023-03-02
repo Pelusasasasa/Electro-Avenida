@@ -61,11 +61,59 @@ main.nombre{
 
 
 .tabla{
-    height: 40vh;
+    height: 50vh;
     background-color: white;
     border: .1rem solid black;
 }
 
 .tabla table thead tr th,.tabla table tbody tr td{
     border: .1rem solid black;
+}
+
+.total{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.total .descuento{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.radioYtotal{
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.vendedor p{
+    border: .1rem solid black;
+}
+
+.radios{
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+}
+
+input[type="radio"]{
+    transform: scale(1.8);
+}
+
+img{
+    width: 3rem;
+}
+
+button{
+    background-color: transparent;
+}
+
+button p{
+    margin: 0;
+}
+button:hover{
+    background-color: transparent;
 }

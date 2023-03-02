@@ -468,7 +468,7 @@ const modificarVentas = (lista)=>{
                 venta.pagado = venta.tipo_comp === "Nota Credito" ? parseFloat(redondear(venta.pagado * -1,2)) : venta.pagado;
                 venta.saldo = venta.tipo_comp === "Nota Credito" ? parseFloat(tr.children[6].innerHTML) * -1 : parseFloat(tr.children[6].innerHTML);
                 try {
-                    await axios.put(`${URL}cuentaComp/numero/${venta.nro_comp}`,venta);
+                    await axios.put(`${URL}cuentaComp/numeroYCliente/${venta.nro_comp}/${venta.codigo}`,venta);
                 } catch (error) {
                     await sweet.fire({
                         title:`No se pudo modifcar la cuenta compensada ${venta.nro_comp}, Anotalo!!`
