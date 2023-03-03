@@ -27,26 +27,17 @@ window.addEventListener('load',async e=>{
     hasta.value = `${year}-${month}`;
 
     const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
-    datos.sort((a,b)=>{
-        if (a.fecha_comp>b.fecha_comp) {
-            return 1
-        }else if(a.fecha_comp<b.fecha_comp){
-            return -1
-        }
-        return 0
-    });
     listarDatos(datos.filter(dato=>dato.tipo_comp !== "Presupuesto"))
 });
 
 desde.addEventListener('change',async e=>{
     const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
-    listarDatos(datos);
+    listarDatos(datos.filter(dato=>dato.tipo_comp !== "Presupuesto"));
 });
 
 hasta.addEventListener('change',async e=>{
     const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
-    console.log(datos)
-    listarDatos(datos);
+    listarDatos(datos.filter(dato=>dato.tipo_comp !== "Presupuesto"));
 });
 
 imprimir.addEventListener('click',e=>{
@@ -57,6 +48,15 @@ imprimir.addEventListener('click',e=>{
 })
 
 const listarDatos = (lista)=>{
+
+    lista.sort((a,b)=>{
+        if (a.fecha_comp>b.fecha_comp) {
+            return 1
+        }else if(a.fecha_comp<b.fecha_comp){
+          return -1
+        }
+    });
+
     tbody.innerHTML = "";
     let pdgr = 0;
     let rdgr = 0;
