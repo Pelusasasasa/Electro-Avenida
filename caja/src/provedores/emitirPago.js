@@ -328,25 +328,25 @@ tbodyCheque.addEventListener('click',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
-    // await cargarChequesPropios(listaCheques) //Se hace bien
-    // await ponerEnComprobantePagos(); //Anda bien
-    // if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
+    await cargarChequesPropios(listaCheques) //Se hace bien
+    await ponerEnComprobantePagos(); //Anda bien
+    if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
          const comprobante = {};
 
-         comprobante.fecha = new Date();
-         const now = new Date();
-         comprobante.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
-    //     comprobante.codProv = codigo.value;
-    //     comprobante.rSocial = provedores.value;
-    //     comprobante.n_cheque = numeroCheque.value;
+        comprobante.fecha = new Date();
+        const now = new Date();
+        comprobante.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+        comprobante.codProv = codigo.value;
+        comprobante.rSocial = provedores.value;
+        comprobante.n_cheque = numeroCheque.value;
 
-    //     await ponerEnCuentaCorriente();//se hace bien
-    //     await descontarSaldoProvedor();//se hace bien
-    //     await sumarNumeroPago();//Se hace bien
-    //     for await(let elem of listaCheques){
-    //         await generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)//Se hace bien 
-    //     };
-    //     await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,provedor.provedor);
+        await ponerEnCuentaCorriente();//se hace bien
+        await descontarSaldoProvedor();//se hace bien
+        await sumarNumeroPago();//Se hace bien
+        for await(let elem of listaCheques){
+            await generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)//Se hace bien 
+        };
+        await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,provedor.provedor);
 
 
     const trs = document.querySelectorAll('#tbodyComprobante tr');
@@ -370,8 +370,8 @@ aceptar.addEventListener('click',async e=>{
         comprobantes:JSON.stringify(comprobantes),
         total: total.value
     });
-    // location.reload();
-    // }
+    location.reload();
+    }
 });
 
 const cargarChequesPropios = async(lista)=>{

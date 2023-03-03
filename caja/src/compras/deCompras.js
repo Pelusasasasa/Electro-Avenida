@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { ipcRenderer } = require('electron');
 const { redondear } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
@@ -41,11 +42,8 @@ hasta.addEventListener('change',async e=>{
 });
 
 imprimir.addEventListener('click',e=>{
-    document.querySelector('.fechas').classList.add('none')
-    document.querySelector('.table').classList.add('table-imprimir');
-    window.print();
-    document.querySelector('.fechas').classList.remove('none');
-})
+    ipcRenderer.send('imprimir-libroIva')
+});
 
 const listarDatos = (lista)=>{
 

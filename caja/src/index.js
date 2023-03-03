@@ -94,6 +94,12 @@ ipcMain.on('imprimir',(e,args)=>{
       nuevaVentana.close();
       nuevaVentana=null;
   })
+});
+
+ipcMain.on('imprimir-libroIva',e=>{
+  ventanaPrincipal.webContents.print({landscape:true},(success,errorType)=>{
+    console.log("a")
+  })
 })
 
 // Lo usamos para cuando alla un cambio en la aplicacion se reinicie

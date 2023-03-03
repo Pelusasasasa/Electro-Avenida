@@ -377,7 +377,7 @@ factura.addEventListener('click',async e=>{
                 nuevaVenta = await axios.post(`${URL}ventas`,venta);
 
                 //mandamos el movimiento de caja
-                await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 3 ? "Nota Credito A" : "Nota Credito B",venta.cod_comp === 3 ? "NTA" : "NTB",redondear(venta.precioFinal * -1,2),venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor);
+                venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 3 ? "Nota Credito A" : "Nota Credito B",venta.cod_comp === 3 ? "NTA" : "NTB",redondear(venta.precioFinal * -1,2),venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor);
 
                 //Imprimos el ticket
                 ipcRenderer.send('imprimir-venta',[venta,afip,true,1,'Ticket Factura']);
@@ -397,7 +397,7 @@ factura.addEventListener('click',async e=>{
                     arregloProductosDescontarStock = [];
                 }
                 //creamos el pdf
-                alerta.children[0].innerHTML = "Guardando nota de credito como pdf"
+                alerta.children[1].innerHTML = "Guardando nota de credito como pdf"
                 await axios.post(`${URL}crearPdf`,[venta,cliente,afip]);
                 //reiniciamos la pagina
                 location.href="../index.html";
@@ -629,7 +629,7 @@ dnicuit.addEventListener('blur',async e=>{
 }
 
 const subirAAfip = async(venta,ventaAsociada)=>{
-    alerta.children[0].innerHTML = "Esperando confirmacion de la afip"
+    alerta.children[1].innerHTML = "Esperando confirmacion de la afip"
     
     const ventaAnterior = await afip.ElectronicBilling.getVoucherInfo(parseFloat(facturaOriginal.value),5,ventaAsociada.cod_comp); 
     
@@ -696,7 +696,7 @@ const subirAAfip = async(venta,ventaAsociada)=>{
             })
         };
         const res = await afip.ElectronicBilling.createVoucher(data); //creamos la factura electronica
-        alerta.children[0].innerHTML = "Nota de Credito Afip Aceptada"
+        alerta.children[1].innerHTML = "Nota de Credito Afip Aceptada"
         const qr = {
             ver: 1,
             fecha: fecha,
