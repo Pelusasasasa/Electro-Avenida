@@ -97,7 +97,10 @@ ipcMain.on('imprimir',(e,args)=>{
 });
 
 ipcMain.on('imprimir-libroIva',e=>{
-  ventanaPrincipal.webContents.print({landscape:true},(success,errorType)=>{
+  const opciones = {
+    landscape:false  
+  }
+  ventanaPrincipal.webContents.print(opciones,(success,errorType)=>{
     console.log("a")
   })
 })
