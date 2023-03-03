@@ -20,6 +20,7 @@ const { ipcRenderer } = require("electron");
 
 
         const listar = async (venta,cliente,valorizado,lista,opciones)=>{
+            console.log(cliente)
             lista = !lista ? venta.productos : lista;
             if(lista.length>51){
                 const tabla = document.querySelector('.tabla');
@@ -40,7 +41,7 @@ const { ipcRenderer } = require("electron");
             numero.innerHTML=venta.nro_comp;
             clientes.innerHTML = cliente.cliente;
             venta.observaciones !== "" ? clientes.innerHTML += ` (${venta.observaciones})` : "";
-            idCliente.innerHTML = cliente._id;
+            idCliente.innerHTML = cliente.id;
             vendedor.innerHTML = venta.vendedor;
             cuit.innerHTML = cliente.cuit;
             direccion.innerHTML = cliente.direccion;
