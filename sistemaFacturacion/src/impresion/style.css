@@ -131,7 +131,7 @@ html {
 .presupuesto .informacion main,.presupuesto .cliente main{
     margin: auto 2rem;
     display: grid;
-    grid-template-columns: 4fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
 }
 
 .presupuesto #marina{

@@ -153,3 +153,9 @@ tbody tr:hover{
     font-size: 1rem !important;
     border: none !important;
 }
+
+@media print{
+    .table{
+        overflow: hidden;
+    }
+}
