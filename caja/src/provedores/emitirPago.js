@@ -3,6 +3,7 @@ const {redondear, generarMovimientoCaja} = require('../assets/js/globales');
 const sweet = require('sweetalert2');
 
 const axios = require('axios');
+const { ipcRenderer } = require('electron');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -327,26 +328,50 @@ tbodyCheque.addEventListener('click',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
-    await cargarChequesPropios(listaCheques) //Se hace bien
-    await ponerEnComprobantePagos(); //Anda bien
-    if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
-        const comprobante = {};
+    // await cargarChequesPropios(listaCheques) //Se hace bien
+    // await ponerEnComprobantePagos(); //Anda bien
+    // if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
+         const comprobante = {};
 
-        comprobante.fecha = new Date();
-        comprobante.codProv = codigo.value;
-        comprobante.rSocial = provedores.value;
-        comprobante.n_cheque = numeroCheque.value;
+         comprobante.fecha = new Date();
+         const now = new Date();
+         comprobante.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+    //     comprobante.codProv = codigo.value;
+    //     comprobante.rSocial = provedores.value;
+    //     comprobante.n_cheque = numeroCheque.value;
 
-        await ponerEnCuentaCorriente();//se hace bien
-        await descontarSaldoProvedor();//se hace bien
-        await sumarNumeroPago();//Se hace bien
-        for await(let elem of listaCheques){
-            await generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)//Se hace bien 
-        };
-        await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,provedor.provedor)
+    //     await ponerEnCuentaCorriente();//se hace bien
+    //     await descontarSaldoProvedor();//se hace bien
+    //     await sumarNumeroPago();//Se hace bien
+    //     for await(let elem of listaCheques){
+    //         await generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)//Se hace bien 
+    //     };
+    //     await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,provedor.provedor);
 
-        location.reload();
+
+    const trs = document.querySelectorAll('#tbodyComprobante tr');
+    const trs2 = document.querySelectorAll('#tbodyCheque tr');
+    let comprobantes = [];
+    let i = 0;
+    for await(let elem of trs){
+        let aux = {}
+        aux.numero = elem.children[0].innerHTML;
+        aux.tipo = elem.children[1].innerHTML;
+        aux.imp = parseFloat(elem.children[3].innerHTML);
+        aux.remitidos = trs2[i] ? trs2[i].children[0].innerHTML  + " " + trs2[i].children[1].innerHTML : "";
+        aux.importe = trs2[i] ? parseFloat(trs2[i].children[3].innerHTML) : "";
+        i++;
+        comprobantes.push(aux);
     }
+
+    await ipcRenderer.send('imprimirComprobantePago',{
+        provedor:provedor.provedor,
+        fecha:comprobante.fecha,
+        comprobantes:JSON.stringify(comprobantes),
+        total: total.value
+    });
+    // location.reload();
+    // }
 });
 
 const cargarChequesPropios = async(lista)=>{

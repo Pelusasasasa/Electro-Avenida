@@ -166,3 +166,63 @@ table{
 .cuentaCorriente #saldo{
     width: 20rem;
 }
+
+.comprobantePago header{
+    text-align: center;
+    border: .1rem solid black;
+}
+
+.comprobantePago .provedor{
+    border: .1rem solid black;
+    padding: 0 1rem;
+}
+
+.provedor main{
+    display:  flex;
+    justify-content: space-between;
+}
+
+.tabla{
+    border: .1rem solid black;
+    height: auto;
+    min-height: 20vh;
+}
+
+.tabla tbody tr td.importe{
+    border: .1rem solid black;
+}
+
+.comprobantePago .total{
+    display: flex;
+    justify-content: space-between;
+}
+
+.comprobantePago .total :first-child{
+    /* justify-self: end; */
+    margin: auto;
+}
+
+.comprobantePago .total main{
+    display: flex;
+}
+
+.comprobantePago .total main label{
+    font-size: 1.6rem;
+}
+
+.comprobantePago .total main p{
+    padding: .5rem;
+    margin: 0;
+    border: .1rem solid black;
+}
+
+.comprobantePago footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.comprobantePago footer :nth-child(2){
+    border-top: .1rem solid black;
+}

@@ -82,7 +82,19 @@ app.on('activate', () => {
 ipcMain.on('abrir-ventana',(e,args)=>{
   const {path,width,height,reinicio,informacion,cerrarVentana,informacionAgregar} = args;
   abrirVentana(path,width,height,reinicio,informacion,cerrarVentana,informacionAgregar);
-}); 
+});
+
+ipcMain.on('imprimirComprobantePago',(e,args)=>{
+  abrirVentana('./provedores/comprobanteDePago.html',1000,1000,false,args)
+});
+
+ipcMain.on('imprimir',(e,args)=>{
+  nuevaVentana.webContents.print({},(success,errorType)=>{
+      ventanaPrincipal.focus()
+      nuevaVentana.close();
+      nuevaVentana=null;
+  })
+})
 
 // Lo usamos para cuando alla un cambio en la aplicacion se reinicie
 if (process.env.NODE_ENV !== 'production') {
