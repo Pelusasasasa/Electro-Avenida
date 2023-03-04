@@ -140,14 +140,7 @@ tbody tr:hover{
     margin: .5rem;
 }
 
-@page{
-    transform: rotate(90deg);
-}
-
 @media print{
-    html{
-        /* transform: rotate(90deg); */
-    }
     .table{
         overflow: hidden;
         font-size: 1rem;

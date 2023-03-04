@@ -172,9 +172,17 @@ table{
     border: .1rem solid black;
 }
 
+.comprobantePago header h1,.comprobantePago header p{
+    margin: 0;
+}
+
 .comprobantePago .provedor{
     border: .1rem solid black;
     padding: 0 1rem;
+}
+
+.comprobantePago .provedor p{
+    margin: 0;
 }
 
 .provedor main{
