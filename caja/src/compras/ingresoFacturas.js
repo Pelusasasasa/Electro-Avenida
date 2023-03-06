@@ -525,7 +525,7 @@ modificar.addEventListener('click',async e=>{
     factura.empresa = empresa.value;
 
     factura.fecha_comp = fechaComp.value;
-    factura.fechaImput = fechaImput.value;
+    factura.fecha_imput = fechaImput.value;
 
     factura.netoNoGravado = redondear(netoNoGravado.value,2);
     factura.netoGravado = redondear(netoGravado.value,2);
@@ -575,7 +575,7 @@ const listarFactura = async(factura)=>{
     numero.value = factura.nro_comp.split('-',2)[1];
     document.getElementById(factura.tipo_comp).checked = true;
     fechaComp.value = `${fecha_comp[0]}-${fecha_comp[1]}-${fecha_comp[2]}`;
-    fechaImput.value = `${fecha_imput[0]}-${fecha_imput[1]}-${fecha_imput[2]}`;
+    fechaImput.value = `${fecha_imput[0]}-${fecha_imput[1]}`;
 
     netoNoGravado.value = redondear(factura.netoNoGravado,2);
     netoGravado.value = redondear(factura.netoGravado,2);

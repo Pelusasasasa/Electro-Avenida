@@ -100,12 +100,12 @@ const listarDatos = (lista)=>{
         tdRIVA.innerHTML =  elem.tipo_comp === "Nota Credito" ? redondear(elem.r_iva_c*-1,2) : elem.r_iva_c.toFixed(2);
         tdTotal.innerHTML = elem.tipo_comp === "Nota Credito" ? redondear(elem.total*-1,2) : elem.total.toFixed(2);
 
-        gravado += elem.netoGravado;
-        iva += elem.iva;
-        pdgr += elem.p_dgr_c;
-        rdgr += elem.r_dgr_c;
-        piva += elem.p_iva_c;
-        riva += elem.r_iva_c;
+        gravado = elem.tipo_comp === "Nota Credito" ? gravado - elem.netoGravado : gravado + elem.netoGravado;
+        iva = elem.tipo_comp === "Nota Credito" ? iva - elem.iva : iva + elem.iva;
+        pdgr = elem.tipo_comp === "Nota Credito" ? pdgr - elem.p_dgr_c : pdgr + elem.p_dgr_c;
+        rdgr = elem.tipo_comp === "Nota Credito" ? rdgr - elem.r_dgr_c : rdgr + elem.r_dgr_c;
+        piva = elem.tipo_comp === "Nota Credito" ? piva - elem.p_iva_c : piva + elem.p_iva_c;
+        riva = elem.tipo_comp === "Nota Credito" ? riva - elem.r_iva_c : riva + elem.r_iva_c;
         total = elem.tipo_comp === "Nota Credito" ? total - elem.total  : total + elem.total;
 
         tdGravado.classList.add('text-right');
