@@ -304,6 +304,7 @@ retencionIVA.addEventListener('focus',e=>{
 });
 
 total.addEventListener('focus',e=>{
+    aceptar.classList.remove('none')
     total.select();
 });
 
@@ -558,7 +559,7 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
     provedorTraido = (await axios.get(`${URL}provedor/codigo/${args}`)).data;
     provedor.value = provedorTraido.provedor;
     codigo.value = provedorTraido.codigo;
-    cond_iva.value = provedorTraido.condIva;
+    cond_iva.value = provedorTraido.situa;
     cuit.value = provedorTraido.cuit;
     puntoVenta.focus(); 
 });
