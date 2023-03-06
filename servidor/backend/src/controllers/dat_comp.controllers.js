@@ -32,7 +32,6 @@ datCompCTRL.deleteForId = async(req,res)=>{
 
 datCompCTRL.getBetween = async(req,res)=>{
     const {desde,hasta} = req.params;
-
     const datComps = await DatComp.find({$and:[
         {fecha_comp: {$gte:desde}},
         {fecha_comp: {$lte:hasta}}
@@ -42,13 +41,14 @@ datCompCTRL.getBetween = async(req,res)=>{
 
 datCompCTRL.getFechaImpt = async(req,res)=>{
     const {desde,hasta} = req.params;
-    const desdeSim = desde.split('-',2);
     const hastaSim = hasta.split('-',2);
     const mes = new Date(desde + "-01T00:00:00.000Z")
-    const mesSig = new Date(hastaSim[0],parseFloat(hastaSim[1]),1,0,0,0);
+    const mesSig = new Date(hasta + "-01T00:00:00.000Z");
+    mesSig.setMonth(parseFloat(hastaSim[1]))
+    mesSig.setDate(0)
     const compras = await DatComp.find({$and:[
         {fecha_imput:{$gte:mes}},
-        {fecha_imput:{$lte:mesSig}}
+        {fecha_imput:{$lt:mesSig}}
     ]});
     res.send(compras)
 }
