@@ -4,6 +4,8 @@ const { redondear } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
+const XLSX = require('xlsx');
+
 const desde = document.getElementById('desde');
 const hasta = document.getElementById('hasta');
 
@@ -14,8 +16,10 @@ const percepIvaCompras = document.getElementById('percepIvaCompras');
 const retencionBrutosCompras = document.getElementById('retencionBrutosCompras');
 const retencionIvaCompras = document.getElementById('retencionIvaCompras');
 
-const imprimir = document.querySelector('.imprimir');
+const exportar = document.querySelector('.exportar');
 const periodo = document.querySelector('.periodo');
+
+let datos;
 
 window.addEventListener('load',async e=>{
     const fecha = new Date();
@@ -27,22 +31,45 @@ window.addEventListener('load',async e=>{
     desde.value = `${year}-${month}`;
     hasta.value = `${year}-${month}`;
 
-    const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
+    datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
     listarDatos(datos.filter(dato=>dato.tipo_comp !== "Presupuesto"))
 });
 
 desde.addEventListener('change',async e=>{
-    const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
+    datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
     listarDatos(datos.filter(dato=>dato.tipo_comp !== "Presupuesto"));
 });
 
 hasta.addEventListener('change',async e=>{
-    const datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
+    datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
     listarDatos(datos.filter(dato=>dato.tipo_comp !== "Presupuesto"));
 });
 
-imprimir.addEventListener('click',e=>{
-    ipcRenderer.send('imprimir-libroIva')
+exportar.addEventListener('click',e=>{
+    ipcRenderer.send('elegirPath');
+    ipcRenderer.on('mandoPath',(e,args)=>{
+        let wb = XLSX.utils.book_new();
+        let path;
+        let extencion = 'xlsx';
+
+        extencion = args.split('.')[1] ? args.split('.')[1] : extencion;
+        path = args.split('.')[0];
+
+        wb.props = {
+            Title: "Compras",
+            subject: "Test",
+            Author: "Electro Avenida"
+        };
+
+        datos.forEach(dato => {
+            delete dato._id;
+        });
+        
+        let newWs = XLSX.utils.json_to_sheet(datos);
+
+        XLSX.utils.book_append_sheet(wb,newWs,'Compras');
+        XLSX.writeFile(wb,path + "." + extencion);
+    });
 });
 
 const listarDatos = (lista)=>{
