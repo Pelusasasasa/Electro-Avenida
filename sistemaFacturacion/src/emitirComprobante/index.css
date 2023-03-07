@@ -1,3 +1,21 @@
+/* Inicio Globales */
+main{
+    display: flex;
+    flex-direction: column;
+}
+
+#codigoC{
+    width: 8rem;
+}
+
+#codigo{
+    width: 12rem;
+}
+
+main.nombre{
+    width: 100%;
+}
+
 fieldset > #cliente{
     display: flex;
     flex-direction: column;
@@ -9,22 +27,13 @@ fieldset > #cliente section{
     grid-template-columns: 2fr 1fr 1fr;
 }
 
-main{
-    display: flex;
-    flex-direction: column;
-}
-
-main.nombre{
-    width: 100%;
+#cliente .medio{
+    grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .buscar{
     display: flex;
     gap: 2rem;
-}
-
-#codigoC{
-    width: 8rem;
 }
 
 .productos{
@@ -42,12 +51,12 @@ main.nombre{
     font-size: 2.2rem;
 }
 
-#codigo{
-    width: 12rem;
-}
-
 .descripcion{
     width: 70%;
+}
+
+#iva,#empresa{
+    height: 100%;
 }
 
 #precio{
@@ -59,11 +68,11 @@ main.nombre{
     justify-self: end;
 }
 
-
 .tabla{
     height: 50vh;
     background-color: white;
     border: .1rem solid black;
+    overflow: scroll;
 }
 
 .tabla table thead tr th,.tabla table tbody tr td{
@@ -74,6 +83,10 @@ main.nombre{
     display: flex;
     width: 100%;
     justify-content: space-between;
+}
+
+img{
+    width: 3rem;
 }
 
 .total .descuento{
@@ -97,14 +110,19 @@ main.nombre{
     display: flex;
     flex-direction: row;
     gap: 2rem;
+    align-self: center;
 }
 
 input[type="radio"]{
     transform: scale(1.8);
 }
 
-img{
-    width: 3rem;
+.descuento input{
+    width: 30%;
+}
+
+.botones{
+    margin: 0;
 }
 
 button{
@@ -114,6 +132,65 @@ button{
 button p{
     margin: 0;
 }
+
 button:hover{
     background-color: transparent;
 }
+/* Fin Globales */
+
+/* Inicio Emitir Comprobante */
+
+.parteAfip{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.parteAfip button{
+    align-self: center;
+    justify-self: center;
+    background-color: orangered;
+    color: white;
+    border: .1rem solid white;
+}
+
+.emitirComprobante .arriba{
+    display: flex;
+    justify-content: space-around;
+}
+
+.numeroDeFactura{
+    font-size: 1rem;
+}
+
+.numeroDeFactura input{
+    width: 45%;
+}
+
+.numeroDeFactura button{
+    padding: .5rem;
+    border-radius: .8rem;
+    margin-right: 1rem;
+}
+
+.opcional{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.numeroDeFactura button:hover{
+    transform: scale(1);
+    color: black;
+}
+
+.mostrarNegro .numeroDeFactura button{
+    /* color: white; */
+    background-color: lightgray;
+}
+
+.mostrarNegro .vendedor{
+    border: .1rem solid white;
+}
+
+/* Fin Emitir Comprobante */

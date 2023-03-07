@@ -42,11 +42,11 @@ const buscarAfip = document.querySelector('.buscarAfip');//boton para buscr desd
 
 //parte buscador Producto
 const codigo = document.querySelector('#codigo');
-const cambioPrecio = document.querySelector('.parte-producto_cambioPrecio');
-const nuevaCantidadDiv = document.querySelector('.parte-producto_cantidad');
-const descripcionAgregar = document.querySelector('.parte-producto_descripcion');
-const precioAgregar = document.querySelector('.parte-producto_precio');
-const agregariva = document.querySelector('.parte-producto_iva');
+const cambioPrecio = document.querySelector('.nuevoPrecio');
+const nuevaCantidadDiv = document.querySelector('.nuevaCantidad');
+const descripcionAgregar = document.querySelector('.descripcion');
+const precioAgregar = document.querySelector('.precio');
+const agregariva = document.querySelector('.iva');
 
 //
 const total = document.querySelector('#total');
@@ -153,7 +153,7 @@ descripcion.addEventListener('keypress',e=>{
 precioAgregar.addEventListener('keypress',e=>{
     if (e.key === "Enter" && codigo.value !== "888-888") {
         const product = {
-            descripcion: descripcionAgregar.children[0].value,
+            descripcion: descripcionAgregar.children[0].value.toUpperCase(),
             precio_venta: precioAgregar.children[0].value !== "" ? parseFloat(precioAgregar.children[0].value) : 0,
             _id:codigo.value,
             marca:"",
@@ -322,15 +322,15 @@ resultado.addEventListener('click',e=>{
 })
 
 //Para Cambiar el precio de un producto
-cambioPrecio.children[1].addEventListener('keypress',async (e)=>{
+cambioPrecio.children[0].addEventListener('keypress',async (e)=>{
     if (e.key === "Enter") {
         const  producto = listaProductos.find(({objeto,cantidad})=> objeto.identificadorTabla === seleccionado.id);
         await borrarUnProductoDeLaLista(seleccionado);
-        producto.objeto.precio_venta = cambioPrecio.children[1].value !== "" ? parseFloat(cambioPrecio.children[1].value) : producto.objeto.precio_venta;
+        producto.objeto.precio_venta = cambioPrecio.children[0].value !== "" ? parseFloat(cambioPrecio.children[0].value) : producto.objeto.precio_venta;
         producto.cantidad = nuevaCantidad.value !== "" ? nuevaCantidad.value : producto.cantidad;
         producto.objeto.iva = agregariva.children[0].value;
         mostrarVentas(producto.objeto,parseFloat(producto.cantidad));
-        cambioPrecio.children[1].value = "";
+        cambioPrecio.children[0].value = "";
         nuevaCantidad.value = "";
         cambioPrecio.classList.add('none');
         agregariva.classList.add('none');
@@ -352,7 +352,7 @@ agregariva.children[0].addEventListener('keypress',e=>{
     e.preventDefault();
     if (e.key === "Enter") {
         if (precioAgregar.classList.contains('none')) {
-            cambioPrecio.children[1].focus();
+            cambioPrecio.children[0].focus();
         }else{
             precio.focus();
         }
@@ -697,22 +697,32 @@ remito.addEventListener('click',async e=>{
 
     tipoVenta = "Remito";
 
-    const venta = {};
+    venta = {};
     venta.fecha = new Date();
     venta.observaciones = "";
     venta.vendedor = vendedor;
-    venta.productos = listaProductos;
+    venta.tipo_comp = "Remito";
+    // venta.productos = listaProductos;
+    venta.cliente = nombre.value;
+    venta.idCliente = codigoC.value;
     venta.nro_comp = await traerUltimoNroComprobante(tipoVenta,venta.cod_comp,venta.tipo_pago);
+    console.log(venta)
 
-    let cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`)).data;
+    for await(let producto of listaProductos){
+        await movimientoProducto(producto.cantidad,producto.objeto,codigoC.value,nombre.value,"RT");
+    }
+
+    await axios.post(`${URL}movProductos`,arregloMovimiento);
+
+    // let cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`)).data;
 
     let valorizadoImpresion="no valorizado";
 
-    await axios.post(`${URL}presupuesto`,venta);
-    await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
-    ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,listaProductos]);
+    await axios.post(`${URL}remitos`,venta);
+    // await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
+    // ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,listaProductos]);
 
-    window.location = "../index.html";
+    // window.location = "../index.html";
 });
 
 //Aca mandamos la venta con tikect Factura
@@ -1247,29 +1257,17 @@ const ponerEnCuentaCorrienteHistorica = async(venta,valorizado,saldo)=>{
     const bodyNegro = document.querySelector('.emitirComprobante')
     const saldoNegro = document.querySelector(".saldoNegro")
     const saldo = document.querySelector(".saldo")
-    const table = document.querySelector('.table');
-    table.classList.add('enNegro')
+    const table = document.querySelector('.tabla');
     const ventaNegro = document.querySelector(".ventaNegro")
-    const ticketFactura = document.querySelector('.ticketFactura')
-    const parteNegra = document.querySelector('.parteNegra')
-        parteNegra.classList.add('formulario-negro')
-        parteNegra.classList.remove('formulario-verde')
-        const total = document.querySelector('.total')
-        total.classList.add('formulario-negro')
-        total.classList.remove('formulario-verde')
-        const tipoVenta = document.querySelector('.tipoVenta')
-        tipoVenta.classList.add('formulario-negro')
-        tipoVenta.classList.remove('formulario-verde')
-        const partefinal = document.querySelector('.partefinal')
-        partefinal.classList.add('formulario-negro')
-        partefinal.classList.remove('formulario-verde')
-        saldoNegro.classList.remove('none')
-        saldo.classList.add('none')
-        bodyNegro.classList.add('mostrarNegro')
-        ventaNegro.classList.remove('none')
-        ticketFactura.classList.add('none')
-        ventaValorizado.classList.remove('none')
-        imprimirCheck.classList.remove('none')
+    const ticketFactura = document.querySelector('.ticketFactura');
+    table.classList.add('enNegro')
+    saldoNegro.classList.remove('none')
+    saldo.classList.add('none')
+    bodyNegro.classList.add('mostrarNegro')
+    ventaNegro.classList.remove('none')
+    ticketFactura.classList.add('none')
+    ventaValorizado.classList.remove('none')
+    imprimirCheck.classList.remove('none')
 }
 
 function ocultarNegro() {
@@ -1287,17 +1285,13 @@ function ocultarNegro() {
     const total = document.querySelector('.total')
     total.classList.remove('formulario-negro')
     total.classList.add('formulario-verde')
-    const partefinal = document.querySelector('.partefinal')
-    partefinal.classList.remove('formulario-negro')
-    partefinal.classList.add('formulario-verde')
-
-        saldoNegro.classList.add('none')
-        saldo.classList.remove('none')
-        bodyNegro.classList.remove('mostrarNegro')
-        ventaNegro.classList.add('none')
-        ticketFactura.classList.remove('none')
-        ventaValorizado.classList.add('none')
-        imprimirCheck.classList.add('none')
+    saldoNegro.classList.add('none')
+    saldo.classList.remove('none')
+    bodyNegro.classList.remove('mostrarNegro')
+    ventaNegro.classList.add('none')
+    ticketFactura.classList.remove('none')
+    ventaValorizado.classList.add('none')
+    imprimirCheck.classList.add('none')
 }
 
 observaciones.addEventListener('keypress',e=>{

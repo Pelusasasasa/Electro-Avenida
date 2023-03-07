@@ -133,6 +133,12 @@ const templateMenu = [
                 }
             },
             {
+                label: "Remitos",
+                click(){
+                    abrirVentana("listados/remitos.html",1200,1000)
+                }
+            },
+            {
                 label: "Buscar Venta",
                 click(){
                     abrirVentana("listados/buscarVentas.html",1200,1000)

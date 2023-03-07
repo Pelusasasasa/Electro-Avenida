@@ -87,3 +87,31 @@
     display: flex;
     flex-direction: column;
 }
+
+
+.remitos .buscador{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1.2rem;
+    margin-bottom: 1.6rem;
+}
+
+.remitos .table{
+    height: 85vh;
+    background: white;
+    overflow: scroll;
+}
+
+.remitos .table table{
+    border-collapse: collapse;
+}
+
+.remitos .table table thead tr th{
+    border: .1rem solid black;
+    white-space: nowrap;
+}
+
+.remitos .table table tbody tr td{
+    padding: 0 .3rem;
+    white-space: nowrap;
+}
