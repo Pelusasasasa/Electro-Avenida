@@ -71,6 +71,11 @@ ipcRenderer.on('datos-movimiento-producto',async (e,args)=>{
 
         tbody.appendChild(tr);
     };
+    tbody.scrollIntoView({
+        block:"end",
+        // behavior:"smooth"
+      });
+    // window.scrollBy(0,100)
 })
 
 document.addEventListener('keydown',e=>{

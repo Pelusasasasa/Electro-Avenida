@@ -48,7 +48,7 @@ const listar = async(lista)=>{
         tdCliente.innerHTML = elem.cliente;
         tdComprob.innerHTML = elem.cuenta;
         tdNumero.innerHTML = elem.nro_comp;
-        tdImporte.innerHTML = elem.imp;
+        tdImporte.innerHTML = elem.imp.toFixed(2);
         tdVendedor.innerHTML = elem.vendedor
 
         tdImporte.classList.add('text-right')
