@@ -235,7 +235,7 @@ const listarLista = (lista,situacion,tipo)=>{
 async function mostrarDetalles(id,tipo,vendedor) {
     detalle.innerHTML = '';
     if (tipo === "Recibos_P" || tipo === "Recibos") {
-        const vendedor = (await axios.get(`${URL}ventas/venta/ventaUnica/${seleccionado.id}/${tipo}`)).data.vendedor;
+        const vendedor = (await axios.get(`${URL}ventas/venta/ventaUnica/${seleccionado.id}/${tipo}`)).data;
         detalle.innerHTML += `
             <tr class="detalle"><h1>El recibo fue emitido por: ${vendedor}</h1></tr>
         `

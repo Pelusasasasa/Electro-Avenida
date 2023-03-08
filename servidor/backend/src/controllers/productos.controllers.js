@@ -5,8 +5,6 @@ const Productos = require("../models/producto");
 
 productosCTRL.traerProductos = async(req,res)=>{
     const {texto,tipoBusqueda} = req.params;
-    console.log(texto)
-    console.log(tipoBusqueda)
     if(texto[0] === "*"){
             const contenga = texto.substr(1);
             const re = new RegExp(`${contenga}`)
@@ -19,7 +17,6 @@ productosCTRL.traerProductos = async(req,res)=>{
                 re = "a" 
                }
             if (tipoBusqueda === "marca") {
-                console.log("a")
                 productos = await Productos.find({[tipoBusqueda]: {$regex: re,$options:'i'}}).sort({descripcion: 1})
             }else{
                 productos = await Productos.find({[tipoBusqueda]: {$regex: re,$options:'i'}}).sort({descripcion: 1});
@@ -96,7 +93,6 @@ productosCTRL.traerMarcas = async(req,res)=>{
 
 productosCTRL.productosPorMarca = async(req,res)=>{
     const {marca} = req.params;
-    console.log(marca)
     const productos = await Productos.find({marca:marca});
     res.send(productos)
 }
@@ -105,7 +101,6 @@ productosCTRL.productosPorMarca = async(req,res)=>{
 productosCTRL.subirImagen = async(req,res)=>{
     const file = req.file;
     const {id} = req.params;
-    console.log(file)
     const producto = (await Productos.find({_id:id}))[0];
     producto.imgURL = req.file.path;
     await Productos.findOneAndUpdate({_id:id},producto);

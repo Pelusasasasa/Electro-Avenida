@@ -714,7 +714,7 @@ remito.addEventListener('click',async e=>{
 
     await axios.post(`${URL}movProductos`,arregloMovimiento);
 
-    // let cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`)).data;
+    let cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`)).data;
 
     let valorizadoImpresion="no valorizado";
 

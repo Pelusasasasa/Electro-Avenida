@@ -229,6 +229,10 @@ const listarLista = (lista,situacion)=>{
             inputActual.type = "number";
             inputActual.value = "0.00";
 
+            if (venta.importe === 0.1) {
+                inputActual.setAttribute('disabled','')
+            }
+
             tdFecha.innerHTML = `${dia}/${mes}/${anio}`;
             tdTipo.innerHTML = venta.tipo_comp;
             tdNumero.innerHTML = venta.nro_comp;
@@ -498,8 +502,12 @@ todo.addEventListener('click',e=>{
 
     const trs = document.querySelectorAll('.listar tr');
     for(let tr of trs){
-        tr.children[5].children[0].value = tr.children[6].innerHTML;
-        tr.children[6].innerHTML = "0.00";
+        if (tr.children[3].innerHTML !== "0.10") {
+            tr.children[5].children[0].value = tr.children[6].innerHTML;
+            tr.children[6].innerHTML = "0.00";
+        }else{
+            total.value = redondear(parseFloat(total.value) - parseFloat(tr.children[3].innerHTML),2);
+        }
     }
 });
 

@@ -21,8 +21,6 @@ reciboCTRL.getForCliente = async(req,res)=>{
 
 reciboCTRL.getbetweenDates = async(req,res)=>{
     const {desde,hasta} = req.params;
-    console.log(desde);
-    console.log(hasta)
     const recibos = await Recibo.find({
         $and:[
             {fecha:{$gte:desde}},

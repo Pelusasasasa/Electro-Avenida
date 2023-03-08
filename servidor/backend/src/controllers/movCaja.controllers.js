@@ -62,7 +62,6 @@ movCajaCTRL.getForDateAndCuenta = async(req,res)=>{
 
 movCajaCTRL.getPriceBetweenDates = async(req,res)=>{
     const {desde,hasta} = req.params;
-    console.log(desde)
     const movimientos = await MovCaja.find({
         $and:[
             {fecha:{$gte:new Date(desde)}},
