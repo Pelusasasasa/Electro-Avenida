@@ -12,7 +12,7 @@ window.addEventListener('load',async e=>{
     desde.value = date.toISOString().slice(0,10);
     hasta.value = date.toISOString().slice(0,10);
 
-    remitos = (await axios.get(`${URL}remitos`)).data;
+    remitos = (await axios.get(`${URL}remitos/betweenDates/${desde.value}/${hasta.value}`)).data;
     listarRemitos(remitos)
 });
 
@@ -40,8 +40,10 @@ const listarRemitos = async(lista) =>{
             const tdVendedor = document.createElement('td');
             const tdObservaciones = document.createElement('td');
     
+            const fecha = remito.fecha.slice(0,10).split('-',3);
+
             tdNumero.innerHTML = remito.nro_comp;
-            tdFecha.innerHTML = remito.fecha.slice(0,10);
+            tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
             tdCliente.innerHTML = remito.cliente;
             tdId.innerHTML = remito.idCliente;
             tdCodProd.innerHTML = movimiento.codProd;

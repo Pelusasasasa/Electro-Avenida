@@ -719,10 +719,10 @@ remito.addEventListener('click',async e=>{
     let valorizadoImpresion="no valorizado";
 
     await axios.post(`${URL}remitos`,venta);
-    // await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
-    // ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,listaProductos]);
+    await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
+    ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,listaProductos]);
 
-    // window.location = "../index.html";
+    window.location = "../index.html";
 });
 
 //Aca mandamos la venta con tikect Factura

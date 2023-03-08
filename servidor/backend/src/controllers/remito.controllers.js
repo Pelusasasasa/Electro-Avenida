@@ -16,4 +16,15 @@ remitoCTRL.getAllRemitos = async(req,res)=>{
     res.send(remitos);
 }
 
+remitoCTRL.getBeetweenDates = async(req,res)=>{
+    const {desde,hasta} = req.params;
+    const inicioDia = new Date(desde + "T00:00:00.000Z");
+    const finDia = new Date(hasta + "T23:59:59.000Z");
+    const remitos = await Remito.find({$and:[
+        {fecha:{$gte:inicioDia}},
+        {fecha:{$lte:finDia}}
+    ]});
+    res.send(remitos);
+}
+
 module.exports  = remitoCTRL;
