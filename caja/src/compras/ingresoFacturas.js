@@ -361,12 +361,12 @@ aceptar.addEventListener('click',async e=>{
         const aDescontar = await actualizarCuentasPosterioreres(parseFloat(dat_comp.total),parseFloat(descuento.value));
         await ponerEnCuentaCorrienteProvedor(dat_comp,aDescontar);
         await ponerSaldoAlProvedor(dat_comp);
-
         if (parseFloat(descuento.value) !== 0) {
             await ponerEnCuentaCorrienteProvedorDescuento(dat_comp);
             await ponerDatoComprobanteDescuento(dat_comp);
         }
     }
+
     try {
         await axios.post(`${URL}dat_comp`,dat_comp);
         location.reload();
@@ -438,7 +438,7 @@ const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
     cuenta.nro_comp = datos.nro_comp;
     cuenta.debe = 0;
     cuenta.haber = descuento.value;
-    cuenta.saldo = (parseFloat(provedorTraido.saldo) - parseFloat(descuento.value));
+    cuenta.saldo = parseFloat(provedorTraido.saldo);
     cuenta.emp = datos.empresa;
     try {
         await axios.post(`${URL}ctactePro`,cuenta);
@@ -504,7 +504,6 @@ const actualizarCuentasPosterioreres = async(total,descuento)=>{
     return retorno
 };
 
-
 const verTipoComprobante = ()=>{
     const radios =  document.querySelectorAll('input[name=tipoComprobante]')
     for(let radio of radios){
@@ -512,7 +511,7 @@ const verTipoComprobante = ()=>{
             return radio.id;
         }
     }
-}
+};
 
 modificar.addEventListener('click',async e=>{
     const factura = {};

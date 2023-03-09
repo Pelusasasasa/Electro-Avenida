@@ -34,7 +34,7 @@ const listarComprobantes = lista=>{
         const tdImporte = document.createElement('td');
 
         tdAplicacion.innerHTML = elem.numero + " " + elem.tipo;
-        tdImp.innerHTML = elem.imp.toFixed(2);
+        tdImp.innerHTML = elem.imp ? elem.imp.toFixed(2) : "";
         tdRemitidos.innerHTML = elem.remitidos;
         tdImporte.innerHTML = elem.importe !== "" ? elem.importe.toFixed(2) : "";
 

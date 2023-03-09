@@ -55,7 +55,7 @@ datCompCTRL.getFechaImpt = async(req,res)=>{
 
 datCompCTRL.getForNumeroCompAndProv = async(req,res)=>{
     const {numero,codProv} = req.params;
-    const datComp = await DatComp.findOne({$and:[
+    const datComp = await DatComp.find({$and:[
         {nro_comp:numero},
         {codProv:codProv}
     ]},{total:1,tipo_comp:1,codProv:1,nro_comp:1});

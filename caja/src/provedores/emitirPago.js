@@ -64,7 +64,7 @@ provedores.addEventListener('keypress',async e=>{
         provedor = (await axios.get(`${URL}provedor/codigo/${provedores.value}`)).data;
         codigo.value = provedor.codigo;
         saldo.value = provedor.saldo.toFixed(2);
-        condIva.value = provedor.condIva;
+        condIva.value = provedor.situa;
         cuit.value = provedor.cuit;
         puntoVenta.focus();
     }
@@ -91,39 +91,41 @@ numero.addEventListener('keypress',async e=>{
     const punto = puntoVenta.value.padStart(4,'0');
     const num = numero.value.padStart(8,'0');
     if (e.keyCode === 13) {
-        const {_id,nro_comp,total:precio,tipo_comp} = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}/${codigo.value}`)).data;
-    
-        if (_id) {
-            const tr = document.createElement('tr');
-            tr.id = _id;
-    
-            const button = document.createElement('button');
-            button.innerText = "Eliminar";
-    
-            const tdNumero = document.createElement('td');
-            const tdTipo = document.createElement('td');
-            const tdImporte = document.createElement('td');
-            const tdDescuento = document.createElement('td');
-            const tdAciones = document.createElement('td');
-    
-            tdNumero.innerHTML = nro_comp;
-            tdTipo.innerHTML = tipo_comp;
-            tdImporte.innerHTML = tipo_comp === "Nota Credito" ? redondear(precio * -1,2) : precio.toFixed(2);
-            tdDescuento.innerHTML = "0.00";
-            tdAciones.appendChild(button)
-    
-            tr.appendChild(tdNumero);
-            tr.appendChild(tdTipo);
-            tr.appendChild(tdDescuento);
-            tr.appendChild(tdImporte);
-            tr.appendChild(tdAciones);
-    
-            tbodyComprobante.appendChild(tr);
-            total.value = tipo_comp === "Nota Credito" ? redondear(parseFloat(parseFloat(total.value) - precio),2) : redondear(parseFloat(parseFloat(total.value) + precio),2);
-    
-            puntoVenta.value = "0000";
-            numero.value = "00000000";
-            puntoVenta.focus();
+        const datos = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}/${codigo.value}`)).data;
+        datos.reverse();
+        for await(let {_id,nro_comp,tipo_comp,total:precio} of datos){
+            if (_id) {
+                const tr = document.createElement('tr');
+                tr.id = _id;
+        
+                const button = document.createElement('button');
+                button.innerText = "Eliminar";
+        
+                const tdNumero = document.createElement('td');
+                const tdTipo = document.createElement('td');
+                const tdImporte = document.createElement('td');
+                const tdDescuento = document.createElement('td');
+                const tdAciones = document.createElement('td');
+        
+                tdNumero.innerHTML = nro_comp;
+                tdTipo.innerHTML = tipo_comp;
+                tdImporte.innerHTML = tipo_comp === "Nota Credito" ? redondear(precio * -1,2) : precio.toFixed(2);
+                tdDescuento.innerHTML = "0.00";
+                tdAciones.appendChild(button)
+        
+                tr.appendChild(tdNumero);
+                tr.appendChild(tdTipo);
+                tr.appendChild(tdDescuento);
+                tr.appendChild(tdImporte);
+                tr.appendChild(tdAciones);
+        
+                tbodyComprobante.appendChild(tr);
+                total.value = tipo_comp === "Nota Credito" ? redondear(parseFloat(parseFloat(total.value) - precio),2) : redondear(parseFloat(parseFloat(total.value) + precio),2);
+        
+                puntoVenta.value = "0000";
+                numero.value = "00000000";
+                puntoVenta.focus();
+            }
         }
     }
 
@@ -328,8 +330,8 @@ tbodyCheque.addEventListener('click',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
-    await cargarChequesPropios(listaCheques) //Se hace bien
-    await ponerEnComprobantePagos(); //Anda bien
+    await cargarChequesPropios(listaCheques)
+    await ponerEnComprobantePagos();
     if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
          const comprobante = {};
 
@@ -340,24 +342,25 @@ aceptar.addEventListener('click',async e=>{
         comprobante.rSocial = provedores.value;
         comprobante.n_cheque = numeroCheque.value;
 
-        await ponerEnCuentaCorriente();//se hace bien
-        await descontarSaldoProvedor();//se hace bien
-        await sumarNumeroPago();//Se hace bien
+        await ponerEnCuentaCorriente();
+        await descontarSaldoProvedor();
+        await sumarNumeroPago();
         for await(let elem of listaCheques){
-            await generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)//Se hace bien 
+             await generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)//Se hace bien 
         };
         await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,provedor.provedor);
 
 
     const trs = document.querySelectorAll('#tbodyComprobante tr');
     const trs2 = document.querySelectorAll('#tbodyCheque tr');
+    let arrayARecorrer = trs.length > trs2.length ? trs : trs2;
     let comprobantes = [];
     let i = 0;
-    for await(let elem of trs){
+    for await(let elem of arrayARecorrer){
         let aux = {}
-        aux.numero = elem.children[0].innerHTML;
-        aux.tipo = elem.children[1].innerHTML;
-        aux.imp = parseFloat(elem.children[3].innerHTML);
+        aux.numero = trs[i] ? trs[i].children[0].innerHTML : "";
+        aux.tipo = trs[i] ? trs[i].children[1].innerHTML : "";
+        aux.imp = trs[i] ? parseFloat(trs[i].children[3].innerHTML) : "";
         aux.remitidos = trs2[i] ? trs2[i].children[0].innerHTML  + " " + trs2[i].children[1].innerHTML : "";
         aux.importe = trs2[i] ? parseFloat(trs2[i].children[3].innerHTML) : "";
         i++;
