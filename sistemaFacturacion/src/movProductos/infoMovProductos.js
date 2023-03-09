@@ -3,9 +3,7 @@ const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const tbody = document.querySelector('.tbody')
-
-// ipcRenderer.send('informacion-movimiento-producto')
+const tbody = document.querySelector('.tbody');
 
 ipcRenderer.on('datos-movimiento-producto',async (e,args)=>{
     const listaMovimiento = (await axios.get(`${URL}movProductos/${args}`)).data;
@@ -73,13 +71,11 @@ ipcRenderer.on('datos-movimiento-producto',async (e,args)=>{
     };
     tbody.scrollIntoView({
         block:"end",
-        // behavior:"smooth"
       });
-    // window.scrollBy(0,100)
-})
+});
 
 document.addEventListener('keydown',e=>{
     if(e.key === "Escape"){
         window.close();
     }
-})
+});

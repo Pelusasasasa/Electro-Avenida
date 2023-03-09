@@ -82,11 +82,13 @@
 .productos .lista{
     background-color: white;
     overflow: scroll;
-    height: 65vh;
+    height: 80vh;    
 }
 
 .productos .lista tr th,.productos .lista tr td{
     border: .1rem solid black;
+    font-size: 2.2rem;
+    white-space: nowrap;
 }
 
 .agregarProducto .codigos,.modificarProducto .codigos{
