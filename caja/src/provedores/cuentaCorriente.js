@@ -56,6 +56,14 @@ const listarProvedores = (lista)=>{
 };
 
 const listarCuentas = (lista) => {
+    lista.sort((a,b)=>{
+        if (a.fecha > b.fecha) {
+            return 1
+        }else if(a.fecha < b.fecha){
+            return -1
+        }
+        return 0;
+    });
     tbody.innerHTML = "";
     lista.forEach(cuenta => {
         const tr = document.createElement('tr');
