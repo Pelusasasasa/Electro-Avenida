@@ -25,6 +25,12 @@ ctateCTRL.getdesdeDate = async(req,res)=>{
     res.send(historicas);
 };
 
+ctateCTRL.getForNumeroComp = async(req,res)=>{
+    const {numero} = req.params;
+    const cuenta = await CtatePro.findOne({nro_comp:numero});
+    res.send(cuenta)
+};
+
 ctateCTRL.putForId = async(req,res)=>{
     const {id} = req.params;
     await CtatePro.findOneAndUpdate({_id:id},req.body);
