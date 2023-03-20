@@ -40,7 +40,8 @@ const cancelar = document.getElementById('cancelar');
 
 let listaCheques = [];
 let provedor;
-let totalInput
+let totalInput;
+let facturas = [];
 
 window.addEventListener('load',async e=>{
     let numero = (await axios.get(`${URL}tipoVenta/name/Ultimo Pago`)).data;
@@ -91,9 +92,9 @@ numero.addEventListener('keypress',async e=>{
     const punto = puntoVenta.value.padStart(4,'0');
     const num = numero.value.padStart(8,'0');
     if (e.keyCode === 13) {
-        const datos = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}/${codigo.value}`)).data;
-        datos.reverse();
-        for await(let {_id,nro_comp,tipo_comp,total:precio} of datos){
+        facturas = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}/${codigo.value}`)).data;
+        facturas.reverse();
+        for await(let {_id,nro_comp,tipo_comp,total:precio} of facturas){
             if (_id) {
                 const tr = document.createElement('tr');
                 tr.id = _id;
@@ -306,7 +307,7 @@ const agregarCheque = ()=>{
     }
 
     numeroCheque.value = "";
-    banco.value = "";
+    banco.value = "BANCO DE ENTRE RIOS";
     fecha.value = "";
     importeCheque.value = "";
 
@@ -345,9 +346,26 @@ aceptar.addEventListener('click',async e=>{
         await ponerEnCuentaCorriente();
         await descontarSaldoProvedor();
         await sumarNumeroPago();
-        for await(let elem of listaCheques){
-             await generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)//Se hace bien 
+
+        if (facturas.length !== 0) {
+            for await(let fact of facturas){
+                const cuenta = (await axios.get(`${URL}ctactePro/numero/${fact.nro_comp}`)).data;
+                cuenta.com_pago = numeroVenta.value;
+                try {
+                    await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+                } catch (error) {
+                    console.log(error)
+                    await sweet.fire({
+                        title:"No se pudo pone en cuenta corriente el comprobante de pago en el comprobante  numero " + cuenta.nro_comp
+                    });
+                }
+            }
         };
+
+        for await(let elem of listaCheques){
+             await generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)
+        };
+
         await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,provedor.provedor);
 
 

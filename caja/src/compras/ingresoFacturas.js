@@ -29,6 +29,8 @@ const empresa = document.getElementById('empresa');
 const factura = document.getElementById('Factura');
 const notaCredito = document.getElementById('Nota Credito');
 const presupuesto = document.getElementById('Presupuesto');
+const debito = document.getElementById('Debito');
+const ret_Pres = document.getElementById('Ret/Pres');
 
 //Fechas
 const fechaComp = document.getElementById('fechaComp');
@@ -96,7 +98,7 @@ provedor.addEventListener('keypress',e=>{
         cond_iva.focus();
         cuentaCorriente.parentNode.classList.add('none')
     }
-})
+});
 
 puntoVenta.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
@@ -109,7 +111,6 @@ numero.addEventListener('keypress',e=>{
         empresa.focus();
     }
 });
-
 
 empresa.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
@@ -131,6 +132,18 @@ notaCredito.addEventListener('keypress',e=>{
 });
 
 presupuesto.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        debito.focus();
+    }
+});
+
+debito.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        ret_Pres.focus();
+    }
+});
+
+ret_Pres.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
         fechaComp.focus();
     }

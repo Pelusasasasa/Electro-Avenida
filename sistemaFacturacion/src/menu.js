@@ -112,7 +112,7 @@ const templateMenu = [
             {
                 label: "Cambiar Precios con lista",
                 click(){
-                    abrirVentana("./productos/cambiarPrecios.html",1200,1100);
+                    abrirVentana("./productos/cambiarPrecios.html",1400,1100);
                 }
             }
         ]

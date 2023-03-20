@@ -32,17 +32,17 @@ window.addEventListener('load',async e=>{
     hasta.value = `${year}-${month}`;
 
     datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
-    listarDatos(datos.filter(dato=>dato.tipo_comp !== "Presupuesto"))
+    listarDatos(datos.filter(dato=>(dato.tipo_comp !== "Presupuesto" && dato.tipo_comp !== "Descuento")));
 });
 
 desde.addEventListener('change',async e=>{
     datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
-    listarDatos(datos.filter(dato=>dato.tipo_comp !== "Presupuesto"));
+    listarDatos(datos.filter(dato=>(dato.tipo_comp !== "Presupuesto" && dato.tipo_comp !== "Descuento")));
 });
 
 hasta.addEventListener('change',async e=>{
     datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
-    listarDatos(datos.filter(dato=>dato.tipo_comp !== "Presupuesto"));
+    listarDatos(datos.filter(dato=>(dato.tipo_comp !== "Presupuesto" && dato.tipo_comp !== "Descuento")));
 });
 
 exportar.addEventListener('click',e=>{
