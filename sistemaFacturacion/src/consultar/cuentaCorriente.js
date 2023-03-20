@@ -154,8 +154,8 @@ listar.addEventListener('click',e=>{
     subSeleccionado.classList.add('subSeleccionado');
 
     if (seleccionado) {
-        listaHistorica.forEach(listar=>{
-            listar.nro_comp === seleccionado.id && mostrarDetalles(listar.nro_comp,listar.tipo_comp,listar.vendedor);
+        listaHistorica.forEach(async listar=>{
+            listar.nro_comp === seleccionado.id && mostrarDetalles(listar.nro_comp,listar.tipo_comp);
         })
     }
 });
@@ -235,7 +235,7 @@ const listarLista = (lista,situacion,tipo)=>{
 async function mostrarDetalles(id,tipo,vendedor) {
     detalle.innerHTML = '';
     if (tipo === "Recibos_P" || tipo === "Recibos") {
-        const vendedor = (await axios.get(`${URL}ventas/venta/ventaUnica/${seleccionado.id}/${tipo}`)).data;
+        const vendedor = (await axios.get(`${URL}recibos/forNro_comp/${seleccionado.id}`)).data.vendedor;
         detalle.innerHTML += `
             <tr class="detalle"><h1>El recibo fue emitido por: ${vendedor}</h1></tr>
         `

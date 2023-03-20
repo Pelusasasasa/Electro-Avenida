@@ -30,4 +30,12 @@ reciboCTRL.getbetweenDates = async(req,res)=>{
     res.send(recibos)
 }
 
+reciboCTRL.getForNro_comp = async(req,res)=>{
+    const {numero} = req.params;
+    const recibo = await Recibo.findOne({
+        nro_comp:numero
+    });
+    res.send(recibo);
+}
+
 module.exports = reciboCTRL;

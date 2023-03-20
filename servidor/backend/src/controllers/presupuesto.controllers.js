@@ -21,7 +21,6 @@ PresupuestoCTRL.traerPresupuesto = async(req,res)=>{
 }
 
 PresupuestoCTRL.modificarPresupuesto = async(req,res) =>{
-    console.log(req.params)
     const {id} = req.params;
     delete req.body._id
     const presupuesto = await Presupuesto.findOneAndUpdate({nro_comp:id},req.body);
@@ -36,13 +35,11 @@ PresupuestoCTRL.entreFechas = async(req,res)=>{
 
 PresupuestoCTRL.entreFechasConId = async(req,res)=> {
     const {id,desde,hasta} = req.params;
-    console.log(req.params)
     const ventaARetornar =  await Presupuesto.find({$and:[{nro_comp:id},{fecha:{$gte: new Date(desde)}},{fecha:{$lte: new Date(hasta)}}]})
     res.send(ventaARetornar)
 }
 PresupuestoCTRL.entreFechasConCliente = async(req,res) => {
     const {idCliente,desde,hasta} = req.params;
-    console.log(req.params)
     const VentaAretornar = await Presupuesto.find({$and:[{cliente:idCliente},{fecha:{$gte: new Date(desde)}},{fecha:{$lte: new Date(hasta)}}]})
     res.send(VentaAretornar);
 };
