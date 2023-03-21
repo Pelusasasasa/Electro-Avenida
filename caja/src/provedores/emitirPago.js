@@ -154,7 +154,6 @@ tipo.addEventListener('change',e=>{
 descuento.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
         const tr = document.getElementById('tbodyComprobante').lastElementChild;
-        console.log(tr)
         importe.value = redondear(-parseFloat(tr.children[3].innerHTML)*parseFloat(descuento.value)/100,2)
         importe.focus();
     }
@@ -288,7 +287,6 @@ const agregarCheque = ()=>{
     tr.appendChild(tdFechaCheque);
     tr.appendChild(tdImporteCheque);
     tr.appendChild(tdEliminar);
-    console.log(tr)
     tbodyCheque.appendChild(tr);
     totalCheque.value = redondear(parseFloat(totalCheque.value) + parseFloat(importeCheque.value),2);
 
@@ -325,7 +323,7 @@ tbodyComprobante.addEventListener('click',e=>{
 tbodyCheque.addEventListener('click',e=>{
     if (e.target.nodeName === "BUTTON") {
         const tr = e.target.parentNode.parentNode;
-        totalCheque.value = redondear(parseFloat(totalCheque.value) - parseFloat(tr.children[2].innerHTML),2) ;
+        totalCheque.value = redondear(parseFloat(totalCheque.value) - parseFloat(tr.children[3].innerHTML),2);
         tbodyCheque.removeChild(tr);
     }
 });
@@ -396,7 +394,6 @@ aceptar.addEventListener('click',async e=>{
 });
 
 const cargarChequesPropios = async(lista)=>{
-    console.log(lista)
     lista.forEach(async cheque => {
         await axios.post(`${URL}cheques`,cheque);
     });

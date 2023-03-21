@@ -181,6 +181,7 @@ ipcRenderer.on('recibir-informacion',(e,args)=>{
     if(args === "tarjeta cargada"){
         aceptar.click();
     }else if(args === "Cheque cargado"){
+        console.log("a")
         aceptar.click();
     }
 });

@@ -75,7 +75,7 @@ document.addEventListener('keydown',(event) =>{
            if (e.key === "F9" && situacion === "blanco") {
                mostrarNegro();
                situacion = 'negro';
-               (parseFloat(cliente.saldo_p)>0) && saldoAfavor.setAttribute('disabled',"");
+               (parseFloat(cliente.saldo_p)>0 && Vendedor !== "ELBIO") && saldoAfavor.setAttribute('disabled',"");
                listarLista(nuevaLista,situacion)
            }else if (e.key === "F8" && situacion === "negro") {
                 ocultarNegro();
