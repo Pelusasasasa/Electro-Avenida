@@ -48,7 +48,7 @@ buscar.addEventListener('click',async e=>{
               const tdObservaciones = document.createElement('td');
 
               tdId.innerHTML = _id;
-              tdDescripcion.innerHTML = descripcion.slice(0,30);
+              tdDescripcion.innerHTML = descripcion;
               tdCodFabrica.innerHTML = cod_fabrica;
               tdStock.innerHTML = parseFloat(stock).toFixed(2);
               tdObservaciones.innerHTML = observacion.slice(0,15);
@@ -66,6 +66,7 @@ buscar.addEventListener('click',async e=>{
 
 const imprimir = document.querySelector('.imprimir')
 imprimir.addEventListener('click',async e=>{
+    document.querySelector('body').classList.add('letra-chica');
     let printContents = document.querySelector('.listar')
     let originalContents = document.body.innerHTML;
     document.body.innerHTML = printContents.innerHTML;
@@ -76,11 +77,12 @@ imprimir.addEventListener('click',async e=>{
 const excel = document.querySelector('.excel')
 excel.addEventListener('click',e=>{
     let listado = []
-    productos.forEach(({_id,descripcion,stock,cod_fabrica,marca})=>{
+    productos.forEach(({_id,descripcion,stock,provedor,cod_fabrica,marca})=>{
         let objeto = {}
             objeto.codigo=_id;
             objeto.descripcion=descripcion;
             objeto.stock=stock;
+            objeto.provedor=provedor
             objeto.fabrica = cod_fabrica;
             objeto.marca = marca
             listado.push(objeto)

@@ -15,6 +15,10 @@
     width: 100%;
 }
 
+.letra-chica{
+    font-size: 1rem;
+}
+
 .listadoPorMarca .lista table tr th,.listadoPorMarca .lista table tr td,.listadoStock .listar table tr th,.listadoStock .listar table tr td{
     border: .1rem solid black;
 }

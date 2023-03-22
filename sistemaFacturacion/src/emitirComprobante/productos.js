@@ -12,6 +12,8 @@ const select = document.querySelector('#seleccion');
 const buscarProducto = document.querySelector('#buscarProducto');
 const body = document.querySelector('body');
 
+let seleccionarTBody = document.querySelector('tbody');
+
 
 let productos = '';
 let subSeleccionado;
@@ -21,10 +23,10 @@ let seleccionado;
 window.addEventListener('load',e=>{
     filtrar();
     copiar();
-})
+});
 
-
-body.addEventListener('keydown',e=>{
+//si la tecla es escape se cierra la pagina
+body.addEventListener('keydown',async e=>{
     if (e.key === 'Enter') {
         //tomamos el tr que este seleccionado
         seleccionado = document.querySelector('.seleccionado');
@@ -34,30 +36,25 @@ body.addEventListener('keydown',e=>{
         }else{
             sweet.fire({title:"Producto no seleccionado"});
             document.querySelector('.ok').focus()
-        } ; 
-}});
+        }; 
+    }
 
-
-//si la tecla es escape se cierra la pagina
-body.addEventListener('keydown',async e=>{
     if (e.key === "Escape") {
         if (!document.activeElement.classList.contains('swal2-input') && !document.activeElement.classList.contains('swal2-modal')) {
             window.close();
         }
     };
 
+    subSeleccionado && subSeleccionado.scrollIntoView({
+        block:"center",
+        inline:'start',
+        behavior:"smooth"
+    });   
+
     if (document.activeElement.nodeName !== "SELECT") {
         subSeleccionado = await recorrerFlechas(e);
         seleccionado = subSeleccionado && subSeleccionado.parentNode;    
     }
-
-    
-
-    subSeleccionado && subSeleccionado.scrollIntoView({
-        block:"center",
-        inline:'center',
-        behavior:"smooth"
-      });
 });
 
 async function filtrar(){
@@ -121,7 +118,11 @@ select.addEventListener('keydown',(e) =>{
 
 
 buscarProducto.addEventListener('keyup',e=>{
-    if (e.keyCode === 40) {
+    if (e.keyCode === 37) {
+        if (buscarProducto.value === "") {
+            select.focus();   
+        };
+    }else if (e.keyCode === 40) {
         buscarProducto.blur();
         resultado.focus();
     }else{
@@ -129,7 +130,6 @@ buscarProducto.addEventListener('keyup',e=>{
     }
 });
 
-let seleccionarTBody = document.querySelector('tbody')
 seleccionarTBody.addEventListener('click',e=>{
     
     seleccionado = document.querySelector('.seleccionado');
@@ -147,14 +147,6 @@ seleccionarTBody.addEventListener('click',e=>{
 seleccionarTBody.addEventListener('dblclick',(e) =>{
     seleccionado = document.querySelector('.seleccionado');
     seleccionado ? cantidad(seleccionado) : sweet.fire({title:"Producto no seleccionado"});
-});
-
-buscarProducto.addEventListener('keyup',e=>{
-    if (e.keyCode === 37) {
-        if (buscarProducto.value === "") {
-            select.focus();   
-        };
-    }
 });
 
 async function cantidad(e) {
