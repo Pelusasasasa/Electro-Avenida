@@ -291,7 +291,7 @@ const agregarCheque = ()=>{
     totalCheque.value = redondear(parseFloat(totalCheque.value) + parseFloat(importeCheque.value),2);
 
     const cheque = {};
-    cheque.f_cheque = new Date();
+    cheque.f_recibido = new Date();
     cheque.n_cheque = numeroCheque.value;
     cheque.banco = banco.value.toUpperCase();
     cheque.f_cheque = fecha.value;
@@ -361,9 +361,8 @@ aceptar.addEventListener('click',async e=>{
         };
 
         for await(let elem of listaCheques){
-             await generarMovimientoCaja(elem.f_recibio,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)
+             await generarMovimientoCaja(elem.f_recibido,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)
         };
-
         await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,provedor.provedor);
 
 
