@@ -329,6 +329,8 @@ tbodyCheque.addEventListener('click',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
+
+    await cambiarNumeroComprobantePago(document.querySelectorAll('#tbodyComprobante tr'));
     await cargarChequesPropios(listaCheques)
     await ponerEnComprobantePagos();
     if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
@@ -474,3 +476,12 @@ const sumarNumeroPago = async()=>{
 cancelar.addEventListener('click',e=>{
     location.href = '../index.html';
 });
+
+
+async function cambiarNumeroComprobantePago(lista) {
+    for await(let elem of lista){
+        const comprobante = (await axios.get(`${URL}ctactePro/numero/${elem.children[0].innerText}`)).data;
+        comprobante.com_pago = numeroVenta.value;
+        (await axios.put(`${URL}ctactePro/id/${comprobante._id}`,comprobante));
+    }
+}
