@@ -32,7 +32,6 @@ ventasCTRL.traerVentaUnica = async(req,res)=>{
     }else{
         venta = await Ventas.find({nro_comp:numero,tipo_comp:tipo});
     }
-    console.log(venta)
     res.send(venta[0]);
 }
 

@@ -14,8 +14,6 @@ let html = fs.readFileSync(__dirname + '/pdf.html','utf8');
 pdfCTRL.crearPdf = async(req,res)=>{
 
     const [venta,cliente,{QR,cae,vencimientoCae,texto,numero}] = req.body;
-    console.log(venta)
-    console.log(cliente)
     let trs = "";
     if (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito") {
     venta.productos.forEach(({objeto,cantidad})=>{
