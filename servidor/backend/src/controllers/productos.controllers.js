@@ -111,7 +111,9 @@ productosCTRL.mostrarImagen = async(req,res)=>{
     const {id} = req.params;
     let producto = (await Productos.find({_id:id}))[0].imgURL;
     const a = path.join(__dirname,'../../');
-    
+    console.log(a)
+    producto = producto.slice(0,8) + "/" + producto.slice(9);
+    console.log(producto) 
     res.sendFile(a + producto)
 }
 

@@ -162,10 +162,9 @@ const imagen = document.querySelector('.imagen')
 async function mostrarImagen(id) {
         const producto = (await axios.get(`${URL}productos/${id}`)).data;
         if (producto.imgURL) {
-            const path = `${URL}productos/${id}/image`
+            const path = `${URL}productos/${producto._id}/image`;
             console.log(path)
-            imagen.innerHTML = `
-            <img class="imagenProducto" src=${path}>`
+            imagen.innerHTML = `<img class="imagenProducto" src=${path}>`
         };
 }
 
