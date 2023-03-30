@@ -47,6 +47,8 @@ buscar.addEventListener('click',async e=>{
               const tdStock = document.createElement('td');
               const tdObservaciones = document.createElement('td');
 
+              tdObservaciones.id = "observaciones"
+
               tdId.innerHTML = _id;
               tdDescripcion.innerHTML = descripcion;
               tdCodFabrica.innerHTML = cod_fabrica;

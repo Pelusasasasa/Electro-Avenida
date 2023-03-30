@@ -16,6 +16,10 @@
 }
 
 .letra-chica{
+    font-size: 1.5rem;
+}
+
+.letra-chica table tbody tr #observaciones{
     font-size: 1rem;
 }
 
