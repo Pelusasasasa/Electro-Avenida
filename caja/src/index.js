@@ -7,6 +7,13 @@ if (require('electron-squirrel-startup')) {
 let ventanaPrincipal
 let nuevaVentana
 
+// Lo usamos para cuando alla un cambio en la aplicacion se reinicie
+if (process.env.NODE_ENV !== 'production') {
+  require('electron-reload')(__dirname, {
+      electron: path.join(__dirname, '../node_modules', '.bin', 'electron')
+  })
+};
+
 const abrirVentana = (direccion,width,height,reinicio,informacion,cerrarVentana=false,informacionAgregar)=>{
   nuevaVentana = new BrowserWindow({
     width: width,
@@ -105,12 +112,7 @@ ipcMain.on('imprimir-libroIva',e=>{
   })
 })
 
-// Lo usamos para cuando alla un cambio en la aplicacion se reinicie
-if (process.env.NODE_ENV !== 'production') {
-  require('electron-reload')(__dirname, {
-      electron: path.join(__dirname, '../node_modules', '.bin', 'electron')
-  })
-};
+
 
 ipcMain.on('enviar-info-ventana-principal',(e,args)=>{
   ventanaPrincipal.webContents.send('recibir-informacion',args);
