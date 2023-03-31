@@ -480,8 +480,10 @@ cancelar.addEventListener('click',e=>{
 
 async function cambiarNumeroComprobantePago(lista) {
     for await(let elem of lista){
-        const comprobante = (await axios.get(`${URL}ctactePro/numero/${elem.children[0].innerText}`)).data;
-        comprobante.com_pago = numeroVenta.value;
-        (await axios.put(`${URL}ctactePro/id/${comprobante._id}`,comprobante));
+        if (elem.children[1].innerText !== "Pago Anticipado" || elem.children[1].innerText !== "Pago A Cuenta") {
+            const comprobante = (await axios.get(`${URL}ctactePro/numero/${elem.children[0].innerText}`)).data;
+            comprobante.com_pago = numeroVenta.value;
+            (await axios.put(`${URL}ctactePro/id/${comprobante._id}`,comprobante));
+        }
     }
 }
