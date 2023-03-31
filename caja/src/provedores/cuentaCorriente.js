@@ -24,7 +24,7 @@ let mesAnterior = parseFloat(dateSeparado[1]-1);
 mesAnterior = mesAnterior === 0 ? 12 : mesAnterior;
 mesAnterior = mesAnterior < 10 ? `0${mesAnterior}` : mesAnterior;
 let anioAnterior = mesAnterior === 12 ? parseFloat(dateSeparado[0]) - 1 : dateSeparado[0];
-desde.value = `${anioAnterior}-${mesAnterior}-${dateSeparado[2]}`;
+desde.value = `${anioAnterior}-${mesAnterior}-01`;
 hasta.value = date;
 
 window.addEventListener('load',async e=>{
@@ -128,6 +128,7 @@ tbody.addEventListener('click',async e=>{
 });
 
 select.addEventListener('change',async e=>{
+    e.preventDefault();
     const provedor = provedores.find(provedor=>provedor.codigo === select.value);
     cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
     listarCuentas(cuentas);
