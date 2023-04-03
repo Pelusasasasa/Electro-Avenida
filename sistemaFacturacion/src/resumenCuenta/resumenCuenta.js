@@ -122,7 +122,18 @@ ipcRenderer.on('mando-el-cliente',async(e,args)=>{
 
 function listarVentas(ventas,situacion,saldoAnterior,saldoAnterior_P) {
     tbody.innerHTML = "";
+
+    ventas.sort((a,b)=>{
+        if (a.fecha > b.fecha) {
+            return 1
+        }else if(b.fecha > a.fecha){
+            return -1
+        }
+        return 0
+    });
+    
     const aux = (situacion === "blanco") ? "Ticket Factura" : "Presupuesto";
+    
     let listaAux = ventas;
     if (aux === "Presupuesto") {
        listaAux = listaAux.filter(e=>{

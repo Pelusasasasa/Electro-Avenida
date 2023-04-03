@@ -120,8 +120,7 @@ costoTotal.addEventListener('focus',()=>{
 precioVenta.addEventListener('focus',e=>{
     
     const aux = (parseFloat(utilidad.value)*parseFloat(costoTotal.value)/100).toFixed(2)
-    console.log(costoTotal.value)
-    precioVenta.value = redondear((parseFloat(aux) + parseFloat(costoTotal.value)),2)
+    precioVenta.value = Math.round((parseFloat(aux) + parseFloat(costoTotal.value))).toFixed(2)
 })
 
 const modificar = document.querySelector('.modificar')

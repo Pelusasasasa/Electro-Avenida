@@ -102,7 +102,7 @@ utilidad.addEventListener('blur', (e) => {
 })
 
 precioVenta.addEventListener('focus', (e) =>{
-    precioVenta.value = redondear(precioV+parseFloat(costoTotal.value),2)
+    precioVenta.value = Math.round(precioV+parseFloat(costoTotal.value)).toFixed(2)
 })
 
 agregar.addEventListener('click' ,async  (e) =>{
