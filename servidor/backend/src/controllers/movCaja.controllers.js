@@ -7,7 +7,12 @@ movCajaCTRL.post = async(req,res)=>{
     const p = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     req.body.fecha = new Date(req.body.fecha.slice(0,10) + "T" + p.slice(11));
     const movCaja = new MovCaja(req.body);
-    await movCaja.save();
+    try {
+        await movCaja.save();
+    } catch (error) {
+        console.log(`El error fue en la fecha ${req.body.fecha}`)
+        console.log(error)
+    }
     console.log(`Movimiento de caja ${req.body.desc} cargado a la hora ${req.body.fecha}`);
     res.send(`Moviemiento de caja Cargado`);
 }
