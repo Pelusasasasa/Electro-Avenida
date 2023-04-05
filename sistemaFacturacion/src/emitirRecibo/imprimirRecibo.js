@@ -37,7 +37,7 @@ cuit.innerHTML = Cliente.cuit;
 localidad.innerHTML=Cliente.localidad;
 direccion.innerHTML=Cliente.direccion;
 iva.innerHTML = cond_iva;
-observaciones.innetText = venta.observaciones;
+observaciones.innerHTML = venta.observaciones;
 tbody.innerHTML = ""
 for(let objeto of lista){
     const tr = document.createElement('tr');
