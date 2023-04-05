@@ -45,7 +45,7 @@ const cuit = document.querySelector('#cuit');
 
 const listar = document.querySelector('.listar');
 
-const descripcion = document.getElementById('descripcion');
+const valoresRecibidos = document.getElementById('valoresRecibidos');
 
 //botones
 const imprimir = document.querySelector('.imprimir');
@@ -400,7 +400,7 @@ const hacerRecibo = async()=>{
      recibo.direccion = direccion.value;
      recibo.condIva = cond_iva.value;
      recibo.dnicuit = cuit.value;
-     recibo.observaciones = descripcion.value;
+     recibo.observaciones = valoresRecibidos.value ? valoresRecibidos.value.toUpperCase() : "EFECTIVO";
      const aux = (situacion === "negro") ? "saldo_p" : "saldo"
      let saldoFavor = 0;
      saldoFavor = (saldoAfavor.value !== "") && parseFloat(saldoAFavor.value);

@@ -18,7 +18,7 @@ const iva = document.querySelector('.cond_iva')
 const total = document.querySelector('#total')
 const tbody = document.querySelector('.tbody');
 
-const observaciones = document.querySelector('observaciones');
+const observaciones = document.querySelector('.observaciones');
 
 const tomarFecha = new Date();
 let hoy = tomarFecha.getDate()

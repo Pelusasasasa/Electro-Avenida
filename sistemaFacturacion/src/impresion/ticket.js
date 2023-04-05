@@ -105,6 +105,7 @@ const listar = async (venta,afip,opciones,cliente)=>{
         descri.innerHTML = "Fecha";
         BI.innerHTML = "Numero";
         importe.innerHTML = "Pagado";
+        observaciones.parentNode.classList.remove('none');
         observaciones.innerText = venta.observaciones;
 
         for await(let producto of venta.productos){
