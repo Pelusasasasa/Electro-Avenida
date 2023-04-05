@@ -28,6 +28,7 @@ const iva = document.querySelector('.iva');
 const descri = document.querySelector('.descri');
 const BI = document.querySelector('.BI');
 const importe = document.querySelector('.importe');
+const observaciones = document.querySelector('.observaciones');
 
 //total
 const descuento = document.querySelector('.descuento');
@@ -104,6 +105,7 @@ const listar = async (venta,afip,opciones,cliente)=>{
         descri.innerHTML = "Fecha";
         BI.innerHTML = "Numero";
         importe.innerHTML = "Pagado";
+        observaciones.innerText = venta.observaciones;
 
         for await(let producto of venta.productos){
             listaProductos.innerHTML += `

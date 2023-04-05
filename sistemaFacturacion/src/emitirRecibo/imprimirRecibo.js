@@ -16,7 +16,10 @@ const localidad = document.querySelector('.localidad')
 const direccion = document.querySelector('.direccion')
 const iva = document.querySelector('.cond_iva')
 const total = document.querySelector('#total')
-const tbody = document.querySelector('.tbody')
+const tbody = document.querySelector('.tbody');
+
+const observaciones = document.querySelector('observaciones');
+
 const tomarFecha = new Date();
 let hoy = tomarFecha.getDate()
 let mes = tomarFecha.getMonth() + 1;
@@ -34,6 +37,7 @@ cuit.innerHTML = Cliente.cuit;
 localidad.innerHTML=Cliente.localidad;
 direccion.innerHTML=Cliente.direccion;
 iva.innerHTML = cond_iva;
+observaciones.innetText = venta.observaciones;
 tbody.innerHTML = ""
 for(let objeto of lista){
     const tr = document.createElement('tr');

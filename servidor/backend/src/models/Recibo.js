@@ -48,6 +48,10 @@ const Recibo = new Schema({
     saldoAFavor:{
         type:Number,
         default:0
+    },
+    observaciones:{
+        type:String,
+        default:""
     }
 })
 
