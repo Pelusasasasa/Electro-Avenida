@@ -61,6 +61,8 @@ exportar.addEventListener('click',e=>{
             Author: "Electro Avenida"
         };
 
+        datos = datos.filter(dato => dato.tipo_comp !== "Descuento");
+
         datos.forEach(dato => {
             delete dato._id;
         });
