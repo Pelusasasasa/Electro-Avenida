@@ -45,7 +45,7 @@ const venciCae = document.querySelector('.venciCae');
  ipcRenderer.on('info-para-imprimir',async (e,args)=>{
     [venta,afip,,,opciones] = JSON.parse(args);
     let cliente;
-
+    
     if (venta.tipo_comp === "Recibos") {
         cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`)).data;
     }
