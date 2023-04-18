@@ -4,7 +4,8 @@ const path = require('path');
 const Productos = require("../models/producto");
 
 productosCTRL.traerProductos = async(req,res)=>{
-    const {texto,tipoBusqueda} = req.params;
+    let {texto,tipoBusqueda} = req.params;
+    texto = texto.replace('ALT47','/');
     if(texto[0] === "*"){
             const contenga = texto.substr(1);
             const re = new RegExp(`${contenga}`)
