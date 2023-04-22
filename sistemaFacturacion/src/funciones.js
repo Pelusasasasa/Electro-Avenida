@@ -15,7 +15,6 @@ const afip = new Afip({ CUIT: 27165767433 });
 
 function redondear(numero,decimales){
     const signo = numero >= 0 ? 1 : -1;
-    console.log(Math.round((numero * Math.pow(10,decimales)) + (signo * 0.0001)))
     return(Math.round((numero * Math.pow(10,decimales)) + (signo * 0.0001)) / Math.pow(10,decimales)).toFixed(decimales);
 }
 
