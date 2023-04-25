@@ -9,17 +9,18 @@ let vendedores = [];
 
 const notificaciones = require('node-notifier');
 window.addEventListener('load',async e=>{
-    const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
-    const dolarBNA = parseFloat((await avisarDolar()).replace(',','.')) + 1;
-    
+    setTimeout(async ()=>{
+        const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
+        const dolarBNA = parseFloat((await avisarDolar()).replace(',','.')) + 1;
+        
+        if (dolarBNA !== dolarSistema) {
+            notificaciones.notify({
+                title:"Dolares distintos",
+                message:`El dolar del sistema: ${dolarSistema} es distinto al dolar de el BNA: ${dolarBNA}`
+            });
+        }
+    },0)
     vendedores = (await axios.get(`${URL}usuarios`)).data;
-
-    if (dolarBNA !== dolarSistema) {
-        notificaciones.notify({
-            title:"Dolares distintos",
-            message:`El dolar del sistema: ${dolarSistema} es distinto al dolar de el BNA: ${dolarBNA}`
-        });
-    }
 });
 
 const avisarDolar = async()=>{
