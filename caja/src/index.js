@@ -295,7 +295,8 @@ const templateMenu = [
       {
         label:"Reordenar Saldo",
         click(){
-          abrirVentana('provedores/reordenarSaldo.html',400,500)
+          ventanaPrincipal.webContents.send('reordenarSaldo');
+          // abrirVentana('provedores/reordenarSaldo.html',400,500)
         }
       }
     ]
