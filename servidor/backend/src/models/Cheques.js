@@ -15,7 +15,8 @@ const Cheque = new Schema({
         default:""
     },
     f_cheque:{
-        type:Date
+        type:Date,
+        default:Date.now
     },
     i_cheque:{
         type:Number,
