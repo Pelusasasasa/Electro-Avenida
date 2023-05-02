@@ -15,16 +15,19 @@ const buscador = document.querySelector('#buscador');
 const totalInput = document.querySelector('#total');
 
 const hoy = document.querySelector('#hoy');
+const totalResumen = document.querySelector('#totalResumen');
 
 const agregar = document.querySelector('.agregar');
 const sumar = document.querySelector('#sumar');
 const exportar = document.querySelector('#exportar');
+const eliminarVarios = document.querySelector('#eliminarVarios');
 const salir = document.querySelector('.salir');
 
 let total = 0;
 let tarjetas = [];
-let seleccionado
-let subSeleccionado
+let seleccionado;
+let subSeleccionado;
+let aux = 0;
 
 let date = new Date();
 
@@ -72,8 +75,19 @@ tbody.addEventListener('click',async e=>{
         }else if(e.target.nodeName === "SPAN"){
             seleccionado = e.target.parentNode.parentNode.parentNode;
             subSeleccionado = e.target.parentNode.parentNode
+        }else if(e.target.nodeName === "INPUT"){
+            seleccionado = e.target.parentNode.parentNode.parentNode;
+            subSeleccionado = e.target.parentNode.parentNode;
+            if (e.target.checked) {
+                aux += parseFloat(seleccionado.children[3].innerText);
+            }else{
+                aux -= parseFloat(seleccionado.children[3].innerText);
+            }
+            totalResumen.parentNode.classList.remove('none')
+            totalResumen.value = redondear(aux,2);
+            
+            totalResumen.value === "0.00" && totalResumen.parentNode.classList.add('none');
         }
-
         seleccionado.classList.add('seleccionado');
         subSeleccionado.classList.add('subSeleccionado');
 
@@ -142,6 +156,7 @@ const listar = async(tarjetas)=>{
         const tdImporte = document.createElement('td');
         const tdVendedor = document.createElement('td');
         const tdAcciones = document.createElement('td');
+        const tdEliminarVarios = document.createElement('td');
 
         const fecha = tarjeta.fecha.slice(0,10).split('-',3);
         
@@ -158,6 +173,11 @@ const listar = async(tarjetas)=>{
                 <span class=material-icons>delete</span>
             </div>
         `
+        tdEliminarVarios.innerHTML = `
+            <div class="divEliminarVarios">
+                <input type="checkbox" class="eliminarVarios" id="${tarjeta._id}" name="hoy">
+            </div>
+        `
 
         tdAcciones.classList.add('acciones');
         total += tarjeta.imp;
@@ -168,6 +188,7 @@ const listar = async(tarjetas)=>{
         tr.appendChild(tdImporte);
         tr.appendChild(tdVendedor);
         tr.appendChild(tdAcciones);
+        tr.appendChild(tdEliminarVarios);
 
         tbody.appendChild(tr)
     }
@@ -199,6 +220,8 @@ exportar.addEventListener('click',e=>{
         tarjetas.forEach(tarjeta=>{
             delete tarjeta._id;
             delete tarjeta.__v;
+            const fecha = tarjeta.fecha.slice(0,10).split('-',3)
+            tarjeta.fecha = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         });
 
         extencion = args.split('.')[1] ? args.split('.')[1] : extencion;
@@ -215,4 +238,27 @@ exportar.addEventListener('click',e=>{
         XLSX.utils.book_append_sheet(wb,newWs,'Tarjetas');
         XLSX.writeFile(wb,path + "." + extencion);
     });
+});
+
+
+eliminarVarios.addEventListener('click',async e=>{
+    const inputs = document.querySelectorAll('tr td input[type=checkbox]');
+    await sweet.fire({
+        title:"Elimiar varias tarjetas?",
+        showCancelButton:true,
+        confirmButtonText:"Aceptar"
+    }).then(async({isConfirmed})=>{
+       if (isConfirmed) {
+        for await(let input of inputs){
+            if (input.checked) {
+                await axios.delete(`${URL}tarjetas/id/${input.id}`);
+                tbody.removeChild(input.parentNode.parentNode.parentNode);
+                totalResumen.value = "0.00";
+                aux = 0;
+                totalResumen.parentNode.classList.add('none'); 
+            }
+        };
+       } 
+    });
+    
 });

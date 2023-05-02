@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const router = Router();
 
-const {post, getdesdeDate, putForId, getForNumeroComp} = require('../controllers/ctate_pro.controllers');
+const {post, getdesdeDate, putForId, getForNumeroComp, getAllForProvedor} = require('../controllers/ctate_pro.controllers');
 
 router.route('/')
     .post(post)
@@ -11,5 +11,6 @@ router.route('/id/:id')
     .put(putForId)
 router.route('/numero/:numero')
     .get(getForNumeroComp)
-
+router.route('/codigo/:codigo')
+    .get(getAllForProvedor)
 module.exports = router

@@ -76,8 +76,14 @@ tbody.addEventListener('click',e=>{
     subSeleccionado.classList.add('subSeleccionado');
 
     if (e.target.nodeName === "BUTTON") {
-        const venta = ventas.find(elem =>elem.nro_comp === seleccionado.id);
-        ipcRenderer.send('imprimir-venta',[venta,,false,1,"Ticket Factura",,]);
+        if (seleccionado.children[2].innerText === "Recibos") {
+            const recibo = recibos.find(elem => elem.nro_comp === seleccionado.id);
+            ipcRenderer.send('imprimir-venta',[recibo,,false,1,"Recibos",,]);
+        }else{
+            const venta = ventas.find(elem =>elem.nro_comp === seleccionado.id);
+            ipcRenderer.send('imprimir-venta',[venta,,false,1,"Ticket Factura",,]);
+        }
+        
     }
 })
 
@@ -126,6 +132,7 @@ const listar = async(lista)=>{
 const listarRecibos = async(recibos)=>{
     for await(let recibo of recibos){
         const tr = document.createElement('tr');
+        tr.id = recibo.nro_comp;
 
         const tdFecha = document.createElement('td');
         const tdCliente = document.createElement('td');
@@ -155,7 +162,7 @@ const listarRecibos = async(recibos)=>{
         tr.appendChild(tdImporte);
         tr.appendChild(tdImprimir);
 
-        tbody.appendChild(tr)
+        // tbody.appendChild(tr)
         
     }
 }

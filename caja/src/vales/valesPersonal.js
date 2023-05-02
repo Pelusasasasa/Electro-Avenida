@@ -44,6 +44,7 @@ buscador.addEventListener('keyup',e=>{
 });
 
 const listarVales = (vales)=>{
+    total = 0;
     tbody.innerHTML = "";
     for(let vale of vales){
     const tr = document.createElement('tr');

@@ -1,4 +1,5 @@
 const { ipcRenderer } = require("electron")
+const puppetter = require('puppeteer');
 
 ipcRenderer.send('abrir-menu');
 const axios = require("axios");
@@ -8,25 +9,30 @@ let vendedores = [];
 
 const notificaciones = require('node-notifier');
 window.addEventListener('load',async e=>{
+    setTimeout(async ()=>{
+        const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
+        const dolarBNA = parseFloat((await avisarDolar()).replace(',','.')) + 1;
+        
+        if (dolarBNA !== dolarSistema) {
+            notificaciones.notify({
+                title:"Dolares distintos",
+                message:`El dolar del sistema: ${dolarSistema} es distinto al dolar de el BNA: ${dolarBNA}`
+            });
+        }
+    },0)
     vendedores = (await axios.get(`${URL}usuarios`)).data;
-    // avisarDolar();
 });
 
 const avisarDolar = async()=>{
-    const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
-    const dolarInternet = parseFloat((await axios.get('https://api-dolar-argentina.herokuapp.com/api/nacion')).data.venta) + 1;
-
-    if (dolarInternet !== dolarSistema) {
-        notificaciones.notify({
-            title:"Dolares distintos",
-            message:`El dolar del sistema: ${dolarSistema.toFixed(2)} es distinto del dolar de internet: ${dolarInternet.toFixed(2)}`,
-            sound:true,
-            wait:false
-        })
-    }
-    setTimeout(() => {
-        avisarDolar();
-    }, 960000);
+   const browser = await puppetter.launch();
+   const page = await browser.newPage();
+   await page.goto('https://www.bna.com.ar/Personas');
+    const selector = '.cotizacion';
+    const dolares = await page.evaluate(()=>{
+        const tr = document.querySelector('.cotizacion tbody tr ');
+        return tr.children[2].innerText
+    });
+    return dolares;
 }
 
 const listaPedidos = document.querySelector('.listaPedidos')

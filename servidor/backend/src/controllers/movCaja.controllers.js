@@ -10,8 +10,8 @@ movCajaCTRL.post = async(req,res)=>{
     try {
         await movCaja.save();
     } catch (error) {
-        console.log(`El error fue en la fecha ${req.body.fecha}`)
-        console.log(error)
+        console.log("Error en " + req.body.fecha + "Con el numero de comprobante " + req.body.nro_comp + "Y tipo " + req.body.tPago + "Y descripcion " + req.body.desc );
+        console.log(error);
     }
     console.log(`Movimiento de caja ${req.body.desc} cargado a la hora ${req.body.fecha}`);
     res.send(`Moviemiento de caja Cargado`);

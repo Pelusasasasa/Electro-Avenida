@@ -4,6 +4,7 @@ require("dotenv").config;
 const URL = process.env.URL;
 
 const {copiar, recorrerFlechas, redondear, botonesSalir} = require('../funciones');
+const { ipcRenderer } = require('electron');
 
 const tbody = document.querySelector("tbody");
 const eliminarPedido = document.querySelector('.eliminarPedido');
@@ -37,7 +38,6 @@ window.addEventListener('load',async e=>{
         const tdStock = document.createElement('td');
         const tdEstado = document.createElement('td');
         const tdObservacion = document.createElement('td');
-
         const inputEstado = document.createElement('input');
 
         //clases
@@ -119,6 +119,28 @@ tbody.addEventListener("click" , e=>{
     })
 });
 
+tbody.addEventListener('dblclick',async e=>{
+    await sweet.fire({
+        title:"Cambiar pedido",
+        html:`
+            <label for="cliente">Cliente</label>
+            <input type="text" value="${seleccionado.children[4].innerText}" name="cliente" id="cliente"/>
+            <label for="">Numero</label>
+            <input type="tel" value="${seleccionado.children[5].innerText}" name="numero" id="numero"/>
+        `,
+        confirmButtonText:"Aceptar",
+        showCancelButton:true
+    }).then(async({isConfirmed})=>{
+        if (isConfirmed){
+            seleccionado.children[4].innerText = document.getElementById('cliente').value.toUpperCase();
+            seleccionado.children[5].innerText = document.getElementById('numero').value;
+            const pedido = (await axios.get(`${URL}pedidos/${seleccionado.id}`)).data;
+            pedido.cliente = seleccionado.children[4].innerText;
+            pedido.telefono = seleccionado.children[5].innerText;
+            await axios.put(`${URL}pedidos/${seleccionado.id}`,pedido);
+        }
+    });
+});
 
 //Eliminar un pedido
 eliminarPedido.addEventListener("click", async e =>{

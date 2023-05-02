@@ -109,6 +109,14 @@ table button:hover{
     margin: .5rem 0;
 }
 
+.ingresarVarios .inputs #puntoVenta{
+    width: 7rem;
+}
+
+.ingresarVarios .inputs #nro_comp{
+    width: 12rem;
+}
+
 .ingresarVarios .inputs main input{
     font-size: 1.8rem;
 }

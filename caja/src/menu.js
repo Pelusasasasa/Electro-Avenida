@@ -185,3 +185,56 @@ const reingresarContraseña = async()=>{
         }
     });
 };
+
+
+ipcRenderer.on('reordenarSaldo',async e=>{
+    let select = ""
+    const provedores = (await axios.get(`${URL}provedor`)).data;
+    provedores.sort((a,b)=>{
+        if (a.provedor>b.provedor) {
+            return 1
+        }else if(a.provedor < b.provedor){
+            return -1
+        }
+        return 0
+    })
+    for(let provedor of provedores){
+        const option = document.createElement('option');
+        option.value = provedor._id;
+        option.text = provedor.provedor;
+        select += `<option value="${provedor.codigo}">${provedor.provedor}</option>`;
+    }
+    await sweet.fire({
+        title:"Provedores",
+        html:`
+            <select name="provedores" autofocus id="provedores">
+            ${select}
+            </select>
+        `,
+        showCancelButton:true,
+        confirmButtonText:"Aceptar",
+    }).then(async({isConfirmed})=>{
+        if (isConfirmed) {
+            const codigo = document.getElementById('provedores').value;
+            const cuentas = (await axios.get(`${URL}ctactePro/codigo/${codigo}`)).data;
+            cuentas.sort((a,b)=>{
+                if (a.fecha>b.fecha) {
+                    return 1
+                }else if (a.fecha<b.fecha) {
+                    return -1
+                }
+                return 0
+            });
+            let saldo = 0;
+            cuentas.forEach(async cuenta => {
+                saldo += cuenta.debe;
+                cuenta.saldo = saldo;
+                await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta)
+            });
+            sweet.fire({
+                title:"Saldo reodenado",
+                icon:"success"
+            })
+        }
+    });
+})

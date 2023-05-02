@@ -325,11 +325,12 @@ tbodyCheque.addEventListener('click',e=>{
         const tr = e.target.parentNode.parentNode;
         totalCheque.value = redondear(parseFloat(totalCheque.value) - parseFloat(tr.children[3].innerHTML),2);
         tbodyCheque.removeChild(tr);
+        const index = listaCheques.findIndex(elem=>elem.n_cheque = e.target.parentNode.parentNode.children[0].innerText);
+        listaCheques.splice(index,1);
     }
 });
 
 aceptar.addEventListener('click',async e=>{
-
     await cambiarNumeroComprobantePago(document.querySelectorAll('#tbodyComprobante tr'));
     await cargarChequesPropios(listaCheques)
     await ponerEnComprobantePagos();
