@@ -16,8 +16,9 @@ require("dotenv").config;
 const URL = process.env.URL;
 
 //Es lo que viene en la URL
-let vendedor = getParameterByName('vendedor')
-let empresa = getParameterByName('empresa')
+let vendedor = getParameterByName('vendedor');
+let empresa = getParameterByName('empresa');
+let botones = getParameterByName('botones') === "false" ? false : true;
 
 const usuario = document.querySelector(".usuario")
 const textoUsuario = document.createElement("P")
@@ -69,6 +70,7 @@ const ticketFactura = document.querySelector('.ticketFactura')
 const borrarProducto = document.querySelector('.borrarProducto')
 const inputEmpresa = document.querySelector('#empresa');
 const alerta = document.querySelector('.alerta');
+const prestamo = document.querySelector('.prestamo');
 const cancelar = document.querySelector('.cancelar');
 
 //variables para caundo usamos el facturar varias facturas
@@ -89,6 +91,14 @@ let arregloProductosDescontarStock = [];
 
 window.addEventListener('load',async e=>{
     copiar();
+    if (!botones) {
+        mostrarNegro();
+        remito.classList.add('none');
+        tiposVentas[1].parentNode.parentNode.classList.add('none'); 
+        presupuesto.classList.add('none');
+        tipoVenta = "Prestamo";
+        prestamo.classList.remove('none');
+    }
 });
 
 //funciones para alt f9 y alt f8
@@ -489,20 +499,20 @@ async function sacarStock(cantidad,objeto) {
 //INICIO MOVPRODUCTOS
 
 //Registramos un movimiento de producto
-async function movimientoProducto(cantidad,objeto,idCliente,cliente,tipo_pago){
+async function movimientoProducto(cantidad,objeto,idCliente,cliente,tipo_pago,tipo_comp,nro_comp,vendedor){
     let movProducto = {}
     movProducto.codProd = objeto._id
     movProducto.descripcion = `${objeto.descripcion} ${objeto.marca ? objeto.marca :""} ${objeto.cod_fabrica ? objeto.cod_fabrica : ""}`;
     movProducto.codCliente = idCliente;
     movProducto.cliente = cliente;
-    movProducto.comprobante = tipoVenta
-    movProducto.tipo_comp = venta.tipo_comp
-    movProducto.nro_comp=venta.nro_comp
-    movProducto.egreso = cantidad
+    movProducto.comprobante = tipoVenta;
+    movProducto.tipo_comp = tipo_comp;
+    movProducto.nro_comp = nro_comp;
+    movProducto.egreso = cantidad;
     movProducto.stock = tipo_pago === "PP" ? objeto.stock : parseFloat((parseFloat(objeto.stock) - cantidad).toFixed(2));
     movProducto.precio_unitario=objeto.precio_venta
     movProducto.total=(parseFloat(movProducto.egreso)*parseFloat(movProducto.precio_unitario)).toFixed(2)
-    movProducto.vendedor = venta.vendedor;
+    movProducto.vendedor = vendedor;
     movProducto.rubro = objeto.rubro;
     movProducto.tipo_pago = tipo_pago;
     console.log(movProducto.tipo_pago)
@@ -651,7 +661,7 @@ presupuesto.addEventListener('click',async (e)=>{
                         if(venta.tipo_pago !== "PP"){
                             producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
                         }
-                        await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente,venta.tipo_pago);
+                        await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente,venta.tipo_pago,venta.tipo_comp,venta.nro_comp,venta.vendedor);
                     };
 
                     if (venta.tipo_pago !== "PP") {
@@ -690,6 +700,42 @@ presupuesto.addEventListener('click',async (e)=>{
     }
 });
 
+prestamo.addEventListener('click',async e=>{
+    let prestamo = {}
+
+    prestamo.fecha = new Date();
+    prestamo.codigo = codigoC.value;
+    prestamo.cliente = nombre.value.toUpperCase();
+    prestamo.direccion = direccion.value.toUpperCase();
+    prestamo.localidad = localidad.value.toUpperCase();
+    prestamo.telefono = telefono.value;
+    prestamo.dnicuit = dnicuit.value;
+    prestamo.condIva = conIva.value;
+    prestamo.tipo_comp = "Prestamo";
+    prestamo.vendedor = vendedor;
+    prestamo.observaciones = observaciones.value.toUpperCase();
+    let numeros = (await axios.get(`${URL}tipoVenta`)).data;
+    let ultimoNumeroPrestamo = parseInt(numeros["Ultimo Prestamo"].split('-',2)[1]) + 1;
+    prestamo.nro_comp = "0007-" + ultimoNumeroPrestamo.toString().padStart(8,'0');
+    numeros["Ultimo Prestamo"] = prestamo.nro_comp;
+    //Actualizamos el ultimo prestamo
+    await axios.put(`${URL}tipoventa`,numeros);
+
+    //Moviento de producto
+    for(let {cantidad,objeto} of listaProductos){
+        movimientoProducto(cantidad,objeto,prestamo.codigo,prestamo.cliente,"PR",prestamo.tipo_comp,prestamo.nro_comp,prestamo.vendedor);
+        objeto._id !== "999-999" &&  await sacarStock(cantidad,objeto);
+    };
+    await axios.post(`${URL}movProductos`,arregloMovimiento);
+    //Fin Moviento de Producto
+
+    //Descontar Stock
+    await axios.put(`${URL}productos`,arregloProductosDescontarStock);
+    //Fin Descontar Stock
+    await axios.post(`${URL}prestamos`,prestamo);
+    console.log(prestamo);
+});
+
 
 //Cuando apretamos el boton de remito
 remito.addEventListener('click',async e=>{
@@ -709,7 +755,7 @@ remito.addEventListener('click',async e=>{
     console.log(venta)
 
     for await(let producto of listaProductos){
-        await movimientoProducto(producto.cantidad,producto.objeto,codigoC.value,nombre.value,"RT");
+        await movimientoProducto(producto.cantidad,producto.objeto,codigoC.value,nombre.value,"RT",venta.tipo_pago,venta.tipo_comp,venta.nro_comp,venta.vendedor);
     }
 
     await axios.post(`${URL}movProductos`,arregloMovimiento);
@@ -808,7 +854,7 @@ ticketFactura.addEventListener('click',async (e) =>{
                             if (venta.tipo_pago !== "PP") {
                                 producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
                             }
-                            await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente);
+                            await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente,venta.tipo_pago,venta.tipo_comp,venta.nro_comp,venta.vendedor);
                         }
                         if (venta.tipo !== "PP") {
                            await axios.put(`${URL}productos`,arregloProductosDescontarStock);

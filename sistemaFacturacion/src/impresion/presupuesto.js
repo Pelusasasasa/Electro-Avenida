@@ -39,13 +39,17 @@ const { ipcRenderer } = require("electron");
             const segundo = tomarFecha.getSeconds();
 
             numero.innerHTML=venta.nro_comp;
-            clientes.innerHTML = cliente.cliente;
             venta.observaciones !== "" ? clientes.innerHTML += ` (${venta.observaciones})` : "";
+
+            //Parte Cliente
+            clientes.innerHTML = cliente.cliente;
             idCliente.innerHTML = cliente._id ? cliente._id : cliente.id;
             vendedor.innerHTML = venta.vendedor;
             cuit.innerHTML = cliente.cuit;
             direccion.innerHTML = cliente.direccion;
             localidad.innerHTML = cliente.localidad;
+            //Fin Parte Cliente
+
             fecha.innerHTML = `${dia}/${mes}/${anio} ${hora}:${minuto}:${segundo}`;
             numeroComp.innerHTML = venta.nro_comp;
             subtotal.innerHTML =  venta.descuento ? (parseFloat(venta.precioFinal)+parseFloat(venta.descuento)).toFixed(2) : 0;

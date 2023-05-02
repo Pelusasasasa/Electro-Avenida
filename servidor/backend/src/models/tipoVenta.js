@@ -11,6 +11,7 @@ const tipoVenta = new Schema({
    "Ultima N Debito A":String,
    "Ultima N Debito B":String,
    "Ultimo Recibo": String,
+   "Ultimo Prestamo": String,
    "Ultimo Presupuesto": String,
    "Ultimo Remito": String,
    "Ultimo Remito Contado": String,

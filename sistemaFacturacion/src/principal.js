@@ -39,7 +39,8 @@ const cuentaCorriente = document.querySelector('.cuentaCorriente');
 const notaCredito = document.querySelector('.notaCredito');
 const productos = document.querySelector('.productos');
 const clientes = document.querySelector('.clientes');
-const flecha = document.querySelector('.flecha')
+const flecha = document.querySelector('.flecha');
+const salir = document.querySelector('.salir');
 
 listaPedidos.addEventListener('click', (e) =>{
     const handlePedidos = document.querySelector('.handlePedidos')
@@ -92,7 +93,7 @@ body.addEventListener('keydown',e=>{
     }else if(e.key === "F3"){
         validacionUsuario("clientes/clientes.html");
     }
-})
+});
 
 let vendedor
 let acceso
@@ -101,7 +102,7 @@ const sweet = require('sweetalert2');
 const { verEstadoServidorAfip } = require("./funciones");
 
 verEstadoServidorAfip()
-async function validacionUsuario(texto) {
+async function validacionUsuario(texto,botones = true) {
     sweet.fire({
                 title:"Contraseña",
                 input:"password",
@@ -123,7 +124,7 @@ async function validacionUsuario(texto) {
                         value === e._id && (empresa = e.empresa)
                     })
                     if(vendedor !== undefined){ 
-                        window.location = `${texto}?vendedor=${vendedor}&acceso=${acceso}&empresa=${empresa}`;
+                        window.location = `${texto}?vendedor=${vendedor}&acceso=${acceso}&empresa=${empresa}&botones=${botones}`;
                         ipcRenderer.send('cerrar-menu');
                     }else{
                         await sweet.fire({
@@ -180,9 +181,12 @@ ipcRenderer.on("validarUsuario",(e,args)=>{
                 }
             }
         })
-})
+});
 
-const salir = document.querySelector('.salir');
+ipcRenderer.on('abrir-prestamo',(e)=>{
+    validacionUsuario("emitirComprobante/emitirComprobante.html",false);
+});
+
 salir.addEventListener('click',async e=>{
     sweet.fire({
         title:"Desea Salir ?",
@@ -193,5 +197,7 @@ salir.addEventListener('click',async e=>{
             window.close();
         }
     })
-})
+});
+
+
 

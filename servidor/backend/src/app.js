@@ -56,4 +56,6 @@ app.use('/api/ctactePro',require('./routes/ctatePro'));
 app.use('/api/recibos',require('./routes/recibo'));
 //Remitos
 app.use('/api/remitos',require('./routes/remito'));
+//Prestamos
+app.use('/api/prestamos',require('./routes/prestamo'));
 module.exports = app
