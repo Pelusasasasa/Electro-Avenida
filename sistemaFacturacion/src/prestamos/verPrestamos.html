@@ -12,7 +12,7 @@
     <section class="fechas">
         <main>
             <label for="desde">Desde</label>
-            <input type="date" name="desde" id="desde">
+            <input autofocus type="date" name="desde" id="desde">
         </main>
         <main>
             <label for="hasta">Hasta</label>
@@ -26,9 +26,22 @@
                     <th>Fecha</th>
                     <th>Id Cliente</th>
                     <th>Cliente</th>
+                    <th>Nro Comp</th>
                 </tr>
             </thead>
             <tbody></tbody>
+        </table>
+    </section>
+    <section class="detallesProducto none">
+        <p class="cerrarVentana">X</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Cod_Prod</th>
+                    <th>Producto</th>
+                </tr>
+            </thead>
+            <tbody id="detalle"></tbody>
         </table>
     </section>
 </body>
