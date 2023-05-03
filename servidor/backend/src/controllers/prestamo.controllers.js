@@ -12,4 +12,17 @@ prestamoCTRL.post = async(req,res)=>{
     res.end();
 };
 
+prestamoCTRL.getBetweenDate = async(req,res)=>{
+    const {desde,hasta} = req.params;
+    console.log(new Date(desde + "T00:00:00"));
+    console.log(hasta);
+    const prestamos = await Prestamo.find({
+        $and:[
+            {fecha: {$gte: new Date(desde + "T00:00:00.000Z")}},
+            {fecha: {$lte: new Date(hasta + "T23:59:59.000Z")}}
+        ]
+    });
+    res.send(prestamos);
+};
+
 module.exports = prestamoCTRL;

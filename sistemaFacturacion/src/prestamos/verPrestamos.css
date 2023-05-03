@@ -1,0 +1,24 @@
+.fechas{
+    display: flex;
+    justify-content: space-around;
+}
+
+.fechas main{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+label,input{
+    font-size: 2rem;
+}
+
+.table{
+    height: 80vh;
+    border: .1rem solid black;
+    background-color: white;
+}
+
+table{
+    width: 100%;
+}

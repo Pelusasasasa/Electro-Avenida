@@ -194,10 +194,21 @@ const templateMenu = [
         ]
     },
     {
-        label:"Prestamo",
-        click(){
-            ventanaPrincipal.webContents.send('abrir-prestamo');
-        }
+        label:"Prestamos",
+        submenu:[
+            {
+                label:"Realizar Prestamo",
+                click(){
+                    ventanaPrincipal.webContents.send('abrir-prestamo');
+                }
+            },
+            {
+                label:"Ver Prestamos",
+                click(){
+                    ventanaPrincipal.webContents.send('ver-prestamos');
+                }
+            }
+        ]
     },
     {
         label:"",

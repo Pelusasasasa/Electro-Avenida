@@ -193,6 +193,10 @@ ipcRenderer.on('abrir-prestamo',(e)=>{
     validacionUsuario("emitirComprobante/emitirComprobante.html",false);
 });
 
+ipcRenderer.on('ver-prestamos',e=>{
+    location.href = 'prestamos/verPrestamos.html'
+});
+
 salir.addEventListener('click',async e=>{
     sweet.fire({
         title:"Desea Salir ?",

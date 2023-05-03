@@ -25,7 +25,6 @@ window.addEventListener('load',async e=>{
     });
 });
 
-
 modificar.addEventListener('click',async e=>{
     let marca = select.value;
     let porcentaje = parseFloat(porcentajeInput.value);
@@ -46,5 +45,21 @@ modificar.addEventListener('click',async e=>{
         }
         await axios.put(`${URL}productos/${producto._id}`,producto)
         sweet.fire({title:`Se Modifico el precio de los productos ${select.value}`})
+            .then(()=>{
+                location.reload();
+            })
     })
-})
+});
+
+select.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        e.preventDefault();
+        porcentaje.focus();
+    }
+});
+
+porcentaje.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        modificar.focus();
+    }
+});
