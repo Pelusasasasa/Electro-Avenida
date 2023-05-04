@@ -18,7 +18,9 @@
             <label for="hasta">Hasta</label>
             <input type="date" id="hasta" name="hasta">
         </main>
+        <button id="botonAnular">Anular Seleccionados</button>
     </section>
+
     <section class="table">
         <table>
             <thead>
@@ -27,23 +29,31 @@
                     <th>Id Cliente</th>
                     <th>Cliente</th>
                     <th>Nro Comp</th>
+                    <th>Anular</th>
                 </tr>
             </thead>
             <tbody></tbody>
         </table>
     </section>
+
     <section class="detallesProducto none">
-        <p class="cerrarVentana">X</p>
-        <table>
-            <thead>
-                <tr>
-                    <th>Cod_Prod</th>
-                    <th>Producto</th>
-                </tr>
-            </thead>
-            <tbody id="detalle"></tbody>
-        </table>
+        <p id="cerrarVentana">X</p>
+        <div class="detalleTabla">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cod_Prod</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Stock</th>
+                        <th>Precio Unitario</th>
+                    </tr>
+                </thead>
+                <tbody id="detalle"></tbody>
+            </table>
+        </div>
     </section>
+    
 </body>
 <script src="./verPrestamos.js"></script>
 </html>

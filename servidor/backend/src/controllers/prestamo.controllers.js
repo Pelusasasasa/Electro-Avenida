@@ -12,6 +12,19 @@ prestamoCTRL.post = async(req,res)=>{
     res.end();
 };
 
+prestamoCTRL.getForNumber = async(req,res)=>{
+    const {numero} = req.params;
+    const prestamo = await Prestamo.findOne({nro_comp:numero});
+    res.send(JSON.stringify(prestamo));
+};
+
+prestamoCTRL.putForNumber = async(req,res)=>{
+    const {numero} = req.params;
+    await Prestamo.findOneAndUpdate({nro_comp:numero},req.body);
+    console.log(`Prestamo con el numero ${numero} modificado a la hora ${new Date()}`)
+    res.end();
+};
+
 prestamoCTRL.getBetweenDate = async(req,res)=>{
     const {desde,hasta} = req.params;
     console.log(new Date(desde + "T00:00:00"));
@@ -19,7 +32,8 @@ prestamoCTRL.getBetweenDate = async(req,res)=>{
     const prestamos = await Prestamo.find({
         $and:[
             {fecha: {$gte: new Date(desde + "T00:00:00.000Z")}},
-            {fecha: {$lte: new Date(hasta + "T23:59:59.000Z")}}
+            {fecha: {$lte: new Date(hasta + "T23:59:59.000Z")}},
+            {anulado:false}
         ]
     });
     res.send(prestamos);

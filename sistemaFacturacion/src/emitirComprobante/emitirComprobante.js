@@ -733,7 +733,7 @@ prestamo.addEventListener('click',async e=>{
     await axios.put(`${URL}productos`,arregloProductosDescontarStock);
     //Fin Descontar Stock
     await axios.post(`${URL}prestamos`,prestamo);
-    console.log(prestamo);
+    location.href = '../index.html';
 });
 
 

@@ -52,6 +52,10 @@ const Prestamo = new Schema({
     observaciones:{
         type:String,
         default:""
+    },
+    anulado:{
+        type:Boolean,
+        default:false
     }
 });
 
