@@ -50,6 +50,12 @@ table{
     width: 100%;
 }
 
+table thead tr{
+    position: sticky;
+    background-color: #fff;
+    top: 0;
+}
+
 table tr th,table tr td{
     border: .1rem solid black;
 }

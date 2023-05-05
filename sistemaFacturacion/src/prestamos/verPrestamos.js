@@ -31,6 +31,7 @@ tbody.addEventListener('click',mostrarDetalleProducto);
 cerrarVentana.addEventListener('click',closeDetalle);
 botonAnular.addEventListener('click',anularPrestamos);
 
+//Mostramos los prestamos que esten en la base de datos sin anular
 async function traerPrestamos(e) {
     if (e.keyCode === 13) {
         const prestamos = (await axios.get(`${URL}prestamos/betweenDates/${desde.value}/${hasta.value}`)).data;
@@ -42,6 +43,7 @@ async function traerPrestamos(e) {
     }
 };
 
+//Listamos los prestamos traidos
 async function listarPrestamos(lista) {
     tbody.innerText = "";
     for(let elem of lista){
@@ -79,6 +81,7 @@ async function listarPrestamos(lista) {
     }
 };
 
+//si se hace un click en el prestamo se traen los moviminetos de producto
 async function mostrarDetalleProducto(e){
     detallesProducto.classList.remove('none');
 
@@ -96,6 +99,7 @@ async function mostrarDetalleProducto(e){
     listarMovimientos(movimientos);
 };
 
+//Listamos los movimientos de productos
 async function listarMovimientos(lista) {
     detalle.innerText = "";
     for(let elem of lista){
@@ -130,10 +134,12 @@ async function listarMovimientos(lista) {
     }
 };
 
+//Cerramos el section de detalle si apretamos escape o hacemos click en la cruz
 function closeDetalle() {
     detallesProducto.classList.add('none');
 };
 
+//Anulamos el prestamo
 async function anularPrestamos() {
   const inputs = document.querySelectorAll('input[type=checkbox]');
   const arrayAAnular = [];
@@ -146,9 +152,10 @@ async function anularPrestamos() {
   await arreglarStock(arrayAAnular);
   await crearMovimiento(arrayAAnular);
 
-
+  location.reload();
 };
 
+//Modificamos el prestamo poniendo la anulacion en true
 async function putAPrestamo(lista) {
     for(let numero of lista){
         let prestamo = (await axios.get(`${URL}prestamos/forNumber/${numero}`)).data;
@@ -157,6 +164,7 @@ async function putAPrestamo(lista) {
       }
 };
 
+//Arregalmos el stock depèndiendo de si suma o se resta para la anulacion
 async function arreglarStock(lista) {
   for(let elem of lista){
     const movimientos = (await axios.get(`${URL}movProductos/${elem}/Prestamo`)).data;
@@ -168,11 +176,32 @@ async function arreglarStock(lista) {
   }  
 };
 
+//Se crea un movimiento por cada producto que este en los prestamos para informar que se anulo
 async function crearMovimiento(lista) {
+    let nuevoArreglo = [];
     for(let elem of lista){
+        const movimientos = (await axios.get(`${URL}movProductos/${seleccionado.id}/Prestamo`)).data;
         
-    }
-}
+        for(let mov of movimientos){
+            console.log(mov)
+            const movimiento = {};
+            movimiento.codCliente = mov.codCliente;
+            movimiento.cliente = mov.cliente;
+            movimiento.codProd = mov.codProd;
+            movimiento.descripcion = mov.descripcion;
+            movimiento.fecha = new Date();
+            movimiento.nro_comp = "0000-00000000";
+            movimiento.tipo_comp = "Anulacion";
+            movimiento.tipo_pago = "AN";
+            movimiento.ingreso = mov.egreso;
+            movimiento.stock = mov.stock + mov.egreso ;
+            movimiento.precio_unitario = mov.precio_unitario;
+            movimiento.total = mov.total;
+            nuevoArreglo.push(movimiento);
+        };
+    };
+    (await axios.post(`${URL}movProductos`,nuevoArreglo));
+};
 
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {

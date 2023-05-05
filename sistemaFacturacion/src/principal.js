@@ -8,6 +8,7 @@ const URL = process.env.URL;
 let vendedores = [];
 
 const notificaciones = require('node-notifier');
+
 window.addEventListener('load',async e=>{
     setTimeout(async ()=>{
         const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
@@ -19,8 +20,9 @@ window.addEventListener('load',async e=>{
                 message:`El dolar del sistema: ${dolarSistema} es distinto al dolar de el BNA: ${dolarBNA}`
             });
         }
+
+        vendedores = (await axios.get(`${URL}usuarios`)).data;
     },0)
-    vendedores = (await axios.get(`${URL}usuarios`)).data;
 });
 
 const avisarDolar = async()=>{
@@ -33,7 +35,7 @@ const avisarDolar = async()=>{
         return tr.children[2].innerText
     });
     return dolares;
-}
+};
 
 const listaPedidos = document.querySelector('.listaPedidos')
 const body = document.querySelector('body')
@@ -87,7 +89,6 @@ resumenCuenta.addEventListener('click',e=>{
 notaCredito.addEventListener('click',e=>{
     validacionUsuario("emitirComprobante/emitirNotaCredito.html")
 });
-
 
 body.addEventListener('keydown',e=>{
     if (e.key === "F1") {

@@ -150,7 +150,12 @@ cheque.addEventListener('click',e=>{
         path:"cheques/agregar-modificarCheques.html",
         width:500,
         height:600,
-        cerrarVentana:true
+        cerrarVentana:true,
+        informacionAgregar:{
+            cliente:seleccionado.children[2].innerText,
+            vendedor:seleccionado.children[6].innerText,
+            imp:parseFloat(seleccionado.children[5].innerText)
+        }
     });
 });
 
@@ -181,7 +186,6 @@ ipcRenderer.on('recibir-informacion',(e,args)=>{
     if(args === "tarjeta cargada"){
         aceptar.click();
     }else if(args === "Cheque cargado"){
-        console.log("a")
         aceptar.click();
     }
 });

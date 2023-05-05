@@ -187,6 +187,13 @@ h1{
     overflow: scroll;
 }
 
+table thead tr{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #fff;
+}
+
 table tr th{
     border: .1rem solid black;
 }
