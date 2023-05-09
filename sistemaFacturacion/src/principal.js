@@ -108,43 +108,43 @@ let empresa
 const sweet = require('sweetalert2');
 const { verEstadoServidorAfip } = require("./funciones");
 
-verEstadoServidorAfip()
-async function validacionUsuario(texto,botones = true) {
-    sweet.fire({
-                title:"Contraseña",
-                input:"password",
-                showCancelButton: true,
-                width:600,
-                size:"2rem",
-                confirmButtonText: 'Aceptar',
-                inputAttributes:{
-                    autofocus: "on"
-                }
-             })
-             .then(async ({value})=>{
-                if (value === "" || value === undefined) {
-                    location.reload();
-                }else{
-                    vendedores.forEach(e=>{
-                        value === e._id && (vendedor=e.nombre)
-                        value === e._id && (acceso = e.acceso)
-                        value === e._id && (empresa = e.empresa)
-                    })
-                    if(vendedor !== undefined){ 
-                        window.location = `${texto}?vendedor=${vendedor}&acceso=${acceso}&empresa=${empresa}&botones=${botones}`;
-                        ipcRenderer.send('cerrar-menu');
-                    }else{
-                        await sweet.fire({
-                            title:"Contraseña incorrecta"
-                        })
-                        validacionUsuario(texto)
-                    }
-                }
-       })
-       .catch(()=>{
-        location.reload()
-       })
-}
+// verEstadoServidorAfip()
+// async function validacionUsuario(texto,botones = true) {
+//     sweet.fire({
+//                 title:"Contraseña",
+//                 input:"password",
+//                 showCancelButton: true,
+//                 width:600,
+//                 size:"2rem",
+//                 confirmButtonText: 'Aceptar',
+//                 inputAttributes:{
+//                     autofocus: "on"
+//                 }
+//              })
+//              .then(async ({value})=>{
+//                 if (value === "" || value === undefined) {
+//                     location.reload();
+//                 }else{
+//                     vendedores.forEach(e=>{
+//                         value === e._id && (vendedor=e.nombre)
+//                         value === e._id && (acceso = e.acceso)
+//                         value === e._id && (empresa = e.empresa)
+//                     })
+//                     if(vendedor !== undefined){ 
+//                         window.location = `${texto}?vendedor=${vendedor}&acceso=${acceso}&empresa=${empresa}&botones=${botones}`;
+//                         ipcRenderer.send('cerrar-menu');
+//                     }else{
+//                         await sweet.fire({
+//                             title:"Contraseña incorrecta"
+//                         })
+//                         validacionUsuario(texto)
+//                     }
+//                 }
+//        })
+//        .catch(()=>{
+//         location.reload()
+//        })
+// }
 
 ipcRenderer.on("validarUsuario",(e,args)=>{
 

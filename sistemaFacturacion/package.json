@@ -20,32 +20,25 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.63",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
-    "electron": "^19.0.5",
-    "gulp-autoprefixer": "^6.1.0",
+    "electron": "^24.2.0",
     "gulp-postcss": "^9.0.1",
-    "gulp-sass": "^5.0.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "gulp-util": "^1.0.0",
-    "sass": "^1.44.0"
+    "gulp-sourcemaps": "^3.0.0"
   },
   "dependencies": {
-    "@afipsdk/afip.js": "^0.7.1",
-    "axios": "^0.24.0",
-    "cssnano": "^5.0.7",
+    "@afipsdk/afip.js": "^0.7.8",
+    "axios": "^1.4.0",
     "cuit-validator": "^1.0.0",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.0.3",
     "electron-osx-prompt": "^1.4.1",
     "electron-prompt": "^1.7.0",
-    "electron-reload": "^1.5.0",
+    "electron-reload": "^2.0.0-alpha.1",
     "electron-squirrel-startup": "^1.0.0",
-    "gulp": "^4.0.2",
-    "luxon": "^2.0.2",
+    "luxon": "^3.3.0",
     "node-notifier": "^10.0.1",
-    "postcss": "^8.3.6",
-    "puppeteer": "^19.9.1",
-    "qrcode": "^1.5.0",
-    "sweetalert2": "^11.4.17",
-    "xlsx": "^0.17.1"
+    "puppeteer": "^20.1.2",
+    "qrcode": "^1.5.3",
+    "sweetalert2": "^11.4.8",
+    "xlsx": "^0.18.5"
   },
   "config": {
     "forge": {
