@@ -37,6 +37,8 @@ const avisarDolar = async()=>{
     return dolares;
 };
 
+console.log("a")
+
 const listaPedidos = document.querySelector('.listaPedidos')
 const body = document.querySelector('body')
 const emitirComprobante = document.querySelector('.emitirComprobante')
