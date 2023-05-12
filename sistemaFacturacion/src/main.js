@@ -281,3 +281,11 @@ const mainMenu = Menu.buildFromTemplate(templateMenu)
 
 Menu.setApplicationMenu(mainMenu)
 module.exports = { crearVentanaPrincipal, abrirVentana }
+
+autoUpdater.on('actualización-disponible', () => { 
+    mainWindow.webContents.send('actualización_disponible'); 
+});
+
+autoUpdater.on('actualización-descargada', () => { 
+   mainWindow.webContents.send('actualización_descargada'); 
+});

@@ -7,13 +7,9 @@ const axios = require('axios');
 require('dotenv').process;
 const URL = process.env.URL;
 const sweet = require('sweetalert2');
-let Afip
-try {
-    Afip = require('@afipsdk/afip.js');
-    const afip = new Afip({ CUIT: 27165767433 });
-} catch (error) {
-    console.log(error)
-}
+
+const Afip = require('@afipsdk/afip.js');
+const afip = new Afip({ CUIT: 27165767433 });
 
 function redondear(numero,decimales){
     const signo = numero >= 0 ? 1 : -1;
