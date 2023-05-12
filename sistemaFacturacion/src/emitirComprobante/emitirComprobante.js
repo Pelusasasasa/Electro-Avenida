@@ -5,9 +5,6 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-const Afip = require('@afipsdk/afip.js');
-const afip = new Afip({ CUIT: 27165767433 });
-
 const sweet = require('sweetalert2');
 const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago} = require('../funciones');
 const { ipcRenderer } = require("electron");
@@ -1020,7 +1017,6 @@ const borrarUnProductoDeLaLista =async  (productoSeleccionado)=>{
                         totalPrecioProductos -= (e.objeto.precio_venta*e.cantidad);
                 }
             };
-            console.log(productoSeleccionado)
             productoSeleccionado.parentNode.removeChild(productoSeleccionado);
             seleccionado = "";
             subSeleccionado = "";
@@ -1339,6 +1335,73 @@ function ocultarNegro() {
     ventaValorizado.classList.add('none')
     imprimirCheck.classList.add('none')
 }
+
+
+//Seccion de Facturar Prestamos
+let arregloPrestamo = JSON.parse(getParameterByName('arregloPrestamo'));
+let facturarPrestamo = JSON.parse(getParameterByName('facturarPrestamo'));
+let botonFacturarPrestamos = document.getElementById('facturar-prestamo');
+botonFacturarPrestamos.addEventListener('click',hacerFacturaParaPrestamos);
+
+if (facturarPrestamo) {
+    mostrarNegro();//Mostramos devuelta en negro
+
+    observaciones.value = getParameterByName('observaciones');
+    inputEmpresa.value = "Electro Avenida";
+    buscarAfip.classList.add('none')//Saco boton Inecesario
+    botonFacturarPrestamos.classList.remove('none');//Saco boton Inecesario
+    ticketFactura.classList.add('none');//Saco boton Inecesario
+    remito.classList.add('none')//Saco boton Inecesario
+    presupuesto.classList.add('none');//Saco boton Inecesario
+    cuentaCorriente.parentNode.parentNode.classList.add('none');//Saco input Inecesario
+
+    rellenarConPrestamo(arregloPrestamo);
+};
+//En esta funcion rellenamos los datos del cliente, productos con los prestamos;
+
+async function rellenarConPrestamo(arreglo) {
+    //Traemos los movimientos del prestamo
+    let aux = [];
+    const movimientos = await traerMovimientosPrestamo(arreglo);
+    const productos = await traerProductosPrestamo(movimientos);
+    for (let i = 0; i < productos.length; i++) {
+        mostrarVentas(productos[i],movimientos[i].egreso)
+    };
+    await listarClientePrestamo(movimientos[0]);
+    
+}
+
+async function listarClientePrestamo(movimiento) {
+    let {codCliente} = movimiento;
+    codigoC.value = codCliente;
+    codigoC.dispatchEvent(new KeyboardEvent('keypress', {'key': 'Enter'}));
+}
+
+async function traerMovimientosPrestamo(arreglo){
+    let moviminetosPrestamos = [];
+    for(let elem of arreglo){
+        const movimiento = (await axios.get(`${URL}movProductos/${elem}/Prestamo`)).data;
+        moviminetosPrestamos.push(movimiento[0]);
+    };    
+    return moviminetosPrestamos;
+};
+
+async function traerProductosPrestamo(arreglo) {
+    let listaProductos = [];
+    for await(let {codProd} of arreglo){
+        const producto = (await axios.get(`${URL}productos/${codProd}`)).data;
+        listaProductos.push(producto)
+    };
+    return listaProductos
+};
+
+async function hacerFacturaParaPrestamos(){
+    console.log(arregloPrestamo)
+}
+
+
+//Seccion de Facturar Prestamos
+
 
 observaciones.addEventListener('keypress',e=>{
     if (e.key==='Enter') {

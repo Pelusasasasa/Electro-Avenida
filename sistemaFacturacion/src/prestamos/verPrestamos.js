@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { ipcRenderer } = require('electron');
 require('dotenv');
 const URL = process.env.URL;
 
@@ -10,7 +11,7 @@ const detallesProducto = document.querySelector('.detallesProducto');
 const detalle = document.getElementById('detalle');
 const cerrarVentana = document.getElementById('cerrarVentana');
 
-const botonAnular = document.getElementById('botonAnular');
+const botonFacturar = document.getElementById('botonFacturar');
 
 /* Variables */
 let seleccionado = "";
@@ -29,7 +30,7 @@ desde.addEventListener('keypress',traerPrestamos);
 hasta.addEventListener('keypress',traerPrestamos);
 tbody.addEventListener('click',mostrarDetalleProducto);
 cerrarVentana.addEventListener('click',closeDetalle);
-botonAnular.addEventListener('click',anularPrestamos);
+botonFacturar.addEventListener('click',facturarPrestamos);
 
 //Mostramos los prestamos que esten en la base de datos sin anular
 async function traerPrestamos(e) {
@@ -56,7 +57,8 @@ async function listarPrestamos(lista) {
         const tdCodigo = document.createElement('td');
         const tdCliente = document.createElement('td');
         const tdNroComp = document.createElement('td');
-        const tdAnular = document.createElement('td');
+        const tdObservaciones = document.createElement('td');
+        const tdFacturar = document.createElement('td');
 
         const inputAnular = document.createElement('input');
         inputAnular.setAttribute('type','checkbox');
@@ -66,14 +68,16 @@ async function listarPrestamos(lista) {
         tdCodigo.innerText = elem.codigo;
         tdCliente.innerText = elem.cliente;
         tdNroComp.innerText = elem.nro_comp;
+        tdObservaciones.innerText = elem.observaciones;
 
-        tdAnular.appendChild(inputAnular)
+        tdFacturar.appendChild(inputAnular)
 
         tr.appendChild(tdFecha);
         tr.appendChild(tdCodigo);
         tr.appendChild(tdCliente);
         tr.appendChild(tdNroComp);
-        tr.appendChild(tdAnular);
+        tr.appendChild(tdObservaciones);
+        tr.appendChild(tdFacturar);
 
         tbody.appendChild(tr);
 
@@ -140,19 +144,15 @@ function closeDetalle() {
 };
 
 //Anulamos el prestamo
-async function anularPrestamos() {
+async function facturarPrestamos() {
   const inputs = document.querySelectorAll('input[type=checkbox]');
-  const arrayAAnular = [];
+  const arrayAFacturar = [];
 
   inputs.forEach(elem=>{
-    elem.checked && arrayAAnular.push(elem.id);
+    elem.checked && arrayAFacturar.push(elem.id);
   });
-  
-  await putAPrestamo(arrayAAnular);
-  await arreglarStock(arrayAAnular);
-  await crearMovimiento(arrayAAnular);
-
-  location.reload();
+  location.href = `../emitirComprobante/emitirComprobante.html?facturarPrestamo=${true}&arregloPrestamo=${JSON.stringify(arrayAFacturar)}&observaciones=${seleccionado.children[4].innerText}`;
+  ipcRenderer.send('facturar-prestamos',JSON.stringify(arrayAFacturar));
 };
 
 //Modificamos el prestamo poniendo la anulacion en true
