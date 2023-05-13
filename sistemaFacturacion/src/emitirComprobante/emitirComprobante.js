@@ -1338,12 +1338,13 @@ function ocultarNegro() {
 
 
 //Seccion de Facturar Prestamos
-let arregloPrestamo = JSON.parse(getParameterByName('arregloPrestamo'));
-let facturarPrestamo = JSON.parse(getParameterByName('facturarPrestamo'));
+let facturarPrestamo = getParameterByName('facturarPrestamo');
+facturarPrestamo = facturarPrestamo ? JSON.parse(facturarPrestamo) : false
 let botonFacturarPrestamos = document.getElementById('facturar-prestamo');
 botonFacturarPrestamos.addEventListener('click',hacerFacturaParaPrestamos);
 
 if (facturarPrestamo) {
+    let arregloPrestamo = JSON.parse(getParameterByName('arregloPrestamo'));
     mostrarNegro();//Mostramos devuelta en negro
 
     observaciones.value = getParameterByName('observaciones');
@@ -1396,7 +1397,29 @@ async function traerProductosPrestamo(arreglo) {
 };
 
 async function hacerFacturaParaPrestamos(){
-    console.log(arregloPrestamo)
+    const presupuesto = {};
+    const numero = (await axios.get(`${URL}tipoVenta`)).data;
+    const puntoVenta = numero["Ultimo Presupuesto"].split('-',2)[0];
+    const numeroPresupuesto = numero["Ultimo Presupuesto"].split('-',2)[1];
+    numero['Ultimo Presupuesto'] = `${puntoVenta}-${parseInt(numeroPresupuesto) + 1}`;
+
+    presupuesto.fecha = new Date();
+    presupuesto.nombreCliente = nombre.value;
+    presupuesto.cliente = codigoC.value;
+    presupuesto.tipo_comp = "Presupuesto";
+    presupuesto.tipo_pago = "CD"
+    presupuesto.nro_comp = numero["Ultimo Presupuesto"];
+    presupuesto.observaciones = observaciones.value;
+
+    //Datos del presupuesto que despues se borranm
+    presupuesto.direccion = direccion.value;
+    presupuesto.localidad = localidad.value;
+    presupuesto.telefono = telefono.value;
+    console.log(presupuesto);
+
+
+    //Actualizamos el numero de presupuesto
+    (await axios.put(`${URL}tipoVenta`,numero));
 }
 
 
