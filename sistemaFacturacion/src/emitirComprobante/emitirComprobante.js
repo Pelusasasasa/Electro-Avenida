@@ -1363,17 +1363,19 @@ if (facturarPrestamo) {
 async function rellenarConPrestamo(arreglo) {
     //Traemos los movimientos del prestamo
     let aux = [];
-    const movimientos = await traerMovimientosPrestamo(arreglo);
+    movimientos = await traerMovimientosPrestamo(arreglo);
     const productos = await traerProductosPrestamo(movimientos);
-    for (let i = 0; i < productos.length; i++) {
-        mostrarVentas(productos[i],movimientos[i].egreso)
+    for (let i = 0; i < productos.length; i++){
+        mostrarVentas(productos[i],movimientos[i].egreso);
     };
     await listarClientePrestamo(movimientos[0]);
     
 }
 
 async function listarClientePrestamo(movimiento) {
+    console.log(movimiento)
     let {codCliente} = movimiento;
+    console.log(movimiento)
     codigoC.value = codCliente;
     codigoC.dispatchEvent(new KeyboardEvent('keypress', {'key': 'Enter'}));
 }
@@ -1381,8 +1383,8 @@ async function listarClientePrestamo(movimiento) {
 async function traerMovimientosPrestamo(arreglo){
     let moviminetosPrestamos = [];
     for(let elem of arreglo){
-        const movimiento = (await axios.get(`${URL}movProductos/${elem}/Prestamo`)).data;
-        moviminetosPrestamos.push(movimiento[0]);
+        const movimientos = (await axios.get(`${URL}movProductos/${elem}/Prestamo`)).data;
+        moviminetosPrestamos.push(...movimientos);
     };    
     return moviminetosPrestamos;
 };
@@ -1401,7 +1403,7 @@ async function hacerFacturaParaPrestamos(){
     const numero = (await axios.get(`${URL}tipoVenta`)).data;
     const puntoVenta = numero["Ultimo Presupuesto"].split('-',2)[0];
     const numeroPresupuesto = numero["Ultimo Presupuesto"].split('-',2)[1];
-    numero['Ultimo Presupuesto'] = `${puntoVenta}-${parseInt(numeroPresupuesto) + 1}`;
+    numero['Ultimo Presupuesto'] = `${puntoVenta}-${(parseInt(numeroPresupuesto) + 1).toString().padStart(8,'0')}`;
 
     presupuesto.fecha = new Date();
     presupuesto.nombreCliente = nombre.value;
@@ -1410,16 +1412,45 @@ async function hacerFacturaParaPrestamos(){
     presupuesto.tipo_pago = "CD"
     presupuesto.nro_comp = numero["Ultimo Presupuesto"];
     presupuesto.observaciones = observaciones.value;
+    presupuesto.vendedor = "GONZALO";
+    presupuesto.precioFinal = total.value;
+    presupuesto.descuento = descuentoN.value;
+    presupuesto.empresa = inputEmpresa.value;
 
-    //Datos del presupuesto que despues se borranm
-    presupuesto.direccion = direccion.value;
-    presupuesto.localidad = localidad.value;
-    presupuesto.telefono = telefono.value;
-    console.log(presupuesto);
+    //Datos del cliente
+    const cliente = {};
+    cliente._id = codigoC.value;
+    cliente.cliente = nombre.value;
+    cliente.cuit = dnicuit.value;
+    cliente.direccion = direccion.value;
+    cliente.localidad = localidad.value;
+    cliente.telefono = telefono.value;
 
-
+    //Imprimiendo venta
+    await ipcRenderer.send('imprimir-venta',[presupuesto,cliente,false,1,"imprimir-comprobante","true",listaProductos]);
+    
     //Actualizamos el numero de presupuesto
     (await axios.put(`${URL}tipoVenta`,numero));
+
+    //posts
+    await axios.post(`${URL}presupuesto`,presupuesto);
+    generarMovimientoCaja(presupuesto.fecha,"I",presupuesto.nro_comp,"Presupuesto","PP",presupuesto.precioFinal,presupuesto.nombreCliente,presupuesto.cliente,presupuesto.nombreCliente,presupuesto.vendedor);
+
+    //Modificamos los movimientos de productos para que pasen de prestamo a presupuesto
+    for await(let mov of movimientos){
+        mov.nro_comp = presupuesto.nro_comp;
+        mov.tipo_comp = presupuesto.tipo_comp;
+        mov.tipo_pago = "CD";
+
+        await axios.put(`${URL}movProductos/${mov._id}`,mov);
+    };
+
+    let arregloPrestamo = JSON.parse(getParameterByName('arregloPrestamo'));
+    for(let elem of arregloPrestamo){
+        const prestamo  = (await axios.get(`${URL}Prestamos/forNumber/${elem}`)).data;
+        prestamo.anulado = true;
+        await axios.put(`${URL}Prestamos/forNumber/${elem}`,prestamo)
+    };
 }
 
 

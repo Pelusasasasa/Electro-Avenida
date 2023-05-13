@@ -20,7 +20,6 @@ const { ipcRenderer } = require("electron");
 
 
         const listar = async (venta,cliente,valorizado,lista,opciones)=>{
-            console.log(cliente)
             lista = !lista ? venta.productos : lista;
             if(lista.length>51){
                 const tabla = document.querySelector('.tabla');
@@ -73,7 +72,7 @@ const { ipcRenderer } = require("electron");
             tbody.innerHTML = ""
              for await (let {objeto,cantidad} of lista) {
                  if ((venta.tipo_pago !== "CC" || (valorizado === "valorizado" && venta.tipo_pago === "CC")) && valorizado !== "no valorizado") {
-                        console.log(objeto.descripcion)
+                        console.log(objeto)
                     tbody.innerHTML += `
                     <tr>
                         <td>${(parseFloat(cantidad)).toFixed(2)}</td>
