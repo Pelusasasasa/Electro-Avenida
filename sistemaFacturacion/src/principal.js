@@ -201,6 +201,10 @@ ipcRenderer.on('ver-prestamos',e=>{
     location.href = 'prestamos/verPrestamos.html'
 });
 
+ipcRenderer.on('ver-prestamos-anulados',e=>{
+    location.href = 'prestamos/anulados.html'
+});
+
 salir.addEventListener('click',async e=>{
     sweet.fire({
         title:"Desea Salir ?",

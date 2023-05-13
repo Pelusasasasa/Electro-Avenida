@@ -1429,7 +1429,7 @@ async function hacerFacturaParaPrestamos(){
     //Imprimiendo venta
     await ipcRenderer.send('imprimir-venta',[presupuesto,cliente,false,1,"imprimir-comprobante","true",listaProductos]);
     
-    //Actualizamos el numero de presupuesto
+    // //Actualizamos el numero de presupuesto
     (await axios.put(`${URL}tipoVenta`,numero));
 
     //posts
@@ -1441,16 +1441,21 @@ async function hacerFacturaParaPrestamos(){
         mov.nro_comp = presupuesto.nro_comp;
         mov.tipo_comp = presupuesto.tipo_comp;
         mov.tipo_pago = "CD";
-
+        mov.precio_unitario = parseFloat(listaProductos.find(elem=>elem._id = mov.codProd).objeto.precio_venta);
+        mov.total = (mov.egreso * mov.precio_unitario).toFixed(2);
         await axios.put(`${URL}movProductos/${mov._id}`,mov);
     };
 
+    //Lo que hacemos es anular los prestamos
     let arregloPrestamo = JSON.parse(getParameterByName('arregloPrestamo'));
     for(let elem of arregloPrestamo){
         const prestamo  = (await axios.get(`${URL}Prestamos/forNumber/${elem}`)).data;
         prestamo.anulado = true;
         await axios.put(`${URL}Prestamos/forNumber/${elem}`,prestamo)
     };
+
+
+    location.href = '../index.html';
 }
 
 

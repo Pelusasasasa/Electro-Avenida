@@ -92,7 +92,12 @@ movCajaCTRL.getForId = async(req,res)=>{
 
 movCajaCTRL.putForId = async(req,res)=>{
     const {id} = req.params;
-    await MovCaja.findOneAndUpdate({_id:id},req.body);
+    try {
+        await MovCaja.findOneAndUpdate({_id:id},req.body);
+    } catch (error) {
+        console.log(`El error estuvo a la hora ${new Date()} en el movimineto ${req.body.nro_comp} de ${req.body.cliente}`)
+        console.log(error)
+    }
     res.end();
 }
 

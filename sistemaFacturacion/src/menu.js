@@ -207,6 +207,12 @@ const templateMenu = [
                 click(){
                     ventanaPrincipal.webContents.send('ver-prestamos');
                 }
+            },
+            {
+                label:"Ver Prestamos Anulados",
+                click(){
+                    ventanaPrincipal.webContents.send('ver-prestamos-anulados');
+                }
             }
         ]
     },
