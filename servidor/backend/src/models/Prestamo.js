@@ -56,6 +56,10 @@ const Prestamo = new Schema({
     anulado:{
         type:Boolean,
         default:false
+    },
+    nroPresupuesto:{
+        type:String,
+        default:""
     }
 });
 

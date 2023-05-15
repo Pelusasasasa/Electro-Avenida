@@ -95,6 +95,8 @@ window.addEventListener('load',async e=>{
         presupuesto.classList.add('none');
         tipoVenta = "Prestamo";
         prestamo.classList.remove('none');
+        codigoC.value = "L083";
+        codigoC.dispatchEvent(new KeyboardEvent('keypress', {'key': 'Enter'}));
     }
 });
 
@@ -1451,16 +1453,14 @@ async function hacerFacturaParaPrestamos(){
     for(let elem of arregloPrestamo){
         const prestamo  = (await axios.get(`${URL}Prestamos/forNumber/${elem}`)).data;
         prestamo.anulado = true;
+        prestamo.nroPresupuesto = presupuesto.nro_comp;
         await axios.put(`${URL}Prestamos/forNumber/${elem}`,prestamo)
     };
 
 
     location.href = '../index.html';
-}
-
-
+};
 //Seccion de Facturar Prestamos
-
 
 observaciones.addEventListener('keypress',e=>{
     if (e.key==='Enter') {
