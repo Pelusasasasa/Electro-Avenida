@@ -128,11 +128,14 @@ async function validacionUsuario(texto,botones = true) {
                 if (value === "" || value === undefined) {
                     location.reload();
                 }else{
-                    const vendedorTraido = (await axios.get(`${URL}usuarios/210`)).data;
-                        value === vendedorTraido._id && (vendedor=vendedorTraido.nombre)
-                        value === vendedorTraido._id && (acceso = vendedorTraido.acceso)
-                        value === vendedorTraido._id && (empresa = vendedorTraido.empresa)
-                    if(vendedor !== undefined){ 
+                    const vendedorTraido = (await axios.get(`${URL}usuarios/${value}`)).data;
+                    console.log(value)
+                    value === vendedorTraido._id && (vendedor=vendedorTraido.nombre)
+                    value === vendedorTraido._id && (acceso = vendedorTraido.acceso)
+                    value === vendedorTraido._id && (empresa = vendedorTraido.empresa)
+                    console.log(vendedorTraido)
+                    if(vendedorTraido !== undefined){ 
+                        console.log(vendedorTraido)
                         window.location = `${texto}?vendedor=${vendedor}&acceso=${acceso}&empresa=${empresa}&botones=${botones}`;
                         ipcRenderer.send('cerrar-menu');
                     }else{
