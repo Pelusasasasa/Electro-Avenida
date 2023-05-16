@@ -114,7 +114,6 @@ resultado.addEventListener('click',e =>{
     seleccionado = document.querySelector('.seleccionado');
     subSeleccionado = document.querySelector('.subSeleccionado');
 
-
     seleccionado && (seleccionado.classList.remove('seleccionado'));
     seleccionado = (e.target.nodeName === "TD" || e.target.nodeName === "TH") ? e.target.parentNode : e.target;
     seleccionado.classList.add('seleccionado');
