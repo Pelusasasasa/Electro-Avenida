@@ -7,7 +7,8 @@ const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
 
-let cerrar = false
+let cerrar = false;
+let bandera = false;
 
 const f_entrega = document.getElementById('f_entrega');
 const n_cheque = document.getElementById('n_cheque');
@@ -69,17 +70,18 @@ agregar.addEventListener('click',async e=>{
                 banco.value = "";
                 plaza.value = "";
                 i_cheque.value = "";
-                ent_por.value = "";
-                entre_a.value = "";
                 domicilio.value = "";
                 telefono.value = "";
-                n_cheque.focus();
+                n_cheque.focus();    
+                bandera = true;
             }else{
                 if (cerrar) {
                     ipcRenderer.send('enviar-info-ventana-principal',"Cheque cargado")
                 }    
                 window.close();
             }
+            
+        
         });
     } catch (error) {
         console.log(error)
@@ -115,7 +117,6 @@ modificar.addEventListener('click',async e=>{
     }
 });
 
-
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
     agregar.classList.add('none');
     modificar.classList.remove('none');
@@ -123,6 +124,18 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
     const cheque = (await axios.get(`${URL}cheques/id/${args}`)).data;
     listarCheque(cheque)
 });
+
+//Aca hacemos que cuando queremos agregar un cheque desde cobranza y facturas se llame a la funcion
+ipcRenderer.on('informacionAgregar',cobranzaDeCheques);
+
+//La funcion lo que hace es autocompletar algunos inputs y tambien sacar el entregado a
+function cobranzaDeCheques(e,{cliente,imp,vendedor}) {
+    entre_a.parentNode.classList.add('none');
+    propio.parentNode.classList.add('none');
+
+    ent_por.value = cliente,
+    i_cheque.value = imp
+}
 
 function listarCheque(cheque) {
     const fechaEntrega = cheque.f_recibido.slice(0,10).split('-',3);
@@ -146,6 +159,9 @@ ipcRenderer.on('cerrar-ventana',(e,args)=>{
 })
 
 salir.addEventListener('click',e=>{
+    if (cerrar && bandera) {
+        ipcRenderer.send('enviar-info-ventana-principal',"Cheque cargado")
+    }
     window.close();
 });
 
@@ -187,7 +203,11 @@ i_cheque.addEventListener('keypress',e=>{
 
 ent_por.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
-        entre_a.focus();    
+        if (entre_a.parentNode.classList.contains('none')) {
+            domicilio.focus();
+        }else{
+            entre_a.focus();
+        }
     }
 });
 

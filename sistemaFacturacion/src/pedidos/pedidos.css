@@ -1,5 +1,6 @@
 h1{
     text-align: center;
+    margin: 0;
 }
 
 .cliente{
@@ -9,8 +10,12 @@ h1{
 
 .table{
     background-color: white;
-    height: 70vh;
+    height: 75vh;
     overflow: scroll;
+}
+
+.tabla-mas-chica{
+    height: 64vh;
 }
 
 table thead tr th,table tbody tr td{

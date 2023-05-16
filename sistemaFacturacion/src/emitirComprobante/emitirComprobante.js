@@ -5,9 +5,6 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-const Afip = require('@afipsdk/afip.js');
-const afip = new Afip({ CUIT: 27165767433 });
-
 const sweet = require('sweetalert2');
 const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago} = require('../funciones');
 const { ipcRenderer } = require("electron");
@@ -16,8 +13,9 @@ require("dotenv").config;
 const URL = process.env.URL;
 
 //Es lo que viene en la URL
-let vendedor = getParameterByName('vendedor')
-let empresa = getParameterByName('empresa')
+let vendedor = getParameterByName('vendedor');
+let empresa = getParameterByName('empresa');
+let botones = getParameterByName('botones') === "false" ? false : true;
 
 const usuario = document.querySelector(".usuario")
 const textoUsuario = document.createElement("P")
@@ -69,6 +67,7 @@ const ticketFactura = document.querySelector('.ticketFactura')
 const borrarProducto = document.querySelector('.borrarProducto')
 const inputEmpresa = document.querySelector('#empresa');
 const alerta = document.querySelector('.alerta');
+const prestamo = document.querySelector('.prestamo');
 const cancelar = document.querySelector('.cancelar');
 
 //variables para caundo usamos el facturar varias facturas
@@ -89,6 +88,16 @@ let arregloProductosDescontarStock = [];
 
 window.addEventListener('load',async e=>{
     copiar();
+    if (!botones) {
+        mostrarNegro();
+        remito.classList.add('none');
+        tiposVentas[1].parentNode.parentNode.classList.add('none'); 
+        presupuesto.classList.add('none');
+        tipoVenta = "Prestamo";
+        prestamo.classList.remove('none');
+        codigoC.value = "L083";
+        codigoC.dispatchEvent(new KeyboardEvent('keypress', {'key': 'Enter'}));
+    }
 });
 
 //funciones para alt f9 y alt f8
@@ -489,20 +498,20 @@ async function sacarStock(cantidad,objeto) {
 //INICIO MOVPRODUCTOS
 
 //Registramos un movimiento de producto
-async function movimientoProducto(cantidad,objeto,idCliente,cliente,tipo_pago){
+async function movimientoProducto(cantidad,objeto,idCliente,cliente,tipo_pago,tipo_comp,nro_comp,vendedor){
     let movProducto = {}
     movProducto.codProd = objeto._id
     movProducto.descripcion = `${objeto.descripcion} ${objeto.marca ? objeto.marca :""} ${objeto.cod_fabrica ? objeto.cod_fabrica : ""}`;
     movProducto.codCliente = idCliente;
     movProducto.cliente = cliente;
-    movProducto.comprobante = tipoVenta
-    movProducto.tipo_comp = venta.tipo_comp
-    movProducto.nro_comp=venta.nro_comp
-    movProducto.egreso = cantidad
+    movProducto.comprobante = tipoVenta;
+    movProducto.tipo_comp = tipo_comp;
+    movProducto.nro_comp = nro_comp;
+    movProducto.egreso = cantidad;
     movProducto.stock = tipo_pago === "PP" ? objeto.stock : parseFloat((parseFloat(objeto.stock) - cantidad).toFixed(2));
     movProducto.precio_unitario=objeto.precio_venta
     movProducto.total=(parseFloat(movProducto.egreso)*parseFloat(movProducto.precio_unitario)).toFixed(2)
-    movProducto.vendedor = venta.vendedor;
+    movProducto.vendedor = vendedor;
     movProducto.rubro = objeto.rubro;
     movProducto.tipo_pago = tipo_pago;
     console.log(movProducto.tipo_pago)
@@ -651,7 +660,7 @@ presupuesto.addEventListener('click',async (e)=>{
                         if(venta.tipo_pago !== "PP"){
                             producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
                         }
-                        await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente,venta.tipo_pago);
+                        await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente,venta.tipo_pago,venta.tipo_comp,venta.nro_comp,venta.vendedor);
                     };
 
                     if (venta.tipo_pago !== "PP") {
@@ -690,6 +699,42 @@ presupuesto.addEventListener('click',async (e)=>{
     }
 });
 
+prestamo.addEventListener('click',async e=>{
+    let prestamo = {}
+
+    prestamo.fecha = new Date();
+    prestamo.codigo = codigoC.value;
+    prestamo.cliente = nombre.value.toUpperCase();
+    prestamo.direccion = direccion.value.toUpperCase();
+    prestamo.localidad = localidad.value.toUpperCase();
+    prestamo.telefono = telefono.value;
+    prestamo.dnicuit = dnicuit.value;
+    prestamo.condIva = conIva.value;
+    prestamo.tipo_comp = "Prestamo";
+    prestamo.vendedor = vendedor;
+    prestamo.observaciones = observaciones.value.toUpperCase();
+    let numeros = (await axios.get(`${URL}tipoVenta`)).data;
+    let ultimoNumeroPrestamo = parseInt(numeros["Ultimo Prestamo"].split('-',2)[1]) + 1;
+    prestamo.nro_comp = "0007-" + ultimoNumeroPrestamo.toString().padStart(8,'0');
+    numeros["Ultimo Prestamo"] = prestamo.nro_comp;
+    //Actualizamos el ultimo prestamo
+    await axios.put(`${URL}tipoventa`,numeros);
+
+    //Moviento de producto
+    for(let {cantidad,objeto} of listaProductos){
+        movimientoProducto(cantidad,objeto,prestamo.codigo,prestamo.cliente,"PR",prestamo.tipo_comp,prestamo.nro_comp,prestamo.vendedor);
+        objeto._id !== "999-999" &&  await sacarStock(cantidad,objeto);
+    };
+    await axios.post(`${URL}movProductos`,arregloMovimiento);
+    //Fin Moviento de Producto
+
+    //Descontar Stock
+    await axios.put(`${URL}productos`,arregloProductosDescontarStock);
+    //Fin Descontar Stock
+    await axios.post(`${URL}prestamos`,prestamo);
+    location.href = '../index.html';
+});
+
 
 //Cuando apretamos el boton de remito
 remito.addEventListener('click',async e=>{
@@ -709,7 +754,7 @@ remito.addEventListener('click',async e=>{
     console.log(venta)
 
     for await(let producto of listaProductos){
-        await movimientoProducto(producto.cantidad,producto.objeto,codigoC.value,nombre.value,"RT");
+        await movimientoProducto(producto.cantidad,producto.objeto,codigoC.value,nombre.value,"RT",venta.tipo_pago,venta.tipo_comp,venta.nro_comp,venta.vendedor);
     }
 
     await axios.post(`${URL}movProductos`,arregloMovimiento);
@@ -808,7 +853,7 @@ ticketFactura.addEventListener('click',async (e) =>{
                             if (venta.tipo_pago !== "PP") {
                                 producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
                             }
-                            await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente);
+                            await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente,venta.tipo_pago,venta.tipo_comp,venta.nro_comp,venta.vendedor);
                         }
                         if (venta.tipo !== "PP") {
                            await axios.put(`${URL}productos`,arregloProductosDescontarStock);
@@ -974,7 +1019,6 @@ const borrarUnProductoDeLaLista =async  (productoSeleccionado)=>{
                         totalPrecioProductos -= (e.objeto.precio_venta*e.cantidad);
                 }
             };
-            console.log(productoSeleccionado)
             productoSeleccionado.parentNode.removeChild(productoSeleccionado);
             seleccionado = "";
             subSeleccionado = "";
@@ -1293,6 +1337,130 @@ function ocultarNegro() {
     ventaValorizado.classList.add('none')
     imprimirCheck.classList.add('none')
 }
+
+
+//Seccion de Facturar Prestamos
+let facturarPrestamo = getParameterByName('facturarPrestamo');
+facturarPrestamo = facturarPrestamo ? JSON.parse(facturarPrestamo) : false
+let botonFacturarPrestamos = document.getElementById('facturar-prestamo');
+botonFacturarPrestamos.addEventListener('click',hacerFacturaParaPrestamos);
+
+if (facturarPrestamo) {
+    let arregloPrestamo = JSON.parse(getParameterByName('arregloPrestamo'));
+    mostrarNegro();//Mostramos devuelta en negro
+
+    observaciones.value = getParameterByName('observaciones');
+    inputEmpresa.value = "Electro Avenida";
+    buscarAfip.classList.add('none')//Saco boton Inecesario
+    botonFacturarPrestamos.classList.remove('none');//Saco boton Inecesario
+    ticketFactura.classList.add('none');//Saco boton Inecesario
+    remito.classList.add('none')//Saco boton Inecesario
+    presupuesto.classList.add('none');//Saco boton Inecesario
+    cuentaCorriente.parentNode.parentNode.classList.add('none');//Saco input Inecesario
+
+    rellenarConPrestamo(arregloPrestamo);
+};
+//En esta funcion rellenamos los datos del cliente, productos con los prestamos;
+
+async function rellenarConPrestamo(arreglo) {
+    //Traemos los movimientos del prestamo
+    let aux = [];
+    movimientos = await traerMovimientosPrestamo(arreglo);
+    const productos = await traerProductosPrestamo(movimientos);
+    for (let i = 0; i < productos.length; i++){
+        mostrarVentas(productos[i],movimientos[i].egreso);
+    };
+    await listarClientePrestamo(movimientos[0]);
+    
+}
+
+async function listarClientePrestamo(movimiento) {
+    console.log(movimiento)
+    let {codCliente} = movimiento;
+    console.log(movimiento)
+    codigoC.value = codCliente;
+    codigoC.dispatchEvent(new KeyboardEvent('keypress', {'key': 'Enter'}));
+}
+
+async function traerMovimientosPrestamo(arreglo){
+    let moviminetosPrestamos = [];
+    for(let elem of arreglo){
+        const movimientos = (await axios.get(`${URL}movProductos/${elem}/Prestamo`)).data;
+        moviminetosPrestamos.push(...movimientos);
+    };    
+    return moviminetosPrestamos;
+};
+
+async function traerProductosPrestamo(arreglo) {
+    let listaProductos = [];
+    for await(let {codProd} of arreglo){
+        const producto = (await axios.get(`${URL}productos/${codProd}`)).data;
+        listaProductos.push(producto)
+    };
+    return listaProductos
+};
+
+async function hacerFacturaParaPrestamos(){
+    const presupuesto = {};
+    const numero = (await axios.get(`${URL}tipoVenta`)).data;
+    const puntoVenta = numero["Ultimo Presupuesto"].split('-',2)[0];
+    const numeroPresupuesto = numero["Ultimo Presupuesto"].split('-',2)[1];
+    numero['Ultimo Presupuesto'] = `${puntoVenta}-${(parseInt(numeroPresupuesto) + 1).toString().padStart(8,'0')}`;
+
+    presupuesto.fecha = new Date();
+    presupuesto.nombreCliente = nombre.value;
+    presupuesto.cliente = codigoC.value;
+    presupuesto.tipo_comp = "Presupuesto";
+    presupuesto.tipo_pago = "CD"
+    presupuesto.nro_comp = numero["Ultimo Presupuesto"];
+    presupuesto.observaciones = observaciones.value;
+    presupuesto.vendedor = "GONZALO";
+    presupuesto.precioFinal = total.value;
+    presupuesto.descuento = descuentoN.value;
+    presupuesto.empresa = inputEmpresa.value;
+
+    //Datos del cliente
+    const cliente = {};
+    cliente._id = codigoC.value;
+    cliente.cliente = nombre.value;
+    cliente.cuit = dnicuit.value;
+    cliente.direccion = direccion.value;
+    cliente.localidad = localidad.value;
+    cliente.telefono = telefono.value;
+
+    //Imprimiendo venta
+    await ipcRenderer.send('imprimir-venta',[presupuesto,cliente,false,1,"imprimir-comprobante","true",listaProductos]);
+    
+    // //Actualizamos el numero de presupuesto
+    (await axios.put(`${URL}tipoVenta`,numero));
+
+    //posts
+    await axios.post(`${URL}presupuesto`,presupuesto);
+    generarMovimientoCaja(presupuesto.fecha,"I",presupuesto.nro_comp,"Presupuesto","PP",presupuesto.precioFinal,presupuesto.nombreCliente,presupuesto.cliente,presupuesto.nombreCliente,presupuesto.vendedor);
+
+    //Modificamos los movimientos de productos para que pasen de prestamo a presupuesto
+    for await(let mov of movimientos){
+        mov.nro_comp = presupuesto.nro_comp;
+        mov.tipo_comp = presupuesto.tipo_comp;
+        mov.tipo_pago = "CD";
+        mov.precio_unitario = parseFloat(listaProductos.find(elem=>elem._id = mov.codProd).objeto.precio_venta);
+        mov.total = (mov.egreso * mov.precio_unitario).toFixed(2);
+        await axios.put(`${URL}movProductos/${mov._id}`,mov);
+    };
+
+    //Lo que hacemos es anular los prestamos
+    let arregloPrestamo = JSON.parse(getParameterByName('arregloPrestamo'));
+    for(let elem of arregloPrestamo){
+        const prestamo  = (await axios.get(`${URL}Prestamos/forNumber/${elem}`)).data;
+        prestamo.anulado = true;
+        prestamo.nroPresupuesto = presupuesto.nro_comp;
+        await axios.put(`${URL}Prestamos/forNumber/${elem}`,prestamo)
+    };
+
+
+    location.href = '../index.html';
+};
+//Seccion de Facturar Prestamos
 
 observaciones.addEventListener('keypress',e=>{
     if (e.key==='Enter') {

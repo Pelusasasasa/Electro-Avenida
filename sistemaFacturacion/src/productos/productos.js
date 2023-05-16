@@ -72,7 +72,13 @@ async function filtrar(){
     //obtenemos lo que se escribe en el input
     texto = buscarProducto.value.toLowerCase();
     let productos;
-    if(texto !== ""){ 
+    if (texto.indexOf('/') !== -1) {
+        const posicionBarra = texto.indexOf('/');
+        let nuevoTexto = texto.replace('/',"ALT47");    
+        let condicion = select.value;
+        condicion === "codigo" && (condicion = "_id")
+        productos = await axios.get(`${URL}productos/buscarProducto/${nuevoTexto}/${condicion}`)
+    }else if(texto !== ""){ 
         let condicion = select.value;
         condicion === "codigo" && (condicion = "_id")
         productos = await axios.get(`${URL}productos/buscarProducto/${texto}/${condicion}`)

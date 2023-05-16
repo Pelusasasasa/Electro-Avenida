@@ -6,8 +6,11 @@ const URL = process.env.URL;
 
 const select = document.getElementById('provedores');
 
+const saldoActual = document.getElementById('saldoActual');
 const concepto = document.getElementById('concepto');
 const fecha = document.getElementById('fecha');
+const puntoVenta = document.getElementById('puntoVenta');
+const nro_comp = document.getElementById('nro_comp');
 const debe = document.getElementById('debe');
 const haber = document.getElementById('haber');
 const saldo = document.getElementById('saldo');
@@ -33,11 +36,20 @@ window.addEventListener('load',async e=>{
 });
 
 const listarProvedores = (lista)=>{
+    lista.sort((a,b)=>{
+        if (a.provedor > b.provedor) {
+            return 1
+        }else if(a.provedor < b.provedor){
+            return -1
+        }
+        return 0
+    });
     for(let elem of lista){
         const option = document.createElement('option');
 
         option.value = elem.codigo;
-        option.text = elem.nombre;
+        option.text = elem.provedor;
+        option.id = elem.saldo;
 
         select.appendChild(option);
     }
@@ -47,6 +59,7 @@ aceptar.addEventListener('click',async e=>{
     const cuenta = {};
     cuenta.tipo_comp = concepto.value.toUpperCase();
     cuenta.codProv = select.value;
+    cuenta.nro_comp = puntoVenta.value.padStart(4,'0') + "-" + nro_comp.value.padStart(8,'0')
     cuenta.provedor = select.innerText;
     cuenta.fecha = fecha.value;
     cuenta.debe = debe.value;
@@ -63,6 +76,8 @@ aceptar.addEventListener('click',async e=>{
             title: "No se pudo cargar en la cueta corriente del provedor"
         })
     }
+
+    window.close();
 });
 
 const sumarSaldoProvedor = async()=>{
@@ -76,6 +91,10 @@ const sumarSaldoProvedor = async()=>{
         })
     }
 };
+
+provedores.addEventListener('change',e=>{
+    saldoActual.value = parseFloat(provedores.options[provedores.selectedIndex].id).toFixed(2);    
+});
 
 provedores.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
@@ -91,6 +110,18 @@ concepto.addEventListener('keypress',e=>{
 });
 
 fecha.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        puntoVenta.focus();
+    }
+});
+
+puntoVenta.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        nro_comp.focus();
+    }
+});
+
+nro_comp.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
         debe.focus();
     }
@@ -124,6 +155,14 @@ observaciones.addEventListener('keypress',e=>{
 
 concepto.addEventListener('focus',e=>{
     concepto.select();
+});
+
+puntoVenta.addEventListener('focus',e=>{
+    puntoVenta.select();
+});
+
+nro_comp.addEventListener('focus',e=>{
+    nro_comp.select();
 });
 
 debe.addEventListener('focus',e=>{

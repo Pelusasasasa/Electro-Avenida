@@ -18,6 +18,7 @@
     padding: .5rem;
 }
 
+/*Modifcar caja*/
 .seccionModificar .fechas{
     display: flex;
     justify-content: space-around;
@@ -47,6 +48,7 @@
 
 .seccionModificar td,.seccionModificar th{
     border: .1rem solid black;
+    white-space: nowrap;
 }
 
 .informeCaja h1{

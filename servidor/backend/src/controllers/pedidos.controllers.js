@@ -16,6 +16,12 @@ pedidosCTRL.crearPedido = async(req,res)=>{
     res.send("Pedido Guardado")
 }
 
+pedidosCTRL.traerPedido = async(req,res)=>{
+    const {id} = req.params;
+    const pedido = await Pedidos.findOne({_id:id});
+    res.send(pedido);
+}
+
 pedidosCTRL.modificarPedido = async(req,res)=>{
     const {id} = req.params;
     await Pedidos.findByIdAndUpdate({_id:id},req.body)

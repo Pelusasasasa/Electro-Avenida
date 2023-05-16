@@ -20,7 +20,6 @@ const { ipcRenderer } = require("electron");
 
 
         const listar = async (venta,cliente,valorizado,lista,opciones)=>{
-            console.log(cliente)
             lista = !lista ? venta.productos : lista;
             if(lista.length>51){
                 const tabla = document.querySelector('.tabla');
@@ -39,13 +38,17 @@ const { ipcRenderer } = require("electron");
             const segundo = tomarFecha.getSeconds();
 
             numero.innerHTML=venta.nro_comp;
-            clientes.innerHTML = cliente.cliente;
             venta.observaciones !== "" ? clientes.innerHTML += ` (${venta.observaciones})` : "";
+
+            //Parte Cliente
+            clientes.innerHTML = cliente.cliente;
             idCliente.innerHTML = cliente._id ? cliente._id : cliente.id;
             vendedor.innerHTML = venta.vendedor;
             cuit.innerHTML = cliente.cuit;
             direccion.innerHTML = cliente.direccion;
             localidad.innerHTML = cliente.localidad;
+            //Fin Parte Cliente
+
             fecha.innerHTML = `${dia}/${mes}/${anio} ${hora}:${minuto}:${segundo}`;
             numeroComp.innerHTML = venta.nro_comp;
             subtotal.innerHTML =  venta.descuento ? (parseFloat(venta.precioFinal)+parseFloat(venta.descuento)).toFixed(2) : 0;
@@ -69,7 +72,7 @@ const { ipcRenderer } = require("electron");
             tbody.innerHTML = ""
              for await (let {objeto,cantidad} of lista) {
                  if ((venta.tipo_pago !== "CC" || (valorizado === "valorizado" && venta.tipo_pago === "CC")) && valorizado !== "no valorizado") {
-                        console.log(objeto.descripcion)
+                        console.log(objeto)
                     tbody.innerHTML += `
                     <tr>
                         <td>${(parseFloat(cantidad)).toFixed(2)}</td>

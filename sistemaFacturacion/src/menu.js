@@ -1,5 +1,5 @@
 const {abrirVentana} = require('./funciones');
-const {dialog} = require('electron');
+const {dialog, ipcRenderer, ipcMain} = require('electron');
 const [pedidos] = require('./descargas/descargas')
 
 const axios = require("axios");
@@ -193,24 +193,29 @@ const templateMenu = [
             }
         ]
     },
-    // { VER LO DE LA CONEXION
-    //     label: `${conexion}`,
-    //     click(){
-    //         if (a === 2) {
-    //             tipoConexion = `a=1;module.exports = a`;
-    //             fs.writeFile(__dirname + '/config.js',tipoConexion,()=>{
-    //                 app.relaunch();
-    //                 app.exit(0);
-    //             })
-    //         }else{
-    //             tipoConexion = `a=2;module.exports = a`;
-    //             fs.writeFile(__dirname + '/config.js',tipoConexion,()=>{
-    //                 app.relaunch();
-    //                 app.exit(0);
-    //             })
-    //         }
-    //     }
-    // },
+    {
+        label:"Prestamos",
+        submenu:[
+            {
+                label:"Realizar Prestamo",
+                click(){
+                    ventanaPrincipal.webContents.send('abrir-prestamo');
+                }
+            },
+            {
+                label:"Ver Prestamos",
+                click(){
+                    ventanaPrincipal.webContents.send('ver-prestamos');
+                }
+            },
+            {
+                label:"Ver Prestamos Anulados",
+                click(){
+                    ventanaPrincipal.webContents.send('ver-prestamos-anulados');
+                }
+            }
+        ]
+    },
     {
         label:"",
         accelerator: process.platform == 'darwin' ? 'Comand+D' : 'Ctrl+D',

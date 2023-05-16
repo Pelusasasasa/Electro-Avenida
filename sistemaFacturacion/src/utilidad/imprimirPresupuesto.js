@@ -27,7 +27,6 @@ aceptar.addEventListener('click',async e=>{
     if (!venta) {
          venta = (await axios.get(`${URL}ventas/venta/ventaUnica/${comprobante}/${tipoVenta}`)).data[0];
     }
-    console.log(venta)
     const cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`)).data;
     ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante","valorizado"])
 });

@@ -4,6 +4,7 @@ const axios = require("axios")
 const path = require('path');
 const url = require('url');
 const { app, BrowserWindow, ipcMain, Menu,dialog } = require('electron');
+const {autoUpdater} = require('electron-updater');
 
 const {abrirVentana} = require('./funciones');
 const templateMenu = require('./menu');
@@ -13,7 +14,7 @@ let URL
 
 if (process.env.NODE_ENV !== 'production') {
     require('electron-reload')(__dirname, {
-        electron: path.join(__dirname, 'node_modules', '.bin', 'electron')
+        electron: path.join(__dirname, '../node_modules', '.bin', 'electron')
     })
 };
 global.nuevaVentana = null;
@@ -34,7 +35,10 @@ function crearVentanaPrincipal() {
         ventanaPrincipal.show();
     })
     ventanaPrincipal.loadFile('src/index.html')
-    ventanaPrincipal.maximize()
+    ventanaPrincipal.maximize();
+    ventanaPrincipal.once('listo para mostrar',()=>{
+        autoUpdater.checkForUpdatesAndNotify();
+    });
 }
 
 ipcMain.on('elegirPath',async e=>{
@@ -278,4 +282,10 @@ const mainMenu = Menu.buildFromTemplate(templateMenu)
 Menu.setApplicationMenu(mainMenu)
 module.exports = { crearVentanaPrincipal, abrirVentana }
 
+autoUpdater.on('actualización-disponible', () => { 
+    mainWindow.webContents.send('actualización_disponible'); 
+});
 
+autoUpdater.on('actualización-descargada', () => { 
+   mainWindow.webContents.send('actualización_descargada'); 
+});

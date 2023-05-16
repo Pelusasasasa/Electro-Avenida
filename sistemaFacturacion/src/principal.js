@@ -1,4 +1,5 @@
 const { ipcRenderer } = require("electron")
+const puppetter = require('puppeteer');
 
 ipcRenderer.send('abrir-menu');
 const axios = require("axios");
@@ -7,27 +8,36 @@ const URL = process.env.URL;
 let vendedores = [];
 
 const notificaciones = require('node-notifier');
+
 window.addEventListener('load',async e=>{
-    vendedores = (await axios.get(`${URL}usuarios`)).data;
-    // avisarDolar();
+    setTimeout(async ()=>{
+        const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
+        const dolarBNA = parseFloat((await avisarDolar()).replace(',','.')) + 1;
+        
+        if (dolarBNA !== dolarSistema) {
+            notificaciones.notify({
+                title:"Dolares distintos",
+                message:`El dolar del sistema: ${dolarSistema} es distinto al dolar de el BNA: ${dolarBNA}`
+            });
+        }
+
+        vendedores = (await axios.get(`${URL}usuarios`)).data;
+    },0)
 });
 
 const avisarDolar = async()=>{
-    const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
-    const dolarInternet = parseFloat((await axios.get('https://api-dolar-argentina.herokuapp.com/api/nacion')).data.venta) + 1;
+   const browser = await puppetter.launch();
+   const page = await browser.newPage();
+   await page.goto('https://www.bna.com.ar/Personas');
+    const selector = '.cotizacion';
+    const dolares = await page.evaluate(()=>{
+        const tr = document.querySelector('.cotizacion tbody tr ');
+        return tr.children[2].innerText
+    });
+    return dolares;
+};
 
-    if (dolarInternet !== dolarSistema) {
-        notificaciones.notify({
-            title:"Dolares distintos",
-            message:`El dolar del sistema: ${dolarSistema.toFixed(2)} es distinto del dolar de internet: ${dolarInternet.toFixed(2)}`,
-            sound:true,
-            wait:false
-        })
-    }
-    setTimeout(() => {
-        avisarDolar();
-    }, 960000);
-}
+console.log("a")
 
 const listaPedidos = document.querySelector('.listaPedidos')
 const body = document.querySelector('body')
@@ -39,7 +49,8 @@ const cuentaCorriente = document.querySelector('.cuentaCorriente');
 const notaCredito = document.querySelector('.notaCredito');
 const productos = document.querySelector('.productos');
 const clientes = document.querySelector('.clientes');
-const flecha = document.querySelector('.flecha')
+const flecha = document.querySelector('.flecha');
+const salir = document.querySelector('.salir');
 
 listaPedidos.addEventListener('click', (e) =>{
     const handlePedidos = document.querySelector('.handlePedidos')
@@ -81,7 +92,6 @@ notaCredito.addEventListener('click',e=>{
     validacionUsuario("emitirComprobante/emitirNotaCredito.html")
 });
 
-
 body.addEventListener('keydown',e=>{
     if (e.key === "F1") {
         validacionUsuario("emitirComprobante/emitirComprobante.html")
@@ -92,7 +102,7 @@ body.addEventListener('keydown',e=>{
     }else if(e.key === "F3"){
         validacionUsuario("clientes/clientes.html");
     }
-})
+});
 
 let vendedor
 let acceso
@@ -100,8 +110,9 @@ let empresa
 const sweet = require('sweetalert2');
 const { verEstadoServidorAfip } = require("./funciones");
 
-verEstadoServidorAfip()
-async function validacionUsuario(texto) {
+// verEstadoServidorAfip()
+
+async function validacionUsuario(texto,botones = true) {
     sweet.fire({
                 title:"Contraseña",
                 input:"password",
@@ -123,7 +134,7 @@ async function validacionUsuario(texto) {
                         value === e._id && (empresa = e.empresa)
                     })
                     if(vendedor !== undefined){ 
-                        window.location = `${texto}?vendedor=${vendedor}&acceso=${acceso}&empresa=${empresa}`;
+                        window.location = `${texto}?vendedor=${vendedor}&acceso=${acceso}&empresa=${empresa}&botones=${botones}`;
                         ipcRenderer.send('cerrar-menu');
                     }else{
                         await sweet.fire({
@@ -180,9 +191,20 @@ ipcRenderer.on("validarUsuario",(e,args)=>{
                 }
             }
         })
-})
+});
 
-const salir = document.querySelector('.salir');
+ipcRenderer.on('abrir-prestamo',(e)=>{
+    validacionUsuario("emitirComprobante/emitirComprobante.html",false);
+});
+
+ipcRenderer.on('ver-prestamos',e=>{
+    location.href = 'prestamos/verPrestamos.html'
+});
+
+ipcRenderer.on('ver-prestamos-anulados',e=>{
+    location.href = 'prestamos/anulados.html'
+});
+
 salir.addEventListener('click',async e=>{
     sweet.fire({
         title:"Desea Salir ?",
@@ -193,5 +215,10 @@ salir.addEventListener('click',async e=>{
             window.close();
         }
     })
+});
+
+ipcRenderer.on('actualización_disponible',()=>{
+    console.log("a")
 })
+
 

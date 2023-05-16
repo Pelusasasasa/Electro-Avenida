@@ -291,6 +291,13 @@ const templateMenu = [
         click(){
           abrirVentana('provedores/cuentaCorriente.html',1200,1000)
         }
+      },
+      {
+        label:"Reordenar Saldo",
+        click(){
+          ventanaPrincipal.webContents.send('reordenarSaldo');
+          // abrirVentana('provedores/reordenarSaldo.html',400,500)
+        }
       }
     ]
   },

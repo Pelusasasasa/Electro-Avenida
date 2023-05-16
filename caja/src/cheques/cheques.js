@@ -28,16 +28,20 @@ window.addEventListener('load', async e =>{
 });
 
 buscador.addEventListener('keyup',e=>{
-    if (porNumero.checked) {
-        const chequesFiltrados = cheques.filter(cheque=> cheque.n_cheque.startsWith(buscador.value))
-        listarCheques(chequesFiltrados)
-    }else if(porRazon.checked){
-        const chequesFiltrados = cheques.filter(cheque=> cheque.ent_por.startsWith(buscador.value.toUpperCase()));
-        listarCheques(chequesFiltrados)
+    if (buscador.value !== "") {
+        if (porNumero.checked) {
+            const chequesFiltrados = cheques.filter(cheque=> cheque.n_cheque.startsWith(buscador.value))
+            listarCheques(chequesFiltrados)
+        }else if(porRazon.checked){
+            const chequesFiltrados = cheques.filter(cheque=> cheque.ent_por.startsWith(buscador.value.toUpperCase()));
+            listarCheques(chequesFiltrados)
+        }else{
+            const chequesFiltrados = cheques.filter(cheque => cheque.i_cheque.toString().startsWith(buscador.value));
+            listarCheques(chequesFiltrados);
+        }
     }else{
-        const chequesFiltrados = cheques.filter(cheque => cheque.i_cheque === parseFloat(buscador.value));
-        listarCheques(chequesFiltrados)
-    }
+        listarCheques(cheques);
+    };
 });
 
 agregar.addEventListener('click',async e=>{
@@ -49,7 +53,7 @@ agregar.addEventListener('click',async e=>{
     })
 })
 
-
+//Seleccionamos cheques
 tbody.addEventListener('click',async e=>{
     seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
@@ -101,7 +105,7 @@ const listarCheques = async(cheques)=>{
     tbody.innerHTML = "";
     for await(let {_id,f_recibido,n_cheque,banco,f_cheque,plaza,i_cheque,ent_por,entreg_a,domicilio,telefono,tipo} of cheques){
         const fechaCorta = f_recibido.slice(0,10).split('-',3);
-        const fechaCheque = f_cheque.slice(0,10).split('-',3);
+        const fechaCheque = f_cheque ? f_cheque.slice(0,10).split('-',3) : "0000-00-00";
         
         let recibido = fechaCorta[2] + "/" + fechaCorta[1] + "/" + fechaCorta[0]
         let F_cheque = fechaCheque[2] + "/" + fechaCheque[1] + "/" + fechaCheque[0];
@@ -172,4 +176,4 @@ document.addEventListener('keyup',e=>{
     if(e.keyCode === 27){
         location.href = "../index.html";
     }
-})
+});

@@ -12,6 +12,7 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
+
 const vendedor = getParameterByName('vendedor')
 const nombre = document.querySelector("#nombre");
 const numero = document.querySelector("#telefono");
@@ -21,6 +22,7 @@ const descripcion = document.querySelector('#descripcion')
 const tbody = document.querySelector('#tbody');
 const grabar = document.querySelector(".grabar");
 const volver = document.getElementById("volver");
+
 
 codigo.addEventListener('keypress', async (e) => {
     if (e.key === 'Enter') {
@@ -97,9 +99,16 @@ function mostrarVentas(objeto,cantidad) {
         <td>${numero.value}</td>
         <td class=text-end>${objeto.stock}</td>
         <td><input type:"text" class=observaciones id=${objeto._id}></td>
+        <td id=eliminar>Eliminar</td>
         </tr>
     `
 };
+
+tbody.addEventListener('click',e=>{
+    if (e.target.id === "eliminar") {
+        tbody.removeChild(e.target.parentNode)
+    }
+});
 
 grabar.addEventListener('click', async e =>{
     //Mandar Pedido a La Base de Datos
@@ -144,6 +153,7 @@ numero.addEventListener('keypress',e=>{
 volver.addEventListener('click',e=>{
     location.href = '../index.html';
 });
+
 
 document.addEventListener('keydown',e=>{
     if(e.key === "Escape"){

@@ -5,7 +5,7 @@ require('dotenv').config
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
-const { copiar, recorrerFlechas,} = require('../funciones');
+const { copiar, recorrerFlechas} = require('../funciones');
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -101,8 +101,6 @@ const filtrar = async ()=>{
     ponerClientes(clientes)
 }
 
-
-
 buscarCliente.addEventListener('keyup',e=>{
     if (e.keyCode === 40) {
         resultado.focus();
@@ -129,8 +127,7 @@ resultado.addEventListener('click',e =>{
 const agregar = document.querySelector('.agregar')
 agregar.addEventListener('click',e=>{
     ipcRenderer.send('abrir-ventana-agregar-cliente')
-})
-
+});
 
 modificar.addEventListener('click',async () =>{
     seleccionado = document.querySelector('.seleccionado');
@@ -143,7 +140,7 @@ modificar.addEventListener('click',async () =>{
         });
         buscarCliente.focus()
     }
-})
+});
 
 eliminar.addEventListener('click',async e=>{
     const clienteEliminar = document.querySelector('.seleccionado')
