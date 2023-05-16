@@ -3,6 +3,7 @@ const sweet = require('sweetalert2');
 
 
 const axios = require('axios');
+const { redondear } = require("./assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -188,7 +189,7 @@ const reingresarContraseña = async()=>{
 
 
 ipcRenderer.on('reordenarSaldo',async e=>{
-    let select = ""
+    let select = "";
     const provedores = (await axios.get(`${URL}provedor`)).data;
     provedores.sort((a,b)=>{
         if (a.provedor>b.provedor) {
@@ -197,7 +198,7 @@ ipcRenderer.on('reordenarSaldo',async e=>{
             return -1
         }
         return 0
-    })
+    });
     for(let provedor of provedores){
         const option = document.createElement('option');
         option.value = provedor._id;
@@ -215,26 +216,37 @@ ipcRenderer.on('reordenarSaldo',async e=>{
         confirmButtonText:"Aceptar",
     }).then(async({isConfirmed})=>{
         if (isConfirmed) {
-            const codigo = document.getElementById('provedores').value;
-            const cuentas = (await axios.get(`${URL}ctactePro/codigo/${codigo}`)).data;
-            cuentas.sort((a,b)=>{
-                if (a.fecha>b.fecha) {
-                    return 1
-                }else if (a.fecha<b.fecha) {
-                    return -1
-                }
-                return 0
-            });
-            let saldo = 0;
-            cuentas.forEach(async cuenta => {
-                saldo += cuenta.debe;
-                cuenta.saldo = saldo;
-                await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta)
-            });
-            sweet.fire({
-                title:"Saldo reodenado",
-                icon:"success"
-            })
+            reodernarSaldos();
         }
     });
-})
+});
+
+
+async function reodernarSaldos(){
+    const codigo = document.getElementById('provedores').value;
+    const cuentas = (await axios.get(`${URL}ctactePro/codigo/${codigo}`)).data;
+    console.log(cuentas);
+
+    // asd
+    cuentas.sort((a,b)=>{
+        if (a.fecha>b.fecha) {
+            return 1
+        }else if (a.fecha<b.fecha) {
+            return -1
+        }
+        return 0
+    });
+    
+    let saldo = 0;
+    
+    for await(let cuenta of cuentas){
+        saldo =  parseFloat(redondear(saldo + cuenta.debe,2));
+        saldo = parseFloat(redondear(saldo - cuenta.haber,2));
+        cuenta.saldo = saldo;
+        await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+    };
+    sweet.fire({
+        title:"Saldo reodenado",
+        icon:"success"
+    });
+}
