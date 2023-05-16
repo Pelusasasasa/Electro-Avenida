@@ -134,6 +134,10 @@ html {
     grid-template-columns: 1fr 1fr 1fr;
 }
 
+.presupuesto .informacion main,.presupuesto .cliente .nombre{
+    grid-template-columns: 3fr 1fr 1fr;
+}
+
 .presupuesto #marina{
     grid-template-columns: 1fr 2fr 1fr;
 }
