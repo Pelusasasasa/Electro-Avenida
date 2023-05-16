@@ -41,7 +41,7 @@ const { ipcRenderer } = require("electron");
             venta.observaciones !== "" ? clientes.innerHTML += ` (${venta.observaciones})` : "";
 
             //Parte Cliente
-            clientes.innerHTML = cliente.cliente;
+            clientes.innerHTML = cliente.cliente + `(${venta.observaciones.toUpperCase()})`;
             idCliente.innerHTML = cliente._id ? cliente._id : cliente.id;
             vendedor.innerHTML = venta.vendedor;
             cuit.innerHTML = cliente.cuit;
