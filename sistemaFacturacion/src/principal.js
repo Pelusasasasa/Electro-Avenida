@@ -113,7 +113,7 @@ const { verEstadoServidorAfip } = require("./funciones");
 // verEstadoServidorAfip()
 
 async function validacionUsuario(texto,botones = true) {
-    sweet.fire({
+    await sweet.fire({
                 title:"Contraseña",
                 input:"password",
                 showCancelButton: true,
@@ -128,11 +128,10 @@ async function validacionUsuario(texto,botones = true) {
                 if (value === "" || value === undefined) {
                     location.reload();
                 }else{
-                    vendedores.forEach(e=>{
-                        value === e._id && (vendedor=e.nombre)
-                        value === e._id && (acceso = e.acceso)
-                        value === e._id && (empresa = e.empresa)
-                    })
+                    const vendedorTraido = (await axios.get(`${URL}usuarios/210`)).data;
+                        value === vendedorTraido._id && (vendedor=vendedorTraido.nombre)
+                        value === vendedorTraido._id && (acceso = vendedorTraido.acceso)
+                        value === vendedorTraido._id && (empresa = vendedorTraido.empresa)
                     if(vendedor !== undefined){ 
                         window.location = `${texto}?vendedor=${vendedor}&acceso=${acceso}&empresa=${empresa}&botones=${botones}`;
                         ipcRenderer.send('cerrar-menu');
@@ -144,7 +143,8 @@ async function validacionUsuario(texto,botones = true) {
                     }
                 }
        })
-       .catch(()=>{
+       .catch((error)=>{
+        console.log(error)
         location.reload()
        })
 }

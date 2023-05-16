@@ -117,11 +117,10 @@ tbody.addEventListener('click',e =>{
    subSeleccionado = document.querySelector('.subSeleccionado');
 
    seleccionado && seleccionado.classList.remove('seleccionado');
-   seleccionado = (e.path[0].nodeName === "TD" || e.path[0].nodeName === "TH" )? e.path[1] : e.path[0];
+   seleccionado = (e.target.nodeName === "TD" || e.target.nodeName === "TH" ) ? e.target.parentNode : e.target;
    seleccionado.classList.add('seleccionado');
-
    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-   subSeleccionado = e.path[0];
+   subSeleccionado = e.target;
    subSeleccionado.classList.add('subSeleccionado')
 });
 

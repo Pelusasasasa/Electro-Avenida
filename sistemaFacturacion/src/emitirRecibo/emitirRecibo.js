@@ -403,6 +403,7 @@ const hacerRecibo = async()=>{
      recibo.observaciones = valoresRecibidos.value ? valoresRecibidos.value.toUpperCase() : "EFECTIVO";
      const aux = (situacion === "negro") ? "saldo_p" : "saldo"
      let saldoFavor = 0;
+     recibo.descuento = 0;
      saldoFavor = (saldoAfavor.value !== "") && parseFloat(saldoAFavor.value);
      recibo.saldoAFavor = saldoFavor;
      recibo.precioFinal = parseFloat(total.value);

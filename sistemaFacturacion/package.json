@@ -25,7 +25,7 @@
     "gulp-sourcemaps": "^3.0.0"
   },
   "dependencies": {
-    "@afipsdk/afip.js": "^0.7.7",
+    "@afipsdk/afip.js": "^0.7.9",
     "axios": "^1.4.0",
     "cuit-validator": "^1.0.0",
     "dotenv": "^16.0.3",
