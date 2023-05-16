@@ -29,18 +29,6 @@ mes = (mes<10) ? `0${mes}` : mes;
 hoy = (hoy<10) ? `0${hoy}` : hoy;
 
 const cond_iva = (Cliente.iva === undefined) && "Consumidor Final";
-<<<<<<< HEAD
-fecha.innerHTML = `${hoy}/${mes}/${anio}`;
-numero.innerHTML = venta.nro_comp;
-idCliente.innerHTML = venta.codigo;
-cliente.innerHTML = Cliente.cliente;
-cuit.innerHTML = Cliente.cuit;
-localidad.innerHTML=Cliente.localidad;
-direccion.innerHTML=Cliente.direccion;
-iva.innerHTML = cond_iva;
-observaciones.innerHTML = venta.observaciones;
-tbody.innerHTML = ""
-=======
 fecha.innerText = `${hoy}/${mes}/${anio}`;
 numero.innerText = venta.nro_comp;
 idCliente.innerText = venta.codigo;
@@ -51,7 +39,6 @@ direccion.innerText=Cliente.direccion;
 iva.innerText = cond_iva;
 observaciones.innerText = venta.observaciones;
 tbody.innerHTML = "";
->>>>>>> 74a4b9e2d9c2f0bee9a91dc64a161e73fc9a723d
 for(let objeto of lista){
     const tr = document.createElement('tr');
 
