@@ -4,6 +4,7 @@ require("dotenv").config;
 const URL = process.env.URL;
 
 const XLSX = require('xlsx');
+const { configAxios } = require("../funciones");
 
 const buscar = document.querySelector('.buscar')
 const tbody = document.querySelector('.tbody')
@@ -30,7 +31,7 @@ hasta.addEventListener('keypress',e=>{
 
 
 buscar.addEventListener('click',async e=>{
-        productos = await axios.get(`${URL}productos/productosEntreRangos/${desde.value}/${hasta.value}`)
+        productos = await axios.get(`${URL}productos/productosEntreRangos/${desde.value}/${hasta.value}`,configAxios)
         productos = productos.data;
         console.log(productos)
         listarProductos();

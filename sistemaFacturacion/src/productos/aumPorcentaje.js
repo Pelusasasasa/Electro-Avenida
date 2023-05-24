@@ -4,7 +4,7 @@ const porcentajeInput = document.querySelector('#porcentaje');
 const modificar = document.querySelector('.modificar');
 
 const axios = require("axios");
-const { cerrarVentana } = require('../funciones');
+const { cerrarVentana, configAxios } = require('../funciones');
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -13,8 +13,8 @@ let dolar;
 
 window.addEventListener('load',async e=>{
     cerrarVentana();
-    dolar = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
-    marcas = await axios(`${URL}productos`);
+    dolar = parseFloat((await axios.get(`${URL}tipoVenta`,configAxios)).data.dolar);
+    marcas = await axios(`${URL}productos`,configAxios);
     marcas = marcas.data
     marcas.sort();
     marcas.forEach(marca => {
@@ -28,7 +28,7 @@ window.addEventListener('load',async e=>{
 modificar.addEventListener('click',async e=>{
     let marca = select.value;
     let porcentaje = parseFloat(porcentajeInput.value);
-    let productos = await axios.get(`${URL}productos/marcas/${marca}`)
+    let productos = await axios.get(`${URL}productos/marcas/${marca}`,configAxios)
     productos = productos.data;
     await productos.forEach(async producto=>{
         if (producto.costodolar === 0) {
@@ -43,7 +43,7 @@ modificar.addEventListener('click',async e=>{
             producto.precio_venta = ((producto.costodolar + parseFloat(producto.impuestos))*dolar*parseFloat(producto.utilidad)/100) + ((parseFloat(producto.costodolar) + parseFloat(producto.impuestos))*dolar);
             producto.precio_venta = (producto.precio_venta).toFixed(2);
         }
-        await axios.put(`${URL}productos/${producto._id}`,producto)
+        await axios.put(`${URL}productos/${producto._id}`,producto,configAxios)
         sweet.fire({title:`Se Modifico el precio de los productos ${select.value}`})
             .then(()=>{
                 location.reload();

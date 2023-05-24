@@ -1,7 +1,7 @@
 
 const axios = require("axios");
 const { ipcRenderer } = require("electron");
-const { cerrarVentana, botonesSalir } = require("../funciones");
+const { cerrarVentana, botonesSalir, configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -40,7 +40,7 @@ window.addEventListener('load',async e=>{
     let nextDay = new Date(hasta.value);
     nextDay.setDate(today.getDate() + 1);
 
-    ventas = (await axios.get(`${URL}ventas/${desde.value}/${nextDay}`)).data;
+    ventas = (await axios.get(`${URL}ventas/${desde.value}/${nextDay}`,configAxios)).data;
     // alerta.classList.remove('none');
     listar(ventas);
 });
@@ -59,8 +59,8 @@ hasta.addEventListener('keypress',async e=>{
 
     if (e.keyCode === 13) {
     await alerta.classList.remove('none');
-    ventas = (await axios.get(`${URL}ventas/${desde.value}/${nextDay}`)).data;
-    recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desde.value}/${nextDay}`)).data;
+    ventas = (await axios.get(`${URL}ventas/${desde.value}/${nextDay}`,configAxios)).data;
+    recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desde.value}/${nextDay}`,configAxios)).data;
     listar(ventas);
     listarRecibos(recibos);
     }

@@ -1,6 +1,5 @@
 const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
-let permiso;
 let idSeleccionado;
 
 const listarUsuarios = document.querySelector('.listarUsuarios');
@@ -15,7 +14,7 @@ const eliminar = document.querySelector('.eliminar');
 const enviar = document.querySelector('#enviar');
 
 const axios = require("axios");
-const { verificarUsuarios } = require("../funciones");
+const { verificarUsuarios, configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -26,7 +25,7 @@ enviar.addEventListener('click', async e =>{
         acceso: acceso.value,
         empresa:empresa.value
     }
-    await axios.post(`${URL}usuarios`,Usuario);
+    await axios.post(`${URL}usuarios`,Usuario,configAxios);
     location.reload();
 })
 
@@ -34,7 +33,9 @@ let usuarios;
 
 window.addEventListener('load', async e=>{
     const usuario = await verificarUsuarios();
+    console.log(usuario)
     permiso = usuario.acceso;
+    console.log(permiso)
     if (usuario === "") {
         await sweet.fire({
             title:"Contraseña incorrecta"
@@ -45,7 +46,7 @@ window.addEventListener('load', async e=>{
     }
     
 
-    usuarios = (await axios.get(`${URL}usuarios`)).data;
+    usuarios = (await axios.get(`${URL}usuarios`,configAxios)).data;
     listar(usuarios)
 })
 
@@ -115,12 +116,12 @@ guardar.addEventListener('click',async e=>{
         acceso:acceso.value,
         empresa:empresa.value
     };
-    await axios.put(`${URL}usuarios/${nuevoUsuario._id}`,nuevoUsuario);
+    await axios.put(`${URL}usuarios/${nuevoUsuario._id}`,nuevoUsuario,configAxios);
     location.reload();
 })
 
 eliminar.addEventListener('click',async e=>{
-    await axios.delete(`${URL}usuarios/${idSeleccionado}`);
+    await axios.delete(`${URL}usuarios/${idSeleccionado}`,configAxios);
     location.reload();
 });
 

@@ -7,7 +7,7 @@ const cambiar = document.querySelector('.cambiarBoton')
 const impirmir = document.querySelector('.imprimirBoton')
 
 const axios = require("axios");
-const { verificarUsuarios } = require('../funciones');
+const { verificarUsuarios, configAxios } = require('../funciones');
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -33,7 +33,7 @@ window.addEventListener('load',async e=>{
         window.close();
     };
 
-    let productos = (await axios(`${URL}productos/stockNegativo`)).data;
+    let productos = (await axios(`${URL}productos/stockNegativo`,configAxios)).data;
     listarStockNegativo(productos)
 });
 
@@ -85,10 +85,10 @@ cambiar.addEventListener('click',async e=>{
         confirmButtonText:"Aceptar",
     }).then(async ({isConfirmed,value})=>{
         if (isConfirmed && value !== "") {
-            let producto = (await axios.get(`${URL}productos/${seleccionado.id}`)).data
+            let producto = (await axios.get(`${URL}productos/${seleccionado.id}`,configAxios)).data
             await crearMovimiento(producto,value);
             producto.stock = value;
-            await axios.put(`${URL}productos/${seleccionado.id}`,producto);
+            await axios.put(`${URL}productos/${seleccionado.id}`,producto,configAxios);
             if (parseFloat(producto.stock) > 0 ) {
                 tbody.removeChild(seleccionado);
             }else{
@@ -108,7 +108,7 @@ const crearMovimiento = async(producto,stock)=>{
     movimiento.vendedor = vendedor.nombre;
     movimiento.tipo_comp = "+";
     movimiento.precio_unitario = producto.precio_venta;
-    await axios.post(`${URL}movProductos`,[movimiento]);
+    await axios.post(`${URL}movProductos`,[movimiento],configAxios);
 }
 
 

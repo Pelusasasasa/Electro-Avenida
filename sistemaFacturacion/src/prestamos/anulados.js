@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { copiar } = require('../funciones');
+const { copiar, configAxios } = require('../funciones');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -43,7 +43,7 @@ cerrarVentana.addEventListener('click',e=>{
 tbody.addEventListener('click',seleccionarTr);
 
 async function traerPrestamosAnulados() {
-    const prestamos = (await axios.get(`${URL}prestamos/anulados/${desde.value}/${hasta.value}`)).data;
+    const prestamos = (await axios.get(`${URL}prestamos/anulados/${desde.value}/${hasta.value}`,configAxios)).data;
     listarPrestamos(prestamos);
 };
 
@@ -96,7 +96,7 @@ async function seleccionarTr(e) {
 };
 
 async function PonerMovimientos(id) {
-    const movimientos = (await axios.get(`${URL}movProductos/${id}/Presupuesto`)).data;
+    const movimientos = (await axios.get(`${URL}movProductos/${id}/Presupuesto`,configAxios)).data;
     detalle.innerText = "";
     for await(let mov of movimientos){
         const tr = document.createElement('tr');

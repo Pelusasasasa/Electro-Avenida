@@ -6,7 +6,7 @@ const url = require('url');
 const { app, BrowserWindow, ipcMain, Menu,dialog } = require('electron');
 const {autoUpdater} = require('electron-updater');
 
-const {abrirVentana} = require('./funciones');
+const {abrirVentana, configAxios} = require('./funciones');
 const templateMenu = require('./menu');
 const [pedidos, ventas] = require('./descargas/descargas')
 
@@ -270,7 +270,7 @@ const abrirVentanaImprimir = async(texto,width,height,reinicio,show=false)=>{
 
 async function descargas(nombreFuncion,ventasTraidas,path) {
     if(nombreFuncion === "Pedidos"){
-        pedidos((await axios.get(`${URL}pedidos`)).data,path)
+        pedidos((await axios.get(`${URL}pedidos`,configAxios)).data,path)
     }else if(nombreFuncion === "Ventas"){
         ventas(ventasTraidas,path);
     }

@@ -7,12 +7,13 @@ const cancelar = document.querySelector('.cancelar')
 const diescripcion = document.querySelector('#descripcion')
 
 const axios = require("axios");
+const { configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
 codigo.addEventListener('keydown',async e=>{
     if(e.key === "Enter" || e.key === "Tab"){  
-        let producto = await axios.get(`${URL}productos/${codigo.value}`)
+        let producto = await axios.get(`${URL}productos/${codigo.value}`,configAxios)
         producto = producto.data
         if (producto.descripcion) {
             descripcion.value = producto.descripcion;
@@ -30,7 +31,7 @@ codigo.addEventListener('keydown',async e=>{
 
 nuevoCodigo.addEventListener('keydown',async e=>{
     if (e.key === "Enter") {
-            let productoYaExistente = await axios.get(`${URL}productos/${e.target.value}`);
+            let productoYaExistente = await axios.get(`${URL}productos/${e.target.value}`,configAxios);
             productoYaExistente = productoYaExistente.data;
                 if (productoYaExistente.length!==0 ) {
                     await sweet.fire({title:"codigo ya utilizado"});
@@ -43,11 +44,11 @@ nuevoCodigo.addEventListener('keydown',async e=>{
 
 
 aceptar.addEventListener('click',async e=>{
-    const productos = await axios.get(`${URL}productos/${codigo.value}`)
+    const productos = await axios.get(`${URL}productos/${codigo.value}`,configAxios)
     const nuevoProducto=productos.data;
     nuevoProducto._id=nuevoCodigo.value;
-    await axios.post(`${URL}productos`,nuevoProducto)   
-    await axios.delete(`${URL}productos/${codigo.value}`)
+    await axios.post(`${URL}productos`,nuevoProducto,configAxios)   
+    await axios.delete(`${URL}productos/${codigo.value}`,configAxios)
     location.reload()
 })
 

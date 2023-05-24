@@ -361,7 +361,7 @@ const verificarUsuarios = async()=>{
         input:"password"
     }).then(async ({isConfirmed,value})=>{
         if (isConfirmed) {
-            vendedor = (await axios.get(`${URL}usuarios/${value}`)).data;
+            vendedor = (await axios.get(`${URL}usuarios/${value}`,configAxios)).data;
         }
     })
     return vendedor
@@ -380,7 +380,7 @@ const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,des
     movimiento.cliente = cliente;
     movimiento.vendedor = vendedor;
     try {
-        await axios.post(`${URL}movCajas`,movimiento);
+        await axios.post(`${URL}movCajas`,movimiento,configAxios);
     } catch (error) {
         console.log(errero)
         await sweet.fire({

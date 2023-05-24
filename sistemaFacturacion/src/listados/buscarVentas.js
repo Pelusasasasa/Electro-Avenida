@@ -2,6 +2,7 @@
 const sweet = require('sweetalert2');
 const axios = require("axios");
 const { DateTime } = require("luxon");
+const { configAxios } = require('../funciones');
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -67,18 +68,18 @@ buscar.addEventListener('click',async e=>{
         let venta; 
         const numero = primerNumero.value.padStart(4,'0') + "-" + segundoNumero.value.padStart(8,'0');
         if (tipoComp.value === "presupuesto") {
-           venta = (await axios.get(`${URL}presupuesto/${numero}`)).data;
+           venta = (await axios.get(`${URL}presupuesto/${numero}`,configAxios)).data;
         }else if(tipoComp.value === "recibo"){
-            venta = (await axios.get(`${URL}ventas/venta/ventaUnica/${numero}/Recibos_P`)).data;
-            venta = venta === "" ? (await axios.get(`${URL}ventas/venta/ventaUnica/${numero}/Recibos`)).data : venta;
+            venta = (await axios.get(`${URL}ventas/venta/ventaUnica/${numero}/Recibos_P`,configAxios)).data;
+            venta = venta === "" ? (await axios.get(`${URL}ventas/venta/ventaUnica/${numero}/Recibos`,configAxios)).data : venta;
         }else{
             console.log(codComp.value)
-            venta = (await axios.get(`${URL}ventas/venta/ventaUnica/${numero}/${codComp.value}`)).data;
+            venta = (await axios.get(`${URL}ventas/venta/ventaUnica/${numero}/${codComp.value}`,configAxios)).data;
         }
         traerVenta(venta);
      }else{
         let texto = razon.value === "" ? "A Consumidor Final" : razon.value;
-        let clientes = await axios.get(`${URL}clientes/${texto}`);
+        let clientes = await axios.get(`${URL}clientes/${texto}`,configAxios);
         clientes = clientes.data;
         traerTodasLasVentas(clientes)
      }
@@ -142,7 +143,7 @@ async function traerTodasLasVentas(lista) {
     const desdeFecha = desde.value
     const hastaFecha = DateTime.fromISO(hasta.value).endOf('day')
     for await(let cliente of lista){
-        let ventas = (await axios.get(`${URL}presupuesto/cliente/${cliente._id}/${desdeFecha}/${hastaFecha}`)).data;
+        let ventas = (await axios.get(`${URL}presupuesto/cliente/${cliente._id}/${desdeFecha}/${hastaFecha}`,configAxios)).data;
         tbody.innerHTML += ventas.length !== 0 && `<tr class="titulo"><td>${cliente.cliente}</td></tr>`
         for await(let venta of ventas){
             listarVentas(venta)

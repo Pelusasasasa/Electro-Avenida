@@ -8,6 +8,8 @@ const URL = process.env.URL;
 let situacion = "blanco";
 let Clientes = {}
 
+const {configAxios} = require('../funciones')
+
 const tbody = document.querySelector('.tbody')
 const fecha = document.querySelector('.fecha');
 const fechaHoy = new Date();
@@ -55,7 +57,7 @@ const mostrarNegro = ()=>{
 }
 
 const traerSaldo = async()=>{
-    Clientes = (await axios.get(`${URL}clientes`)).data;
+    Clientes = (await axios.get(`${URL}clientes`,configAxios)).data;
     Clientes.sort((a,b)=>{
         if (a.cliente<b.cliente) {
             return -1;

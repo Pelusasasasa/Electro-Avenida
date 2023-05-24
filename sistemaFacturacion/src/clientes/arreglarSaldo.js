@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
-const { cerrarVentana, botonesSalir,verificarUsuarios } = require("../funciones");
+const { cerrarVentana, botonesSalir,verificarUsuarios, configAxios } = require("../funciones");
 
 require("dotenv").config;
 const URL = process.env.URL;
@@ -42,7 +42,7 @@ window.addEventListener('load',async e=>{
 
 codigo.addEventListener('keypress',async e=>{
     if (e.key === "Enter") {
-        cliente = (await axios.get(`${URL}clientes/id/${codigo.value.toUpperCase()}`)).data;
+        cliente = (await axios.get(`${URL}clientes/id/${codigo.value.toUpperCase()}`,configAxios)).data;
         if (cliente !== "") {
             listarCliente(cliente);
             saldo.focus();
@@ -107,6 +107,6 @@ guardar.addEventListener('click',async e=>{
     cliente.saldo = saldo.value;
     cliente.saldo_p = saldo_P.value;
     console.log(cliente)
-    await axios.put(`${URL}clientes/${cliente._id}`,cliente);
+    await axios.put(`${URL}clientes/${cliente._id}`,cliente,configAxios);
     window.close();
 });

@@ -1,6 +1,7 @@
 
 const { DateTime } = require("luxon");
 const axios = require("axios");
+const { configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -30,8 +31,8 @@ const imprimir = document.querySelector('.imprimir');
 window.addEventListener('load', async e=>{
     const desdeFecha = new Date(desde.value);
     let hastaFecha = DateTime.fromISO(hasta.value).endOf('day');
-    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`)).data;
-    let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hastaFecha}`)).data;
+    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`,configAxios)).data;
+    let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hastaFecha}`,configAxios)).data;
     const ventasPresupuestos = ventas.filter(venta => venta.tipo_pago === "PP")
     const presupuestoPresupuestos = presupuesto.filter(venta => venta.tipo_pago === "PP")
     listarVentas([...ventasPresupuestos,...presupuestoPresupuestos],tbody)
@@ -47,8 +48,8 @@ hasta.addEventListener('keypress',async e=>{
     if (e.key === "Enter") {
         const desdeFecha = new Date(desde.value);
         let hastaFecha = DateTime.fromISO(hasta.value).endOf('day');
-        let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`)).data;
-        let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hastaFecha}`)).data;
+        let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`,configAxios)).data;
+        let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hastaFecha}`,configAxios)).data;
         const ventasPresupuestos = ventas.filter(venta => venta.tipo_pago === "PP")
         const presupuestoPresupuestos = presupuesto.filter(venta => venta.tipo_pago === "PP")
         listarVentas([...ventasPresupuestos,...presupuestoPresupuestos],tbody)

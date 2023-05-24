@@ -3,7 +3,7 @@ require("dotenv").config;
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
-const { copiar } = require("../funciones");
+const { copiar, configAxios } = require("../funciones");
 
 const codigo = document.querySelector('#codigo');
 const nombre = document.querySelector('#nombre');
@@ -24,7 +24,7 @@ guardar.addEventListener('click',async e=>{
     rubro.nombre = nombre.value.toUpperCase();
 
     try {
-        await axios.post(`${URL}rubros`,rubro);
+        await axios.post(`${URL}rubros`,rubro,configAxios);
         location.reload();
     } catch (error) {
         console.log(error)
@@ -36,8 +36,8 @@ guardar.addEventListener('click',async e=>{
 
 window.addEventListener('load',async e=>{
     copiar();
-    const id = (await axios.get(`${URL}rubros/codigo`)).data;
-    rubros = (await axios.get(`${URL}rubros`)).data;
+    const id = (await axios.get(`${URL}rubros/codigo`,configAxios)).data;
+    rubros = (await axios.get(`${URL}rubros`,configAxios)).data;
     listar(rubros)
     codigo.value = (id.toString().padStart(4,'0'));
 });
@@ -86,7 +86,7 @@ tbody.addEventListener('dblclick',e=>{
             }).then(async({isConfirmed:confirmado})=>{
                 if (confirmado) {
                     try {
-                        await axios.delete(`${URL}rubros/${rubro._id}`);
+                        await axios.delete(`${URL}rubros/${rubro._id}`,configAxios);
                         location.reload();
                     } catch (error) {
                         console.log(error);
