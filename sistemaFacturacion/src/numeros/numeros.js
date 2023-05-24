@@ -5,7 +5,7 @@ const modificar = document.querySelector('#modificar');
 const grabar = document.querySelector('#grabar');
 const cancelar = document.querySelector('#cancelar');
 const axios = require("axios");
-const { ultimasFacturas, redondear } = require("../funciones");
+const { ultimasFacturas, redondear, configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -59,13 +59,13 @@ async function guardarDatos() {
         "dolar":dolar.value
     };
     (parseFloat(dolarAux) !== parseFloat(dolar.value)) && cambiarPrecios(parseFloat(dolar.value));
-    await axios.put(`${URL}tipoVenta`,numeros);
+    await axios.put(`${URL}tipoVenta`,numeros,configAxios);
     
     // location.reload();
 }
 
 const recibirNumeros = async()=>{
-    let numeros = await axios.get(`${URL}tipoVenta`);
+    let numeros = await axios.get(`${URL}tipoVenta`,configAxios);
     numeros=numeros.data;
     ponerInpusnumero(numeros)
 }
@@ -100,7 +100,7 @@ cancelar.addEventListener('click', ()=>{
 async function cambiarPrecios(dolar) {
     dolarAux = dolar;
     //cambiamos el precio de los productos con dolares
-    let productos = (await axios.get(`${URL}productos/buscarProducto/textoVacio/dolar`)).data;
+    let productos = (await axios.get(`${URL}productos/buscarProducto/textoVacio/dolar`,configAxios)).data;
     productos.sort((a,b)=>{
         if (a.descripcion>b.descripcion) {
             return 1
@@ -119,7 +119,7 @@ async function cambiarPrecios(dolar) {
         const costoMasIva = parseFloat(redondear((parseFloat(producto.impuestos)+parseFloat(producto.costodolar)),2))
         const costoTotal = parseFloat(redondear(dolar * costoMasIva,2));
         producto.precio_venta = (costoTotal+((parseFloat(producto.utilidad)*costoTotal/100))).toFixed(2);
-        await axios.put(`${URL}productos/${producto._id}`,producto);
+        await axios.put(`${URL}productos/${producto._id}`,producto,configAxios);
     };
         esperar.classList.add('none');
 };

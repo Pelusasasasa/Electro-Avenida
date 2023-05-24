@@ -2,7 +2,7 @@ const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
 
 const axios = require("axios");
-const { copiar, recorrerFlechas } = require("../funciones");
+const { copiar, recorrerFlechas, configAxios } = require("../funciones");
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -77,13 +77,13 @@ async function filtrar(){
         let nuevoTexto = texto.replace('/',"ALT47");    
         let condicion = select.value;
         condicion === "codigo" && (condicion = "_id")
-        productos = await axios.get(`${URL}productos/buscarProducto/${nuevoTexto}/${condicion}`)
+        productos = await axios.get(`${URL}productos/buscarProducto/${nuevoTexto}/${condicion}`,configAxios)
     }else if(texto !== ""){ 
         let condicion = select.value;
         condicion === "codigo" && (condicion = "_id")
-        productos = await axios.get(`${URL}productos/buscarProducto/${texto}/${condicion}`)
+        productos = await axios.get(`${URL}productos/buscarProducto/${texto}/${condicion}`,configAxios)
     }else{
-        productos = await axios.get(`${URL}productos/buscarProducto/textoVacio/descripcion`)
+        productos = await axios.get(`${URL}productos/buscarProducto/textoVacio/descripcion`,configAxios)
     }
     productos = productos.data
     
@@ -166,7 +166,7 @@ seleccionarTBody.addEventListener('click',(e) =>{
 
 const imagen = document.querySelector('.imagen')
 async function mostrarImagen(id) {
-        const producto = (await axios.get(`${URL}productos/${id}`)).data;
+        const producto = (await axios.get(`${URL}productos/${id}`),configAxios).data;
         if (producto.imgURL) {
             const path = `${URL}productos/${producto._id}/image`;
             console.log(path)
@@ -243,7 +243,7 @@ eliminar.addEventListener('click',async e=>{
             confirmButtonText:"Aceptar"
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
-                await axios.delete(`${URL}productos/${seleccionado.id}`)
+                await axios.delete(`${URL}productos/${seleccionado.id}`,configAxios)
                 location.reload()        
             }
         })

@@ -11,7 +11,7 @@ const notificaciones = require('node-notifier');
 
 window.addEventListener('load',async e=>{
     setTimeout(async ()=>{
-        const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
+        const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`,configAxios)).data.dolar);
         const dolarBNA = parseFloat((await avisarDolar()).replace(',','.')) + 1;
         
         if (dolarBNA !== dolarSistema) {
@@ -21,7 +21,7 @@ window.addEventListener('load',async e=>{
             });
         }
 
-        vendedores = (await axios.get(`${URL}usuarios`)).data;
+        vendedores = (await axios.get(`${URL}usuarios`,configAxios)).data;
     },0)
 });
 
@@ -108,7 +108,7 @@ let vendedor
 let acceso
 let empresa
 const sweet = require('sweetalert2');
-const { verEstadoServidorAfip } = require("./funciones");
+const { verEstadoServidorAfip, configAxios } = require("./funciones");
 
 // verEstadoServidorAfip()
 
@@ -128,7 +128,7 @@ async function validacionUsuario(texto,botones = true) {
                 if (value === "" || value === undefined) {
                     location.reload();
                 }else{
-                    const vendedorTraido = (await axios.get(`${URL}usuarios/${value}`)).data;
+                    const vendedorTraido = (await axios.get(`${URL}usuarios/${value}`,configAxios)).data;
                     console.log(value)
                     value === vendedorTraido._id && (vendedor=vendedorTraido.nombre)
                     value === vendedorTraido._id && (acceso = vendedorTraido.acceso)
@@ -161,7 +161,7 @@ ipcRenderer.on("validarUsuario",(e,args)=>{
             confirmButtonText:"Aceptar"
         }).then(async ({isConfirmed,value})=>{
             if (isConfirmed && value !== "") {
-                const usuario = (await axios.get(`${URL}usuarios/${value}`)).data;
+                const usuario = (await axios.get(`${URL}usuarios/${value}`,configAxios)).data;
                 let vendedor;
                 let acceso;
                 if (usuario !== "") {
