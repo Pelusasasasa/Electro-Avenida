@@ -4,7 +4,7 @@ const { ipcRenderer } = require("electron");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const{ cerrarVentana, botonesSalir, verificarUsuarios} = require('../funciones')
+const{ cerrarVentana, botonesSalir, verificarUsuarios, configAxios} = require('../funciones')
 
 const numeroCheque = document.querySelector('#numeroCheque');
 const banco = document.querySelector('#banco');
@@ -130,7 +130,7 @@ agregar.addEventListener('click',async e=>{
     cheque.dom = domicilio.value;
     cheque.tel = telefono.value;
     console.log(cheque)
-    await axios.post(`${URL}cheques`,cheque);
+    await axios.post(`${URL}cheques`,cheque,configAxios);
     await sweet.fire({
         title:"Otro Cheque?",
         showCancelButton:true,

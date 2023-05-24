@@ -3,7 +3,7 @@ const { ipcRenderer } = require("electron");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const {botonesSalir, cerrarVentana, verificarUsuarios} = require('../funciones');
+const {botonesSalir, cerrarVentana, verificarUsuarios, configAxios} = require('../funciones');
 
 const fecha = document.querySelector('#fecha');
 const tarjetas = document.querySelector('#tarjetas');
@@ -31,7 +31,7 @@ window.addEventListener('load',async e=>{
     botonesSalir();
     cerrarVentana();
 
-    const tipoTajertas = (await axios.get(`${URL}tipoTarjetas`)).data;
+    const tipoTajertas = (await axios.get(`${URL}tipoTarjetas`,configAxios)).data;
     for await(let tipo of tipoTajertas){
         const option = document.createElement('option');
 
@@ -61,7 +61,7 @@ agregar.addEventListener('click',async e=>{
     tarjeta.fecha = new Date(year,month-1,date,hora,minutos,seg);
     tarjeta.tarjeta = tarjetas.value;
     try {
-        await axios.post(`${URL}tarjetas`,tarjeta)
+        await axios.post(`${URL}tarjetas`,tarjeta,configAxios)
         window.close();
     } catch (error) {
         console.log(error);

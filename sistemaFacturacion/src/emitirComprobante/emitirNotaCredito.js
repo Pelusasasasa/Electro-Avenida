@@ -11,7 +11,7 @@ function getParameterByName(name) {
 }
 
 const axios = require("axios");
-const { verCodComp, generarMovimientoCaja, redondear } = require("../funciones");
+const { verCodComp, generarMovimientoCaja, redondear, configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -73,7 +73,7 @@ let arregloProductosDescontarStock = [];
 codigoC.addEventListener('keypress',async e=>{
     if ((e.key === "Enter")) {
         if (codigoC.value !== "") {
-            let cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`)).data;
+            let cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`,configAxios)).data;
                 if (cliente==="") {
                     await sweet.fire({title:"Cliente no encontrado"});
                     codigoC.value = "";
@@ -89,7 +89,7 @@ codigoC.addEventListener('keypress',async e=>{
 })
 
 ipcRenderer.on('mando-el-cliente',async (e,args)=>{
-    cliente = (await axios.get(`${URL}clientes/id/${args}`)).data
+    cliente = (await axios.get(`${URL}clientes/id/${args}`,configAxios)).data
     ponerInputsClientes(cliente)
     
 })
@@ -168,7 +168,7 @@ codigo.addEventListener('keypress',async (e) => {
             precioAgregar.classList.remove('none');
             descripcionAgregar.children[0].focus();
         }else if (e.target.value !== "") {
-            let producto = (await axios.get(`${URL}productos/${e.target.value}`)).data
+            let producto = (await axios.get(`${URL}productos/${e.target.value}`,configAxios)).data
                 if (producto.length === 0) {
                         await sweet.fire({title:"No existe ese Producto"});
                         codigo.value = "";
@@ -251,7 +251,7 @@ precioAgregar.addEventListener('keypress',e=>{
 
 ipcRenderer.on('mando-el-producto',async(e,args)=>{
         const {id,cantidad} = JSON.parse(args);
-        const producto = (await axios.get(`${URL}productos/${id}`)).data;
+        const producto = (await axios.get(`${URL}productos/${id}`,configAxios)).data;
         await mostrarVentas(producto,cantidad);
 });
 
@@ -360,7 +360,7 @@ factura.addEventListener('click',async e=>{
 
                 
                 //Traemos la venta relacionada con la nota de credito
-                let ventaRelacionada = (await axios.get(`${URL}ventas/factura/${venta.numeroAsociado}/${"Ticket Factura"}/${venta.condIva}`)).data;
+                let ventaRelacionada = (await axios.get(`${URL}ventas/factura/${venta.numeroAsociado}/${"Ticket Factura"}/${venta.condIva}`,configAxios)).data;
                 //subimos a la afip la factura electronica
                 let afip = await subirAAfip(venta,ventaRelacionada);
                 venta.nro_comp = `0005-${(afip.numero).toString().padStart(8,'0')}`;
@@ -374,7 +374,7 @@ factura.addEventListener('click',async e=>{
                 venta.tipo_pago === "CD" && await verTipoPago();
                 
                 //mandamos la venta
-                nuevaVenta = await axios.post(`${URL}ventas`,venta);
+                nuevaVenta = await axios.post(`${URL}ventas`,venta,configAxios);
 
                 //mandamos el movimiento de caja
                 venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 3 ? "Nota Credito A" : "Nota Credito B",venta.cod_comp === 3 ? "NTA" : "NTB",redondear(venta.precioFinal * -1,2),venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor);
@@ -391,14 +391,14 @@ factura.addEventListener('click',async e=>{
                         await agregarStock(producto.objeto._id,producto.cantidad);
                         await movimientoProducto(producto.objeto,producto.cantidad,venta);
                     }
-                    await axios.put(`${URL}productos`,arregloProductosDescontarStock);
-                    await axios.post(`${URL}movProductos`,arregloMovimiento);
+                    await axios.put(`${URL}productos`,arregloProductosDescontarStock,configAxios);
+                    await axios.post(`${URL}movProductos`,arregloMovimiento,configAxios);
                     arregloMovimiento = [];
                     arregloProductosDescontarStock = [];
                 }
                 //creamos el pdf
                 alerta.children[1].innerHTML = "Guardando nota de credito como pdf"
-                await axios.post(`${URL}crearPdf`,[venta,cliente,afip]);
+                await axios.post(`${URL}crearPdf`,[venta,cliente,afip],configAxios);
                 //reiniciamos la pagina
                 location.href="../index.html";
            
@@ -413,7 +413,7 @@ factura.addEventListener('click',async e=>{
 
 //Agregamos el stock nuevo
 const agregarStock = async (codigo,cantidad)=>{
-    let producto = (await axios.get(`${URL}productos/${codigo}`)).data;
+    let producto = (await axios.get(`${URL}productos/${codigo}`,configAxios)).data;
     const descontar = parseFloat(producto.stock) + parseFloat(cantidad);
     producto.stock = descontar.toFixed(2);
     arregloProductosDescontarStock.push(producto);
@@ -438,10 +438,10 @@ const movimientoProducto = async(objeto,cantidad,venta)=>{
 
 //Sumamos el saldo al cluente si la venta  es Cuenta Corriente
 const sumarSaldo = async(precio,id) =>{
-    const cliente = (await axios.get(`${URL}clientes/id/${id}`)).data;
+    const cliente = (await axios.get(`${URL}clientes/id/${id}`,configAxios)).data;
     saldoNuevo = parseFloat(cliente.saldo) - parseFloat(precio);
     cliente.saldo = saldoNuevo.toFixed(2);
-    await axios.put(`${URL}clientes/${id}`,cliente)
+    await axios.put(`${URL}clientes/${id}`,cliente,configAxios)
 };
 
 
@@ -449,7 +449,7 @@ const sumarSaldo = async(precio,id) =>{
 const traerNumeroComprobante = async(codigo)=>{
     let retornar
     const tipo = (codigo === "008") ? "Ultima N Credito B" : "Ultima N Credito A"
-    let numeros = (await axios.get(`${URL}tipoVenta`)).data;
+    let numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
     retornar = `${numeros[tipo]}`
     return retornar
 }
@@ -465,9 +465,9 @@ const actualizarNroCom = async(comprobante,codigo)=>{
     }
     numero = comprobante.split('-')[1];
     numero = (parseFloat(numero) + 1).toString().padStart(8,0)
-    let numeros = (await axios.get(`${URL}tipoVenta`)).data;
+    let numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
     numeros[tipoFactura] = `0005-${numero}`;
-    await axios.put(`${URL}tipoventa`,numeros);
+    await axios.put(`${URL}tipoventa`,numeros,configAxios);
 }
 
 cancelar.addEventListener('click',async e=>{
@@ -742,7 +742,7 @@ const ponerEnCuentaCorrienteCompensada = async(venta,valorizado)=>{
     cuenta.importe = valorizado ? parseFloat(venta.precioFinal) : 0.1;
     cuenta.saldo = valorizado ? parseFloat(venta.precioFinal) : 0.1;
     cuenta.observaciones = venta.observaciones;
-    await axios.post(`${URL}cuentaComp`,cuenta)
+    await axios.post(`${URL}cuentaComp`,cuenta,configAxios)
 };
 
 //inicio historica
@@ -754,7 +754,7 @@ const ponerEnCuentaCorrienteHistorica = async(venta,valorizado,saldo)=>{
     cuenta.nro_comp = venta.nro_comp;
     cuenta.debe = valorizado ? parseFloat(venta.precioFinal) : 0.1;
     cuenta.saldo = parseFloat(saldo) - cuenta.debe;
-    await axios.post(`${URL}cuentaHisto`,cuenta);
+    await axios.post(`${URL}cuentaHisto`,cuenta,configAxios);
 };
 
 descuento.addEventListener('keypress',e=>{

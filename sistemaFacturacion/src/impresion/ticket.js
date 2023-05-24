@@ -4,6 +4,7 @@ const URL = process.env.URL;
 
 const { ipcRenderer } = require("electron");
 const qrcode = require('qrcode');
+const { configAxios } = require("../funciones");
 
 const codFactura = document.querySelector('.codFactura');
 const tipo = document.querySelector('.tipo');
@@ -47,7 +48,7 @@ const venciCae = document.querySelector('.venciCae');
     let cliente;
     
     if (venta.tipo_comp === "Recibos") {
-        cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`)).data;
+        cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`,configAxios)).data;
     }
 
     listar(venta,afip,opciones,cliente);

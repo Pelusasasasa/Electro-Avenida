@@ -1,5 +1,6 @@
 const axios = require('axios');
 const { ipcRenderer } = require('electron');
+const { configAxios } = require('../funciones');
 require('dotenv');
 const URL = process.env.URL;
 
@@ -22,7 +23,7 @@ window.addEventListener('load',async e=>{
     const fechaArgentina = new Date(hoy.getTime() - hoy.getTimezoneOffset() * 60000).toISOString();
     desde.value = fechaArgentina.slice(0,10);
     hasta.value = fechaArgentina.slice(0,10);
-    const prestamos = (await axios.get(`${URL}prestamos/betweenDates/${desde.value}/${hasta.value}`)).data;
+    const prestamos = (await axios.get(`${URL}prestamos/betweenDates/${desde.value}/${hasta.value}`,configAxios)).data;
     listarPrestamos(prestamos);
 });
 
@@ -35,7 +36,7 @@ botonFacturar.addEventListener('click',facturarPrestamos);
 //Mostramos los prestamos que esten en la base de datos sin anular
 async function traerPrestamos(e) {
     if (e.keyCode === 13) {
-        const prestamos = (await axios.get(`${URL}prestamos/betweenDates/${desde.value}/${hasta.value}`)).data;
+        const prestamos = (await axios.get(`${URL}prestamos/betweenDates/${desde.value}/${hasta.value}`,configAxios)).data;
         listarPrestamos(prestamos);
 
         if (e.target.id === "desde") {
@@ -99,7 +100,7 @@ async function mostrarDetalleProducto(e){
     subSeleccionado.classList.add('subSeleccionado');
 
     /*Traer movimientos*/;
-    const movimientos = (await axios.get(`${URL}movProductos/${seleccionado.id}/Prestamo`)).data;
+    const movimientos = (await axios.get(`${URL}movProductos/${seleccionado.id}/Prestamo`,configAxios)).data;
     listarMovimientos(movimientos);
 };
 
@@ -158,7 +159,7 @@ async function facturarPrestamos() {
 //Modificamos el prestamo poniendo la anulacion en true
 async function putAPrestamo(lista) {
     for(let numero of lista){
-        let prestamo = (await axios.get(`${URL}prestamos/forNumber/${numero}`)).data;
+        let prestamo = (await axios.get(`${URL}prestamos/forNumber/${numero}`,configAxios)).data;
         prestamo.anulado = true;
         await axios.put(`${URL}prestamos/forNumber/${numero}`,prestamo);
       }
@@ -167,11 +168,11 @@ async function putAPrestamo(lista) {
 //Arregalmos el stock depèndiendo de si suma o se resta para la anulacion
 async function arreglarStock(lista) {
   for(let elem of lista){
-    const movimientos = (await axios.get(`${URL}movProductos/${elem}/Prestamo`)).data;
+    const movimientos = (await axios.get(`${URL}movProductos/${elem}/Prestamo`,configAxios)).data;
     for(let {codProd,egreso} of movimientos){
-        const producto = (await axios.get(`${URL}productos/${codProd}`)).data;
+        const producto = (await axios.get(`${URL}productos/${codProd}`,configAxios)).data;
         producto.stock = parseFloat(producto.stock) + egreso;
-        await axios.put(`${URL}productos/${codProd}`,producto);
+        await axios.put(`${URL}productos/${codProd}`,producto,configAxios);
     }
   }  
 };
@@ -180,7 +181,7 @@ async function arreglarStock(lista) {
 async function crearMovimiento(lista) {
     let nuevoArreglo = [];
     for(let elem of lista){
-        const movimientos = (await axios.get(`${URL}movProductos/${seleccionado.id}/Prestamo`)).data;
+        const movimientos = (await axios.get(`${URL}movProductos/${seleccionado.id}/Prestamo`,configAxios)).data;
         
         for(let mov of movimientos){
             console.log(mov)
@@ -200,7 +201,7 @@ async function crearMovimiento(lista) {
             nuevoArreglo.push(movimiento);
         };
     };
-    (await axios.post(`${URL}movProductos`,nuevoArreglo));
+    (await axios.post(`${URL}movProductos`,nuevoArreglo,configAxios));
 };
 
 document.addEventListener('keyup',e=>{

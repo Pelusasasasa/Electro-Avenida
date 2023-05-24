@@ -8,7 +8,6 @@ const impirmir = document.querySelector('.imprimirBoton')
 
 const axios = require("axios");
 const { verificarUsuarios, configAxios } = require('../funciones');
-const { config } = require('dotenv');
 require("dotenv").config;
 const URL = process.env.URL;
 

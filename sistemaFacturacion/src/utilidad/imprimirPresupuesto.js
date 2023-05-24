@@ -1,5 +1,6 @@
 const {ipcRenderer} = require('electron');
 const axios = require('axios');
+const { configAxios } = require('../funciones');
 require('dotenv').config
 const URL = process.env.URL;
 
@@ -22,12 +23,12 @@ aceptar.addEventListener('click',async e=>{
         tipoVenta = "Ticket Factura";
     }
 
-    let venta = (await axios.get(`${URL}presupuesto/${comprobante}`)).data;
+    let venta = (await axios.get(`${URL}presupuesto/${comprobante}`,configAxios)).data;
     console.log(venta)
     if (!venta) {
-         venta = (await axios.get(`${URL}ventas/venta/ventaUnica/${comprobante}/${tipoVenta}`)).data[0];
+         venta = (await axios.get(`${URL}ventas/venta/ventaUnica/${comprobante}/${tipoVenta}`,configAxios)).data[0];
     }
-    const cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`)).data;
+    const cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`,configAxios)).data;
     ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante","valorizado"])
 });
 
