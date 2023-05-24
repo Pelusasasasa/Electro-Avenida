@@ -1,7 +1,7 @@
 const {ipcRenderer} = require('electron');
 const sweet = require('sweetalert2');
 const axios = require('axios');
-const { copiar, recorrerFlechas } = require('../funciones');
+const { copiar, recorrerFlechas, configAxios } = require('../funciones');
 require('dotenv').config;
 const URL = process.env.URL;
 
@@ -32,7 +32,7 @@ body.addEventListener('keypress',e=>{
 const listar = async(texto) =>{
     //traemos a los clientes
     texto === "" && (texto = "A Consumidor Final")
-    let clientes = (await axios.get(`${URL}clientes/${texto}`)).data;
+    let clientes = (await axios.get(`${URL}clientes/${texto}`,configAxios)).data;
     
     //ordenamos el arreglo de clientes
     clientes = clientes.sort(function(a,b){

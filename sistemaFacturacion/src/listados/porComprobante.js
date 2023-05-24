@@ -1,6 +1,7 @@
 
 const { DateTime } = require("luxon");
 const axios = require("axios");
+const { configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -31,9 +32,9 @@ window.addEventListener('load',async e=>{
 
     const desdefecha = new Date(desde.value);
     let hastafecha = DateTime.fromISO(hasta.value).endOf('day');
-    let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hastafecha}`)).data;
-    let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`)).data;
-    let recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hastafecha}`)).data;
+    let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hastafecha}`,configAxios)).data;
+    let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`,configAxios)).data;
+    let recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hastafecha}`,configAxios)).data;
     ventas = [...tickets,...presupuesto];
     const ventasContado = ventas.filter(venta=> venta.tipo_pago == "CD");
 
@@ -50,9 +51,9 @@ hasta.addEventListener('keypress',async e=>{
     if (e.key === "Enter") {
         const desdefecha = new Date(desde.value)
         let hastafecha = DateTime.fromISO(hasta.value).endOf('day');
-        let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hastafecha}`)).data;
-        let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`)).data;
-        let recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hastafecha}`)).data;
+        let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hastafecha}`,configAxios)).data;
+        let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`,configAxios)).data;
+        let recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hastafecha}`,configAxios)).data;
         ventas = [...tickets,...presupuesto,...recibos];
         contado.focus();
     }

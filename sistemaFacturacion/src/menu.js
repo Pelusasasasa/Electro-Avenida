@@ -1,4 +1,4 @@
-const {abrirVentana} = require('./funciones');
+const {abrirVentana, configAxios} = require('./funciones');
 const {dialog, ipcRenderer, ipcMain} = require('electron');
 const [pedidos] = require('./descargas/descargas')
 
@@ -16,7 +16,7 @@ const templateMenu = [
             label: 'Pedidos',
             async click() {
                 const path = (await dialog.showSaveDialog()).filePath;
-                pedidos((await axios.get(`${URL}pedidos`)).data,path)
+                pedidos((await axios.get(`${URL}pedidos`,configAxios)).data,path)
             }
         },
         {
