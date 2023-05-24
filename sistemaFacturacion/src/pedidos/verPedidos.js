@@ -3,7 +3,7 @@ const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const {copiar, recorrerFlechas, redondear, botonesSalir} = require('../funciones');
+const {copiar, recorrerFlechas, redondear, botonesSalir, configAxios} = require('../funciones');
 const { ipcRenderer } = require('electron');
 
 const tbody = document.querySelector("tbody");
@@ -19,7 +19,7 @@ let inputSeleccionado;
 window.addEventListener('load',async e=>{
     copiar();
 
-    let pedidos = (await axios.get(`${URL}pedidos`)).data;
+    let pedidos = (await axios.get(`${URL}pedidos`,configAxios)).data;
 
     for(let [index,pedido] of pedidos.entries()){
         let fecha = new Date(pedido.fecha)
@@ -115,7 +115,7 @@ tbody.addEventListener("click" , e=>{
     //se ejecuta cuando escribimos en el input
     inputSeleccionado.addEventListener('keyup',async e=>{
         pedidoIdentificado.estadoPedido = e.target.value;
-        await axios.put(`${URL}pedidos/${pedidoIdentificado._id}`,pedidoIdentificado);
+        await axios.put(`${URL}pedidos/${pedidoIdentificado._id}`,pedidoIdentificado,configAxios);
     })
 });
 
@@ -134,10 +134,10 @@ tbody.addEventListener('dblclick',async e=>{
         if (isConfirmed){
             seleccionado.children[4].innerText = document.getElementById('cliente').value.toUpperCase();
             seleccionado.children[5].innerText = document.getElementById('numero').value;
-            const pedido = (await axios.get(`${URL}pedidos/${seleccionado.id}`)).data;
+            const pedido = (await axios.get(`${URL}pedidos/${seleccionado.id}`,configAxios)).data;
             pedido.cliente = seleccionado.children[4].innerText;
             pedido.telefono = seleccionado.children[5].innerText;
-            await axios.put(`${URL}pedidos/${seleccionado.id}`,pedido);
+            await axios.put(`${URL}pedidos/${seleccionado.id}`,pedido,configAxios);
         }
     });
 });
@@ -151,7 +151,7 @@ eliminarPedido.addEventListener("click", async e =>{
                 showCancelButton:true,
                 confirmButtonText:"Aceptar"
             }).then(async ({isConfirmed})=>{
-                await axios.delete(`${URL}pedidos/${seleccionado.id}`);
+                await axios.delete(`${URL}pedidos/${seleccionado.id}`,configAxios);
                 location.reload();
             })
         }else{

@@ -5,7 +5,7 @@ require('dotenv').config
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
-const { copiar, recorrerFlechas} = require('../funciones');
+const { copiar, recorrerFlechas, configAxios} = require('../funciones');
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -96,7 +96,7 @@ const filtrar = async ()=>{
     resultado.innerHTML='';
     texto = buscarCliente.value.toLowerCase();
     texto = texto === "" ? "a consumidor final" : texto;
-    let clientes = await axios.get(`${URL}clientes/${texto}`);
+    let clientes = await axios.get(`${URL}clientes/${texto}`,configAxios);
     clientes = clientes.data;
     ponerClientes(clientes)
 }
@@ -151,7 +151,7 @@ eliminar.addEventListener('click',async e=>{
             confirmButtonText:"Aceptar"
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
-                await axios.delete(`${URL}clientes/${clienteEliminar.id}`);
+                await axios.delete(`${URL}clientes/${clienteEliminar.id}`,configAxios);
                 location.reload()    
             }
         })

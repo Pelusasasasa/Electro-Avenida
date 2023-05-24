@@ -2,7 +2,7 @@ const sweet = require('sweetalert2');
 const { ipcRenderer } = require("electron");
 
 const axios = require("axios");
-const { copiar, recorrerFlechas } = require('../funciones');
+const { copiar, recorrerFlechas, configAxios } = require('../funciones');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -63,9 +63,9 @@ async function filtrar(){
     if(texto !== ""){ 
         let condicion = select.value;
         condicion === "codigo" && (condicion = "_id")
-        productos = (await axios.get(`${URL}productos/buscarProducto/${texto}/${condicion}`)).data
+        productos = (await axios.get(`${URL}productos/buscarProducto/${texto}/${condicion}`,configAxios)).data;
     }else{
-        productos = (await axios.get(`${URL}productos/buscarProducto/textoVacio/descripcion`)).data
+        productos = (await axios.get(`${URL}productos/buscarProducto/textoVacio/descripcion`,configAxios)).data;
     }
 
     for(let producto of productos){

@@ -2,7 +2,7 @@ const { ipcRenderer } = require("electron");
 require('dotenv').config();
 const URL = process.env.URL;
 const axios = require("axios");
-const { redondear } = require("../funciones");
+const { redondear, configAxios } = require("../funciones");
 let data = new FormData();
 
 
@@ -33,9 +33,9 @@ let producto;
 
 //Traer el dolar
 window.addEventListener('load',async e=>{
-    let numeros = (await axios.get(`${URL}tipoVenta`)).data;
+    let numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
     dolar = numeros.dolar;
-    let rubros = (await axios.get(`${URL}rubros`)).data;
+    let rubros = (await axios.get(`${URL}rubros`,configAxios)).data;
     listarRubros(rubros);
 });
 
@@ -51,7 +51,7 @@ const listarRubros = async(lista)=>{
 };
 
 ipcRenderer.on('id-producto',async(e,args)=>{
-    producto = (await axios.get(`${URL}productos/${args}`)).data;
+    producto = (await axios.get(`${URL}productos/${args}`,configAxios)).data;
     asignarCampos(producto)
 });
 
@@ -163,12 +163,13 @@ guardar.addEventListener('click',async e=>{
     producto.impuestos = ivaImp.value;
     producto.rubro = select.value;
     
-    await axios.put(`${URL}productos/${producto._id}`,producto);
+    await axios.put(`${URL}productos/${producto._id}`,producto,configAxios);
     if (imagen.files[0]) {
         data.append('imagen',imagen.files[0]);
         await axios.put(`${URL}productos/${producto._id}/image`,data,{
             headers:{
                 'Content-Type': `multipart/form-data`,
+                "ngrok-skip-browser-warning": "69420",
             }
         });
     }

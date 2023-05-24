@@ -2,6 +2,7 @@ const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
 
 const axios = require("axios");
+const { configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -11,7 +12,6 @@ function getParameterByName(name) {
     results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-
 
 const vendedor = getParameterByName('vendedor')
 const nombre = document.querySelector("#nombre");
@@ -33,7 +33,7 @@ codigo.addEventListener('keypress', async (e) => {
             descripcion.classList.remove('none')
             descripcion.focus();
         }else{
-            let producto = (await axios.get(`${URL}productos/${codigo.value}`)).data;
+            let producto = (await axios.get(`${URL}productos/${codigo.value}`,configAxios)).data;
                 if (producto !== "") {
                     sweet.fire({
                         title:"Cantidad",
@@ -83,7 +83,7 @@ cantidad.addEventListener('keypress',e=>{
 
 ipcRenderer.on('mando-el-producto',async(e,args) => {
     const {id,cantidad} = JSON.parse(args);
-    const producto = (await axios.get(`${URL}productos/${id}`)).data;
+    const producto = (await axios.get(`${URL}productos/${id}`,configAxios)).data;
     mostrarVentas(producto,cantidad)
 });
 
@@ -125,7 +125,7 @@ grabar.addEventListener('click', async e =>{
         Pedido.observacion = td.children[6].children[0].value.toUpperCase();
         Pedido.vendedor = vendedor;
         try {
-            await axios.post(`${URL}pedidos`,Pedido);
+            await axios.post(`${URL}pedidos`,Pedido,configAxios);
         } catch (error) {
             await sweet.fire({
                 title:"No se pudo cargar el pedido"

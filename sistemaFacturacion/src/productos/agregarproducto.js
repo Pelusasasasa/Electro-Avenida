@@ -1,6 +1,6 @@
 const axios = require('axios');
 const sweet = require('sweetalert2');
-const { redondear } = require('../funciones');
+const { redondear, configAxios } = require('../funciones');
 
 require('dotenv').config();
 const URL = process.env.URL;
@@ -44,8 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //Traer el dolar
 window.addEventListener('load',async e=>{
-    let numeros = (await axios.get(`${URL}tipoVenta`)).data;
-    let rubros = (await axios.get(`${URL}rubros`)).data;
+    let numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
+    let rubros = (await axios.get(`${URL}rubros`,configAxios)).data;
     listarRubros(rubros)
     dolar = numeros.dolar;
 });
@@ -65,7 +65,7 @@ const listarRubros = async(rubros)=>{
 //Vemos si el codigo que se puso ya esta utilizado o no
 codigo.addEventListener('blur',async e=>{
     if(codigo.value !== ""){
-        let producto = (await axios.get(`${URL}productos/${codigo.value}`)).data;
+        let producto = (await axios.get(`${URL}productos/${codigo.value}`,configAxios)).data;
             if(producto !== ""){
                 sweet.fire({title:"El codigo ya es utilizador por " + producto.descripcion});
                 codigo.value = "";
@@ -134,13 +134,14 @@ agregar.addEventListener('click' ,async  (e) =>{
     }
 
     //Enviamos el producto al servidor
-    await axios.post(`${URL}productos`,producto);
+    await axios.post(`${URL}productos`,producto,configAxios);
     //enviamos la imagen si es que tiene
     if (imagen.files[0]) {
         data.append('imagen',imagen.files[0]);
         await axios.put(`${URL}productos/${producto._id}/image`,data,{
             headers:{
                 'Content-Type': `multipart/form-data`,
+                "ngrok-skip-browser-warning": "69420",
             }
         });
     }
