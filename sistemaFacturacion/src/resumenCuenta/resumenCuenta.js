@@ -1,6 +1,7 @@
 const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
 const axios = require("axios");
+const { configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -47,7 +48,7 @@ buscador.addEventListener('keypress',async e=>{
         if (buscador.value === "") {
             ipcRenderer.send('abrir-ventana-clientesConSaldo',situacion)
         }else{
-            cliente = (await axios.get(`${URL}clientes/clienteConSaldo/${buscador.value.toUpperCase()}`)).data;
+            cliente = (await axios.get(`${URL}clientes/clienteConSaldo/${buscador.value.toUpperCase()}`,configAxios)).data;
             if (cliente !== "") {
                 buscador.value = cliente._id;
                 nombreCliente.value = cliente.cliente;
@@ -98,7 +99,7 @@ const ponerDatos = async(cliente)=>{
     nombre.innerHTML = cliente.cliente + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + cliente._id
     direccion.innerHTML = `${cliente.direccion}-${cliente.localidad}`;
     telefono.innerHTML = cliente.telefono;
-    let cuentas = (await axios.get(`${URL}cuentaHisto/cliente/${cliente._id}`)).data;
+    let cuentas = (await axios.get(`${URL}cuentaHisto/cliente/${cliente._id}`,configAxios)).data;
     let ventasAnteriores = cuentas.filter(e=>e.fecha < desde.value);
     //Aca vemos si ya debia algo del progama viejo
     ventasAnteriores = ventasAnteriores.reverse();
@@ -116,7 +117,7 @@ const ponerDatos = async(cliente)=>{
 }
 
 ipcRenderer.on('mando-el-cliente',async(e,args)=>{
-    cliente = (await axios.get(`${URL}clientes/id/${args}`)).data;
+    cliente = (await axios.get(`${URL}clientes/id/${args}`,configAxios)).data;
     ponerDatos(cliente)
 })
 

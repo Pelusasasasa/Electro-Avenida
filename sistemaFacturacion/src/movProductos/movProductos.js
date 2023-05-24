@@ -1,6 +1,7 @@
 const { ipcRenderer } = require("electron")
 
 const axios = require("axios");
+const { configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -21,7 +22,7 @@ let vendedor
 
 ipcRenderer.on('movimiento-producto-abrir',async(e,args)=>{
     const [id,usuario] = JSON.parse(args)
-    let producto = (await axios.get(`${URL}productos/${id}`)).data;
+    let producto = (await axios.get(`${URL}productos/${id}`,configAxios)).data;
     codigo.value = producto._id
     descripcion.value = producto.descripcion
     stock.value = producto.stock
@@ -63,10 +64,10 @@ aceptar.addEventListener('click', async (e) => {
     ( operacion==="Resta") ? (movProducto.egreso=cantidad.value) : (movProducto.ingreso=cantidad.value);
     movProducto.stock=nuevoStock.value !== "" ? nuevoStock.value : stock.value;
       movProducto.vendedor = vendedor;
-      await axios.post(`${URL}movProductos`,[movProducto]);
-      let producto = (await axios.get(`${URL}productos/${movProducto.codProd}`)).data;
+      await axios.post(`${URL}movProductos`,[movProducto],configAxios);
+      let producto = (await axios.get(`${URL}productos/${movProducto.codProd}`,configAxios)).data;
       producto.stock = movProducto.stock;
-      await axios.put(`${URL}productos/${movProducto.codProd}`,producto)
+      await axios.put(`${URL}productos/${movProducto.codProd}`,producto,configAxios)
       ipcRenderer.send('productoModificado',producto);
       window.close()
 });

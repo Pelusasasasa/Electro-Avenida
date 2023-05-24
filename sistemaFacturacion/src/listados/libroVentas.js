@@ -3,6 +3,7 @@ const { ipcRenderer } = require("electron");
 const axios = require("axios");
 const { DateTime } = require("luxon");
 const XLSX = require('xlsx');
+const { configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -67,7 +68,7 @@ buscar.addEventListener('click',async e=>{
     totalGlobalFactura = 0;
     const desdeFecha = new Date(desde.value)
     let hastaFecha = DateTime.fromISO(hasta.value).endOf('day');
-    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`)).data;
+    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`,configAxios)).data;
     ventas = ventas.filter(venta=>venta.tipo_comp !== "Recibos");
     ventas = ventas.filter(venta => venta.tipo_comp !== "Recibos_P");
     ventasExportar = ventas;
@@ -197,7 +198,7 @@ const listar = async (ventas,diaVentaAnterior)=>{
         month = (month < 10) ? `0${month}` : month;
         let year = fecha.getFullYear();
         
-        let cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`)).data
+        let cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`,configAxios)).data;
         cond_iva = (cliente.cond_iva) ? (cliente.cond_iva) : "Consumidor Final";
         gravado105 = venta.gravado105;
         gravado21 = venta.gravado21;

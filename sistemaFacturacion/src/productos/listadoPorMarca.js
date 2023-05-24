@@ -2,7 +2,7 @@ const { ipcRenderer } = require("electron");
 require('dotenv').config();
 const URL = process.env.URL;
 const axios = require("axios");
-const { cerrarVentana } = require("../funciones");
+const { cerrarVentana, configAxios } = require("../funciones");
 
 const select = document.querySelector('#marcas');
 const tbody = document.querySelector('tbody');
@@ -10,7 +10,7 @@ const tbody = document.querySelector('tbody');
 
 window.addEventListener('load',async e=>{
     cerrarVentana();
-    const marcas = (await axios.get(`${URL}productos`)).data;
+    const marcas = (await axios.get(`${URL}productos`,configAxios)).data;
     marcas.sort((a,b)=>{
         if (a>b) {
             return 1
@@ -38,7 +38,7 @@ select.addEventListener('click',async e=>{
 });
 
 const listar = async ()=>{
-    const productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`)).data;
+    const productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`,configAxios)).data;
     for await(let {descripcion,_id,stock,precio_venta,observacion} of productos){
         tbody.innerHTML += `
             <tr>

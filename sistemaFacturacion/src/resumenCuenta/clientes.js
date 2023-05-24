@@ -1,6 +1,6 @@
 const {ipcRenderer} = require('electron');
 const axios = require('axios');
-const { copiar, recorrerFlechas } = require('../funciones');
+const { copiar, recorrerFlechas, configAxios } = require('../funciones');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -14,7 +14,7 @@ let seleccionado;
 let subSeleccionado;
 
 window.addEventListener('load',async e=>{
-    clientes = (await axios.get(`${URL}clientes`)).data;
+    clientes = (await axios.get(`${URL}clientes`,configAxios)).data;
     listarClientes(clientes,"");
 
     copiar();
