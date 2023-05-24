@@ -432,6 +432,12 @@ const verTipoPago = async(vendedor)=>{
     }
 };
 
+const configAxios = {
+    headers:{
+        "ngrok-skip-browser-warning": "69420",
+    }
+}
+
 module.exports = {
     redondear,
     abrirVentana,
@@ -446,5 +452,6 @@ module.exports = {
     verificarUsuarios,
     generarMovimientoCaja,
     verTipoPago,
-    verEstadoServidorAfip
+    verEstadoServidorAfip,
+    configAxios
 }

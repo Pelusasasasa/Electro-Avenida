@@ -5,7 +5,7 @@ const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const { cerrarVentana, botonesSalir } = require('../funciones');
+const { cerrarVentana, botonesSalir, configAxios } = require('../funciones');
 
 const botonEnviar = document.querySelector('#boton-enviar')
 const nombre = document.querySelector('#nombre')
@@ -119,6 +119,7 @@ normal.addEventListener('keypress',e=>{
 
 botonEnviar.addEventListener('click',async e =>{
     e.preventDefault();
+    console.log("a")
     for(let i of moroso){
         i.checked && (condicion = i.value  )
     }
@@ -142,11 +143,10 @@ botonEnviar.addEventListener('click',async e =>{
         listaVenta: listaVenta.value
     }
     const inicial = ((nombre.value)[0]).toUpperCase();
-    let numero = (await axios.get(`${URL}clientes/crearCliente/${inicial}`)).data;
-    console.log(numero)
+    let numero = (await axios.get(`${URL}clientes/crearCliente/${inicial}`,configAxios)).data;
     cliente._id = numero;
     try {
-        await axios.post(`${URL}clientes`,cliente);
+        await axios.post(`${URL}clientes`,cliente,configAxios);
         window.close();
     } catch (error) {
         sweet.fire({

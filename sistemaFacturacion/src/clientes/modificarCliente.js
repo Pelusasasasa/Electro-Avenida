@@ -1,6 +1,7 @@
 const { ipcRenderer } = require("electron")
 
 const axios = require("axios");
+const { configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -24,7 +25,7 @@ let acceso
 let situacion = "blanco"
 
 ipcRenderer.on('datos-clientes',async(e,args)=>{
-    cliente = (await axios.get(`${URL}clientes/id/${JSON.parse(args)[0]}`)).data;
+    cliente = (await axios.get(`${URL}clientes/id/${JSON.parse(args)[0]}`,configAxios)).data;
     acceso = JSON.parse(args)[1];
 
 
@@ -90,7 +91,7 @@ guardar.addEventListener('click',async e =>{
     nuevoCliente.condicion = condicion;
     nuevoCliente.cond_fact = conFact.value;
     nuevoCliente.lim_compra = parseFloat(limite.value) ;
-    await axios.put(`${URL}clientes/${nuevoCliente._id}`,nuevoCliente);
+    await axios.put(`${URL}clientes/${nuevoCliente._id}`,nuevoCliente,configAxios);
     window.close();
 })
 
