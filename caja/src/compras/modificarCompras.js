@@ -34,17 +34,17 @@ window.addEventListener('load',async e=>{
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
 
-    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`)).data;
+    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`,configAxios)).data;
     listarCompras(facturas)
 });
 
 desde.addEventListener('change',async e=>{
-    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`)).data;
+    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`,configAxios)).data;
     listarCompras(facturas)
 });
 
 hasta.addEventListener('change',async e=>{
-    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`)).data;
+    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`,configAxios)).data;
     listarCompras(facturas)
 });
 
@@ -139,7 +139,7 @@ eliminar.addEventListener('click',e=>{
     }).then(async ({isConfirmed})=>{
         if(isConfirmed){
             try {
-                await axios.delete(`${URL}dat_comp/id/${seleccionado.id}`)
+                await axios.delete(`${URL}dat_comp/id/${seleccionado.id}`,configAxios);
             } catch (error) {
                 console.log(error);
                 sweet.fire({

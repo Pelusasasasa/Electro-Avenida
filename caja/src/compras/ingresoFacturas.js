@@ -15,7 +15,7 @@ let numeroIvaAnterior = 0;
 
 const sweet = require('sweetalert2');
 
-const {redondear} = require('../assets/js/globales');
+const {redondear, configAxios} = require('../assets/js/globales');
 
 const provedor = document.getElementById('provedor');
 const codigo = document.getElementById('codigo');
@@ -73,7 +73,7 @@ window.addEventListener('load',async e=>{
     fechaImput.value  = `${year}-${month}`;
 
     if (numeroParaModifcar) {
-        const factura = (await axios.get(`${URL}dat_comp/id/${numeroParaModifcar}`)).data;
+        const factura = (await axios.get(`${URL}dat_comp/id/${numeroParaModifcar}`,configAxios)).data;
         listarFactura(factura)
     }
     
@@ -381,7 +381,7 @@ aceptar.addEventListener('click',async e=>{
     }
 
     try {
-        await axios.post(`${URL}dat_comp`,dat_comp);
+        await axios.post(`${URL}dat_comp`,dat_comp,configAxios);
         location.reload();
     } catch (error) {
         await sweet.fire({
@@ -413,7 +413,7 @@ const ponerDatoComprobanteDescuento = async()=>{
     datos.r_iva_c = 0
     datos.total = redondear(parseFloat(descuento.value) * -1,2);
     try {
-        await axios.post(`${URL}dat_comp`,datos);
+        await axios.post(`${URL}dat_comp`,datos,configAxios);
     } catch (error) {
         await sweet.fire({
             title:"No se pudo cargar le descuento"
@@ -433,7 +433,7 @@ const ponerEnCuentaCorrienteProvedor = async(datos,aDescontar = 0)=>{
     cuenta.saldo = datos.tipo_comp === "Nota Credito" ? redondear(aDescontar - parseFloat(datos.total),2) : redondear(aDescontar + parseFloat(datos.total),2);
     cuenta.emp = datos.empresa;
     try {
-        await axios.post(`${URL}ctactePro`,cuenta);
+        await axios.post(`${URL}ctactePro`,cuenta,configAxios);
     } catch (error) {
         console.log(error)
         sweet.fire({
@@ -454,7 +454,7 @@ const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
     cuenta.saldo = parseFloat(provedorTraido.saldo);
     cuenta.emp = datos.empresa;
     try {
-        await axios.post(`${URL}ctactePro`,cuenta);
+        await axios.post(`${URL}ctactePro`,cuenta,configAxios);
     } catch (error) {
         console.log(error)
         sweet.fire({
@@ -466,7 +466,7 @@ const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
 const ponerSaldoAlProvedor = async(datos)=>{
     provedorTraido.saldo = datos.tipo_comp === "Nota Credito" ? redondear(provedorTraido.saldo - parseFloat(neto.value),2) : redondear(provedorTraido.saldo + parseFloat(neto.value),2);
     try {
-        await axios.put(`${URL}provedor/codigo/${datos.codProv}`,provedorTraido);
+        await axios.put(`${URL}provedor/codigo/${datos.codProv}`,provedorTraido,configAxios);
     } catch (error) {
         sweet.fire({title:"No se pudo modificar el saldo del provedor"})
     }
@@ -474,7 +474,7 @@ const ponerSaldoAlProvedor = async(datos)=>{
 
 const actualizarCuentasPosterioreres = async(total,descuento)=>{
     let retorno = 0;
-    const cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${codigo.value}/${fechaComp.value}`)).data;
+    const cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${codigo.value}/${fechaComp.value}`,configAxios)).data;
     cuentas.sort((a,b)=>{
         if (a.fecha < b.fecha) {
             return -1
@@ -494,7 +494,7 @@ const actualizarCuentasPosterioreres = async(total,descuento)=>{
             cuenta.saldo = redondear(aux + cuenta.debe,2);
             aux = parseFloat(cuenta.saldo);
             try {
-                await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+                await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta,configAxios);
             } catch (error) {
                 console.log(error)
                 sweet.fire({
@@ -505,7 +505,7 @@ const actualizarCuentasPosterioreres = async(total,descuento)=>{
             cuenta.saldo = redondear(aux - cuenta.debe,2);
             aux = parseFloat(cuenta.saldo);
             try {
-                await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+                await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta,configAxios);
             } catch (error) {
                 console.log(error)
                 sweet.fire({
@@ -549,7 +549,7 @@ modificar.addEventListener('click',async e=>{
     factura.r_iva_c = redondear(retencionIVA.value,2);
     factura.total = redondear(neto.value,2);
     try {
-        await axios.put(`${URL}dat_comp/id/${numeroParaModifcar}`,factura);
+        await axios.put(`${URL}dat_comp/id/${numeroParaModifcar}`,factura,configAxios);
         if (aceptar.classList.contains('none')) {
             location.href = '../compras/modificarCompras.html'
         }else{
@@ -568,7 +568,7 @@ cancelar.addEventListener('click',e=>{
 });
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    provedorTraido = (await axios.get(`${URL}provedor/codigo/${args}`)).data;
+    provedorTraido = (await axios.get(`${URL}provedor/codigo/${args}`,configAxios)).data;
     provedor.value = provedorTraido.provedor;
     codigo.value = provedorTraido.codigo;
     cond_iva.value = provedorTraido.situa;

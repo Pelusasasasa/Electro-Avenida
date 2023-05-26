@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { ipcRenderer } = require('electron');
-const { redondear } = require('../assets/js/globales');
+const { redondear, configAxios } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -31,17 +31,17 @@ window.addEventListener('load',async e=>{
     desde.value = `${year}-${month}`;
     hasta.value = `${year}-${month}`;
 
-    datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
+    datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`,configAxios)).data;
     listarDatos(datos.filter(dato=>(dato.tipo_comp !== "Presupuesto" && dato.tipo_comp !== "Descuento")));
 });
 
 desde.addEventListener('change',async e=>{
-    datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
+    datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`,configAxios)).data;
     listarDatos(datos.filter(dato=>(dato.tipo_comp !== "Presupuesto" && dato.tipo_comp !== "Descuento")));
 });
 
 hasta.addEventListener('change',async e=>{
-    datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`)).data;
+    datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`,configAxios)).data;
     listarDatos(datos.filter(dato=>(dato.tipo_comp !== "Presupuesto" && dato.tipo_comp !== "Descuento")));
 });
 
