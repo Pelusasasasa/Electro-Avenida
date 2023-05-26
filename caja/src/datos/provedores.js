@@ -4,6 +4,7 @@ require('dotenv').config();
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
+const { configAxios } = require('../assets/js/globales');
 
 let seleccionado;
 let subSeleccionado;
@@ -19,7 +20,7 @@ let botones = true;
 let provedores
 
 window.addEventListener('load',async e=>{
-    provedores = (await axios.get(`${URL}provedor`)).data;
+    provedores = (await axios.get(`${URL}provedor`,configAxios)).data;
     await listar(provedores);
 
     seleccionado = tbody.firstElementChild;
@@ -149,7 +150,7 @@ tbody.addEventListener('click',async e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}provedor/codigo/${seleccionado.id}`);
+                    await axios.delete(`${URL}provedor/codigo/${seleccionado.id}`,configAxios);
                     location.reload();
                 } catch (error) {
                     sweet.fire({

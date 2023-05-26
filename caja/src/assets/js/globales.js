@@ -118,4 +118,13 @@ const recorrerFlechas =  async(code) => {
     })
 };
 
-module.exports = {alerta,cerrarVentana,copiar,redondear,generarMovimientoCaja}
+const clave = btoa(`electroAvenida:Elbio935`);
+const configAxios = {
+    
+    headers:{
+        "ngrok-skip-browser-warning": "69420",
+        "Authorization": `Basic ${clave}`
+    }
+}
+
+module.exports = {alerta,cerrarVentana,copiar,redondear,generarMovimientoCaja,configAxios}

@@ -4,6 +4,7 @@ const URL = process.env.URL;
 const { ipcRenderer } = require("electron");
 
 const sweet = require('sweetalert2');
+const { configAxios } = require('../assets/js/globales');
 
 const codigo = document.querySelector('#codigo');
 const inputProvedor = document.querySelector('#provedor');
@@ -28,7 +29,7 @@ const consultar = document.querySelector('.consultar');
 const salir = document.querySelector('.salir');
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    const provedor = (await axios.get(`${URL}provedor/codigo/${args}`)).data;
+    const provedor = (await axios.get(`${URL}provedor/codigo/${args}`,configAxios)).data;
     console.log(provedor)
     llenarinputs(provedor);
 });
@@ -102,7 +103,7 @@ modificar.addEventListener('click',async e=>{
     provedorModificado.provinciaPostal = provinciaPostal.value;
 
     try {
-        await axios.put(`${URL}provedor/codigo/${provedorModificado.codigo}`,provedorModificado);
+        await axios.put(`${URL}provedor/codigo/${provedorModificado.codigo}`,provedorModificado,configAxios);
         await sweet.fire({
             title:`Provedor ${provedorModificado.provedor} Modificado`
         });

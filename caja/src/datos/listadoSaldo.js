@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { configAxios } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -10,7 +11,7 @@ const saldo = document.querySelector('#saldo');
 saldo.classList.add('text-end')
 
 window.addEventListener('load',async e=>{
-    provedores = (await axios.get(`${URL}provedor/conSaldo`)).data;
+    provedores = (await axios.get(`${URL}provedor/conSaldo`,configAxios)).data;
     provedores.sort((a,b)=>{
         if(a.provedor > b.provedor){
             return 1

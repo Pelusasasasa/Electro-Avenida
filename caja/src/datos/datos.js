@@ -3,6 +3,7 @@ require('dotenv').config();
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
+const { configAxios } = require('../assets/js/globales');
 
 const codigo = document.querySelector('#codigo');
 const descripcion = document.querySelector('#descripcion');
@@ -22,8 +23,8 @@ const listar = (cuenta)=>{
 }
 
 window.addEventListener('load',async e=>{
-    cuentas = (await axios.get(`${URL}cuentas`)).data;
-    // listar(cuentas[0]);
+    cuentas = (await axios.get(`${URL}cuentas`,configAxios)).data;
+    listar(cuentas[0]);
 });
 
 
@@ -95,7 +96,7 @@ guardar.addEventListener('click',async e=>{
     cuenta.desc = (descripcion.value).toUpperCase();
     cuenta.tipo = tipo.value.toUpperCase();
     try {
-        await axios.post(`${URL}cuentas`,cuenta);
+        await axios.post(`${URL}cuentas`,cuenta,configAxios);
         location.reload();
     } catch (error) {
         sweet.fire({

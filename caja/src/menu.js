@@ -3,7 +3,7 @@ const sweet = require('sweetalert2');
 
 
 const axios = require('axios');
-const { redondear } = require("./assets/js/globales");
+const { redondear, configAxios } = require("./assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -70,7 +70,7 @@ ipcRenderer.on('fecha',(e,args)=>{
 });
 
 ipcRenderer.on('saldoInicial',async (e,args)=>{
-    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
+    const numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
     const saldo = numeros["saldo Inicial"];
     console.log(saldo)
     sweet.fire({
@@ -84,7 +84,7 @@ ipcRenderer.on('saldoInicial',async (e,args)=>{
             numeros["saldo Inicial"] = saldoNuevo
             try {
                 console.log(numeros)
-                await axios.put(`${URL}tipoVenta`,numeros)
+                await axios.put(`${URL}tipoVenta`,numeros,configAxios)
             } catch (error) {
                 console.log(error)
             }
@@ -190,7 +190,7 @@ const reingresarContraseña = async()=>{
 
 ipcRenderer.on('reordenarSaldo',async e=>{
     let select = "";
-    const provedores = (await axios.get(`${URL}provedor`)).data;
+    const provedores = (await axios.get(`${URL}provedor`,configAxios)).data;
     provedores.sort((a,b)=>{
         if (a.provedor>b.provedor) {
             return 1
@@ -224,7 +224,7 @@ ipcRenderer.on('reordenarSaldo',async e=>{
 
 async function reodernarSaldos(){
     const codigo = document.getElementById('provedores').value;
-    const cuentas = (await axios.get(`${URL}ctactePro/codigo/${codigo}`)).data;
+    const cuentas = (await axios.get(`${URL}ctactePro/codigo/${codigo}`,configAxios)).data;
     console.log(cuentas);
 
     // asd
@@ -243,7 +243,7 @@ async function reodernarSaldos(){
         saldo =  parseFloat(redondear(saldo + cuenta.debe,2));
         saldo = parseFloat(redondear(saldo - cuenta.haber,2));
         cuenta.saldo = saldo;
-        await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+        await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta,configAxios);
     };
     sweet.fire({
         title:"Saldo reodenado",

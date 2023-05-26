@@ -4,6 +4,7 @@ require('dotenv').config();
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
+const { configAxios } = require('../assets/js/globales');
 
 const codigo = document.querySelector('#codigo');
 const provedor = document.querySelector('#provedor');
@@ -49,7 +50,7 @@ agregar.addEventListener('click',async e=>{
     nuevoProvedor.codigoPostal = codigoPostal.value;
     nuevoProvedor.provinciaPostal = provinciaPostal.value;
     try {
-        await axios.post(`${URL}provedor`,nuevoProvedor);
+        await axios.post(`${URL}provedor`,nuevoProvedor,configAxios);
         window.close();
     } catch (error) {
         console.log(error)
@@ -61,7 +62,7 @@ agregar.addEventListener('click',async e=>{
 
 
 window.addEventListener('load',async e=>{
-    const id = (await axios.get(`${URL}provedor/traerId`)).data;
+    const id = (await axios.get(`${URL}provedor/traerId`,configAxios)).data;
     codigo.value = id;
 });
 
