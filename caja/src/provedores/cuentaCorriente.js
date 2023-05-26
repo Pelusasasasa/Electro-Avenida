@@ -29,7 +29,7 @@ hasta.value = date;
 
 window.addEventListener('load',async e=>{
     cerrarVentana();
-    provedores = (await axios.get(`${URL}provedor`)).data;
+    provedores = (await axios.get(`${URL}provedor`,configAxios)).data;
     provedores.sort((a,b)=>{
         if (a.provedor < b.provedor) {
             return -1;
@@ -39,7 +39,7 @@ window.addEventListener('load',async e=>{
         return 0
     });
     await listarProvedores(provedores);
-    cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
+    cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`,configAxios)).data;
     listarCuentas(cuentas);
     const provedor = provedores.find(provedor=>provedor.codigo === select.value);
     saldo.value = provedor.saldo.toFixed(2);
@@ -116,7 +116,7 @@ tbody.addEventListener('click',async e=>{
                     const cuenta = cuentas.find(cuenta=>cuenta._id === e.target.id);
                     cuenta.observaciones = value.toUpperCase();
                     try {
-                        await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+                        await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta,configAxios);
                         e.target.innerHTML = cuenta.observaciones
                     } catch (error) {
                         console.log(error)
@@ -130,7 +130,7 @@ tbody.addEventListener('click',async e=>{
 select.addEventListener('change',async e=>{
     e.preventDefault();
     const provedor = provedores.find(provedor=>provedor.codigo === select.value);
-    cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
+    cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`,configAxios)).data;
     listarCuentas(cuentas);
     codigo.value = provedor.codigo;
     saldo.value = provedor.saldo.toFixed(2);
@@ -139,7 +139,7 @@ select.addEventListener('change',async e=>{
 
 desde.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
-        cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
+        cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`,configAxios)).data;
         listarCuentas(cuentas)
         hasta.focus();
     }

@@ -1,6 +1,7 @@
 const sweet = require('sweetalert2');
 
 const axios = require('axios');
+const { configAxios } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -20,7 +21,7 @@ const aceptar = document.querySelector('.aceptar');
 const cancelar = document.querySelector('.cancelar');
 
 window.addEventListener('load',async e=>{
- const provedores = (await axios.get(`${URL}provedor`)).data;
+ const provedores = (await axios.get(`${URL}provedor`,configAxios)).data;
  listarProvedores(provedores);
 
  const date = new Date();
@@ -70,7 +71,7 @@ aceptar.addEventListener('click',async e=>{
     sumarSaldoProvedor(cuenta)
 
     try {
-        await axios.post(`${URL}ctactePro`,cuenta);
+        await axios.post(`${URL}ctactePro`,cuenta,configAxios);
     } catch (error) {
         sweet.fire({
             title: "No se pudo cargar en la cueta corriente del provedor"
@@ -81,10 +82,10 @@ aceptar.addEventListener('click',async e=>{
 });
 
 const sumarSaldoProvedor = async()=>{
-    let provedor = (await axios.get(`${URL}provedor/codigo/${select.value}`)).data;
+    let provedor = (await axios.get(`${URL}provedor/codigo/${select.value}`,configAxios)).data;
     provedor.saldo = saldo.value;
     try {
-        await axios.put(`${URL}provedor/codigo/${provedor.codigo}`,provedor);
+        await axios.put(`${URL}provedor/codigo/${provedor.codigo}`,provedor,configAxios);
     } catch (error) {
         sweet.fire({
             title:"No se pudo modificar el saldo del provedor"

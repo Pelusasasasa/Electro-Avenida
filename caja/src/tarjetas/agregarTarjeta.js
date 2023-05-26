@@ -4,7 +4,7 @@ require('dotenv').config();
 const URL = process.env.URL;
 const sweet = require('sweetalert2');
 
-const {redondear, cerrarVentana} = require('../assets/js/globales');
+const {redondear, cerrarVentana, configAxios} = require('../assets/js/globales');
 
 const selectTarjeta = document.querySelector('#tarjeta');
 const selectVendedor = document.querySelector('#vendedor');
@@ -31,8 +31,8 @@ let vendedorForSelect;
 let tarjeta;
 
 window.addEventListener('load',async e=>{
-    const tipos = (await axios.get(`${URL}tipoTarjetas`)).data;
-    const usuarios = (await axios.get(`${URL}usuarios`)).data;
+    const tipos = (await axios.get(`${URL}tipoTarjetas`,configAxios)).data;
+    const usuarios = (await axios.get(`${URL}usuarios`,configAxios)).data;
     for await(let usuario of usuarios){
         const option = document.createElement('option');
         option.value = usuario.nombre;
@@ -94,7 +94,7 @@ ipcRenderer.on('cerrar-ventana',async(e,args)=>{
 });
 
 ipcRenderer.on('recibir-informacion',async(e,args)=>{
-    tarjeta = (await axios.get(`${URL}tarjetas/id/${args}`)).data;
+    tarjeta = (await axios.get(`${URL}tarjetas/id/${args}`,configAxios)).data;
     modificar.classList.remove('none');
     aceptar.classList.add('none');
     modificar.id = args;
@@ -146,7 +146,7 @@ aceptar.addEventListener('click',async e=>{
     importe.focus();
     }else{
         try {
-            await axios.post(`${URL}tarjetas`,tarjeta);
+            await axios.post(`${URL}tarjetas`,tarjeta,configAxios);
             if (cerrar) {
                 ipcRenderer.send('enviar-info-ventana-principal',"tarjeta cargada");
                 window.close();
@@ -172,7 +172,7 @@ modificar.addEventListener('click',async e=>{
     tarjeta.vendedor = selectVendedor.value;
     tarjeta.cliente = cliente.value;
     try {
-        await axios.put(`${URL}tarjetas/id/${modificar.id}`,tarjeta);
+        await axios.put(`${URL}tarjetas/id/${modificar.id}`,tarjeta,configAxios);
         window.close();
     } catch (error) {
         console.log(error)

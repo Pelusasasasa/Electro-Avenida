@@ -1,7 +1,7 @@
 const { ipcRenderer,clipboard } = require("electron");
 
 const axios = require('axios');
-const { copiar,redondear } = require("../assets/js/globales");
+const { copiar,redondear, configAxios } = require("../assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -44,7 +44,7 @@ hoy.addEventListener('change',e=>{
 
 window.addEventListener('load',async e=>{
     copiar();
-    tarjetas = (await axios.get(`${URL}tarjetas`)).data;
+    tarjetas = (await axios.get(`${URL}tarjetas`,configAxios)).data;
     listar(tarjetas);
 });
 
@@ -101,7 +101,7 @@ tbody.addEventListener('click',async e=>{
                 if (isConfirmed) {
                     try {
                         totalInput.value = redondear(parseFloat(totalInput.value) - parseFloat(seleccionado.children[2].innerHTML),2)
-                        await axios.delete(`${URL}tarjetas/id/${seleccionado.id}`);
+                        await axios.delete(`${URL}tarjetas/id/${seleccionado.id}`,configAxios);
                         tbody.removeChild(seleccionado)
                     } catch (error) {
                         await sweet.fire({
@@ -251,7 +251,7 @@ eliminarVarios.addEventListener('click',async e=>{
        if (isConfirmed) {
         for await(let input of inputs){
             if (input.checked) {
-                await axios.delete(`${URL}tarjetas/id/${input.id}`);
+                await axios.delete(`${URL}tarjetas/id/${input.id}`,configAxios);
                 tbody.removeChild(input.parentNode.parentNode.parentNode);
                 totalResumen.value = "0.00";
                 aux = 0;

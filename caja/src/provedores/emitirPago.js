@@ -1,4 +1,4 @@
-const {redondear, generarMovimientoCaja} = require('../assets/js/globales');
+const {redondear, generarMovimientoCaja, configAxios} = require('../assets/js/globales');
 
 const sweet = require('sweetalert2');
 
@@ -44,9 +44,9 @@ let totalInput;
 let facturas = [];
 
 window.addEventListener('load',async e=>{
-    let numero = (await axios.get(`${URL}tipoVenta/name/Ultimo Pago`)).data;
+    let numero = (await axios.get(`${URL}tipoVenta/name/Ultimo Pago`,configAxios)).data;
     numeroVenta.value = numero + 1;
-    let provedores = (await axios.get(`${URL}provedor`)).data;
+    let provedores = (await axios.get(`${URL}provedor`,configAxios)).data;
     provedores.sort((a,b)=>{
         if (a.provedor > b.provedor) {
             return 1
@@ -62,7 +62,7 @@ window.addEventListener('load',async e=>{
 provedores.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
         e.preventDefault();
-        provedor = (await axios.get(`${URL}provedor/codigo/${provedores.value}`)).data;
+        provedor = (await axios.get(`${URL}provedor/codigo/${provedores.value}`,configAxios)).data;
         codigo.value = provedor.codigo;
         saldo.value = provedor.saldo.toFixed(2);
         condIva.value = provedor.situa;
@@ -92,7 +92,7 @@ numero.addEventListener('keypress',async e=>{
     const punto = puntoVenta.value.padStart(4,'0');
     const num = numero.value.padStart(8,'0');
     if (e.keyCode === 13) {
-        facturas = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}/${codigo.value}`)).data;
+        facturas = (await axios.get(`${URL}dat_comp/nro_Comp/${punto + '-' + num}/${codigo.value}`,configAxios)).data;
         facturas.reverse();
         for await(let {_id,nro_comp,tipo_comp,total:precio} of facturas){
             if (_id) {
@@ -220,7 +220,7 @@ const agregarComprobante = ()=>{
 numeroCheque.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
         if (numeroCheque.value !== "") {
-            const cheque = (await axios.get(`${URL}cheques/numero/${numeroCheque.value}`)).data;
+            const cheque = (await axios.get(`${URL}cheques/numero/${numeroCheque.value}`,configAxios)).data;
             if (cheque && !cheque.entreg_a) {
                 const fechaCheque = cheque.f_cheque.slice(0,10).split('-',3);
                 const option = document.createElement('option');
@@ -350,10 +350,10 @@ aceptar.addEventListener('click',async e=>{
 
         if (facturas.length !== 0) {
             for await(let fact of facturas){
-                const cuenta = (await axios.get(`${URL}ctactePro/numero/${fact.nro_comp}`)).data;
+                const cuenta = (await axios.get(`${URL}ctactePro/numero/${fact.nro_comp}`,configAxios)).data;
                 cuenta.com_pago = numeroVenta.value;
                 try {
-                    await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+                    await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta,configAxios);
                 } catch (error) {
                     console.log(error)
                     await sweet.fire({
@@ -397,7 +397,7 @@ aceptar.addEventListener('click',async e=>{
 
 const cargarChequesPropios = async(lista)=>{
     lista.forEach(async cheque => {
-        await axios.post(`${URL}cheques`,cheque);
+        await axios.post(`${URL}cheques`,cheque,configAxios);
     });
 }
 
@@ -422,7 +422,7 @@ const ponerEnComprobantePagos = async() =>{
         comp_pago.imp_Fact = trComprobantes[i].children[3].innerHTML;
         comp_pago.n_opago = numeroVenta.value;
         try {
-            await axios.post(`${URL}compPagos`,comp_pago);
+            await axios.post(`${URL}compPagos`,comp_pago,configAxios);
         } catch (error) {
             await sweet.fire({
                 title:"No se pudo cargar la venta"
@@ -444,7 +444,7 @@ const ponerEnCuentaCorriente = async()=>{
     cuenta.saldo = redondear(provedor.saldo -  parseFloat(total.value),2);
     cuenta.com_pago = numeroVenta.value;
     try {
-        await axios.post(`${URL}ctactePro`,cuenta);
+        await axios.post(`${URL}ctactePro`,cuenta,configAxios);
     } catch (error) {
         sweet.fire({
             title:"No se pudo cargar en cuenta corriente provedor"
@@ -456,7 +456,7 @@ const ponerEnCuentaCorriente = async()=>{
 const descontarSaldoProvedor = async()=>{
     provedor.saldo = redondear(provedor.saldo - parseFloat(total.value),2);
     try {
-        await axios.put(`${URL}provedor/codigo/${provedor.codigo}`,provedor)
+        await axios.put(`${URL}provedor/codigo/${provedor.codigo}`,provedor,configAxios)
     } catch (error) {
         sweet.fire({
             title: "No se pudo modificar el saldo del provedor, pero si se cargo en la cuenta corriente"
@@ -466,7 +466,7 @@ const descontarSaldoProvedor = async()=>{
 
 const sumarNumeroPago = async()=>{
     try {
-        await axios.put(`${URL}tipoVenta/name/Ultimo Pago`,{valor:numeroVenta.value});
+        await axios.put(`${URL}tipoVenta/name/Ultimo Pago`,{valor:numeroVenta.value},configAxios);
     } catch (error) {
         sweet.fire({
             title:"No se pudo modifacar el numero de pago, pero si se cargo en la cuenta corriente y se desconto el saldo"
@@ -482,9 +482,9 @@ cancelar.addEventListener('click',e=>{
 async function cambiarNumeroComprobantePago(lista) {
     for await(let elem of lista){
         if (elem.children[1].innerText !== "Pago Anticipado" && elem.children[1].innerText !== "Pago A Cuenta") {
-            const comprobante = (await axios.get(`${URL}ctactePro/numero/${elem.children[0].innerText}`)).data;
+            const comprobante = (await axios.get(`${URL}ctactePro/numero/${elem.children[0].innerText}`,configAxios)).data;
             comprobante.com_pago = numeroVenta.value;
-            (await axios.put(`${URL}ctactePro/id/${comprobante._id}`,comprobante));
+            (await axios.put(`${URL}ctactePro/id/${comprobante._id}`,comprobante,configAxios));
         }
     }
 }
