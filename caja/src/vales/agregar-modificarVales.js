@@ -53,7 +53,7 @@ agregar.addEventListener('click',async e=>{
     vale.tipo = "C";
 
     try {
-        await axios.post(`${URL}vales`,vale);
+        await axios.post(`${URL}vales`,vale,configAxios);
         window.close();
     } catch (error) {
         await sweet.fire({
@@ -71,7 +71,7 @@ modificar.addEventListener('click',async e=>{
     vale.tipo = "C";
 
     try {
-        await axios.put(`${URL}vales/id/${modificar.id}`,vale);
+        await axios.put(`${URL}vales/id/${modificar.id}`,vale,configAxios);
         window.close();
     } catch (error) {
         await sweet.fire({
@@ -113,7 +113,7 @@ salir.addEventListener('click',e=>{
 });
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    const vale = (await axios.get(`${URL}vales/id/${args}`)).data;
+    const vale = (await axios.get(`${URL}vales/id/${args}`,configAxios)).data;
     llenarInputs(vale);
 });
 

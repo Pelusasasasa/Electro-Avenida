@@ -5,7 +5,7 @@ const URL = process.env.URL;
 
 const XLSX = require('xlsx');
 const sweet = require('sweetalert2');
-const { redondear, copiar } = require('../assets/js/globales');
+const { redondear, copiar, configAxios } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
 const buscador = document.getElementById('buscador');
@@ -23,7 +23,7 @@ let subSeleccionado;
 
 window.addEventListener('load',async e=>{
     copiar();
-    vales = (await axios.get(`${URL}vales/personal`)).data;
+    vales = (await axios.get(`${URL}vales/personal`,configAxios)).data;
 
     vales.sort((a,b)=>{
         console.log(a)
@@ -117,7 +117,7 @@ tbody.addEventListener('click',e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
+                    await axios.delete(`${URL}vales/id/${seleccionado.id}`,configAxios);
                     tbody.removeChild(seleccionado);
                     inputTotal.value = redondear(parseFloat(inputTotal.value) - parseFloat(seleccionado.children[4].innerHTML),2);
                 } catch (error) {

@@ -2,6 +2,7 @@ const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
 
 const axios = require('axios');
+const { configAxios } = require("../assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -56,7 +57,7 @@ const listar = async(lista)=>{
 }
 
 window.addEventListener('load',async e=>{
-    vales = (await axios.get(`${URL}vales`)).data;
+    vales = (await axios.get(`${URL}vales`,configAxios)).data;
     listar(vales)
 });
 
@@ -91,7 +92,7 @@ agregar.addEventListener('click',e=>{
 
 borrar.addEventListener('click',async e=>{
     if (trSeleccionado) {
-        await axios.delete(`${URL}vale/${trSeleccionado.id}`);
+        await axios.delete(`${URL}vale/${trSeleccionado.id}`,configAxios);
         location.reload();
     }else{
         sweet.fire({

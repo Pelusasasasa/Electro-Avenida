@@ -24,7 +24,7 @@ let vales;
  
 window.addEventListener('load',async e=>{
     copiar();
-    vales = (await axios.get(`${URL}vales/cliente`)).data;
+    vales = (await axios.get(`${URL}vales/cliente`,configAxios)).data;
     listarVales(vales);
 });
 
@@ -113,7 +113,7 @@ tbody.addEventListener('click',e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
+                    await axios.delete(`${URL}vales/id/${seleccionado.id}`,configAxios);
                     tbody.removeChild(seleccionado);
                     totalInput.value = redondear(parseFloat(totalInput.value) - parseFloat(seleccionado.children[5].innerHTML),2);
                 } catch (error) {

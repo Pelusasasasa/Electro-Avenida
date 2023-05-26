@@ -4,7 +4,7 @@ require('dotenv').config();
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
-const { redondear, copiar } = require('../assets/js/globales');
+const { redondear, copiar, configAxios } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
 
@@ -21,7 +21,7 @@ let totalInput = 0;
 
 window.addEventListener('load',async e=>{
     copiar();
-    vales = (await axios.get(`${URL}vales/incobrable`)).data
+    vales = (await axios.get(`${URL}vales/incobrable`,configAxios)).data
     listarVales(vales)
 });
 
@@ -98,7 +98,7 @@ tbody.addEventListener('click',async e=>{
         }).then(async ({isConfirmed})=>{
             if(isConfirmed){
                 try {
-                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
+                    await axios.delete(`${URL}vales/id/${seleccionado.id}`,configAxios);
                     tbody.removeChild(seleccionado);
                     total.value = redondear(parseFloat(total.value) - parseFloat(seleccionado.children[4].innerHTML),2);
                 } catch (erro) {

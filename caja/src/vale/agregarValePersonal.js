@@ -2,6 +2,7 @@ const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
 
 const axios = require('axios');
+const { configAxios } = require("../assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -14,7 +15,7 @@ const agregar = document.querySelector('.agregar');
 const salir = document.querySelector('.salir');
 
 window.addEventListener('load',async e=>{
-    const usuarios = (await axios.get(`${URL}usuarios`)).data;
+    const usuarios = (await axios.get(`${URL}usuarios`,configAxios)).data;
     usuarios.sort((a,b)=>{
         if (a.nombre>b.nombre) {
             return 1
@@ -93,7 +94,7 @@ agregar.addEventListener('click',async e=>{
     vale.nro_comp = nComprobante.value;
     vale.tipo = "P";
     try {
-        await axios.post(`${URL}vales`,vale);
+        await axios.post(`${URL}vales`,vale,configAxios);
         window.close();
     } catch (error) {
         console.log(error);

@@ -24,7 +24,7 @@ let facturas;
 
 window.addEventListener('load',async e=>{
     copiar();
-    facturas = (await axios.get(`${URL}vales/factura`)).data;
+    facturas = (await axios.get(`${URL}vales/factura`,configAxios)).data;
     listarFacturas(facturas);
 });
 
@@ -105,7 +105,7 @@ tbody.addEventListener('click',e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
+                    await axios.delete(`${URL}vales/id/${seleccionado.id}`,configAxios);
                     tbody.removeChild(seleccionado);
                     inputTotal.value = redondear(parseFloat(inputTotal.value) - parseFloat(seleccionado.children[4].innerHTML),2)
                 } catch (error) {

@@ -6,7 +6,7 @@ const URL = process.env.URL;
 const sweet = require('sweetalert2');
 const fs = require('fs');
 
-const { cerrarVentana, redondear } = require('../assets/js/globales');
+const { cerrarVentana, redondear, configAxios } = require('../assets/js/globales');
 const { CLIENT_RENEG_LIMIT } = require('tls');
 
 const fecha = document.getElementById('fecha');
@@ -34,7 +34,7 @@ window.addEventListener('load',async e=>{
 
     fecha.value = `${year}-${month}-${day}`;
 
-    const vendedores = (await axios.get(`${URL}usuarios`)).data;
+    const vendedores = (await axios.get(`${URL}usuarios`,configAxios)).data;
     ponerPersonal(vendedores);
 
 });
@@ -69,7 +69,7 @@ agregar.addEventListener('click',async e=>{
     vale.tipo = "P";
 
     try {
-        await axios.post(`${URL}vales`,vale);
+        await axios.post(`${URL}vales`,vale,configAxios);
         window.close();
     } catch (error) {
         console.log(error)
@@ -89,7 +89,7 @@ modificar.addEventListener('click',async e=>{
     vale.tipo = "P";
 
     try {
-        await axios.put(`${URL}vales/id/${modificar.id}`,vale);
+        await axios.put(`${URL}vales/id/${modificar.id}`,vale,configAxios);
         window.close();
     } catch (error) {
         await sweet.fire({
@@ -133,7 +133,7 @@ salir.addEventListener('click',e=>{
 });
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    const vale = (await axios.get(`${URL}vales/id/${args}`)).data;
+    const vale = (await axios.get(`${URL}vales/id/${args}`,configAxios)).data;
     modificar.classList.remove('none');
     modificar.id = args;
     agregar.classList.add('none');
