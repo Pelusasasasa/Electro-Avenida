@@ -431,10 +431,12 @@ const verTipoPago = async(vendedor)=>{
         });
     }
 };
-
+const prueba = btoa(`electroAvenida:Elbio935`);
 const configAxios = {
+    
     headers:{
         "ngrok-skip-browser-warning": "69420",
+        "Authorization": `Basic ${prueba}`
     }
 }
 
