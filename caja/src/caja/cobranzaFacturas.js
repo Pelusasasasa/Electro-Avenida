@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { redondear, cerrarVentana } = require('../assets/js/globales');
+const { redondear, cerrarVentana, configAxios } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -24,7 +24,7 @@ let subSeleccionado;
 let movimientos;
 
 window.addEventListener('load',async e=>{  
-    movimientos = (await axios.get(`${URL}movCajas/forPased`)).data;
+    movimientos = (await axios.get(`${URL}movCajas/forPased`),configAxios).data;
     listar(movimientos);
 });
 
@@ -96,7 +96,7 @@ aceptar.addEventListener('click',async e=>{
         mov.cliente = movimiento.cliente;
 
         try {
-            await axios.post(`${URL}movCajas`,mov);
+            await axios.post(`${URL}movCajas`,mov,configAxios);
         } catch (error) {
             console.log(error);
             await sweet.fire({
@@ -111,7 +111,7 @@ aceptar.addEventListener('click',async e=>{
     const p = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     movimiento.fecha = p;
     try {
-        await axios.put(`${URL}movCajas/id/${movimiento._id}`,movimiento);
+        await axios.put(`${URL}movCajas/id/${movimiento._id}`,movimiento,configAxios);
         tbody.removeChild(seleccionado);
         total.value = "0.00";
         cobrado.value = "0.00";

@@ -3,6 +3,7 @@ const { ipcRenderer } = require('electron/renderer');
 require('dotenv').config();
 const URL = process.env.URL;
 const sweet = require('sweetalert2');
+const { configAxios } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
 const desde = document.querySelector('#desde');
@@ -33,7 +34,7 @@ window.addEventListener('load',async e=>{
     let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2],20,59,59);
     // nextDay.setDate(nextDay.getDate() + 1);
 
-    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay.toISOString()}`)).data;
+    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay.toISOString()}`,configAxios)).data;
     const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
     movimientosPasados.sort((a,b)=>{
@@ -54,7 +55,7 @@ desde.addEventListener('keypress',async e=>{
         let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
         nextDay.setDate(nextDay.getDate() + 1);
 
-        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`,configAxios)).data;
         const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
         movimientosPasados.sort((a,b)=>{
@@ -77,7 +78,7 @@ hasta.addEventListener('keypress',async e=>{
         let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2],20,59,59);
         // nextDay.setDate(nextDay.getDate() + 1);
 
-        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay.toISOString()}`)).data;
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay.toISOString()}`,configAxios)).data;
         const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
         movimientosPasados.sort((a,b)=>{
@@ -178,7 +179,7 @@ tbody.addEventListener('click',async e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}movCajas/id/${seleccionado.id}`);
+                    await axios.delete(`${URL}movCajas/id/${seleccionado.id}`,configAxios);
                     tbody.removeChild(seleccionado);
                 } catch (error) {
                     sweet.fire({

@@ -1,7 +1,7 @@
 const { ipcRenderer } = require("electron");
 
 const axios = require('axios');
-const { redondear } = require("../assets/js/globales");
+const { redondear, configAxios } = require("../assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -49,7 +49,7 @@ window.addEventListener('load',async e=>{
 
         let nextDay = new Date(hasta);
         nextDay.setDate(hasta.getDate() + 1);
-        const movimientos = (await axios.get(`${URL}movCajas/${desde}/${nextDay}`)).data;
+        const movimientos = (await axios.get(`${URL}movCajas/${desde}/${nextDay}`,configAxios)).data;
 
         for await(let mov of movimientos){
             if (mov.pasado) {
@@ -62,15 +62,15 @@ window.addEventListener('load',async e=>{
         };  
     });
 
-    valesCobrar .value = (await axios.get(`${URL}vales/totalPrice/C`)).data.toFixed(2);
-    personal.value = (await axios.get(`${URL}vales/totalPrice/P`)).data.toFixed(2);
-    incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`)).data.toFixed(2);
-    facturasCobrar.value = (await axios.get(`${URL}vales/totalPrice/F`)).data.toFixed(2);
-    tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`)).data.toFixed(2);
-    caja1.value = redondear((await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"] + total,2);
+    valesCobrar .value = (await axios.get(`${URL}vales/totalPrice/C`,configAxios)).data.toFixed(2);
+    personal.value = (await axios.get(`${URL}vales/totalPrice/P`,configAxios)).data.toFixed(2);
+    incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`,configAxios)).data.toFixed(2);
+    facturasCobrar.value = (await axios.get(`${URL}vales/totalPrice/F`,configAxios)).data.toFixed(2);
+    tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`,configAxios)).data.toFixed(2);
+    caja1.value = redondear((await axios.get(`${URL}tipoVenta`,configAxios)).data["saldo Inicial"] + total,2);
 
     totalVales.value = redondear(parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value) + parseFloat(facturasCobrar.value),2);
-    ultimos = (await axios.get(`${URL}ultimos`)).data;
+    ultimos = (await axios.get(`${URL}ultimos`,configAxios)).data;
 
 
 
@@ -97,7 +97,7 @@ document.addEventListener('keyup',async e=>{
         ultimos.maleta = maleta.value === "" ? 0 : maleta.value;
     
         try {
-            await axios.put(`${URL}ultimos`,ultimos);
+            await axios.put(`${URL}ultimos`,ultimos,configAxios);
             window.close();
         } catch (error) {
             console.log(error)
@@ -223,7 +223,7 @@ salir.addEventListener('click',async e=>{
     ultimos.maleta = maleta.value === "" ? 0 : maleta.value;
 
     try {
-        await axios.put(`${URL}ultimos`,ultimos);
+        await axios.put(`${URL}ultimos`,ultimos,configAxios);
         window.close();
     } catch (error) {
         console.log(error)

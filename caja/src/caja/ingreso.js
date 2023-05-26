@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { ipcRenderer } = require('electron/renderer');
-const { cerrarVentana, copiar } = require('../assets/js/globales');
+const { cerrarVentana, copiar, configAxios } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -43,7 +43,7 @@ window.addEventListener('load',async e=>{
 select.addEventListener('change',async e=>{
     let nextDay = new Date(hasta.value);
     nextDay.setDate(today.getDate() + 1);
-    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data
+    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`,configAxios)).data
     listar(ingresos);
 });
 
@@ -58,7 +58,7 @@ const listarRubros = async(cuentasConTipo)=>{
     let nextDay = new Date(hasta.value);
     nextDay.setDate(today.getDate() + 1);
 
-    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data;
+    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`,configAxios)).data;
     listar(ingresos.filter(ingreso => ingreso.tMov === tipo))
 }
 
@@ -152,7 +152,7 @@ desde.addEventListener('keypress',async e=>{
     let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
     nextDay.setDate(nextDay.getDate() + 1);
 
-    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data
+    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`,configAxios)).data
     listar(ingresos);
 });
 
@@ -161,7 +161,7 @@ hasta.addEventListener('change',async e=>{
         let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
         nextDay.setDate(nextDay.getDate() + 1);
 
-        const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data
+        const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`,configAxios)).data
         listar(ingresos);
 });
 
@@ -187,7 +187,7 @@ tbody.addEventListener('click',e=>{
 });
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    cuentas = (await axios.get(`${URL}cuentas`)).data;
+    cuentas = (await axios.get(`${URL}cuentas`,configAxios)).data;
     tipo = args;
     
     if (tipo === "I") {

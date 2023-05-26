@@ -5,7 +5,7 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-const {alerta} = require('../assets/js/globales');
+const {alerta, configAxios} = require('../assets/js/globales');
 const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
@@ -104,7 +104,7 @@ window.addEventListener('load',async e=>{
         aceptar.classList.add('none');
         modificar.classList.remove('none');
     }
-    cuentas = (await axios.get(`${URL}cuentas`)).data;
+    cuentas = (await axios.get(`${URL}cuentas`,configAxios)).data;
     rellenarSelect(cuentas);
 });
 
@@ -127,7 +127,7 @@ aceptar.addEventListener('click',async e=>{
         movimientoCaja.nro_comp = punto.value.padStart(4,'0') + "-" + numero.value.padStart(8,'0');
         movimientoCaja.pasado = true;
         try {
-            await axios.post(`${URL}movCajas`,movimientoCaja);
+            await axios.post(`${URL}movCajas`,movimientoCaja,configAxios);
             // window.close();
             location.reload();
         } catch (error) {
@@ -146,7 +146,7 @@ modificar.addEventListener('click',async e=>{
     movimiento.desc = descripcion.value.toUpperCase();
     movimiento.imp = importe.value;
     try {
-        await axios.put(`${URL}movCajas/id/${modificar.id}`,movimiento);
+        await axios.put(`${URL}movCajas/id/${modificar.id}`,movimiento,configAxios);
         window.close();
     } catch (error) {
         sweet.fire({
@@ -181,7 +181,7 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
     aceptar.classList.add('none');
     modificar.classList.remove('none')
     modificar.id = args
-    movimiento = (await axios.get(`${URL}movCajas/id/${args}`)).data;
+    movimiento = (await axios.get(`${URL}movCajas/id/${args}`,configAxios)).data;
     listarMovimiento(movimiento);
 });
 

@@ -4,7 +4,7 @@ const URL = process.env.URL;
 
 const {clipboard} = require('electron')
 const sweet = require('sweetalert2');
-const { redondear } = require('../assets/js/globales');
+const { redondear, configAxios } = require('../assets/js/globales');
 
 const desde = document.querySelector('#desde');
 const hasta = document.querySelector('#hasta');
@@ -40,7 +40,7 @@ window.addEventListener('load',async e=>{
     let nextDay = new Date(today);
     nextDay.setDate(today.getDate() + 1);
 
-    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
+    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`,configAxios)).data;
 
     arregloEgresos = movimientos.filter(mov => (mov.pasado && mov.tMov === "E") && mov.pasado === true);
     arregloIngresos = movimientos.filter(mov => (mov.pasado && mov.tMov === "I") && mov.pasado === true);
@@ -129,13 +129,13 @@ const listar = async(lista,tbody)=>{
     tdTotal.classList.add('bold');
 
     tbody.appendChild(tr);
-    document.querySelector('.saldoAnterior').innerHTML = (await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"];
+    document.querySelector('.saldoAnterior').innerHTML = (await axios.get(`${URL}tipoVenta`,configAxios)).data["saldo Inicial"];
     if (tbody.classList.contains('tbodyEgreso')) {
         document.querySelector('.totalEgresos').innerHTML = totalEgresos.toFixed(2);
     }else{
         document.querySelector('.totalIngresos').innerHTML = totalIngresos.toFixed(2);
     }
-    document.querySelector('.saldoFinal').innerHTML = redondear(totalIngresos-totalEgresos + (await axios.get(`${URL}tipoVenta`)).data["saldo Inicial"],2);
+    document.querySelector('.saldoFinal').innerHTML = redondear(totalIngresos-totalEgresos + (await axios.get(`${URL}tipoVenta`,configAxios)).data["saldo Inicial"],2);
     
 };
 
@@ -175,7 +175,7 @@ hasta.addEventListener('keypress', async e=>{
     if (e.key === "Enter") {
         const fecha = hasta.value.split('-',3);
         let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2],20,59,59);
-        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay.toISOString()}`)).data;
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay.toISOString()}`,configAxios)).data;
 
         arregloEgresos = movimientos.filter(elem => (elem.pasado && elem.tMov === "E"));
         arregloIngresos = movimientos.filter(elem => (elem.pasado & elem.tMov === "I"));
@@ -294,7 +294,7 @@ modificar.addEventListener('click',async e=>{
     }
 
     try {
-        await axios.put(`${URL}movCajas`,arreglo);
+        await axios.put(`${URL}movCajas`,arreglo,configAxios);
         location.reload();
     } catch (error) {
         await sweet.fire({
