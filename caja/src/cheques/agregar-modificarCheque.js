@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 const sweet = require('sweetalert2');
 
-const {cerrarVentana, redondear} = require('../assets/js/globales')
+const {cerrarVentana, redondear, configAxios} = require('../assets/js/globales')
 
 const axios = require('axios');
 require('dotenv').config();
@@ -58,7 +58,7 @@ agregar.addEventListener('click',async e=>{
     cheque.tipo = propio.checked ? "P" : "";
     
     try {
-        await axios.post(`${URL}cheques`,cheque);
+        await axios.post(`${URL}cheques`,cheque,configAxios);
         await sweet.fire({
             title:"Otro Cheque?",
             confirmButtonText:"Aceptar",
@@ -108,7 +108,7 @@ modificar.addEventListener('click',async e=>{
     cheque.tipo = propio.checked ? "P" : "";
     
     try {
-        await axios.put(`${URL}cheques/id/${modificar.id}`,cheque);
+        await axios.put(`${URL}cheques/id/${modificar.id}`,cheque,configAxios);
         window.close();
     } catch (error) {
         await sweet.fire({
@@ -121,7 +121,7 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
     agregar.classList.add('none');
     modificar.classList.remove('none');
     modificar.id = args;
-    const cheque = (await axios.get(`${URL}cheques/id/${args}`)).data;
+    const cheque = (await axios.get(`${URL}cheques/id/${args}`,configAxios)).data;
     listarCheque(cheque)
 });
 

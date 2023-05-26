@@ -2,7 +2,7 @@ const axios = require("axios");
 require('dotenv').config();
 const URL = process.env.URL;
 
-const { cerrarVentana } = require("../assets/js/globales");
+const { cerrarVentana, configAxios } = require("../assets/js/globales");
 const sweet = require('sweetalert2');
 
 
@@ -24,7 +24,7 @@ window.addEventListener('load',e=>{
 numero.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
         entreg.focus();
-        cheque = (await axios.get(`${URL}cheques/numero/${numero.value}`)).data;
+        cheque = (await axios.get(`${URL}cheques/numero/${numero.value}`,configAxios)).data;
         listarCheque(cheque);
     };
 });
@@ -32,7 +32,7 @@ numero.addEventListener('keypress',async e=>{
 aceptar.addEventListener('click',async e=>{
     cheque.fechaPago = fechaPago.value;
     try {
-        await axios.put(`${URL}cheques/id/${cheque._id}`,cheque);
+        await axios.put(`${URL}cheques/id/${cheque._id}`,cheque,configAxios);
         window.close();
     } catch (error) {
      sweet.fire({

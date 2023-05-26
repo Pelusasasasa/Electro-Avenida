@@ -2,6 +2,7 @@ const { ipcRenderer } = require('electron');
 const sweet = require('sweetalert2');
 
 const axios = require('axios');
+const { configAxios } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -23,7 +24,7 @@ let seleccionado;
 let subSeleccionado;
 
 window.addEventListener('load', async e =>{
-    cheques = (await axios.get(`${URL}cheques`)).data;
+    cheques = (await axios.get(`${URL}cheques`,configAxios)).data;
     listarCheques(cheques);
 });
 
@@ -80,7 +81,7 @@ tbody.addEventListener('click',async e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}cheques/id/${seleccionado.id}`);
+                    await axios.delete(`${URL}cheques/id/${seleccionado.id}`,configAxios);
                     tbody.removeChild(seleccionado);
                 } catch (error) {
                     console.log(error)
