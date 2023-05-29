@@ -667,9 +667,6 @@ presupuesto.addEventListener('click',async (e)=>{
                     };
 
                     await axios.post(`${URL}movProductos`,arregloMovimiento,configAxios);
-                    
-                    arregloMovimiento = [];
-                    arregloProductosDescontarStock = []
 
                     if(impresion.checked) {
                         let cliente = {
@@ -681,12 +678,14 @@ presupuesto.addEventListener('click',async (e)=>{
                             cond_iva: conIva.value
                         }
                         if (venta.tipo_pago === "CC") {
-                            await ipcRenderer.send('imprimir-venta',[venta,cliente,true,2,"imprimir-comprobante",valorizadoImpresion,listaSinDescuento])
+                            await ipcRenderer.send('imprimir-venta',[venta,cliente,true,2,"imprimir-comprobante",valorizadoImpresion,arregloMovimiento])
                         }else{
-                            await ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,listaSinDescuento])
+                            await ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,arregloMovimiento])
                         }
                     } 
 
+                    arregloMovimiento = [];
+                    arregloProductosDescontarStock = [];
                     window.location = "../index.html";  
                 } catch (error) {
                     console.log(error)

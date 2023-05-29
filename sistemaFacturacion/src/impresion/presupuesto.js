@@ -19,7 +19,7 @@ const { ipcRenderer } = require("electron");
         const descuento = document.querySelector('.descuento');
 
 
-        const listar = async (venta,cliente,valorizado,lista,opciones)=>{
+    const listar = async (venta,valorizado,lista,opciones)=>{
             lista = !lista ? venta.productos : lista;
             if(lista.length>51){
                 const tabla = document.querySelector('.tabla');
@@ -40,16 +40,8 @@ const { ipcRenderer } = require("electron");
             numero.innerHTML=venta.nro_comp;
             venta.observaciones !== "" ? clientes.innerHTML += ` (${venta.observaciones})` : "";
 
-            //Parte Cliente
-            clientes.innerHTML = cliente.cliente + `(${venta.observaciones.toUpperCase()})`;
-            idCliente.innerHTML = cliente._id ? cliente._id : cliente.id;
-            vendedor.innerHTML = venta.vendedor;
-            cuit.innerHTML = cliente.cuit;
-            direccion.innerHTML = cliente.direccion;
-            localidad.innerHTML = cliente.localidad;
-            //Fin Parte Cliente
-
             fecha.innerHTML = `${dia}/${mes}/${anio} ${hora}:${minuto}:${segundo}`;
+            vendedor.innerHTML = venta.vendedor;
             numeroComp.innerHTML = venta.nro_comp;
             subtotal.innerHTML =  venta.descuento ? (parseFloat(venta.precioFinal)+parseFloat(venta.descuento)).toFixed(2) : 0;
             precioFinal.innerHTML=(parseFloat(venta.precioFinal)).toFixed(2);
@@ -63,45 +55,54 @@ const { ipcRenderer } = require("electron");
                 subtotal.innerHTML=""
                 descuento.innerHTML= ""
             }
-    
-            if (cliente.cond_iva) {
-                cond_iva.innerHTML = cliente.cond_iva
-            }else{
-                cond_iva.innerHTML = "Consumidor Final"
-            }
-            tbody.innerHTML = ""
-             for await (let {objeto,cantidad} of lista) {
+
+            tbody.innerHTML = "";
+             for await (let elem of lista) {
                  if ((venta.tipo_pago !== "CC" || (valorizado === "valorizado" && venta.tipo_pago === "CC")) && valorizado !== "no valorizado") {
-                        console.log(objeto)
                     tbody.innerHTML += `
                     <tr>
-                        <td>${(parseFloat(cantidad)).toFixed(2)}</td>
-                        <td>${objeto._id}</td>
-                        <td class="descripcion">${objeto.descripcion} ${objeto.marca}</td>
-                        <td>${parseFloat(objeto.precio_venta).toFixed(2)}</td>
-                        <td>${(parseFloat(objeto.precio_venta)*cantidad).toFixed(2)}</td>
+                        <td>${(elem.egreso).toFixed(2)}</td>
+                        <td>${elem.codProd}</td>
+                        <td class="descripcion">${elem.descripcion}</td>
+                        <td>${parseFloat(elem.precio_unitario).toFixed(2)}</td>
+                        <td>${(parseFloat(elem.precio_unitario)*elem.egreso).toFixed(2)}</td>
                     </tr>
                     `
                 }else{
                     tbody.innerHTML += `
                     <tr>
-                        <td>${(parseFloat(cantidad)).toFixed(2)}</td>
-                        <td class="descripcion">${objeto._id}</td>
-                        <td>${objeto.descripcion.slice(0,40)} ${objeto.marca}</td>
+                        <td>${(elem.egreso).toFixed(2)}</td>
+                        <td class="descripcion">${elem.codProd}</td>
+                        <td>${elem.descripcion.slice(0,40)}</td>
                     </tr>
                     `
                 }
              };
-             await ipcRenderer.send('imprimir',JSON.stringify(opciones));
+    };
+
+    ipcRenderer.on('info-para-imprimir',async(e,args)=>{
+        [venta,cliente,valorizado,lista,opciones] = JSON.parse(args);
+        await listar(venta,valorizado,lista,opciones);
+        await listarCliente(cliente);
+        await ipcRenderer.send('imprimir',JSON.stringify(opciones));
+    });
+
+    async function listarCliente() {
+        clientes.innerHTML = cliente.cliente + `(${venta.observaciones.toUpperCase()})`;
+        idCliente.innerHTML = cliente._id ? cliente._id : cliente.id;
+        cuit.innerHTML = cliente.cuit;
+        direccion.innerHTML = cliente.direccion;
+        localidad.innerHTML = cliente.localidad;
+        if (cliente.cond_iva) {
+            cond_iva.innerHTML = cliente.cond_iva
+        }else{
+            cond_iva.innerHTML = "Consumidor Final"
         }
- 
+    };
+
+
     document.addEventListener('keydown',e=>{
         if(e.key === "Escape"){
             window.close()
         }
-        })
-
-    ipcRenderer.on('info-para-imprimir',(e,args)=>{
-        [venta,cliente,valorizado,lista,opciones] = JSON.parse(args);
-        listar(venta,cliente,valorizado,lista,opciones)
-    })
+    });
