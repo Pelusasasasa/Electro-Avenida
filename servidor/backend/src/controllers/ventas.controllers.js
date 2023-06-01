@@ -43,7 +43,13 @@ ventasCTRL.modificarVentas = async(req,res) =>{
 }
 ventasCTRL.entreFechas = async(req,res) => {
     const {desde,hasta} = req.params;
-    const ventas = await Ventas.find({$and:[{fecha:{$gte: new Date(desde)}},{fecha:{$lte: new Date(hasta)}}]})
+    const ventas = await Ventas.find({
+        $and:
+        [
+            {fecha:{$gte: new Date(desde)}},
+            {fecha:{$lte: new Date(hasta + "T23:59:59.000Z")}}
+        ]
+    });
     res.send(ventas)
 }
 ventasCTRL.entreFechasConId = async(req,res) => {

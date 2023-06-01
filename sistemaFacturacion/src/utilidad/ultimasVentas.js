@@ -37,10 +37,8 @@ window.addEventListener('load',async e=>{
     desde.value = `${year}-${month}-${day}`
     hasta.value = `${year}-${month}-${day}`
 
-    let nextDay = new Date(hasta.value);
-    nextDay.setDate(today.getDate() + 1);
-
-    ventas = (await axios.get(`${URL}ventas/${desde.value}/${nextDay}`,configAxios)).data;
+    ventas = (await axios.get(`${URL}ventas/${desde.value}/${hasta.value}`,configAxios)).data;
+    console.log(ventas)
     // alerta.classList.remove('none');
     listar(ventas);
 });

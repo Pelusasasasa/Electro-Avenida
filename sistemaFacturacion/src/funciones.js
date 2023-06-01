@@ -8,8 +8,8 @@ require('dotenv').process;
 const URL = process.env.URL;
 const sweet = require('sweetalert2');
 
-Afip = require('@afipsdk/afip.js');
-afip = new Afip({ CUIT: 27165767433 });
+let Afip = require('@afipsdk/afip.js');
+let afip = new Afip({ CUIT: 27165767433 });
 
 
 function redondear(numero,decimales){

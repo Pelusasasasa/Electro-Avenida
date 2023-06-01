@@ -414,7 +414,7 @@ const hacerRecibo = async()=>{
      clienteTraido[aux] = parseFloat(saldoNuevo);
      try {
         //modificamos las ventas en cuentas compensada
-        await modificarVentas(nuevaLista);
+        await modificarVentasConpensadas(nuevaLista);
 
 
         //modificamos el numero del recibo
@@ -467,10 +467,10 @@ const modifcarNroRecibo = async(numero,tipo_comp,iva)=>{
 
 }
 
-const modificarVentas = (lista)=>{
+const modificarVentasConpensadas = async (lista)=>{
     const trs = document.querySelectorAll('tbody tr');
-    trs.forEach(tr=>{
-        nuevaLista.forEach(async venta=>{
+    for await(let tr of trs){
+        for await(let venta of nuevaLista){
             if(tr.id === venta.nro_comp){
                 venta.pagado = (tr.children[5].children[0].value !== "") ? parseFloat(redondear(parseFloat(tr.children[4].innerHTML) + parseFloat(tr.children[5].children[0].value),2)) : parseFloat(venta.pagado);
                 venta.pagado = venta.tipo_comp === "Nota Credito" ? parseFloat(redondear(venta.pagado * -1,2)) : venta.pagado;
@@ -483,8 +483,8 @@ const modificarVentas = (lista)=>{
                     })
                 }
             }
-        })
-    })
+        }
+    }
 }
 
 cancelar.addEventListener('click',async e=>{
