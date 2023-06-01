@@ -41,6 +41,10 @@ const Prestamo = new Schema({
         type:String,
         default:true
     },
+    tipo_pago:{
+        type:String,
+        default:"PR"
+    },
     nro_comp:{
         type:String,
         required:true

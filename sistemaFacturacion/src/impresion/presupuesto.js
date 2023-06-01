@@ -30,12 +30,15 @@ const { ipcRenderer } = require("electron");
             } 
 
             const tomarFecha = new Date(venta.fecha);
-            const dia = tomarFecha.getDate(); 
-            const mes = tomarFecha.getMonth() + 1;
+            let dia = tomarFecha.getDate(); 
+            let mes = tomarFecha.getMonth() + 1;
             const anio = tomarFecha.getFullYear();
             const hora = tomarFecha.getHours();
             const minuto = tomarFecha.getMinutes();
             const segundo = tomarFecha.getSeconds();
+
+            dia = dia<10 ? `0${dia}` : dia;
+            mes = mes<10 ? `0${mes}` : mes;
 
             numero.innerHTML=venta.nro_comp;
             venta.observaciones !== "" ? clientes.innerHTML += ` (${venta.observaciones})` : "";
@@ -45,6 +48,7 @@ const { ipcRenderer } = require("electron");
             numeroComp.innerHTML = venta.nro_comp;
             subtotal.innerHTML =  venta.descuento ? (parseFloat(venta.precioFinal)+parseFloat(venta.descuento)).toFixed(2) : 0;
             precioFinal.innerHTML=(parseFloat(venta.precioFinal)).toFixed(2);
+            console.log(venta)
             tipoPago.innerHTML= venta.tipo_pago;
             tipoFactura.innerHTML = venta.tipo_pago === "PP" ? "X" : "R";
             presupuesto.innerHTML = venta.tipo_pago === "PP" ? "Comprobante no valido como Factura" : "";    

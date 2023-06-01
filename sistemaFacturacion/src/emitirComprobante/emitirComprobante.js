@@ -489,7 +489,7 @@ function codDoc(dniocuit) {
 
 //Vamos a descontar el stock 
 async function sacarStock(cantidad,objeto) {
-    let producto = (await axios.get(`${URL}productos/${objeto._id}`)).data;
+    let producto = (await axios.get(`${URL}productos/${objeto._id}`,configAxios)).data;
     const descontar = parseInt(producto.stock) - parseFloat(cantidad);
     producto.stock = descontar.toFixed(2);
     arregloProductosDescontarStock.push(producto);
@@ -709,6 +709,7 @@ prestamo.addEventListener('click',async e=>{
     prestamo.dnicuit = dnicuit.value;
     prestamo.condIva = conIva.value;
     prestamo.tipo_comp = "Prestamo";
+    prestamo.tipo_pago = "PR";
     prestamo.vendedor = vendedor;
     prestamo.observaciones = observaciones.value.toUpperCase();
     let numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
