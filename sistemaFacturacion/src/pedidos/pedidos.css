@@ -20,10 +20,17 @@ h1{
 
 table thead tr th,table tbody tr td{
     border: .1rem solid black;
+    font-size: 1.4rem;
 }
 
 .observaciones{
     width: 100%;
 }
 
+.eliminar{
+    background-color: red !important;
+}
 
+.eliminar td{
+    background-color: red !important;
+}
