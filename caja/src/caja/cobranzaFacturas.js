@@ -24,12 +24,11 @@ let subSeleccionado;
 let movimientos;
 
 window.addEventListener('load',async e=>{  
-    movimientos = (await axios.get(`${URL}movCajas/forPased`),configAxios).data;
+    movimientos = (await axios.get(`${URL}movCajas/forPased`,configAxios)).data;
     listar(movimientos);
 });
 
 const listar = async(lista)=>{
-    
     for await(let elem of lista){
         const tr = document.createElement('tr');
         tr.id = elem._id;

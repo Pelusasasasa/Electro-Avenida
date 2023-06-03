@@ -120,7 +120,6 @@ const recorrerFlechas =  async(code) => {
 
 const clave = btoa(`electroAvenida:Elbio935`);
 const configAxios = {
-    
     headers:{
         "ngrok-skip-browser-warning": "69420",
         "Authorization": `Basic ${clave}`
