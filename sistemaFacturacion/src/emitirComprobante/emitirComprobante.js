@@ -590,6 +590,7 @@ const sacarIdentificadorTabla = (arreglo)=>{
 
 presupuesto.addEventListener('click',async (e)=>{
     e.preventDefault();
+    console.log(movimientos)
     let seguro;
     await sweet.fire({
         title:"Presupuesto?",
@@ -634,7 +635,6 @@ presupuesto.addEventListener('click',async (e)=>{
                         valorizadoImpresion="no valorizado";
                     }
                     
-                        
                     for await (let producto of venta.productos){
                         if (parseFloat(descuentoN.value) !== 0 && descuentoN.value !== "" ) {
                             producto.objeto.precio_venta =  (parseFloat(producto.objeto.precio_venta)) - parseFloat(producto.objeto.precio_venta)*parseFloat(descuento.value)/100
@@ -654,19 +654,19 @@ presupuesto.addEventListener('click',async (e)=>{
                         await ponerEnCuentaCorrienteHistorica(venta,valorizado.checked,saldo_p.value);
                     }
 
-                    //si la venta es distinta de presupuesto sacamos el stock y movimiento de producto 
+                    //si la venta es distinta de presupuesto o de prestamo sacamos el stock y movimiento de producto 
                     for(let producto of venta.productos){
-                        if(venta.tipo_pago !== "PP"){
+                        if(venta.tipo_pago !== "PP" && !facturarPrestamo){
                             producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
                         }
                         await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente,venta.tipo_pago,venta.tipo_comp,venta.nro_comp,venta.vendedor);
                     };
 
-                    if (venta.tipo_pago !== "PP") {
+                    if (venta.tipo_pago !== "PP" && !facturarPrestamo) {
                        await axios.put(`${URL}productos`,arregloProductosDescontarStock,configAxios);
                     };
 
-                    await axios.post(`${URL}movProductos`,arregloMovimiento,configAxios);
+                    !facturarPrestamo && await axios.post(`${URL}movProductos`,arregloMovimiento,configAxios);
 
                     if(impresion.checked) {
                         let cliente = {
@@ -682,7 +682,22 @@ presupuesto.addEventListener('click',async (e)=>{
                         }else{
                             await ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,arregloMovimiento])
                         }
-                    } 
+                    };
+
+                    if (facturarPrestamo) {
+                        await movimientos.map(mov=>{
+                            mov.nro_comp = venta.nro_comp;
+                            mov.tipo_comp = venta.tipo_comp;
+                            mov.tipo_pago = venta.tipo_pago;
+                        });
+
+                        //Lo que hacemos es modificar los movimientos que estan como prestamos a el tipo de venta
+                        await axios.put(`${URL}movProductos`,movimientos,configAxios);
+
+                        //Anulamos el prestamo anterior
+                        let lista = JSON.parse(getParameterByName('arregloPrestamo'));
+                        await axios.put(`${URL}prestamos/anularVarios/${venta.nro_comp}`,lista);
+                    }
 
                     arregloMovimiento = [];
                     arregloProductosDescontarStock = [];
@@ -1341,8 +1356,6 @@ function ocultarNegro() {
 //Seccion de Facturar Prestamos
 let facturarPrestamo = getParameterByName('facturarPrestamo');
 facturarPrestamo = facturarPrestamo ? JSON.parse(facturarPrestamo) : false
-let botonFacturarPrestamos = document.getElementById('facturar-prestamo');
-botonFacturarPrestamos.addEventListener('click',hacerFacturaParaPrestamos);
 
 if (facturarPrestamo) {
     let arregloPrestamo = JSON.parse(getParameterByName('arregloPrestamo'));
@@ -1351,11 +1364,8 @@ if (facturarPrestamo) {
     observaciones.value = getParameterByName('observaciones');
     inputEmpresa.value = "Electro Avenida";
     buscarAfip.classList.add('none')//Saco boton Inecesario
-    botonFacturarPrestamos.classList.remove('none');//Saco boton Inecesario
     ticketFactura.classList.add('none');//Saco boton Inecesario
     remito.classList.add('none')//Saco boton Inecesario
-    presupuesto.classList.add('none');//Saco boton Inecesario
-    cuentaCorriente.parentNode.parentNode.classList.add('none');//Saco input Inecesario
 
     rellenarConPrestamo(arregloPrestamo);
 };
@@ -1399,66 +1409,6 @@ async function traerProductosPrestamo(arreglo) {
     return listaProductos
 };
 
-async function hacerFacturaParaPrestamos(){
-    const presupuesto = {};
-    const numero = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
-    const puntoVenta = numero["Ultimo Presupuesto"].split('-',2)[0];
-    const numeroPresupuesto = numero["Ultimo Presupuesto"].split('-',2)[1];
-    numero['Ultimo Presupuesto'] = `${puntoVenta}-${(parseInt(numeroPresupuesto) + 1).toString().padStart(8,'0')}`;
-
-    presupuesto.fecha = new Date();
-    presupuesto.nombreCliente = nombre.value;
-    presupuesto.cliente = codigoC.value;
-    presupuesto.tipo_comp = "Presupuesto";
-    presupuesto.tipo_pago = "CD"
-    presupuesto.nro_comp = numero["Ultimo Presupuesto"];
-    presupuesto.observaciones = observaciones.value;
-    presupuesto.vendedor = "GONZALO";
-    presupuesto.precioFinal = total.value;
-    presupuesto.descuento = descuentoN.value;
-    presupuesto.empresa = inputEmpresa.value;
-
-    //Datos del cliente
-    const cliente = {};
-    cliente._id = codigoC.value;
-    cliente.cliente = nombre.value;
-    cliente.cuit = dnicuit.value;
-    cliente.direccion = direccion.value;
-    cliente.localidad = localidad.value;
-    cliente.telefono = telefono.value;
-
-    //Imprimiendo venta
-    await ipcRenderer.send('imprimir-venta',[presupuesto,cliente,false,1,"imprimir-comprobante","true",listaProductos]);
-    
-    // //Actualizamos el numero de presupuesto
-    (await axios.put(`${URL}tipoVenta`,numero,configAxios));
-
-    //posts
-    await axios.post(`${URL}presupuesto`,presupuesto,configAxios);
-    generarMovimientoCaja(presupuesto.fecha,"I",presupuesto.nro_comp,"Presupuesto","PP",presupuesto.precioFinal,presupuesto.nombreCliente,presupuesto.cliente,presupuesto.nombreCliente,presupuesto.vendedor);
-
-    //Modificamos los movimientos de productos para que pasen de prestamo a presupuesto
-    for await(let mov of movimientos){
-        mov.nro_comp = presupuesto.nro_comp;
-        mov.tipo_comp = presupuesto.tipo_comp;
-        mov.tipo_pago = "CD";
-        mov.precio_unitario = parseFloat(listaProductos.find(elem=>elem._id = mov.codProd).objeto.precio_venta);
-        mov.total = (mov.egreso * mov.precio_unitario).toFixed(2);
-        await axios.put(`${URL}movProductos/${mov._id}`,mov,configAxios);
-    };
-
-    //Lo que hacemos es anular los prestamos
-    let arregloPrestamo = JSON.parse(getParameterByName('arregloPrestamo'));
-    for(let elem of arregloPrestamo){
-        const prestamo  = (await axios.get(`${URL}Prestamos/forNumber/${elem}`,configAxios)).data;
-        prestamo.anulado = true;
-        prestamo.nroPresupuesto = presupuesto.nro_comp;
-        await axios.put(`${URL}Prestamos/forNumber/${elem}`,prestamo,configAxios)
-    };
-
-
-    location.href = '../index.html';
-};
 //Seccion de Facturar Prestamos
 
 observaciones.addEventListener('keypress',e=>{

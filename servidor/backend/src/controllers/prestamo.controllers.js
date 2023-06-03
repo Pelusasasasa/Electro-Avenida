@@ -12,6 +12,16 @@ prestamoCTRL.post = async(req,res)=>{
     res.end();
 };
 
+prestamoCTRL.anularVarios = async(req,res)=>{
+    const arreglo = req.body;
+    const {numero} = req.params;
+    for(let elem of arreglo){
+        await Prestamo.findOneAndUpdate({nro_comp:elem},{$set:{anulado:true,nroPresupuesto:numero}});
+        console.log(`Prestamos anulados y su presupuesto es ${numero}`);
+    };
+    res.end();
+}
+
 prestamoCTRL.getForNumber = async(req,res)=>{
     const {numero} = req.params;
     const prestamo = await Prestamo.findOne({nro_comp:numero});

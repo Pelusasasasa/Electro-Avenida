@@ -3,12 +3,31 @@ require('dotenv').config();
 const axios = require("axios")
 const path = require('path');
 const url = require('url');
-const { app, BrowserWindow, ipcMain, Menu,dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu,dialog, MenuItem } = require('electron');
 const {autoUpdater} = require('electron-updater');
 
 const {abrirVentana, configAxios} = require('./funciones');
 const templateMenu = require('./menu');
 const [pedidos, ventas] = require('./descargas/descargas')
+
+//Configuramos el menu secundario que va a aparecer alado del cursor
+const menuSecundario = new Menu();
+
+const seleccionarParaEliminar = new MenuItem({
+    label: "Seleccionar para Eliminar",
+    async click() {
+        ventanaPrincipal.webContents.send('seleccionarParaEliminar');    
+    }
+});
+
+const prueba = new MenuItem({
+    label: "Prueba 1",
+    async click() {
+        ventanaPrincipal.webContents.send('seleccionarParaEliminar');    
+    }
+});
+
+//Fin de Menu Secundario
 
 let URL
 
@@ -103,8 +122,18 @@ ipcMain.on('abrir-ventana-clientesConSaldo',async(e,args)=>{
         nuevaVentana.webContents.send('situacion',JSON.stringify(args))
     })
 })
-
 //FIN CLIENTES
+
+
+ipcMain.on('mostrar-menu',(e,{x,y,ventana})=>{
+    e.preventDefault();
+    if (ventana === "VerPedidos") {
+        if (!menuSecundario.items.find(menu => menu.label === "Seleccionar para Eliminar")) {
+            menuSecundario.append(seleccionarParaEliminar);   
+        }
+    };
+    menuSecundario.popup({window:ventanaPrincipal,x,y:y+5})
+})
 
 //INICIO VENTAS
 //imprivimos una venta ya sea presupuesto o ticket factura

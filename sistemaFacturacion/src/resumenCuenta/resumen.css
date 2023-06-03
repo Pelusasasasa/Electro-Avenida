@@ -1,7 +1,20 @@
 .buscador{
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 1fr;
     margin: 0 .5rem;
+}
+
+.buscador #nombreCliente{
+    width: 80%;
+}
+
+.buscador #buscador{
+    width: 30%;
+}
+
+.buscador .imprimir{
+    justify-self: center;
+    margin-bottom: 1rem;
 }
 
 .imagen{
@@ -18,6 +31,7 @@ img{
 
 body{
     font-size: 1.2rem;
+    font-weight: bold;
 }
 
 .imagen h3,.imagen p{
@@ -27,9 +41,11 @@ body{
 .cliente{
     background-color: white;
     padding-bottom: 1rem;
+    padding-left: 2rem;
 }
 
 .cliente p{
+    font-size: 1.5rem;
     margin: 0;
 }
 
@@ -57,9 +73,11 @@ table thead tr th{
     display: flex;
     justify-content: flex-end;
     font-weight: bold;
+    padding-right: 2rem;
+    font-size: 2rem;
 }
 
-.saldoActual p{
+.saldoActual p.saldoActual label{
     margin: 0;
     font-size: 2rem;
 }
@@ -67,6 +85,8 @@ table thead tr th{
 .informacion{
     background-color: white;
     padding-bottom: 1.5rem;
+    padding-left: 1rem;
+    font-size: 1.5rem;
 }
 
 .informacion p{

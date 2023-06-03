@@ -8,6 +8,7 @@ const { ipcRenderer } = require('electron');
 
 const tbody = document.querySelector("tbody");
 const eliminarPedido = document.querySelector('.eliminarPedido');
+const eliminarVarios = document.getElementById('eliminarVarios');
 const salir = document.querySelector('.salir');
 
 let arreglo;
@@ -84,13 +85,21 @@ window.addEventListener('load',async e=>{
     arreglo = await pedidos
 });
 
+document.addEventListener('contextmenu',clickderecho);
+
 tbody.addEventListener("click" , e=>{
     seleccionado &&  seleccionado.classList.remove('seleccionado');
-    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target.parentNode.parentNode;
-    seleccionado.classList.add('seleccionado');
-
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.parentNode;
+    
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }else if (e.target.nodeName === "INPUT") {
+        seleccionado = e.target.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode;
+    }
+
+    seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
 
     const identificador = seleccionado.id;
@@ -142,6 +151,23 @@ tbody.addEventListener('dblclick',async e=>{
     });
 });
 
+document.addEventListener('keydown',async e=>{
+    if(e.key === "Escape"){
+        location.href = "../index.html";
+    }
+    subSeleccionado = await recorrerFlechas(e);
+    seleccionado = subSeleccionado && subSeleccionado.parentNode;
+    subSeleccionado && subSeleccionado.scrollIntoView({
+        block:"center",
+        inline:"center",
+        behavior:"smooth"
+    })
+});
+
+salir.addEventListener('click',e=>{
+    location.href = '../index.html';
+});
+
 //Eliminar un pedido
 eliminarPedido.addEventListener("click", async e =>{
     seleccionado = document.querySelector('.seleccionado');
@@ -159,19 +185,50 @@ eliminarPedido.addEventListener("click", async e =>{
         }
 });
 
-document.addEventListener('keydown',async e=>{
-    if(e.key === "Escape"){
-        location.href = "../index.html";
-    }
-    subSeleccionado = await recorrerFlechas(e);
-    seleccionado = subSeleccionado && subSeleccionado.parentNode;
-    subSeleccionado && subSeleccionado.scrollIntoView({
-        block:"center",
-        inline:"center",
-        behavior:"smooth"
-    })
+//Eliminar Varios Pedidos
+eliminarVarios.addEventListener('click',eliminarVariosPedidos);
+
+
+//Nos llega que hicimos un click para seleccionar un pedido a eliminar
+ipcRenderer.on('seleccionarParaEliminar',e=>{
+    seleccionado.classList.add('eliminar')
 });
 
-salir.addEventListener('click',e=>{
-    location.href = '../index.html';
-});
+async function eliminarVariosPedidos() {
+    const pedidosAEliminar = document.querySelectorAll('.eliminar');
+    await sweet.fire({
+        title:"Eliminar Varios pedidos?",
+        showCancelButton:true,
+        confirmButtonText:"Aceptar"
+    }).then(async ({isConfirmed})=>{
+        if (isConfirmed) {
+            for await(let elem of pedidosAEliminar){    
+                await axios.delete(`${URL}pedidos/${elem.id}`,configAxios);
+                tbody.removeChild(elem);
+            }
+        }
+    })
+};
+
+
+function clickderecho(e) {
+    const cordenadas = {
+        x: e.clientX,
+        y:e.clientY,
+        ventana:"VerPedidos"
+    };
+
+    ipcRenderer.send('mostrar-menu',cordenadas);
+    
+    seleccionado.classList.remove('seleccionado');
+    subSeleccionado.classList.remove('subSeleccionado');
+
+    if (e.target.nodeName === "TD") {
+        subSeleccionado = e.target
+        seleccionado = e.target.parentNode;
+    }
+
+    seleccionado.classList.add('seleccionado');
+    subSeleccionado.classList.add('subSeleccionado')
+
+};

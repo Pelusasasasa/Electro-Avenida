@@ -99,26 +99,29 @@ const ponerDatos = async(cliente)=>{
     nombre.innerHTML = cliente.cliente + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + cliente._id
     direccion.innerHTML = `${cliente.direccion}-${cliente.localidad}`;
     telefono.innerHTML = cliente.telefono;
+
+
     let cuentas = (await axios.get(`${URL}cuentaHisto/cliente/${cliente._id}`,configAxios)).data;
     let ventasAnteriores = cuentas.filter(e=>e.fecha < desde.value);
+    console.log(ventasAnteriores)
     //Aca vemos si ya debia algo del progama viejo
     ventasAnteriores = ventasAnteriores.reverse();
     const primerHistoP = ventasAnteriores.find(venta =>venta.tipo_comp === "Presupuesto" || venta.tipo_comp === "Recibos_P");
     const primerHisto = ventasAnteriores.find(venta =>venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Recibos"  || venta.tipo_comp === "Nota Credito");
     saldoAnterior_P = primerHistoP ? primerHistoP.saldo : 0;
+    console.log(primerHistoP)
     saldoAnterior = primerHisto ? primerHisto.saldo : 0;
-    cuentas = cuentas.filter(e=> {
+    listaVentas = cuentas.filter(e=> {
         return (e.fecha >= desde.value)
     });
     nuevaLista = [];
-    listaVentas = cuentas;
 
     listarVentas(listaVentas,situacion,saldoAnterior,saldoAnterior_P)
 }
 
 ipcRenderer.on('mando-el-cliente',async(e,args)=>{
     cliente = (await axios.get(`${URL}clientes/id/${args}`,configAxios)).data;
-    ponerDatos(cliente)
+    ponerDatos(cliente);
 })
 
 function listarVentas(ventas,situacion,saldoAnterior,saldoAnterior_P) {
@@ -201,4 +204,3 @@ document.addEventListener('keyup',e=>{
 volver.addEventListener('click',e=>{
     location.href = '../index.html';
 });
-

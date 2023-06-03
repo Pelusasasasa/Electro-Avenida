@@ -15,7 +15,7 @@
                     <label for="Desde">Desde</label>
                     <input type="date" name="desde" id="desde" autofocus>
             </main>
-            <main class="buscador">
+            <main>
                 <label for="buscador">Buscar Cliente</label>
                 <input type="text"  id="buscador" name="buscador">
             </main>
@@ -23,10 +23,9 @@
                 <label for="nombreCliente">Nombre Cliente</label>
                 <input type="text" name="nombreCliente" id="nombreCliente">
             </main>
-
-
             <button class="imprimir">Imprimir</button>
         </section>
+
         <section class="imagen">
             <img src="../imagenes/Logo.jpg" alt="Electro Avenida">
             <p>Av. 9 de Julio 3380 - Tel: 03456-421421 / 3456478657</p>
@@ -36,8 +35,8 @@
         <section class="cliente">
             <p>Sr: <span class="nombre"></span></p>
             <main class=informacionCliente>
-                <p class="direccion"></p>
-                <p class="telefono"></p>
+                <p>Direccion: <span class="direccion"></span></p>
+                <p>Telefono: <span class="telefono"></span></p>
             </main>
         </section>
     </header>
@@ -60,8 +59,7 @@
             </table>
         </section>
         <main class="saldoActual">
-            <label for="saldoActual">Saldo Actual: </label>
-            <p class="saldoImprimir"></p>
+            <p>Saldo Actual: <span class="saldoImprimir"></span></p>
         </main>
         <main class="informacion">
             <p>Sr: Cliente:</p>

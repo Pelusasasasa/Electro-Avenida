@@ -152,11 +152,14 @@ let seleccionarTBody = document.querySelector('tbody');
 seleccionarTBody.addEventListener('click',(e) =>{
 
     seleccionado && seleccionado.classList.remove('seleccionado');
-    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
-    seleccionado.classList.add('seleccionado')
-    
     subSeleccion && subSeleccion.classList.remove('subSeleccionado');
-    subSeleccion = e.path[0].nodeName === "TD" ? e.path[0] : e.path[1];
+
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccion = e.target;
+    };
+
+    seleccionado.classList.add('seleccionado')
     subSeleccion.classList.add('subSeleccionado');
 
     //mostrar imagen
@@ -167,11 +170,13 @@ seleccionarTBody.addEventListener('click',(e) =>{
 const imagen = document.querySelector('.imagen')
 async function mostrarImagen(id) {
         const producto = (await axios.get(`${URL}productos/${id}`),configAxios).data;
-        if (producto.imgURL) {
-            const path = `${URL}productos/${producto._id}/image`;
-            console.log(path)
-            imagen.innerHTML = `<img class="imagenProducto" src=${path}>`
-        };
+        if (producto) {
+            if (producto.imgURL) {
+                const path = `${URL}productos/${producto._id}/image`;
+                console.log(path)
+                imagen.innerHTML = `<img class="imagenProducto" src=${path}>`
+            };
+        }
 }
 
 ipcRenderer.once('Historial',async(e,args)=>{
