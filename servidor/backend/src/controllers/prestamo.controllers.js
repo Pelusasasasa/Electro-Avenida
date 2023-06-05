@@ -12,6 +12,11 @@ prestamoCTRL.post = async(req,res)=>{
     res.end();
 };
 
+prestamoCTRL.get = async(req,res) =>{
+    const prestamos = await Prestamo.find();
+    res.send(prestamos);
+}
+
 prestamoCTRL.anularVarios = async(req,res)=>{
     const arreglo = req.body;
     const {numero} = req.params;

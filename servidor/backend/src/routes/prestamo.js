@@ -1,10 +1,11 @@
 const {Router} =require('express');
 const router = Router();
 
-const { post, getBetweenDate, getForNumber, putForNumber, getAnuladosBetweenDate, anularVarios } = require('../controllers/prestamo.controllers');
+const { post, getBetweenDate, getForNumber, putForNumber, getAnuladosBetweenDate, anularVarios, get } = require('../controllers/prestamo.controllers');
 
 router.route('/')
     .post(post)
+    .get(get)
 router.route('/anularVarios/:numero')
     .put(anularVarios)
 router.route('/forNumber/:numero')

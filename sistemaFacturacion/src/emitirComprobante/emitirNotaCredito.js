@@ -65,7 +65,7 @@ divVendedor.children[0].innerHTML = vendedor
 let cliente = {};
 let listaProductos = [];
 let seleccionado;
-let subseleccionado
+let subSeleccionado;
 let totalPrecioProductos = 0;
 let arregloMovimiento = [];
 let arregloProductosDescontarStock = [];
@@ -483,9 +483,15 @@ cancelar.addEventListener('click',async e=>{
 })
 
 resultado.addEventListener('click',e=>{
-    seleccionado && seleccionado.classList.remove('seleccionado')
-    seleccionado = e.path[1];
+    seleccionado && seleccionado.classList.remove('seleccionado');
+    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+
+    seleccionado = e.target.parentNode;
+    subSeleccionado = e.target;
+
     seleccionado.classList.add('seleccionado');
+    subSeleccionado.classList.add('subSeleccionado');
+
     if (seleccionado) {
         divNuevaCantidad.classList.remove('none');
         agregarIva.classList.remove('none');

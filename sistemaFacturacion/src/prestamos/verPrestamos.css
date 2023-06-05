@@ -1,13 +1,6 @@
-.fechas{
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 1rem;
-}
-
-.fechas main{
-    display: flex;
-    flex-direction: column;
-    text-align: center;
+h1{
+    margin: 0;
+    margin-bottom:.5rem;
 }
 
 label,input{

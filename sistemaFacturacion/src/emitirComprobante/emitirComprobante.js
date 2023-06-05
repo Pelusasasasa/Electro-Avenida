@@ -587,10 +587,8 @@ const sacarIdentificadorTabla = (arreglo)=>{
 };
 
 //Aca mandamos la venta en presupuesto
-
 presupuesto.addEventListener('click',async (e)=>{
     e.preventDefault();
-    console.log(movimientos)
     let seguro;
     await sweet.fire({
         title:"Presupuesto?",
@@ -712,6 +710,7 @@ presupuesto.addEventListener('click',async (e)=>{
     }
 });
 
+//Boton para hacer un prestamo
 prestamo.addEventListener('click',async e=>{
     let prestamo = {}
 
@@ -748,7 +747,6 @@ prestamo.addEventListener('click',async e=>{
     await axios.post(`${URL}prestamos`,prestamo,configAxios);
     location.href = '../index.html';
 });
-
 
 //Cuando apretamos el boton de remito
 remito.addEventListener('click',async e=>{

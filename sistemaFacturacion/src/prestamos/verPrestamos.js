@@ -4,9 +4,6 @@ const { configAxios } = require('../funciones');
 require('dotenv');
 const URL = process.env.URL;
 
-const desde = document.getElementById('desde');
-const hasta = document.getElementById('hasta');
-
 const tbody = document.querySelector('tbody');
 const detallesProducto = document.querySelector('.detallesProducto');
 const detalle = document.getElementById('detalle');
@@ -20,30 +17,13 @@ let subSeleccionado = "";
 
 window.addEventListener('load',async e=>{
     const hoy = new Date();
-    const fechaArgentina = new Date(hoy.getTime() - hoy.getTimezoneOffset() * 60000).toISOString();
-    desde.value = fechaArgentina.slice(0,10);
-    hasta.value = fechaArgentina.slice(0,10);
-    const prestamos = (await axios.get(`${URL}prestamos/betweenDates/${desde.value}/${hasta.value}`,configAxios)).data;
+    const prestamos = (await axios.get(`${URL}prestamos`,configAxios)).data;
     listarPrestamos(prestamos);
 });
 
-desde.addEventListener('keypress',traerPrestamos);
-hasta.addEventListener('keypress',traerPrestamos);
 tbody.addEventListener('click',mostrarDetalleProducto);
 cerrarVentana.addEventListener('click',closeDetalle);
 botonFacturar.addEventListener('click',facturarPrestamos);
-
-//Mostramos los prestamos que esten en la base de datos sin anular
-async function traerPrestamos(e) {
-    if (e.keyCode === 13) {
-        const prestamos = (await axios.get(`${URL}prestamos/betweenDates/${desde.value}/${hasta.value}`,configAxios)).data;
-        listarPrestamos(prestamos);
-
-        if (e.target.id === "desde") {
-            hasta.focus();
-        }
-    }
-};
 
 //Listamos los prestamos traidos
 async function listarPrestamos(lista) {
@@ -81,8 +61,6 @@ async function listarPrestamos(lista) {
         tr.appendChild(tdFacturar);
 
         tbody.appendChild(tr);
-
-        
     }
 };
 
@@ -101,6 +79,7 @@ async function mostrarDetalleProducto(e){
 
     /*Traer movimientos*/;
     const movimientos = (await axios.get(`${URL}movProductos/${seleccionado.id}/Prestamo`,configAxios)).data;
+    console.log(movimientos)
     listarMovimientos(movimientos);
 };
 
