@@ -202,11 +202,12 @@ const listarLista = (lista,situacion,tipo)=>{
         let saldo = venta.saldo;
         let pagado = venta.pagado;
         if (venta.length !== 0) {
-            let fecha = new Date(venta.fecha)
+            let fecha = venta.fecha.slice(0,10).split('-',3);
+            console.log(fecha)
             if (tipo === "compensada") {
                 listar.innerHTML += `
                 <tr id="${venta.nro_comp}">
-                <td>${fecha.getUTCDate()}/${fecha.getUTCMonth()+1}/${fecha.getUTCFullYear()}</td>
+                <td>${fecha[2]}/${fecha[1]}/${fecha[0]}</td>
                     <td>${venta.tipo_comp}</td>
                     <td>${venta.nro_comp}</td>
                     <td class = "importe">${parseFloat(importe).toFixed(2)}</td>
@@ -218,7 +219,7 @@ const listarLista = (lista,situacion,tipo)=>{
             }else{
                 listar.innerHTML += `
                 <tr id="${venta.nro_comp}">
-                <td>${fecha.getUTCDate()}/${fecha.getUTCMonth()+1}/${fecha.getUTCFullYear()}</td>
+                <td>${fecha[2]}/${fecha[1]}/${fecha[0]}</td>
                     <td>${venta.tipo_comp}</td>
                     <td>${venta.nro_comp}</td>
                     <td class = "importe">${(venta.debe).toFixed(2)}</td>
@@ -300,7 +301,7 @@ actualizar.addEventListener('click',async e=>{
         //Guardamos la venta con el nuevo precioFinal
         venta.precioFinal = parseFloat(total.toFixed(2));
       
-        ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante","valorizado",,true]);
+        ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante","valorizado",movimientos,true]);
             sweet.fire({
                 title: "Grabar Importe",
                 showCancelButton:true,

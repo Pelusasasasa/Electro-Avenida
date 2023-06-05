@@ -36,10 +36,9 @@ aceptar.addEventListener('click',async e=>{
     ipcRenderer.send('elegirPath');
     ipcRenderer.on('mandoPath',async(e,args)=>{
     let desdefecha = new Date(desde.value);
-    let hastafecha = DateTime.fromISO(hasta.value).endOf('day');
-    const tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hastafecha}`,configAxios)).data;
-    const presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`,configAxios)).data;
-    const recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hastafecha}`,configAxios)).data;
+    const tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hasta.value}`,configAxios)).data;
+    const presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hasta.value}`,configAxios)).data;
+    const recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hasta.value}`,configAxios)).data;
     //Sacamos los tickes que se hicieron en el dia y son contados
         let ticketsDelDia = tickets.filter(ticket =>{
             if ((ticket.tipo_comp === "Ticket Factura" || ticket.tipo_comp === "Nota Credito") && ticket.tipo_pago==="CD") {

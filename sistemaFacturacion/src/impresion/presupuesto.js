@@ -52,7 +52,7 @@ const { ipcRenderer } = require("electron");
             tipoPago.innerHTML= venta.tipo_pago;
             tipoFactura.innerHTML = venta.tipo_pago === "PP" ? "X" : "R";
             presupuesto.innerHTML = venta.tipo_pago === "PP" ? "Comprobante no valido como Factura" : "";    
-            descuento.innerHTML = venta.descuento;
+            descuento.innerHTML = venta.descuento ? venta.descuento : "0.00";
     
             if ((venta.tipo_pago === "CC" && valorizado !== "valorizado") || valorizado === "no valorizado") {
                 precioFinal.innerHTML = ""
@@ -62,6 +62,7 @@ const { ipcRenderer } = require("electron");
 
             tbody.innerHTML = "";
              for await (let elem of lista) {
+                console.log(elem)
                  if ((venta.tipo_pago !== "CC" || (valorizado === "valorizado" && venta.tipo_pago === "CC")) && valorizado !== "no valorizado") {
                     tbody.innerHTML += `
                     <tr>

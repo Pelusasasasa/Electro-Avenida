@@ -20,13 +20,12 @@ const seleccionarParaEliminar = new MenuItem({
     }
 });
 
-const prueba = new MenuItem({
-    label: "Prueba 1",
-    async click() {
-        ventanaPrincipal.webContents.send('seleccionarParaEliminar');    
+const seleccionarParaReImprimir = new MenuItem({
+    label:"Re Imprimir",
+    async click(){
+        ventanaPrincipal.webContents.send('reImprimir');
     }
-});
-
+})
 //Fin de Menu Secundario
 
 let URL
@@ -36,6 +35,7 @@ if (process.env.NODE_ENV !== 'production') {
         electron: path.join(__dirname, '../node_modules', '.bin', 'electron')
     })
 };
+
 global.nuevaVentana = null;
 global.ventanaPrincipal = null
 global.nuevaVentanaDos = null
@@ -132,6 +132,13 @@ ipcMain.on('mostrar-menu',(e,{x,y,ventana})=>{
             menuSecundario.append(seleccionarParaEliminar);   
         }
     };
+
+    if (ventana === "VerPrestamos") {
+        if (!menuSecundario.items.find(menu => menu.label === "Re Imprimir")) {
+            menuSecundario.append(seleccionarParaReImprimir);
+        }
+    };
+    
     menuSecundario.popup({window:ventanaPrincipal,x,y:y+5})
 })
 

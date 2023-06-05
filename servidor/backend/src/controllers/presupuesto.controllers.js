@@ -29,18 +29,31 @@ PresupuestoCTRL.modificarPresupuesto = async(req,res) =>{
 
 PresupuestoCTRL.entreFechas = async(req,res)=>{
     const {id,desde,hasta} = req.params;
-    const ventaARetornar = await Presupuesto.find({$and:[{fecha:{$gte: new Date(desde)}},{fecha:{$lte: new Date(hasta)}}]})
+    const ventaARetornar = await Presupuesto.find({
+        $and:[
+            {fecha:{$gte: new Date(desde)}},
+            {fecha:{$lte: new Date(hasta + "T23:59:59.000Z")}}
+        ]})
     res.send(ventaARetornar)
 }
 
 PresupuestoCTRL.entreFechasConId = async(req,res)=> {
     const {id,desde,hasta} = req.params;
-    const ventaARetornar =  await Presupuesto.find({$and:[{nro_comp:id},{fecha:{$gte: new Date(desde)}},{fecha:{$lte: new Date(hasta)}}]})
+    const ventaARetornar =  await Presupuesto.find({
+        $and:[
+            {nro_comp:id},{fecha:{$gte: new Date(desde)}},
+            {fecha:{$lte: new Date(hasta + "T23:59:59.000Z")}}
+        ]})
     res.send(ventaARetornar)
 }
 PresupuestoCTRL.entreFechasConCliente = async(req,res) => {
     const {idCliente,desde,hasta} = req.params;
-    const VentaAretornar = await Presupuesto.find({$and:[{cliente:idCliente},{fecha:{$gte: new Date(desde)}},{fecha:{$lte: new Date(hasta)}}]})
+    const VentaAretornar = await Presupuesto.find({
+        $and:[
+            {cliente:idCliente},
+            {fecha:{$gte: new Date(desde)}},
+            {fecha:{$lte: new Date(hasta + "T23:59:59.000Z")}}
+        ]});
     res.send(VentaAretornar);
 };
 

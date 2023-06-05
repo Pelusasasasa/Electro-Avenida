@@ -67,8 +67,7 @@ buscar.addEventListener('click',async e=>{
     totalGlobalIva105Factura = 0;
     totalGlobalFactura = 0;
     const desdeFecha = new Date(desde.value)
-    let hastaFecha = DateTime.fromISO(hasta.value).endOf('day');
-    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`,configAxios)).data;
+    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hasta.value}`,configAxios)).data;
     ventas = ventas.filter(venta=>venta.tipo_comp !== "Recibos");
     ventas = ventas.filter(venta => venta.tipo_comp !== "Recibos_P");
     ventasExportar = ventas;

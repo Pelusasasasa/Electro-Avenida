@@ -48,14 +48,14 @@ const cliente = new Schema({
     },
     mail:String,
     saldo: {
-        type:String,
-        default: "0"
+        type:Number,
+        default: 0
     },
     lim_compra: Number,
     cond_fact: String,
     saldo_p: {
-        type: String,
-        default: "0"
+        type: Number,
+        default: 0
     },
     listaVentas:[]
 })

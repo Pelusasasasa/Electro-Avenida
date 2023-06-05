@@ -31,10 +31,9 @@ window.addEventListener('load',async e=>{
     contado.classList.add('seleccionado');
 
     const desdefecha = new Date(desde.value);
-    let hastafecha = DateTime.fromISO(hasta.value).endOf('day');
     let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hasta.value}`,configAxios)).data;
-    let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`,configAxios)).data;
-    let recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hastafecha}`,configAxios)).data;
+    let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hasta.value}`,configAxios)).data;
+    let recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hasta.value}`,configAxios)).data;
     ventas = [...tickets,...presupuesto];
     const ventasContado = ventas.filter(venta=> venta.tipo_pago == "CD");
 
@@ -50,10 +49,9 @@ desde.addEventListener('keypress',e=>{
 hasta.addEventListener('keypress',async e=>{
     if (e.key === "Enter") {
         const desdefecha = new Date(desde.value)
-        let hastafecha = DateTime.fromISO(hasta.value).endOf('day');
-        let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hastafecha}`,configAxios)).data;
-        let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hastafecha}`,configAxios)).data;
-        let recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hastafecha}`,configAxios)).data;
+        let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hasta.value}`,configAxios)).data;
+        let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hasta.value}`,configAxios)).data;
+        let recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hasta.value}`,configAxios)).data;
         ventas = [...tickets,...presupuesto,...recibos];
         contado.focus();
     }

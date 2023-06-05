@@ -30,9 +30,8 @@ const imprimir = document.querySelector('.imprimir');
 
 window.addEventListener('load', async e=>{
     const desdeFecha = new Date(desde.value);
-    let hastaFecha = DateTime.fromISO(hasta.value).endOf('day');
-    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`,configAxios)).data;
-    let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hastaFecha}`,configAxios)).data;
+    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hasta.value}`,configAxios)).data;
+    let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hasta.value}`,configAxios)).data;
     const ventasPresupuestos = ventas.filter(venta => venta.tipo_pago === "PP")
     const presupuestoPresupuestos = presupuesto.filter(venta => venta.tipo_pago === "PP")
     listarVentas([...ventasPresupuestos,...presupuestoPresupuestos],tbody)
@@ -47,9 +46,9 @@ desde.addEventListener('keypress',e=>{
 hasta.addEventListener('keypress',async e=>{
     if (e.key === "Enter") {
         const desdeFecha = new Date(desde.value);
-        let hastaFecha = DateTime.fromISO(hasta.value).endOf('day');
-        let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`,configAxios)).data;
-        let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hastaFecha}`,configAxios)).data;
+
+        let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hasta.value}`,configAxios)).data;
+        let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hasta.value}`,configAxios)).data;
         const ventasPresupuestos = ventas.filter(venta => venta.tipo_pago === "PP")
         const presupuestoPresupuestos = presupuesto.filter(venta => venta.tipo_pago === "PP")
         listarVentas([...ventasPresupuestos,...presupuestoPresupuestos],tbody)

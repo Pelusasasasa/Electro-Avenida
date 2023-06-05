@@ -135,53 +135,36 @@ async function facturarPrestamos() {
   ipcRenderer.send('facturar-prestamos',JSON.stringify(arrayAFacturar));
 };
 
-//Modificamos el prestamo poniendo la anulacion en true
-async function putAPrestamo(lista) {
-    for(let numero of lista){
-        let prestamo = (await axios.get(`${URL}prestamos/forNumber/${numero}`,configAxios)).data;
-        prestamo.anulado = true;
-        await axios.put(`${URL}prestamos/forNumber/${numero}`,prestamo);
-      }
-};
+tbody.addEventListener('contextmenu',clickDerecho);
 
-//Arregalmos el stock depèndiendo de si suma o se resta para la anulacion
-async function arreglarStock(lista) {
-  for(let elem of lista){
-    const movimientos = (await axios.get(`${URL}movProductos/${elem}/Prestamo`,configAxios)).data;
-    for(let {codProd,egreso} of movimientos){
-        const producto = (await axios.get(`${URL}productos/${codProd}`,configAxios)).data;
-        producto.stock = parseFloat(producto.stock) + egreso;
-        await axios.put(`${URL}productos/${codProd}`,producto,configAxios);
+function clickDerecho(e) {
+    seleccionado && seleccionado.classList.remove('seleccionado');
+    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
     }
-  }  
+
+    subSeleccionado.classList.add('subSeleccionado');
+    seleccionado.classList.add('seleccionado');
+
+    const cordenadas = {
+        x:e.clientX,
+        y:e.clientY,
+        ventana: "VerPrestamos"
+    };
+    ipcRenderer.send('mostrar-menu',cordenadas);
 };
 
-//Se crea un movimiento por cada producto que este en los prestamos para informar que se anulo
-async function crearMovimiento(lista) {
-    let nuevoArreglo = [];
-    for(let elem of lista){
-        const movimientos = (await axios.get(`${URL}movProductos/${seleccionado.id}/Prestamo`,configAxios)).data;
-        
-        for(let mov of movimientos){
-            console.log(mov)
-            const movimiento = {};
-            movimiento.codCliente = mov.codCliente;
-            movimiento.cliente = mov.cliente;
-            movimiento.codProd = mov.codProd;
-            movimiento.descripcion = mov.descripcion;
-            movimiento.fecha = new Date();
-            movimiento.nro_comp = "0000-00000000";
-            movimiento.tipo_comp = "Anulacion";
-            movimiento.tipo_pago = "AN";
-            movimiento.ingreso = mov.egreso;
-            movimiento.stock = mov.stock + mov.egreso ;
-            movimiento.precio_unitario = mov.precio_unitario;
-            movimiento.total = mov.total;
-            nuevoArreglo.push(movimiento);
-        };
-    };
-    (await axios.post(`${URL}movProductos`,nuevoArreglo,configAxios));
-};
+ipcRenderer.on('reImprimir',imprimirPrestamo);
+
+async function imprimirPrestamo() {
+    const venta = (await axios.get(`${URL}prestamos/forNumber/${seleccionado.id}`,configAxios)).data;
+    const cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`)).data;
+    const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`)).data;
+    ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante","valorizado",movimientos]);
+}
 
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {

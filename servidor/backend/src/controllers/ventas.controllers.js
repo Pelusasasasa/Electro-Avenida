@@ -59,7 +59,7 @@ ventasCTRL.entreFechasConId = async(req,res) => {
             [
             {nro_comp:id},
             {fecha:{$gte: new Date(desde)}},
-            {fecha:{$lte: new Date(hasta)}}
+            {fecha:{$lte: new Date(hasta + "T23:59:59.00Z")}}
         ]})
     res.send(ventaARetornar)
 }

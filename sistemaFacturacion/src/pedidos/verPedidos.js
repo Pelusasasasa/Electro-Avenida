@@ -188,7 +188,6 @@ eliminarPedido.addEventListener("click", async e =>{
 //Eliminar Varios Pedidos
 eliminarVarios.addEventListener('click',eliminarVariosPedidos);
 
-
 //Nos llega que hicimos un click para seleccionar un pedido a eliminar
 ipcRenderer.on('seleccionarParaEliminar',e=>{
     seleccionado.classList.add('eliminar')
@@ -209,7 +208,6 @@ async function eliminarVariosPedidos() {
         }
     })
 };
-
 
 function clickderecho(e) {
     const cordenadas = {

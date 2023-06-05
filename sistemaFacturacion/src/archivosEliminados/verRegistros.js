@@ -15,12 +15,11 @@ dia = dia < 10 ? `0${dia}` : dia;
 mes = mes < 10 ? `0${mes}` : mes;
 desde.value = `${anio}-${mes}-${dia}`;
 hasta.value = `${anio}-${mes}-${dia}`
-let hastaFecha = DateTime.fromISO(hasta.value).endOf('day');
 const desdeFecha = new Date(desde.value)
 let tickets = [];
 const traerVentasEntreFechas = async()=>{
-    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hastaFecha}`)).data;
-    let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hastaFecha}`)).data
+    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hasta.value}`)).data;
+    let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hasta.value}`)).data
     tickets = ventas.filter(venta => ( venta.tipo_pago !== "CC"));
     presupuestosTickets = presupuesto.filter(venta => ( venta.tipo_pago !== "CC"));
     listarVentas([...tickets,...presupuestosTickets]);

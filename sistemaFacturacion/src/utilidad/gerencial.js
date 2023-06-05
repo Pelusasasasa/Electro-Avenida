@@ -43,8 +43,7 @@ hasta.addEventListener('keypress',e=>{
 
 const main = async()=>{
     const desdeFecha = new Date(desde.value);
-    let hastaFecha = DateTime.fromISO(hasta.value).endOf('day');
-    let ventasCanceladas = (await axios.get(`${URL}cancelados/${desdeFecha}/${hastaFecha}`,configAxios)).data;
+    let ventasCanceladas = (await axios.get(`${URL}cancelados/${desdeFecha}/${hasta.value}`,configAxios)).data;
     for await(let venta of ventasCanceladas){
         listarVentasCanceladas(venta)
     }
@@ -55,8 +54,7 @@ main();
 
 buscar.addEventListener('click',async e=>{
     const desdeFecha = new Date(desde.value);
-    let hastaFecha = DateTime.fromISO(hasta.value).endOf('day');
-    let ventasCanceladas = (await axios.get(`${URL}cancelados/${desdeFecha}/${hastaFecha}`,configAxios)).data;
+    let ventasCanceladas = (await axios.get(`${URL}cancelados/${desdeFecha}/${hasta.value}`,configAxios)).data;
     tbody.innerHTML = "";
     ventasCanceladas.forEach((venta)=>{
         listarVentasCanceladas(venta)

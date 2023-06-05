@@ -141,9 +141,8 @@ let ventas = []
 async function traerTodasLasVentas(lista) {
     let retornar = [];
     const desdeFecha = desde.value
-    const hastaFecha = DateTime.fromISO(hasta.value).endOf('day')
     for await(let cliente of lista){
-        let ventas = (await axios.get(`${URL}presupuesto/cliente/${cliente._id}/${desdeFecha}/${hastaFecha}`,configAxios)).data;
+        let ventas = (await axios.get(`${URL}presupuesto/cliente/${cliente._id}/${desdeFecha}/${hasta.value}`,configAxios)).data;
         tbody.innerHTML += ventas.length !== 0 && `<tr class="titulo"><td>${cliente.cliente}</td></tr>`
         for await(let venta of ventas){
             listarVentas(venta)
