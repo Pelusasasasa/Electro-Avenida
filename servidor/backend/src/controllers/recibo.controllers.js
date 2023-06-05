@@ -24,7 +24,7 @@ reciboCTRL.getbetweenDates = async(req,res)=>{
     const recibos = await Recibo.find({
         $and:[
             {fecha:{$gte:desde}},
-            {fecha:{$lte:hasta}}
+            {fecha:{$lte:new Date(hasta + "T23:59:59.000Z")}}
         ]
     });
     res.send(recibos)

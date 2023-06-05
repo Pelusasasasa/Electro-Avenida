@@ -54,7 +54,13 @@ ventasCTRL.entreFechas = async(req,res) => {
 }
 ventasCTRL.entreFechasConId = async(req,res) => {
     const {id,desde,hasta} = req.params
-    const ventaARetornar =  await Ventas.find({$and:[{nro_comp:id},{fecha:{$gte: new Date(desde)}},{fecha:{$lte: new Date(hasta)}}]})
+    const ventaARetornar =  await Ventas.find(
+        {$and:
+            [
+            {nro_comp:id},
+            {fecha:{$gte: new Date(desde)}},
+            {fecha:{$lte: new Date(hasta)}}
+        ]})
     res.send(ventaARetornar)
 }
 

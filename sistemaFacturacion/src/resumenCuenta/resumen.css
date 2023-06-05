@@ -4,6 +4,12 @@
     margin: 0 .5rem;
 }
 
+.buscador main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .buscador #nombreCliente{
     width: 80%;
 }
@@ -36,9 +42,11 @@ body{
 
 .imagen h3,.imagen p{
     margin: 0;
+    color: black;
 }
 
 .cliente{
+    color: black;
     background-color: white;
     padding-bottom: 1rem;
     padding-left: 2rem;
@@ -77,8 +85,9 @@ table thead tr th{
     font-size: 2rem;
 }
 
-.saldoActual p.saldoActual label{
+.saldoActual p{
     margin: 0;
+    color: black;
     font-size: 2rem;
 }
 
@@ -90,6 +99,7 @@ table thead tr th{
 }
 
 .informacion p{
+    color: black;
     margin: 0;
 }
 

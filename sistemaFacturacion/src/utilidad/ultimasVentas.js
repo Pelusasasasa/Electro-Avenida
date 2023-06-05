@@ -38,7 +38,6 @@ window.addEventListener('load',async e=>{
     hasta.value = `${year}-${month}-${day}`
 
     ventas = (await axios.get(`${URL}ventas/${desde.value}/${hasta.value}`,configAxios)).data;
-    console.log(ventas)
     // alerta.classList.remove('none');
     listar(ventas);
 });
@@ -52,15 +51,13 @@ desde.addEventListener('keypress',e=>{
 });
 
 hasta.addEventListener('keypress',async e=>{
-    let nextDay = new Date(hasta.value);
-    nextDay.setDate(today.getDate() + 1);
 
     if (e.keyCode === 13) {
     await alerta.classList.remove('none');
-    ventas = (await axios.get(`${URL}ventas/${desde.value}/${nextDay}`,configAxios)).data;
-    recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desde.value}/${nextDay}`,configAxios)).data;
+    ventas = (await axios.get(`${URL}ventas/${desde.value}/${hasta.value}`,configAxios)).data;
+    // recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desde.value}/${nextDay}`,configAxios)).data;
     listar(ventas);
-    listarRecibos(recibos);
+    // listarRecibos(recibos);
     }
 })
 
