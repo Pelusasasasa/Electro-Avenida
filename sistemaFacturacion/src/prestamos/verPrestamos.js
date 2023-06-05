@@ -1,4 +1,5 @@
 const axios = require('axios');
+const sweet = require('sweetalert2')
 const { ipcRenderer } = require('electron');
 const { configAxios } = require('../funciones');
 require('dotenv');
@@ -158,13 +159,29 @@ function clickDerecho(e) {
 };
 
 ipcRenderer.on('reImprimir',imprimirPrestamo);
+ipcRenderer.on('cambiarObservacion',cambiarObservacion);
 
 async function imprimirPrestamo() {
     const venta = (await axios.get(`${URL}prestamos/forNumber/${seleccionado.id}`,configAxios)).data;
-    const cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`)).data;
-    const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`)).data;
+    const cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`,configAxios)).data;
+    const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`,configAxios)).data;
     ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante","valorizado",movimientos]);
 }
+
+async function cambiarObservacion(){
+    const prestamo = (await axios.get(`${URL}prestamos/forNumber/${seleccionado.id}`,configAxios)).data;
+    const {value,isConfirmed} = await sweet.fire({
+        title:"Cambiar Observacion",
+        input:"text",
+        showCancelButton:true,
+        confirmButtonText:"Aceptar"
+    });
+    if (isConfirmed) {
+        prestamo.observaciones = value.toUpperCase();
+        await axios.put(`${URL}prestamos/forNumber/${prestamo.nro_comp}`,prestamo,configAxios);
+        seleccionado.children[4].innerText = value.toUpperCase();
+    }
+};
 
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {

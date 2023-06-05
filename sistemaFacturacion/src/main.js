@@ -25,6 +25,13 @@ const seleccionarParaReImprimir = new MenuItem({
     async click(){
         ventanaPrincipal.webContents.send('reImprimir');
     }
+});
+
+const cambiarObservaciones = new MenuItem({
+    label:"Cambiar Observacion",
+    async click(){
+        ventanaPrincipal.webContents.send('cambiarObservacion')
+    }
 })
 //Fin de Menu Secundario
 
@@ -136,6 +143,9 @@ ipcMain.on('mostrar-menu',(e,{x,y,ventana})=>{
     if (ventana === "VerPrestamos") {
         if (!menuSecundario.items.find(menu => menu.label === "Re Imprimir")) {
             menuSecundario.append(seleccionarParaReImprimir);
+        }
+        if (!menuSecundario.items.find(menu => menu.label === "Cambiar Observacion")) {
+            menuSecundario.append(cambiarObservaciones);
         }
     };
     
