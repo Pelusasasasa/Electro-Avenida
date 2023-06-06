@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { cerrarVentana } = require('../assets/js/globales');
+const { cerrarVentana, configAxios } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
