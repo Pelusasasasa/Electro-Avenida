@@ -3,6 +3,18 @@ h1{
     margin-bottom:.5rem;
 }
 
+.fechas{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.fechas main{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
 label,input{
     font-size: 2rem;
 }

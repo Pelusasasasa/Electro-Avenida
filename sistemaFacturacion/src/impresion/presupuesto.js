@@ -48,7 +48,6 @@ const { ipcRenderer } = require("electron");
             numeroComp.innerHTML = venta.nro_comp;
             subtotal.innerHTML =  venta.descuento ? (parseFloat(venta.precioFinal)+parseFloat(venta.descuento)).toFixed(2) : 0;
             precioFinal.innerHTML=(parseFloat(venta.precioFinal)).toFixed(2);
-            console.log(venta)
             tipoPago.innerHTML= venta.tipo_pago;
             tipoFactura.innerHTML = venta.tipo_pago === "PP" ? "X" : "R";
             presupuesto.innerHTML = venta.tipo_pago === "PP" ? "Comprobante no valido como Factura" : "";    
