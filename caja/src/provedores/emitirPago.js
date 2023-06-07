@@ -14,6 +14,7 @@ const saldo = document.getElementById('saldo');
 const condIva = document.getElementById('condIva');
 const cuit = document.getElementById('cuit');
 const numeroVenta = document.getElementById('numeroVenta');
+
 //comprobante
 const puntoVenta = document.getElementById('puntoVenta');
 const numero = document.getElementById('numero');
@@ -59,14 +60,18 @@ window.addEventListener('load',async e=>{
     listarProductos(provedores);
 });
 
-provedores.addEventListener('keypress',async e=>{
-    if (e.keyCode === 13) {
+provedores.addEventListener('change',async e=>{
         e.preventDefault();
         provedor = (await axios.get(`${URL}provedor/codigo/${provedores.value}`,configAxios)).data;
         codigo.value = provedor.codigo;
         saldo.value = provedor.saldo.toFixed(2);
         condIva.value = provedor.situa;
         cuit.value = provedor.cuit;
+});
+
+provedores.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        e.preventDefault();
         puntoVenta.focus();
     }
 });
@@ -364,7 +369,7 @@ aceptar.addEventListener('click',async e=>{
         };
 
         for await(let elem of listaCheques){
-             await generarMovimientoCaja(elem.f_recibido,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a)
+             await generarMovimientoCaja(elem.f_recibido,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a);
         };
         await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,provedor.provedor);
 
@@ -487,4 +492,10 @@ async function cambiarNumeroComprobantePago(lista) {
             (await axios.put(`${URL}ctactePro/id/${comprobante._id}`,comprobante,configAxios));
         }
     }
-}
+};
+
+document.addEventListener('keyup',e=>{
+    if (e.keyCode === 27) {
+        location.href = '../index.html';
+    }
+})

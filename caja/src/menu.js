@@ -7,15 +7,77 @@ const { redondear, configAxios } = require("./assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
+const ingresarFacturas = document.querySelector('.ingresarFacturas');
+const emitirPago = document.querySelector('.emitirPago');
+const cuentaCorriente = document.querySelector('.cuentaCorriente');
 const cheques = document.querySelector('.cheques');
 const tarjetas = document.querySelector('.tarjetas');
+const cajaGeneral = document.querySelector('.cajaGeneral');
 
-document.addEventListener('click',e=>{
-    if (e.target.nodeName === "MAIN") {
-        window.location = `${e.target.className}/${e.target.className}.html`;
-    }else if(e.target.nodeName === "H1"){
-        window.location = `${e.target.parentNode.className}/${e.target.parentNode.className}.html`;
-    }
+document.addEventListener('keyup',e=>{
+    console.log(e.keyCode)
+    if (e.keyCode === 112) {
+        location.href = 'compras/ingresoFacturas.html';
+    }else if(e.keyCode === 113){
+        location.href = 'provedores/emitirPago.html';
+    }else if(e.keyCode === 114){
+        const options = {
+            path:"provedores/cuentaCorriente.html",
+            width:1200,
+            height:1000
+        };
+    
+        ipcRenderer.send('abrir-ventana',options);
+    }else if(e.keyCode === 115){
+        location.href = 'cheques/cheques.html';
+    }else if(e.keyCode === 116){
+        location.href = 'tarjetas/tarjetas.html';
+    }else if(e.keyCode === 117){
+        const options = {
+            path: "caja/informeCaja.html",
+            width:1200,
+            height:1200
+        };
+    
+        ipcRenderer.send('abrir-ventana',options);
+    };
+
+});
+
+ingresarFacturas.addEventListener('click',()=>{
+    location.href = 'compras/ingresoFacturas.html';
+});
+
+emitirPago.addEventListener('click',()=>{
+    location.href = 'provedores/emitirPago.html';
+});
+
+cuentaCorriente.addEventListener('click',()=>{
+    const options = {
+        path:"provedores/cuentaCorriente.html",
+        width:1200,
+        height:1000
+    };
+
+    ipcRenderer.send('abrir-ventana',options);
+});
+
+cheques.addEventListener('click',e=>{
+    location.href = 'cheques/cheques.html';
+});
+
+tarjetas.addEventListener('click',e=>{
+    location.href = 'tarjetas/tarjetas.html';
+});
+
+cajaGeneral.addEventListener('click',e=>{
+    const options = {
+        path: "caja/informeCaja.html",
+        width:1200,
+        height:1200
+    };
+
+    ipcRenderer.send('abrir-ventana',options);
 });
 
 ipcRenderer.on('fechas',async e=>{
@@ -186,7 +248,6 @@ const reingresarContraseña = async()=>{
         }
     });
 };
-
 
 ipcRenderer.on('reordenarSaldo',async e=>{
     let select = "";

@@ -50,7 +50,7 @@ const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,des
     try {
         await axios.post(`${URL}movCajas`,movimiento);
     } catch (error) {
-        console.log(errero)
+        console.log(error)
         await sweet.fire({
             title:"no se pudo cargar el movimiento de caja"
         });

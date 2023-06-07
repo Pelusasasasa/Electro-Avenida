@@ -80,7 +80,7 @@ tbody.addEventListener('click',e=>{
 aceptar.addEventListener('click',async e=>{
     const movimiento = movimientos.find(mov=>mov._id === seleccionado.id);
 
-    if (parseFloat(descuento.value) !== 0) {
+    if (parseFloat(descuento.value) !== 0 && descuento.value) {
         const mov = {};
         mov.tMov = "E";
         mov.fecha = new Date();

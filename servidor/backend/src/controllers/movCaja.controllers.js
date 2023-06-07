@@ -42,7 +42,6 @@ movCajaCTRL.put = async(req,res)=>{
     res.send('Movimientos de cajas modificados');
 }
 
-
 movCajaCTRL.getForDateAndCuenta = async(req,res)=>{
     const {desde,hasta,idCuenta} = req.params;
     if (idCuenta === "todos") {

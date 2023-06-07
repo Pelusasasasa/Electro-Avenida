@@ -6,9 +6,10 @@ if (require('electron-squirrel-startup')) {
 }
 let ventanaPrincipal
 let nuevaVentana
-
+require('dotenv').config();
 // Lo usamos para cuando alla un cambio en la aplicacion se reinicie
-if (process.env.NODE_ENV !== 'production') {
+
+if (process.env.NODE_ENV === 'desarrollo') {
   require('electron-reload')(__dirname, {
       electron: path.join(__dirname, '../node_modules', '.bin', 'electron')
   })
