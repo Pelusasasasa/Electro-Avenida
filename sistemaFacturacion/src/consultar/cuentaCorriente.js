@@ -145,12 +145,18 @@ ipcRenderer.on('mando-el-cliente',async(e,args)=>{
 
 //si hacemos click en el tbody vamos a seleccionar una cuenta compensada o historica y pasamos a mostrar los detalles de la cuenta
 listar.addEventListener('click',e=>{
-    seleccionado && seleccionado.classList.remove('seleccionado')
-    seleccionado = e.target.nodeName === "TD" ?  e.target.parentNode : e.target.parentNode.parentNode;
-    seleccionado.classList.toggle('seleccionado')
-
+    seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-    subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.parentNode;
+
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }else if(e.target.nodeName === "INPUT"){
+        seleccionado = e.target.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode;
+    }
+
+    seleccionado.classList.toggle('seleccionado')
     subSeleccionado.classList.add('subSeleccionado');
 
     if (seleccionado) {
@@ -203,7 +209,6 @@ const listarLista = (lista,situacion,tipo)=>{
         let pagado = venta.pagado;
         if (venta.length !== 0) {
             let fecha = venta.fecha.slice(0,10).split('-',3);
-            console.log(fecha)
             if (tipo === "compensada") {
                 listar.innerHTML += `
                 <tr id="${venta.nro_comp}">
