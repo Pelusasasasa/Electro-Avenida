@@ -53,6 +53,17 @@ cuentaCompCTRL.modificarCompensada = async(req,res)=>{
     res.send(`Compensada de ${req.body.cliente} con numero ${req.body.nro_comp} Modificada`);
 };
 
+cuentaCompCTRL.getPorNumeroYCliente = async(req,res)=>{
+    const {numero,cliente} = req.params;
+    const cuenta = await CuentaComp.findOne({
+        $and:[
+            {nro_comp:numero},
+            {codigo:cliente}
+        ]
+    });
+    res.send(cuenta)
+}
+
 
 cuentaCompCTRL.modificarPorNumeroYCliente = async(req,res)=>{
     const {numero,cliente} = req.params;

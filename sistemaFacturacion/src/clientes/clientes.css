@@ -84,3 +84,21 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 }
+
+.arreglarCompensada{
+background-color: lightgreen;
+}
+
+.arreglarCompensada h1{
+    text-align: center;
+}
+
+.arreglarCompensada .inputs{
+    display: flex;
+    justify-content: space-around;
+}
+
+.arreglarCompensada .inputs main{
+    display: flex;
+    flex-direction: column;
+}
