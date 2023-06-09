@@ -1078,8 +1078,8 @@ const tamanioCancelados = async() =>{
 async function ponerInputsClientes(cliente) {
     cliente._id && (codigoC.value = cliente._id);
     buscarCliente.value = cliente.cliente;
-    cliente.saldo && (saldo.value = cliente.saldo);
-    cliente.saldo_p && (saldo_p.value = cliente.saldo_p);
+    saldo.value = cliente.saldo.toFixed(2);
+    saldo_p.value = cliente.saldo_p.toFixed(2);
     localidad.value = cliente.localidad;
     direccion.value = cliente.direccion;
     provincia.value = cliente.provincia;
