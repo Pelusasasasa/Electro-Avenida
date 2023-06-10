@@ -109,3 +109,17 @@ background-color: lightgreen;
     flex-direction: column;
 }
 
+.arreglarCompensada .datos fieldset{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.arreglarCompensada .datos fieldset main{
+    margin: 1rem 0;
+}
+
+.arreglarCompensada .datos fieldset label{
+    display: inline-block;
+    width: 9rem;
+}
+

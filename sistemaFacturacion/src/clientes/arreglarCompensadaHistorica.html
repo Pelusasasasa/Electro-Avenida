@@ -17,7 +17,7 @@
         </main>
         <main>
             <label for="cliente">Cliente</label>
-            <input type="text" name="cliente" id="cliente">
+            <input type="text" name="cliente" disabled id="cliente">
         </main>
     </section>
     <section class="inputs">
@@ -34,6 +34,10 @@
         <fieldset>
             <legend>Datos</legend>
             <main>
+                <label for="tipoComp">Tipo_Comp</label>
+                <input type="text" name="tipoComp" id="tipoComp">
+            </main>
+            <main>
                 <label for="importe">Importe</label>
                 <input type="number" name="importe" id="importe">
             </main>
@@ -42,13 +46,18 @@
                 <input type="number" name="pagado" id="pagado">
             </main>
             <main>
-                <label for="Saldo">Saldo</label>
-                <input type="number" name="Saldo" id="Saldo">
+                <label for="saldo">Saldo</label>
+                <input type="number" name="saldo" id="saldo">
+            </main>
+            <main>
+                <label for="observaciones">Observaciones</label>
+                <input type="text" name="observaciones" id="observaciones">
             </main>
         </fieldset>
         
     </section>
     <section class="botones">
+        <button class="modificar">Modificar</button>
         <button class="salir">Salir</button>
     </section>
 </body>
