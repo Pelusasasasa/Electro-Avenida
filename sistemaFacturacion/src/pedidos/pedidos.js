@@ -20,6 +20,9 @@ const codigo = document.querySelector("#codigo");
 const cantidad = document.querySelector('#cantidad');
 const descripcion = document.querySelector('#descripcion')
 const tbody = document.querySelector('#tbody');
+
+const cantidadMain = document.querySelector('.cantidad');
+const descripcionMain = document.querySelector('.descripcion');
 const grabar = document.querySelector(".grabar");
 const volver = document.getElementById("volver");
 
@@ -29,8 +32,8 @@ codigo.addEventListener('keypress', async (e) => {
         if (codigo.value === "") {
             ipcRenderer.send('abrir-ventana',"productos");
         }else if(codigo.value === "999-999"){
-            cantidad.classList.remove('none')
-            descripcion.classList.remove('none')
+            cantidadMain.classList.remove('none')
+            descripcionMain.classList.remove('none')
             descripcion.focus();
         }else{
             let producto = (await axios.get(`${URL}productos/${codigo.value}`,configAxios)).data;
@@ -97,7 +100,7 @@ function mostrarVentas(objeto,cantidad) {
         <td>${objeto.descripcion}  ${marca}  ${codfabrica}</td>
         <td>${nombre.value.toUpperCase()}</td>
         <td>${numero.value}</td>
-        <td class=text-end>${objeto.stock}</td>
+        <td class=text-end>${objeto.stock.toFixed(2)}</td>
         <td><input type:"text" class=observaciones id=${objeto._id}></td>
         <td id=eliminar>Eliminar</td>
         </tr>

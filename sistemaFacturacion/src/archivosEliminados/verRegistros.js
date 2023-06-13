@@ -1,7 +1,6 @@
 const { ipcRenderer } = require("electron/renderer");
 const axios = require("axios")
 const URL = process.env.URL;
-const { DateTime } = require("luxon");
 
 
 const desde = document.querySelector('#desde');

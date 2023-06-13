@@ -8,6 +8,19 @@ h1{
     justify-content: space-around;
 }
 
+.contenedorPedidos{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 2rem;
+}
+
+.contenedorPedidos  main{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 100%;
+}
+
 .table{
     background-color: white;
     height: 75vh;

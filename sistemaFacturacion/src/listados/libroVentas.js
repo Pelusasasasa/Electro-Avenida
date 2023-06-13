@@ -1,7 +1,6 @@
 const { ipcRenderer } = require("electron");
 
 const axios = require("axios");
-const { DateTime } = require("luxon");
 const XLSX = require('xlsx');
 const { configAxios } = require("../funciones");
 require("dotenv").config;

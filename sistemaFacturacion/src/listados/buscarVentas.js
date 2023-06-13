@@ -1,7 +1,6 @@
 
 const sweet = require('sweetalert2');
 const axios = require("axios");
-const { DateTime } = require("luxon");
 const { configAxios } = require('../funciones');
 require("dotenv").config;
 const URL = process.env.URL;

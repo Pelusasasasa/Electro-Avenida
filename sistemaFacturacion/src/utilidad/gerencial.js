@@ -1,6 +1,5 @@
 
 const axios = require("axios");
-const { DateTime } = require("luxon");
 const { redondear, configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;

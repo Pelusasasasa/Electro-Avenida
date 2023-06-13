@@ -1,5 +1,4 @@
 
-const { DateTime } = require("luxon");
 const axios = require("axios");
 const { configAxios } = require("../funciones");
 require("dotenv").config;

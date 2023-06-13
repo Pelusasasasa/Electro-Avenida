@@ -36,7 +36,12 @@ movCajaCTRL.getBetweenDates = async(req,res)=>{
 movCajaCTRL.put = async(req,res)=>{
     const arreglo = req.body;
     for await(let elem of arreglo){
-        await MovCaja.findOneAndUpdate({_id:elem._id},elem);
+        try {
+            await MovCaja.findOneAndUpdate({_id:elem._id},elem);
+        } catch (error) {
+            console.log(error);
+            console.log(`Movimiento de caja con el numero de comprobante: ${elem.nro_comp} no fue modificado`)
+        }
         console.log(`Movimiento de caja ${elem._id} Modificado`);
     };
     res.send('Movimientos de cajas modificados');
