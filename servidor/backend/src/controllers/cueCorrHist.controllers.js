@@ -9,7 +9,7 @@ cuentaHistoricaCTRL.cargarHistorica = async(req,res)=>{
     let id = (await CuentaHisto.find().sort({$natural:-1}).limit(1))[0];
     historica._id = id ? id._id + 1 : 1;
     try {
-        historica.save();
+        await historica.save();
     } catch (error) {
         console.log(`No se pudo cargar la cuenta historica de ${req.body.codigo} a la fecha ${req.body.fecha} con el numero ${req.body.nro_comps}`);
         console.log(error)

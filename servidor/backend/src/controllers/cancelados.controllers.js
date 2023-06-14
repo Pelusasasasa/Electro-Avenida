@@ -24,7 +24,12 @@ canceladosCTRL.traerTamanio = async(req,res)=>{
 
 canceladosCTRL.traerEntreFechas = async(req,res)=>{
     const {desde,hasta} = req.params;
-    const ventasCanceladas = await Cancelados.find({$and:[{fecha:{$gte: new Date(desde)}},{fecha:{$lte: new Date(hasta)}}]})
+    const ventasCanceladas = await Cancelados.find({
+        $and:[
+            {fecha:{$gte: new Date(desde)}},
+            {fecha:{$lte: new Date(hasta + "T23:59:59.000Z")}}
+        ]
+    })
     res.send(ventasCanceladas)
 }
 
