@@ -1,5 +1,9 @@
 const { clipboard } = require("electron");
 
+require('dotenv').config();
+const URL = process.env.URL
+
+
 const alerta = async(mensaje)=>{
     await sweet.fire({
         title:mensaje,
@@ -48,7 +52,7 @@ const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,des
     movimiento.desc = desc.toUpperCase();
     movimiento.pasado = true;
     try {
-        await axios.post(`${URL}movCajas`,movimiento);
+        await axios.post(`${URL}movCajas`,movimiento,configAxios);
     } catch (error) {
         console.log(error)
         await sweet.fire({
