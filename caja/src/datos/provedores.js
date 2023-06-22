@@ -112,6 +112,12 @@ const listar = (lista)=>{
         tr.id = elem.codigo;
         tbody.appendChild(tr);
     }
+
+    seleccionado = tbody.firstElementChild;
+    subSeleccionado = seleccionado.children[0];
+
+    seleccionado && seleccionado.classList.add('seleccionado');
+    subSeleccionado && subSeleccionado.classList.add('subSeleccionado')
 };
 
 const body = document.querySelector('body');

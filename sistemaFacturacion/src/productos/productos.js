@@ -71,6 +71,7 @@ window.addEventListener('click',e=>{
 async function filtrar(){
     //obtenemos lo que se escribe en el input
     texto = buscarProducto.value.toLowerCase();
+    texto = texto.replace('/','%2F');
     let productos;
     if (texto.indexOf('/') !== -1) {
         const posicionBarra = texto.indexOf('/');

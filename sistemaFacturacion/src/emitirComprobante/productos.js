@@ -27,14 +27,14 @@ window.addEventListener('load',e=>{
 
 //si la tecla es escape se cierra la pagina
 body.addEventListener('keydown',async e=>{
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter'){
+        e.preventDefault();
         //tomamos el tr que este seleccionado
         seleccionado = document.querySelector('.seleccionado');
-        e.preventDefault();
         if(seleccionado){
             cantidad(seleccionado)
         }else{
-            sweet.fire({title:"Producto no seleccionado"});
+            await sweet.fire({title:"Producto no seleccionado"});
             document.querySelector('.ok').focus()
         }; 
     }
@@ -43,23 +43,24 @@ body.addEventListener('keydown',async e=>{
         if (!document.activeElement.classList.contains('swal2-input') && !document.activeElement.classList.contains('swal2-modal')) {
             window.close();
         }
-    };
-
-    subSeleccionado && subSeleccionado.scrollIntoView({
-        block:"center",
-        inline:'start',
-        behavior:"smooth"
-    });   
-
-    if (document.activeElement.nodeName !== "SELECT") {
-        subSeleccionado = await recorrerFlechas(e);
-        seleccionado = subSeleccionado && subSeleccionado.parentNode;    
-    }
+    };     
 });
+
+body.addEventListener('keyup',async e=>{
+    if (document.activeElement.nodeName !== "SELECT" && document.activeElement.nodeName !== "INPUT") {
+        subSeleccionado = await recorrerFlechas(e);
+        seleccionado = subSeleccionado && subSeleccionado.parentNode;
+        subSeleccionado && subSeleccionado.scrollIntoView({
+            block:"center",
+            behavior:"smooth"
+        });  
+    }
+})
 
 async function filtrar(){
     resultado.innerHTML = '';
     texto = buscarProducto.value.toLowerCase();
+    texto = texto.replace('/','%2F');
     if(texto !== ""){ 
         let condicion = select.value;
         condicion === "codigo" && (condicion = "_id")
