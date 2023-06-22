@@ -100,7 +100,7 @@ function mostrarVentas(objeto,cantidad) {
         <td>${objeto.descripcion}  ${marca}  ${codfabrica}</td>
         <td>${nombre.value.toUpperCase()}</td>
         <td>${numero.value}</td>
-        <td class=text-end>${objeto.stock.toFixed(2)}</td>
+        <td class=text-end>${objeto.stock}</td>
         <td><input type:"text" class=observaciones id=${objeto._id}></td>
         <td id=eliminar>Eliminar</td>
         </tr>
