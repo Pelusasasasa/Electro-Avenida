@@ -101,6 +101,10 @@ select{
   color: white;
 }
 
+.border-bottom{
+  border-bottom: .1rem solid black;
+}
+
 .alerta{
   position: absolute;
   top: 0;

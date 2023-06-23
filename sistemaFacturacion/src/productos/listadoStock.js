@@ -39,27 +39,32 @@ buscar.addEventListener('click',async e=>{
 
     async function listarProductos() {
         tbody.innerHTML = "";
-        for(let {_id,descripcion,cod_fabrica,stock,observacion} of productos){
+        for(let {_id,descripcion,cod_fabrica,stock,observacion,marca} of productos){
               const tr = document.createElement('tr');
               const tdId = document.createElement('td');
 
               const tdDescripcion = document.createElement('td');
               const tdCodFabrica = document.createElement('td');
               const tdStock = document.createElement('td');
+              const tdMarca = document.createElement('td');
               const tdObservaciones = document.createElement('td');
 
               tdObservaciones.id = "observaciones"
 
-              tdId.innerHTML = _id;
-              tdDescripcion.innerHTML = descripcion;
-              tdCodFabrica.innerHTML = cod_fabrica;
-              tdStock.innerHTML = parseFloat(stock).toFixed(2);
-              tdObservaciones.innerHTML = observacion.slice(0,15);
+              tdId.innerText = _id;
+              tdDescripcion.innerText = descripcion;
+              tdCodFabrica.innerText = cod_fabrica;
+              tdStock.innerText = parseFloat(stock).toFixed(2);
+              tdMarca.innerText = marca;
+              tdObservaciones.innerText = observacion.slice(0,15);
+
+              tr.classList.add('border-bottom');
 
               tr.appendChild(tdId);
               tr.appendChild(tdDescripcion);
-              tr.appendChild(tdCodFabrica);
               tr.appendChild(tdStock);
+              tr.appendChild(tdMarca);
+              tr.appendChild(tdCodFabrica);
               tr.appendChild(tdObservaciones)
 
               tbody.appendChild(tr)

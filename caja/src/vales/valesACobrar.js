@@ -4,7 +4,7 @@ const URL = process.env.URL;
 const sweet = require('sweetalert2');
 
 const { ipcRenderer } = require('electron');
-const { copiar, redondear } = require('../assets/js/globales');
+const { copiar, redondear, configAxios } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
 
@@ -29,6 +29,7 @@ window.addEventListener('load',async e=>{
 });
 
 buscador.addEventListener('keyup',e=>{
+    console.log(vales)
     const valesFiltrados = vales.filter(vale => (vale.rsoc).startsWith(buscador.value.toUpperCase()));
     listarVales(valesFiltrados);
 });

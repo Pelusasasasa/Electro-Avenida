@@ -4,7 +4,7 @@ require('dotenv').config();
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
-const { cerrarVentana } = require('../assets/js/globales');
+const { cerrarVentana, configAxios } = require('../assets/js/globales');
 
 const h1 = document.querySelector('h1');
 
@@ -58,7 +58,8 @@ agregar.addEventListener('click',async e=>{
     } catch (error) {
         await sweet.fire({
             title:"No se pudo cargar la venta"
-        })
+        });
+        console.log(error)
     }
 });
 
