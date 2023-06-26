@@ -40,16 +40,8 @@ prestamoCTRL.putForNumber = async(req,res)=>{
     res.end();
 };
 
-prestamoCTRL.getBetweenDate = async(req,res)=>{
-    const {desde,hasta} = req.params;
-    console.log(new Date(desde + "T00:00:00"));
-    const prestamos = await Prestamo.find({
-        $and:[
-            {fecha: {$gte: new Date(desde + "T00:00:00.000Z")}},
-            {fecha: {$lte: new Date(hasta + "T23:59:59.000Z")}},
-            {anulado:false}
-        ]
-    });
+prestamoCTRL.getNoAnulados = async(req,res)=>{
+    const prestamos = await Prestamo.find({anulado:false});
     res.send(prestamos);
 };
 

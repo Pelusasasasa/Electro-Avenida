@@ -18,7 +18,7 @@ let subSeleccionado = "";
 
 window.addEventListener('load',async e=>{
     const hoy = new Date();
-    const prestamos = (await axios.get(`${URL}prestamos`,configAxios)).data;
+    const prestamos = (await axios.get(`${URL}prestamos/noAnulados`,configAxios)).data;
     listarPrestamos(prestamos);
 });
 

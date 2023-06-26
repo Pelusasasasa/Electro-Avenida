@@ -5,7 +5,7 @@ const modificar = document.querySelector('#modificar');
 const grabar = document.querySelector('#grabar');
 const cancelar = document.querySelector('#cancelar');
 const axios = require("axios");
-const { ultimasFacturas, redondear, configAxios } = require("../funciones");
+const { ultimasFacturas, redondear, configAxios, cerrarVentana } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -16,7 +16,9 @@ modificar.addEventListener('click' , (e) => {
     modificar.classList.add('none');
     grabar.classList.remove('none');
     inputs.forEach(input => {
-        input.removeAttribute("disabled")
+        if (input.id !== "facturaA" && input.id !== "facturaB") {
+            input.removeAttribute("disabled");
+        };
     })
 })
 
@@ -33,8 +35,6 @@ const facturaA = document.querySelector('#facturaA');
 const facturaB = document.querySelector('#facturaB');
 const creditoA = document.querySelector('#creditoA');
 const creditoB = document.querySelector('#creditoB');
-const reciboA = document.querySelector('#reciboA');
-const reciboB = document.querySelector('#reciboB');
 const recibo = document.querySelector('#recibo');
 const presupuesto= document.querySelector('#presupuesto');
 const remito= document.querySelector('#remito');
@@ -48,8 +48,6 @@ async function guardarDatos() {
         "Ultima Factura A": facturaA.value,
         "Ultima Factura B": facturaB.value,
         "Ultima N Credito A":creditoA.value,
-        "Ultima Recibo A":reciboA.value,
-        "Ultima Recibo B":reciboB.value,
         "Ultima N Credito B":creditoB.value,
         "Ultimo Recibo": recibo.value,
         "Ultimo Presupuesto":presupuesto.value,
@@ -81,8 +79,6 @@ const ponerInpusnumero = async(objeto)=>{
 
     creditoA.value = numeros["Ultima N Credito A"];
     creditoB.value = numeros["Ultima N Credito B"];
-    reciboA.value =numeros["Ultima Recibo A"];
-    reciboB.value =numeros["Ultima Recibo B"];
     recibo.value =numeros["Ultimo Recibo"];
     presupuesto.value =numeros["Ultimo Presupuesto"];
     remito.value =numeros["Ultimo Remito"];
@@ -125,8 +121,52 @@ async function cambiarPrecios(dolar) {
 };
 
 
-document.addEventListener('keydown',e=>{
-    if (e.key === "Escape") {
-        window.close();
+document.addEventListener('keydown',cerrarVentana);
+
+creditoA.addEventListener('keyup',(e)=>{
+    if (e.keyCode === 13) {
+        creditoB.focus();
     }
-})
+});
+
+creditoB.addEventListener('keyup',(e)=>{
+    if (e.keyCode === 13) {
+        recibo.focus();
+    }
+});
+
+recibo.addEventListener('keyup',(e)=>{
+    if (e.keyCode === 13) {
+        presupuesto.focus();
+    }
+});
+
+presupuesto.addEventListener('keyup',(e)=>{
+    if (e.keyCode === 13) {
+        remito.focus();
+    }
+});
+
+remito.addEventListener('keyup',(e)=>{
+    if (e.keyCode === 13) {
+        remitoC.focus();
+    }
+});
+
+remitoC.addEventListener('keyup',(e)=>{
+    if (e.keyCode === 13) {
+        remitoCorriente.focus();
+    }
+});
+
+remitoCorriente.addEventListener('keyup',(e)=>{
+    if (e.keyCode === 13) {
+        dolar.focus();
+    }
+});
+
+dolar.addEventListener('keyup',(e)=>{
+    if (e.keyCode === 13) {
+        grabar.focus();
+    }
+});
