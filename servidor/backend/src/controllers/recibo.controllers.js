@@ -36,6 +36,18 @@ reciboCTRL.getForNro_comp = async(req,res)=>{
         nro_comp:numero
     });
     res.send(recibo);
+};
+
+reciboCTRL.getRecibosBetweenDates = async(req,res)=>{
+    const {desde,hasta} = req.params;
+    const recibos = await Recibo.find({
+        $and:[
+            {fecha:{$gte:new Date(desde + "T00:00:00.000Z")}},
+            {fecha:{$lte:new Date(hasta + "T23:59:59.000Z")}},
+            {tipo_comp:"Recibos"}
+        ]
+    });
+    res.send(recibos);
 }
 
 module.exports = reciboCTRL;

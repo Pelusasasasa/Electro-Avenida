@@ -41,7 +41,6 @@ table tbody tr td{
 
 
 .detallesProducto{
-    position: absolute;
     bottom: 0%;
     background-color: lightgray;
     border: .1rem solid black;

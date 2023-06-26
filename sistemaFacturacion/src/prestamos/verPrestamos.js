@@ -5,10 +5,10 @@ const { configAxios } = require('../funciones');
 require('dotenv');
 const URL = process.env.URL;
 
+const table = document.querySelector('.table');
 const tbody = document.querySelector('tbody');
 const detallesProducto = document.querySelector('.detallesProducto');
 const detalle = document.getElementById('detalle');
-const cerrarVentana = document.getElementById('cerrarVentana');
 
 const botonFacturar = document.getElementById('botonFacturar');
 
@@ -23,7 +23,6 @@ window.addEventListener('load',async e=>{
 });
 
 tbody.addEventListener('click',mostrarDetalleProducto);
-cerrarVentana.addEventListener('click',closeDetalle);
 botonFacturar.addEventListener('click',facturarPrestamos);
 
 //Listamos los prestamos traidos
@@ -78,9 +77,16 @@ async function mostrarDetalleProducto(e){
     seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
 
+    //achicamos el tamaño de la tabla de prestamos
+    table.style.height = "40vh";
+
+    seleccionado.scrollIntoView({
+        block:'center',
+        behavior:'smooth'
+    });
+
     /*Traer movimientos*/;
     const movimientos = (await axios.get(`${URL}movProductos/${seleccionado.id}/Prestamo`,configAxios)).data;
-    console.log(movimientos)
     listarMovimientos(movimientos);
 };
 
@@ -186,7 +192,8 @@ async function cambiarObservacion(){
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {
         if (!detallesProducto.classList.contains('none')) {
-            detallesProducto.classList.add('none')
+            detallesProducto.classList.add('none');
+            table.style.height = "80vh";
         }else{
             location.href = '../index.html';
         }

@@ -34,14 +34,14 @@ window.addEventListener('load',async e=>{
     month = month<10 ? `0${month}` : month;
     day = day<10 ? `0${day}` : day;
 
-    desde.value = `${year}-${month}-${day}`
-    hasta.value = `${year}-${month}-${day}`
+    desde.value = `${year}-${month}-${day}`;
+    hasta.value = `${year}-${month}-${day}`;
 
+    recibos = (await axios.get(`${URL}recibos/recibosBetweenDates/${desde.value}/${hasta.value}`)).data;
     ventas = (await axios.get(`${URL}ventas/${desde.value}/${hasta.value}`,configAxios)).data;
     // alerta.classList.remove('none');
-    listar(ventas);
+    listar(ventas,recibos);
 });
-
 
 
 desde.addEventListener('keypress',e=>{
@@ -55,8 +55,9 @@ hasta.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
     await alerta.classList.remove('none');
     ventas = (await axios.get(`${URL}ventas/${desde.value}/${hasta.value}`,configAxios)).data;
-    // recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desde.value}/${nextDay}`,configAxios)).data;
-    listar(ventas);
+    recibos = (await axios.get(`${URL}recibos/recibosBetweenDates/${desde.value}/${hasta.value}`)).data;
+    console.log(recibos)
+    listar(ventas,recibos);
     // listarRecibos(recibos);
     }
 })
@@ -82,10 +83,12 @@ tbody.addEventListener('click',e=>{
     }
 })
 
-const listar = async(lista)=>{
+const listar = async(listaVentas,listaRecibos)=>{
+    const lista = [...listaVentas,...listaRecibos]
     //filtramos las ventas solo para ver ticket o notas de credito
 
     for await(let venta of lista){
+        console.log(venta)
         const tr = document.createElement('tr');
         tr.id = venta.nro_comp;
 
@@ -103,8 +106,8 @@ const listar = async(lista)=>{
         const hora = (venta.fecha.slice(11,19)).split(':',3);
 
         tdHora.innerHTML = `${hora[0]}:${hora[1]}:${hora[2]}`;
-        tdCliente.innerHTML = venta.nombreCliente;
-        tdTipo.innerHTML = verTipoComp(venta.cod_comp);
+        tdCliente.innerHTML = venta.nombreCliente ? venta.nombreCliente : venta.cliente;
+        tdTipo.innerHTML = venta.tipo_comp === "Recibos" ? "Recibos" : verTipoComp(venta.cod_comp);
         tdNumero.innerHTML = venta.nro_comp;
         tdImporte.innerHTML = venta.precioFinal.toFixed(2);
 
@@ -124,44 +127,6 @@ const listar = async(lista)=>{
     alerta.classList.add('none');
 };
 
-const listarRecibos = async(recibos)=>{
-    for await(let recibo of recibos){
-        const tr = document.createElement('tr');
-        tr.id = recibo.nro_comp;
-
-        const tdFecha = document.createElement('td');
-        const tdCliente = document.createElement('td');
-        const tdTipo = document.createElement('td');
-        const tdNumero = document.createElement('td');
-        const tdImporte = document.createElement('td');
-        const tdImprimir = document.createElement('td');
-        const button = document.createElement('button');
-
-        tdFecha.innerHTML = recibo.fecha.slice(11,19);
-        tdCliente.innerHTML = recibo.cliente;
-        tdTipo.innerHTML = recibo.tipo_comp;
-        tdNumero.innerHTML = recibo.nro_comp;
-        tdImporte.innerHTML = recibo.precioFinal.toFixed(2);
-        button.innerHTML = "Re-Imprimir"
-        tdImprimir.appendChild(button);
-
-        tdImporte.classList.add('text-right');
-        tdImporte.classList.add('text-bold');
-
-        button.classList.add('imprimir');
-
-        tr.appendChild(tdFecha);
-        tr.appendChild(tdCliente);
-        tr.appendChild(tdTipo);
-        tr.appendChild(tdNumero);
-        tr.appendChild(tdImporte);
-        tr.appendChild(tdImprimir);
-
-        // tbody.appendChild(tr)
-        
-    }
-}
-
 const verTipoComp = (numero)=>{
     if (numero === 1) {
         return "Factura A";
@@ -172,5 +137,5 @@ const verTipoComp = (numero)=>{
     }else if(numero === 8){
         return "Nota Credito B"
     }
-    return ""
+    return undefined
 };

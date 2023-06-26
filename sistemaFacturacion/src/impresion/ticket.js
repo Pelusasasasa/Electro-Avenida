@@ -108,7 +108,7 @@ const listar = async (venta,afip,opciones,cliente)=>{
         importe.innerHTML = "Pagado";
         observaciones.parentNode.classList.remove('none');
         observaciones.innerText = venta.observaciones;
-
+        console.log(venta)
         for await(let producto of venta.productos){
             listaProductos.innerHTML += `
                 <div class=cantidad>

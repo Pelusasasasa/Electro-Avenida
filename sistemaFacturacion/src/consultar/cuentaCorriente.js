@@ -305,6 +305,12 @@ actualizar.addEventListener('click',async e=>{
         cuentaHistorica.debe = cuentaCompensada.importe;
         //Guardamos la venta con el nuevo precioFinal
         venta.precioFinal = parseFloat(total.toFixed(2));
+
+        for(let mov of movimientos){
+            let producto =(await axios.get(`${URL}productos/${mov.codProd}`,configAxios)).data;
+            mov.precio_unitario = parseFloat(producto.precio_venta);
+            mov.total = parseFloat((mov.egreso*mov.precio_unitario).toFixed(2));
+        }
       
         ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante","valorizado",movimientos,true]);
             sweet.fire({
@@ -314,9 +320,6 @@ actualizar.addEventListener('click',async e=>{
             }).then(async({isConfirmed})=>{
                 if (isConfirmed) {
                     for await (let movProducto of movimientos) {
-                        let producto =(await axios.get(`${URL}productos/${movProducto.codProd}`,configAxios)).data;
-                        movProducto.precio_unitario = parseFloat(producto.precio_venta);
-                            movProducto.total = parseFloat((movProducto.egreso*movProducto.precio_unitario).toFixed(2));
                             await axios.put(`${URL}movProductos/${movProducto._id}`,movProducto,configAxios);
                         };
     
