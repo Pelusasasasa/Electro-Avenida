@@ -389,7 +389,6 @@ const hacerRecibo = async()=>{
             })
         }
     };
-
      const recibo = {}
      recibo.fecha = new Date();
      recibo.codigo = codigo.value;
@@ -401,6 +400,7 @@ const hacerRecibo = async()=>{
      recibo.condIva = cond_iva.value;
      recibo.dnicuit = cuit.value;
      recibo.observaciones = valoresRecibidos.value ? valoresRecibidos.value.toUpperCase() : "EFECTIVO";
+     recibo.comprobantes = arregloParaImprimir;
      const aux = (situacion === "negro") ? "saldo_p" : "saldo"
      let saldoFavor = 0;
      recibo.descuento = 0;

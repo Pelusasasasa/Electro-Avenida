@@ -109,7 +109,7 @@ const listar = async (venta,afip,opciones,cliente)=>{
         observaciones.parentNode.classList.remove('none');
         observaciones.innerText = venta.observaciones;
         console.log(venta)
-        for await(let producto of venta.productos){
+        for await(let producto of venta.comprobantes){
             listaProductos.innerHTML += `
                 <div class=cantidad>
                     <p>${producto.fecha}</p>
@@ -156,6 +156,7 @@ const listar = async (venta,afip,opciones,cliente)=>{
     }else{
         divAfip.classList.add('none');
     }
+    asdasd
     await ipcRenderer.send('imprimir',JSON.stringify(opciones));
  }
 

@@ -52,6 +52,10 @@ const Recibo = new Schema({
     observaciones:{
         type:String,
         default:""
+    },
+    comprobantes:{
+        type:Array,
+        default:[]
     }
 })
 
