@@ -527,7 +527,6 @@ const ponerEnCuentaCorrienteCompensada = async(recibo)=>{
 }
 
 const ponerEnCuentaCorrienteHistorica = async(recibo)=>{
-    console.log(recibo)
     const cuenta = {};
     cuenta.codigo = recibo.codigo;
     cuenta.cliente = cliente.cliente;

@@ -50,8 +50,8 @@ const venciCae = document.querySelector('.venciCae');
     if (venta.tipo_comp === "Recibos") {
         cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`,configAxios)).data;
     }
-
     listar(venta,afip,opciones,cliente);
+    listarCliente(cliente);
  });
 
 const listar = async (venta,afip,opciones,cliente)=>{
@@ -108,7 +108,6 @@ const listar = async (venta,afip,opciones,cliente)=>{
         importe.innerHTML = "Pagado";
         observaciones.parentNode.classList.remove('none');
         observaciones.innerText = venta.observaciones;
-        console.log(venta)
         for await(let producto of venta.comprobantes){
             listaProductos.innerHTML += `
                 <div class=cantidad>
@@ -158,7 +157,11 @@ const listar = async (venta,afip,opciones,cliente)=>{
     }
     asdasd
     await ipcRenderer.send('imprimir',JSON.stringify(opciones));
- }
+};
+
+async function listarCliente(cliente) {
+       
+}
 
 
  const verTipoFactura = (codigo)=>{
