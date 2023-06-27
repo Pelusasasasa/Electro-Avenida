@@ -301,13 +301,14 @@ const agregarCheque = ()=>{
     cheque.banco = banco.value.toUpperCase();
     cheque.f_cheque = fecha.value;
     cheque.i_cheque = importeCheque.value;
-    cheque.tipo = "P";
     cheque.vendedor;
     cheque.entreg_a = provedor.provedor;
 
     if (banco.value === "BANCO DE ENTRE RIOS") {
-        listaCheques.push(cheque);
-    }
+        cheque.tipo = "P";
+    };
+
+    listaCheques.push(cheque);
 
     numeroCheque.value = "";
     banco.value = "BANCO DE ENTRE RIOS";
@@ -330,14 +331,15 @@ tbodyCheque.addEventListener('click',e=>{
         const tr = e.target.parentNode.parentNode;
         totalCheque.value = redondear(parseFloat(totalCheque.value) - parseFloat(tr.children[3].innerHTML),2);
         tbodyCheque.removeChild(tr);
-        const index = listaCheques.findIndex(elem=>elem.n_cheque = e.target.parentNode.parentNode.children[0].innerText);
+        const index = listaCheques.findIndex(elem=>elem.n_cheque === e.target.parentNode.parentNode.children[0].innerText);
         listaCheques.splice(index,1);
     }
 });
 
 aceptar.addEventListener('click',async e=>{
-    await cambiarNumeroComprobantePago(document.querySelectorAll('#tbodyComprobante tr'));
     await cargarChequesPropios(listaCheques)
+    await cambiarNumeroComprobantePago(document.querySelectorAll('#tbodyComprobante tr'));
+    
     await ponerEnComprobantePagos();
     if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
          const comprobante = {};
@@ -402,7 +404,11 @@ aceptar.addEventListener('click',async e=>{
 
 const cargarChequesPropios = async(lista)=>{
     lista.forEach(async cheque => {
-        await axios.post(`${URL}cheques`,cheque,configAxios);
+        if (cheque.banco === "BANCO DE ENTRE RIOS") {
+            await axios.post(`${URL}cheques`,cheque,configAxios);
+        }else{
+            await axios.put(`${URL}cheques/${cheque.n_cheque}`,cheque,configAxios);
+        }
     });
 }
 
