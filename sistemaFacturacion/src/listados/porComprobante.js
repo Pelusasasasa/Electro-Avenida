@@ -93,7 +93,7 @@ function listarVentas(lista) {
         return 0;
     })
 
-    lista.forEach(venta => {
+    lista.forEach(async venta => {
         let tipo  = "";
         if (venta.tipo_comp === "Presupuesto") {
             tipo = "P";
@@ -113,10 +113,8 @@ function listarVentas(lista) {
         let seconds = hora[2]
         let anio = fecha[0]
 
-
-        if (venta.productos) {
-            venta.productos.forEach(({objeto,cantidad})=>{
-
+        const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`,configAxios)).data;
+        movimientos.forEach((mov)=>{
                 const tr = document.createElement('tr');
     
                 const tdTipo = document.createElement('td');
@@ -134,12 +132,12 @@ function listarVentas(lista) {
                 tdNumero.innerHTML = venta.nro_comp;
                 tdFecha.innerHTML = `${hoy}/${mes}/${anio} - ${hours}:${minutes}:${seconds}`;
                 tdCliente.innerHTML = venta.nombreCliente.slice(0,18);
-                tdId.innerHTML = objeto._id;
-                tdDescripcion.innerHTML = objeto.descripcion.slice(0,22);
+                tdId.innerHTML = mov.codProd;
+                tdDescripcion.innerHTML = mov.descripcion.slice(0,22);
                 tdVendedor.innerHTML = venta.vendedor.substr(-20,3);
-                tdCantidad.innerHTML = venta.tipo_comp === "Nota Credito" ? (cantidad * -1).toFixed(2) : cantidad.toFixed(2);
-                tdPrecio.innerHTML = objeto.precio_venta;
-                tdTotal.innerHTML = venta.tipo_comp === "Nota Credito" ? (objeto.precio_venta*cantidad*-1).toFixed(2) : (objeto.precio_venta*cantidad).toFixed(2);
+                tdCantidad.innerHTML = venta.tipo_comp === "Nota Credito" ? (mov.egreso * -1).toFixed(2) : mov.egreso.toFixed(2);
+                tdPrecio.innerHTML = mov.precio_unitario;
+                tdTotal.innerHTML = venta.tipo_comp === "Nota Credito" ? (objeto.precio_venta*cantidad*-1).toFixed(2) : (mov.precio_unitario*mov.egreso).toFixed(2);
     
                 tr.appendChild(tdTipo);
                 tr.appendChild(tdNumero);
@@ -154,7 +152,6 @@ function listarVentas(lista) {
     
                 tbody.appendChild(tr);
             });
-        }
 
         if (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") {
             tbody.innerHTML += `

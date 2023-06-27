@@ -39,10 +39,8 @@ let hasta;
 
 let ultimos = {};
 let total = 0;
-
-window.addEventListener('load',async e=>{
     
-    ipcRenderer.on('recibir-informacion',async (e,args)=>{
+ipcRenderer.on('recibir-informacion',async (e,args)=>{
         let aux = args.hasta.split('-',3);
         desde = args.desde;
         hasta = new Date(`${aux[1]}/${aux[2]}/${aux[0]}`);
@@ -50,7 +48,6 @@ window.addEventListener('load',async e=>{
         let nextDay = new Date(hasta);
         nextDay.setDate(hasta.getDate() + 1);
         const movimientos = (await axios.get(`${URL}movCajas/${desde}/${nextDay}`,configAxios)).data;
-
         for await(let mov of movimientos){
             if (mov.pasado) {
                 if (mov.tMov === "I") {
@@ -60,25 +57,21 @@ window.addEventListener('load',async e=>{
                 }
             }
         };  
+
+        valesCobrar.value = (await axios.get(`${URL}vales/totalPrice/C`,configAxios)).data.toFixed(2);
+        personal.value = (await axios.get(`${URL}vales/totalPrice/P`,configAxios)).data.toFixed(2);
+        incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`,configAxios)).data.toFixed(2);
+        facturasCobrar.value = (await axios.get(`${URL}vales/totalPrice/F`,configAxios)).data.toFixed(2);
+        tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`,configAxios)).data.toFixed(2);
+        caja1.value = redondear((await axios.get(`${URL}tipoVenta`,configAxios)).data["saldo Inicial"] + total,2);
+    
+        totalVales.value = redondear(parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value) + parseFloat(facturasCobrar.value),2);
+        ultimos = (await axios.get(`${URL}ultimos`,configAxios)).data;
+    
+        ponerValores(ultimos);
     });
 
-    valesCobrar .value = (await axios.get(`${URL}vales/totalPrice/C`,configAxios)).data.toFixed(2);
-    personal.value = (await axios.get(`${URL}vales/totalPrice/P`,configAxios)).data.toFixed(2);
-    incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`,configAxios)).data.toFixed(2);
-    facturasCobrar.value = (await axios.get(`${URL}vales/totalPrice/F`,configAxios)).data.toFixed(2);
-    tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`,configAxios)).data.toFixed(2);
-    caja1.value = redondear((await axios.get(`${URL}tipoVenta`,configAxios)).data["saldo Inicial"] + total,2);
 
-    totalVales.value = redondear(parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value) + parseFloat(facturasCobrar.value),2);
-    ultimos = (await axios.get(`${URL}ultimos`,configAxios)).data;
-
-
-
-    ponerValores(ultimos);
-
-    
-    //traemos el total el movimiento de caja
-});
 
 document.addEventListener('keyup',async e=>{
     if ((e.keyCode === 27)) {
