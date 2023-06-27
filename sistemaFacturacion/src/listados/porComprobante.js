@@ -81,7 +81,7 @@ cteCorriente.addEventListener('click',e=>{
 });
 
 
-function listarVentas(lista) {
+async function listarVentas(lista) {
     tbody.innerHTML = "";
 
     lista.sort((a,b)=>{
@@ -93,7 +93,7 @@ function listarVentas(lista) {
         return 0;
     })
 
-    lista.forEach(async venta => {
+    for await (let venta of lista){
         let tipo  = "";
         if (venta.tipo_comp === "Presupuesto") {
             tipo = "P";
@@ -114,7 +114,7 @@ function listarVentas(lista) {
         let anio = fecha[0]
 
         const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`,configAxios)).data;
-        movimientos.forEach((mov)=>{
+        for await(let mov of movimientos){
                 const tr = document.createElement('tr');
     
                 const tdTipo = document.createElement('td');
@@ -151,7 +151,7 @@ function listarVentas(lista) {
                 tr.appendChild(tdTotal);
     
                 tbody.appendChild(tr);
-            });
+            }
 
         if (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") {
             tbody.innerHTML += `
@@ -180,7 +180,7 @@ function listarVentas(lista) {
         }
         tbody.innerHTML += `
         <tr class="total"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class=tdTotal>${venta.tipo_comp === "Nota Credito" ? (parseFloat(venta.precioFinal)*-1).toFixed(2)  : parseFloat(venta.precioFinal).toFixed(2)}</td></tr>`
-    });
+    };
 
     tbody.innerHTML += `
         <tr class="total">
