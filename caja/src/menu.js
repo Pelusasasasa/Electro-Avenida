@@ -15,7 +15,6 @@ const tarjetas = document.querySelector('.tarjetas');
 const cajaGeneral = document.querySelector('.cajaGeneral');
 
 document.addEventListener('keyup',e=>{
-    console.log(e.keyCode)
     if (e.keyCode === 112) {
         location.href = 'compras/ingresoFacturas.html';
     }else if(e.keyCode === 113){
@@ -286,9 +285,7 @@ ipcRenderer.on('reordenarSaldo',async e=>{
 async function reodernarSaldos(){
     const codigo = document.getElementById('provedores').value;
     const cuentas = (await axios.get(`${URL}ctactePro/codigo/${codigo}`,configAxios)).data;
-    console.log(cuentas);
 
-    // asd
     cuentas.sort((a,b)=>{
         if (a.fecha>b.fecha) {
             return 1
@@ -297,7 +294,6 @@ async function reodernarSaldos(){
         }
         return 0
     });
-    
     let saldo = 0;
     
     for await(let cuenta of cuentas){

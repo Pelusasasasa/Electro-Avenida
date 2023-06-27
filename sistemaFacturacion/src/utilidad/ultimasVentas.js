@@ -56,9 +56,7 @@ hasta.addEventListener('keypress',async e=>{
     await alerta.classList.remove('none');
     ventas = (await axios.get(`${URL}ventas/${desde.value}/${hasta.value}`,configAxios)).data;
     recibos = (await axios.get(`${URL}recibos/recibosBetweenDates/${desde.value}/${hasta.value}`)).data;
-    console.log(recibos)
     listar(ventas,recibos);
-    // listarRecibos(recibos);
     }
 })
 
@@ -88,7 +86,6 @@ const listar = async(listaVentas,listaRecibos)=>{
     //filtramos las ventas solo para ver ticket o notas de credito
 
     for await(let venta of lista){
-        console.log(venta)
         const tr = document.createElement('tr');
         tr.id = venta.nro_comp;
 

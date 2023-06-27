@@ -55,11 +55,11 @@ window.addEventListener('load',async e=>{
 
 fecha.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        selectTarjeta.focus();
+        cliente.focus();
     }
 });
 
-fecha.addEventListener('keypress',e=>{
+cliente.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         selectTarjeta.focus();
     }
@@ -125,11 +125,12 @@ importe.addEventListener('focus',e=>{
 
 aceptar.addEventListener('click',async e=>{
     const tarjeta = {} ;
-    const pasarFecha = (fecha.value).split('-',3);
-    tarjeta.fecha = new Date(pasarFecha[0],pasarFecha[1] - 1, pasarFecha[2],"08","24","00")
+    const now = new Date();
+    const fechaArgentina = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+    tarjeta.fecha = fechaArgentina;
     tarjeta.tarjeta = selectTarjeta.value;
     tarjeta.imp = importe.value;
-    tarjeta.cliente = cliente.value;
+    tarjeta.cliente = cliente.value.toUpperCase();
     tarjeta.vendedor = selectVendedor.value;
 
     if (selectTarjeta.value  === "") {
@@ -147,8 +148,8 @@ aceptar.addEventListener('click',async e=>{
     }else{
         try {
             await axios.post(`${URL}tarjetas`,tarjeta,configAxios);
+            await ipcRenderer.send('enviar-info-ventana-principal',tarjeta);
             if (cerrar) {
-                ipcRenderer.send('enviar-info-ventana-principal',"tarjeta cargada");
                 window.close();
             }else{
                 location.reload();

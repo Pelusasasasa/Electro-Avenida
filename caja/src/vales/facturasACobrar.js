@@ -4,7 +4,7 @@ const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
 
-const { copiar, redondear } = require('../assets/js/globales');
+const { copiar, redondear, configAxios } = require('../assets/js/globales');
 const { ipcRenderer } = require('electron/renderer');
 
 const buscador = document.getElementById('buscador');

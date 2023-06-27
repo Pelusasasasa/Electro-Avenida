@@ -46,12 +46,15 @@ const venciCae = document.querySelector('.venciCae');
  ipcRenderer.on('info-para-imprimir',async (e,args)=>{
     [venta,afip,,,opciones] = JSON.parse(args);
     let cliente;
-    
+
     if (venta.tipo_comp === "Recibos") {
         cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`,configAxios)).data;
+    }else{
+        cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`,configAxios)).data;
     }
-    listar(venta,afip,opciones,cliente);
-    listarCliente(cliente);
+    await listarCliente(cliente);
+    await listar(venta,afip,opciones);
+    // await ipcRenderer.send('imprimir',JSON.stringify(opciones));
  });
 
 const listar = async (venta,afip,opciones,cliente)=>{
@@ -79,10 +82,6 @@ const listar = async (venta,afip,opciones,cliente)=>{
 
     fecha.innerHTML = `${day}/${month}/${year}`;
     hora.innerHTML = `${hour}:${minuts}:${seconds}`;
-    nombre.innerHTML = venta.nombreCliente || venta.cliente;
-    cuit.innerHTML = venta.dnicuit.length === 11 ? `CUIT:${venta.dnicuit}` : `DNI : ${venta.dnicuit}`;
-    condIva.innerHTML = venta.condIva.toUpperCase();
-    direccion.innerHTML = venta.direccion + " - " + venta.localidad;
     venta.numeroAsociado && (numeroAsociado.innerHTML = "Comp Original Nº:" + venta.numeroAsociado);
     
     if (venta.tipo_comp !== "Recibos") {
@@ -155,12 +154,14 @@ const listar = async (venta,afip,opciones,cliente)=>{
     }else{
         divAfip.classList.add('none');
     }
-    asdasd
-    await ipcRenderer.send('imprimir',JSON.stringify(opciones));
 };
 
 async function listarCliente(cliente) {
-       
+    console.log(cliente)
+       nombre.innerText = cliente.cliente;
+       cuit.innerText = cliente.cuit.length === 11 ? `CUIT: ${cliente.cuit}` : `DNI: ${cliente.cuit}`;
+       condIva.innerHTML = venta.condIva.toUpperCase();
+       direccion.innerHTML = venta.direccion + " - " + (venta.localidad ? venta.localidad : "CHAJARI");
 }
 
 

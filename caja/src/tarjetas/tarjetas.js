@@ -57,7 +57,7 @@ agregar.addEventListener('click',e=>{
         path:"./tarjetas/agregarTarjeta.html",
         width:500,
         height:600,
-        reinicio:true
+        reinicio:false
     });
 });
 
@@ -240,7 +240,6 @@ exportar.addEventListener('click',e=>{
     });
 });
 
-
 eliminarVarios.addEventListener('click',async e=>{
     const inputs = document.querySelectorAll('tr td input[type=checkbox]');
     await sweet.fire({
@@ -262,3 +261,50 @@ eliminarVarios.addEventListener('click',async e=>{
     });
     
 });
+
+ipcRenderer.on('recibir-informacion',(e,args)=>{
+    const tr = document.createElement('tr');
+
+    const tdFecha = document.createElement('td');
+    const tdTarjeta = document.createElement('td');
+    const tdCliente = document.createElement('td');
+    const tdImporte = document.createElement('td');
+    const tdVendedor = document.createElement('td');
+    const tdAcciones = document.createElement('td');
+    const tdEliminarVarios = document.createElement('td');
+
+    const auxFecha = args.fecha.slice(0,10).split('-',3);
+    tdFecha.innerText = `${auxFecha[2]}/${auxFecha[1]}/${auxFecha[0]}`;
+    tdTarjeta.innerText = args.tarjeta;
+    tdCliente.innerText = args.cliente;
+    tdImporte.innerText = parseFloat(args.imp).toFixed(2);
+    tdVendedor.innerText = args.vendedor;
+    tdAcciones.innerHTML = `
+            <div id=edit class=tool>
+                <span class=material-icons>edit</span>
+            </div>
+            <div id=delete class=tool>
+                <span class=material-icons>delete</span>
+            </div>
+        `
+    tdEliminarVarios.innerHTML = `
+        <div class="divEliminarVarios">
+            <input type="checkbox" class="eliminarVarios" name="hoy">
+        </div>
+        `
+
+        tdAcciones.classList.add('acciones');
+        total += parseFloat(args.imp);
+        totalInput.value = total.toFixed(2);
+
+    tr.appendChild(tdFecha);
+    tr.appendChild(tdTarjeta);
+    tr.appendChild(tdCliente);
+    tr.appendChild(tdImporte);
+    tr.appendChild(tdImporte);
+    tr.appendChild(tdVendedor);
+    tr.appendChild(tdAcciones);
+    tr.appendChild(tdEliminarVarios);
+
+    tbody.appendChild(tr)
+})
