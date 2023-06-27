@@ -426,7 +426,7 @@ const hacerRecibo = async()=>{
         await ponerEnCuentaCorrienteHistorica(recibo);
 
         //Ponemos en la compensada si le queda saldo a favor
-        saldoAfavor.value !== "" && await ponerEnCuentaCorrienteCompensada(recibo);
+        parseFloat(saldoAfavor.value) !== 0 && await ponerEnCuentaCorrienteCompensada(recibo);
         
         await axios.put(`${URL}clientes/${recibo.codigo}`,clienteTraido,configAxios);
         await axios.post(`${URL}recibos`,recibo,configAxios);

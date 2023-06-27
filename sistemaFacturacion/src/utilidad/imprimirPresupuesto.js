@@ -30,7 +30,12 @@ aceptar.addEventListener('click',async e=>{
         tipoVenta = "Prestamo";
         venta = (await axios.get(`${URL}prestamos/forNumber/${comprobante}`,configAxios)).data;
         cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`,configAxios)).data;
+    }else if(punto === "0006"){
+        tipoVenta = "Remito"
+        venta = (await axios.get(`${URL}remitos/forNumber/${comprobante}`,configAxios)).data;
+        cliente = (await axios.get(`${URL}clientes/id/${venta.idCliente}`,configAxios)).data;
     };
+    
     const movimientos  = (await axios.get(`${URL}movProductos/${comprobante}/${tipoVenta}`)).data;;
     ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante","valorizado",movimientos])
 });

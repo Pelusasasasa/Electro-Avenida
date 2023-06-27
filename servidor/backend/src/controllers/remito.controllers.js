@@ -25,6 +25,12 @@ remitoCTRL.getBeetweenDates = async(req,res)=>{
         {fecha:{$lte:finDia}}
     ]});
     res.send(remitos);
+};
+
+remitoCTRL.getForNumber = async(req,res)=>{
+    const {numero} = req.params;
+    const remito = await Remito.findOne({nro_comp:numero});
+    res.send(remito);
 }
 
 module.exports  = remitoCTRL;

@@ -651,7 +651,6 @@ presupuesto.addEventListener('click',async (e)=>{
                         await  ponerEnCuentaCorrienteCompensada(venta,valorizado.checked);
                         await ponerEnCuentaCorrienteHistorica(venta,valorizado.checked,saldo_p.value);
                     }
-
                     //si la venta es distinta de presupuesto o de prestamo sacamos el stock y movimiento de producto 
                     for(let producto of venta.productos){
                         if(venta.tipo_pago !== "PP" && !facturarPrestamo){
@@ -759,14 +758,12 @@ remito.addEventListener('click',async e=>{
     venta.observaciones = "";
     venta.vendedor = vendedor;
     venta.tipo_comp = "Remito";
-    // venta.productos = listaProductos;
     venta.cliente = nombre.value;
     venta.idCliente = codigoC.value;
+    venta.tipo_pago = "RT";
     venta.nro_comp = await traerUltimoNroComprobante(tipoVenta,venta.cod_comp,venta.tipo_pago);
-    console.log(venta)
-
     for await(let producto of listaProductos){
-        await movimientoProducto(producto.cantidad,producto.objeto,codigoC.value,nombre.value,"RT",venta.tipo_pago,venta.tipo_comp,venta.nro_comp,venta.vendedor);
+        await movimientoProducto(producto.cantidad,producto.objeto,codigoC.value,nombre.value,"RT",venta.tipo_comp,venta.nro_comp,venta.vendedor);
     }
 
     await axios.post(`${URL}movProductos`,arregloMovimiento,configAxios);
@@ -777,7 +774,7 @@ remito.addEventListener('click',async e=>{
 
     await axios.post(`${URL}remitos`,venta,configAxios);
     await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
-    ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,listaProductos]);
+    ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,arregloMovimiento]);
 
     window.location = "../index.html";
 });

@@ -28,7 +28,6 @@ const { ipcRenderer } = require("electron");
                 const tabla = document.querySelector('.tabla');
                 tabla.classList.add('hojaGrande');
             } 
-
             const tomarFecha = new Date(venta.fecha);
             let dia = tomarFecha.getDate(); 
             let mes = tomarFecha.getMonth() + 1;
@@ -52,11 +51,10 @@ const { ipcRenderer } = require("electron");
             tipoFactura.innerHTML = venta.tipo_pago === "PP" ? "X" : "R";
             presupuesto.innerHTML = venta.tipo_pago === "PP" ? "Comprobante no valido como Factura" : "";    
             descuento.innerHTML = venta.descuento ? venta.descuento : "0.00";
-    
-            if ((venta.tipo_pago === "CC" && valorizado !== "valorizado") || valorizado === "no valorizado") {
-                precioFinal.innerHTML = ""
-                subtotal.innerHTML=""
-                descuento.innerHTML= ""
+            if ((venta.tipo_pago === "CC" && valorizado !== "valorizado") || valorizado === "no valorizado" || venta.tipo_pago === "RT") {
+                precioFinal.innerText = ""
+                subtotal.innerText=""
+                descuento.innerText= ""
             }
 
             tbody.innerHTML = "";

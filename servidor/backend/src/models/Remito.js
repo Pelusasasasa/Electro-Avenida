@@ -13,6 +13,14 @@ const Remito = new Schema({
         type:String,
         required:true
     },
+    tipo_pago:{
+        type:String,
+        default:"RT"
+    },
+    tipo_comp:{
+        type:String,
+        default:"Remito"
+    },
     cliente:{
         type:String,
         default:"A Consumidor Final"

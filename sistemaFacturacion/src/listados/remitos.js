@@ -25,7 +25,7 @@ desde.addEventListener('keypress',e=>{
 
 const listarRemitos = async(lista) =>{
     for await(let remito of remitos){
-
+        
         const movimientos = (await axios.get(`${URL}movProductos/${remito.nro_comp}/Remito`,configAxios)).data;
         
         for await(let movimiento of movimientos){
