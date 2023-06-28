@@ -52,13 +52,14 @@ const venciCae = document.querySelector('.venciCae');
     }else{
         cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`,configAxios)).data;
     }
+    await infoComprobante(venta);
     await listarCliente(cliente);
     await listar(venta,afip,opciones);
-    // await ipcRenderer.send('imprimir',JSON.stringify(opciones));
+    await listarAfip(afip);
+    await ipcRenderer.send('imprimir',JSON.stringify(opciones));
  });
 
-const listar = async (venta,afip,opciones,cliente)=>{
-    
+async function infoComprobante(venta) {
     //fecha y hora
     let date = new Date(venta.fecha);
     let day = date.getDate();
@@ -74,7 +75,6 @@ const listar = async (venta,afip,opciones,cliente)=>{
     hour = hour < 10 ? `0${hour}` : hour;
     minuts = minuts < 10 ? `0${minuts}` : minuts;
     seconds = seconds < 10 ? `0${seconds}` : seconds;
-
     const tipoFactura = verTipoFactura(venta.cod_comp)
     codFactura.innerHTML = venta.cod_comp ?  "0"+venta.cod_comp : "06";
     tipo.innerHTML = tipoFactura;
@@ -83,6 +83,14 @@ const listar = async (venta,afip,opciones,cliente)=>{
     fecha.innerHTML = `${day}/${month}/${year}`;
     hora.innerHTML = `${hour}:${minuts}:${seconds}`;
     venta.numeroAsociado && (numeroAsociado.innerHTML = "Comp Original Nº:" + venta.numeroAsociado);
+
+    //Totales
+    descuento.innerHTML = venta.descuento ? parseFloat(venta.descuento).toFixed(2) : "0.00";
+    total.innerHTML = parseFloat(venta.precioFinal).toFixed(2);
+    tipoVenta.innerHTML = (venta.tipo_pago !== "CC" || venta.cliente === "M122" || venta.cliente === "A029") ? `Contado: ${parseFloat(venta.precioFinal).toFixed(2)}` : "Cuenta Corriente";
+}
+
+async function listar(venta,afip,opciones){
     
     if (venta.tipo_comp !== "Recibos") {
         for await(let {objeto,cantidad} of venta.productos){
@@ -90,7 +98,7 @@ const listar = async (venta,afip,opciones,cliente)=>{
             listaProductos.innerHTML += `
                 <div class="cantidad">
                     <p>${cantidad}/${venta.condIva === "Inscripto" ? (objeto.precio_venta/iva).toFixed(2)  : objeto.precio_venta}</p>
-                    <p>${objeto.iva === "N" ? "(21.00)" : "(10.50)"}</p>
+                    <p class=iva>${objeto.iva === "N" ? "(21.00)" : "(10.50)"}</p>
                     <p></p>
                 </div>
                 <div class="descripcionProducto">
@@ -117,6 +125,7 @@ const listar = async (venta,afip,opciones,cliente)=>{
             `
         }
     }
+
     if (venta.condIva === "Inscripto" && venta.tipo_comp !== "Recibos") {
         if (venta.gravado21 !== 0) {
             discriminadorIva.innerHTML += `
@@ -143,17 +152,6 @@ const listar = async (venta,afip,opciones,cliente)=>{
             `
         }
     }
-
-    descuento.innerHTML = venta.descuento ? parseFloat(venta.descuento).toFixed(2) : "0.00";
-    total.innerHTML = parseFloat(venta.precioFinal).toFixed(2);
-    tipoVenta.innerHTML = (venta.tipo_pago !== "CC" || venta.cliente === "M122" || venta.cliente === "A029") ? `Contado: ${parseFloat(venta.precioFinal).toFixed(2)}` : "Cuenta Corriente";
-    if (afip && venta.tipo_comp !== "Recibos") {
-        qr.children[0].src = afip.QR;
-        cae.innerHTML = afip.cae;
-        venciCae.innerHTML = afip.vencimientoCae;
-    }else{
-        divAfip.classList.add('none');
-    }
 };
 
 async function listarCliente(cliente) {
@@ -162,6 +160,16 @@ async function listarCliente(cliente) {
        cuit.innerText = cliente.cuit.length === 11 ? `CUIT: ${cliente.cuit}` : `DNI: ${cliente.cuit}`;
        condIva.innerHTML = venta.condIva.toUpperCase();
        direccion.innerHTML = venta.direccion + " - " + (venta.localidad ? venta.localidad : "CHAJARI");
+};
+
+async function listarAfip(afip) {
+    if (afip && venta.tipo_comp !== "Recibos") {
+        qr.children[0].src = afip.QR;
+        cae.innerHTML = afip.cae;
+        venciCae.innerHTML = afip.vencimientoCae;
+    }else{
+        divAfip.classList.add('none');
+    }
 }
 
 

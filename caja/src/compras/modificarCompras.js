@@ -4,7 +4,7 @@ const hasta = document.getElementById('hasta');
 const sweet = require('sweetalert2');
 
 const axios = require('axios');
-const { redondear, copiar, cerrarVentana } = require('../assets/js/globales');
+const { redondear, copiar,configAxios, cerrarVentana } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
