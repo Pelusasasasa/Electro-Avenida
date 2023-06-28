@@ -24,6 +24,10 @@ const precioVenta = document.querySelector('#precioVenta');
 const unidad = document.querySelector('#unidad');
 const select = document.querySelector('#rubros');
 
+//Botones
+const modificar = document.querySelector('.modificar');
+const guardar = document.querySelector('.guardar');
+
 let dolar = 0;
 let costo = 0;
 let valorTasaIva = 26;
@@ -35,8 +39,6 @@ let producto;
 window.addEventListener('load',async e=>{
     let numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
     dolar = numeros.dolar;
-    let rubros = (await axios.get(`${URL}rubros`,configAxios)).data;
-    listarRubros(rubros);
 });
 
 //listamos los rubros para que tenemos en la base de datos
@@ -51,8 +53,10 @@ const listarRubros = async(lista)=>{
 };
 
 ipcRenderer.on('id-producto',async(e,args)=>{
+    let rubros = (await axios.get(`${URL}rubros`,configAxios)).data;
     producto = (await axios.get(`${URL}productos/${args}`,configAxios)).data;
-    asignarCampos(producto)
+    await listarRubros(rubros);
+    await asignarCampos(producto)
 });
 
 ipcRenderer.on('acceso',(e,args)=>{
@@ -64,7 +68,6 @@ ipcRenderer.on('acceso',(e,args)=>{
 })
 
 function asignarCampos(producto) {
-    console.log(producto)
     codigo.value = producto._id
     codFabrica.value = producto.cod_fabrica
     descripcion.value = producto.descripcion
@@ -72,7 +75,7 @@ function asignarCampos(producto) {
     marca.value = producto.marca
     stock.value = producto.stock
     tasaIva.value = producto.iva;
-    select.value = producto.rubro;
+    select.value = producto.rubro ? producto.rubro : select.value = "0";
     (parseFloat(producto.costo) !== 0) ? (costoPesos.value = parseFloat(producto.costo).toFixed(2)) : (costoPesos.value = "0.00");
     (parseFloat(producto.costodolar) !== 0) ? (costoDolares.value = parseFloat(producto.costodolar).toFixed(3)) : (costoDolares.value = "0.00");
 
@@ -121,9 +124,8 @@ precioVenta.addEventListener('focus',e=>{
     
     const aux = (parseFloat(utilidad.value)*parseFloat(costoTotal.value)/100).toFixed(2)
     precioVenta.value = Math.round((parseFloat(aux) + parseFloat(costoTotal.value))).toFixed(2)
-})
+});
 
-const modificar = document.querySelector('.modificar')
 modificar.addEventListener('click',e=>{
     modificar.classList.add('none');
     guardar.classList.remove('none');
@@ -143,13 +145,11 @@ modificar.addEventListener('click',e=>{
 
 })
 
-
-const guardar = document.querySelector('.guardar')
 guardar.addEventListener('click',async e=>{
     let producto = {};
     producto._id = codigo.value
     producto.cod_fabrica = codFabrica.value
-    producto.descripcion = descripcion.value
+    producto.descripcion = descripcion.value.toUpperCase();
     producto.provedor = provedor.value
     producto.marca = marca.value
     producto.stock = stock.value

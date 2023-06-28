@@ -14,6 +14,10 @@
     border: .1rem solid black;
 }
 
+.seccionCancelados tr.total{
+    border: .1rem solid black;
+}
+
 .seccionCancelados .total{
     font-weight: bold;
 }

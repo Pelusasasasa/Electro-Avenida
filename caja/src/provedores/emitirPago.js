@@ -371,7 +371,9 @@ aceptar.addEventListener('click',async e=>{
         };
 
         for await(let elem of listaCheques){
-             await generarMovimientoCaja(elem.f_recibido,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a);
+             if (elem.banco === "BANCO DE ENTRE RIOS") {
+                await generarMovimientoCaja(elem.f_recibido,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a);
+             }
         };
         await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,provedor.provedor);
 
