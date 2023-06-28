@@ -115,7 +115,6 @@ aceptar.addEventListener('click',async e=>{
         total.value = "0.00";
         cobrado.value = "0.00";
         descuento.value = "0.00";
-
     } catch (error) {
         await sweet.fire({
             title:"No se pudo cargar la factura"
@@ -182,7 +181,7 @@ descuento.addEventListener('focus',e=>{
 });
 
 ipcRenderer.on('recibir-informacion',(e,args)=>{
-    if(args === "tarjeta cargada"){
+    if(args.tipo === "Tarjeta"){
         aceptar.click();
     }else if(args === "Cheque cargado"){
         aceptar.click();

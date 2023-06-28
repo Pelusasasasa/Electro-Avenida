@@ -132,6 +132,7 @@ aceptar.addEventListener('click',async e=>{
     tarjeta.imp = importe.value;
     tarjeta.cliente = cliente.value.toUpperCase();
     tarjeta.vendedor = selectVendedor.value;
+    tarjeta.tipo = "Tarjeta"
 
     if (selectTarjeta.value  === "") {
      await sweet.fire({
