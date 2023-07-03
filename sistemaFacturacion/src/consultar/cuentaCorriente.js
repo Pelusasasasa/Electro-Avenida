@@ -240,12 +240,44 @@ const listarLista = (lista,situacion,tipo)=>{
 
 async function mostrarDetalles(id,tipo,vendedor) {
     detalle.innerHTML = '';
+
+    //cambiamos los valores de los th del detalle para el recibo
+    const tr = document.querySelector('.listarDetalleVenta thead tr');
+    tr.children[0].innerText = "Fecha";
+    tr.children[1].innerText = "Numero Comp";
+    tr.children[2].innerText = "Tipo Comp";
+    tr.children[3].innerText = "Pagado";
+    tr.children[4].innerText = "Saldo";
+    tr.children[5].innerText = "Vendedor";
+
     if (tipo === "Recibos_P" || tipo === "Recibos") {
-        const vendedor = (await axios.get(`${URL}recibos/forNro_comp/${seleccionado.id}`,configAxios)).data.vendedor;
-        detalle.innerHTML += `
-            <tr class="detalle"><h1>El recibo fue emitido por: ${vendedor}</h1></tr>
-        `
+        const recibo = (await axios.get(`${URL}recibos/forNro_comp/${seleccionado.id}`,configAxios)).data;
+        console.log(recibo)
+        if (recibo.comprobantes.length !== 0) {
+            for(let {fecha,numero,pagado,saldo,comprobante} of recibo.comprobantes){
+                detalle.innerHTML += `
+                <tr class comprobante>
+                    <td>${fecha}</td>
+                    <td>${numero}</td>
+                    <td>${comprobante}</td>
+                    <td>${pagado}</td>
+                    <td>${saldo}</td>
+                    <td>${recibo.vendedor}</td>
+                </tr>`
+            }
+        }else{
+            detalle.innerHTML += `
+                <tr class="detalle">${recibo.vendedor}</tr>
+            `
+        }
     }else{
+        const tr = document.querySelector('.listarDetalleVenta thead tr');
+        tr.children[0].innerText = "Codigo";
+        tr.children[1].innerText = "Descripcion";
+        tr.children[2].innerText = "Cantidad";
+        tr.children[3].innerText = "Precio";
+        tr.children[4].innerText = "Total";
+        tr.children[5].innerText = "Vendedor";
     let productos = (await axios.get(`${URL}movProductos/${id}/${tipo}`,configAxios)).data;
     let movimientos1 = productos.filter(movimiento => movimiento.codCliente === clienteTraido._id);
     let movimientos2 = productos.filter(movimiento => movimiento.codigo === clienteTraido._id);
