@@ -56,7 +56,7 @@ agregar.addEventListener('click',e=>{
     ipcRenderer.send('abrir-ventana',{
         path:"./tarjetas/agregarTarjeta.html",
         width:500,
-        height:600,
+        height:550,
         reinicio:false
     });
 });
@@ -114,7 +114,7 @@ tbody.addEventListener('click',async e=>{
             ipcRenderer.send('abrir-ventana',{
                 path:"./tarjetas/agregarTarjeta.html",
                 width:500,
-                height:600,
+                height:550,
                 reinicio:true,
                 informacion: seleccionado.id
             });

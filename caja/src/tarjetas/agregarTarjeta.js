@@ -113,8 +113,7 @@ const listarTarjeta = (tarjeta)=>{
     const date = tarjeta.fecha.slice(0,10).split('-',3);
     fecha.value = `${date[0]}-${date[1]}-${date[2]}`;
     selectTarjeta.value = tarjeta.tarjeta;
-    console.log(selectTarjeta)
-    console.log(selectTarjeta.value)
+    cliente.value = tarjeta.cliente;
     importe.value = redondear(tarjeta.imp,2);
     selectVendedor.value = tarjeta.vendedor;
 }

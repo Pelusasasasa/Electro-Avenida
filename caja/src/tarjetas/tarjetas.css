@@ -84,6 +84,10 @@ thead th{
     padding: 1rem;
 }
 
+.agregarTarjeta .inputs main input,.agregarTarjeta .inputs main select{
+    width: 70%;
+}
+
 .agregarTarjeta input,.agregarTarjeta select{
     font-size: 2rem;
 }
