@@ -24,8 +24,9 @@ movCajaCTRL.getAll = async(req,res)=>{
 
 movCajaCTRL.getBetweenDates = async(req,res)=>{
     const {desde,hasta} = req.params;
+    let movimientos
     try {
-        const movimientos = await MovCaja.find({
+         movimientos = await MovCaja.find({
             $and:[
                 {fecha:{$gte:new Date(desde)}},
                 {fecha:{$lte:new Date(hasta)}}
@@ -53,9 +54,10 @@ movCajaCTRL.put = async(req,res)=>{
 
 movCajaCTRL.getForDateAndCuenta = async(req,res)=>{
     const {desde,hasta,idCuenta} = req.params;
+    let movimientos;
     if (idCuenta === "todos") {
         try {
-            const movimientos = await MovCaja.find({
+            movimientos = await MovCaja.find({
                 $and:[
                     {fecha:{$lte:new Date(hasta)}},
                     {fecha:{$gte:new Date(desde)}},
@@ -67,7 +69,7 @@ movCajaCTRL.getForDateAndCuenta = async(req,res)=>{
         res.send(movimientos);
     }else{
         try {
-            const movimientos = await MovCaja.find({
+            movimientos = await MovCaja.find({
                 $and:[
                     {fecha:{$lte:new Date(hasta)}},
                     {fecha:{$gte:new Date(desde)}},
@@ -83,8 +85,9 @@ movCajaCTRL.getForDateAndCuenta = async(req,res)=>{
 
 movCajaCTRL.getPriceBetweenDates = async(req,res)=>{
     const {desde,hasta} = req.params;
+    let movimientos
     try {
-        const movimientos = await MovCaja.find({
+        movimientos = await MovCaja.find({
             $and:[
                 {fecha:{$gte:new Date(desde)}},
                 {fecha:{$lte:new Date(hasta)}},
