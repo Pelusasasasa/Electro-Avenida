@@ -36,8 +36,9 @@ const cambiarObservaciones = new MenuItem({
 //Fin de Menu Secundario
 
 let URL
+require('dotenv').config();
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'desarrollo') {
     require('electron-reload')(__dirname, {
         electron: path.join(__dirname, '../node_modules', '.bin', 'electron')
     })

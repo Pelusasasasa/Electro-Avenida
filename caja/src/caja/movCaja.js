@@ -172,8 +172,6 @@ const listarMovimiento = (movimiento)=>{
     punto.value = movimiento.nro_comp.slice(0,4);
     numero.value = movimiento.nro_comp.slice(5,14)
     tipoMovimiento.value = movimiento.tMov;
-    console.log(movimiento)
-    console.log(tipoCuenta)
     tipoCuenta.value = movimiento.idCuenta;
     descripcion.value = movimiento.desc;
     importe.value = movimiento.imp.toFixed(2);
