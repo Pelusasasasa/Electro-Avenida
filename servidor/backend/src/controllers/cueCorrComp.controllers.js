@@ -67,6 +67,7 @@ cuentaCompCTRL.getPorNumeroYCliente = async(req,res)=>{
 
 cuentaCompCTRL.modificarPorNumeroYCliente = async(req,res)=>{
     const {numero,cliente} = req.params;
+    delete req.body._id;
     await CuentaComp.findOneAndUpdate({$and:[
         {nro_comp:numero},
         {codigo:cliente}

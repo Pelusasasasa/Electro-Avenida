@@ -24,12 +24,16 @@ movCajaCTRL.getAll = async(req,res)=>{
 
 movCajaCTRL.getBetweenDates = async(req,res)=>{
     const {desde,hasta} = req.params;
-    const movimientos = await MovCaja.find({
-        $and:[
-            {fecha:{$gte:new Date(desde)}},
-            {fecha:{$lte:new Date(hasta)}}
-        ]
-    });
+    try {
+        const movimientos = await MovCaja.find({
+            $and:[
+                {fecha:{$gte:new Date(desde)}},
+                {fecha:{$lte:new Date(hasta)}}
+            ]
+        });
+    } catch (error) {
+        console.log('Error en la ilea 35')
+    }
     res.send(movimientos)
 }
 
@@ -50,33 +54,45 @@ movCajaCTRL.put = async(req,res)=>{
 movCajaCTRL.getForDateAndCuenta = async(req,res)=>{
     const {desde,hasta,idCuenta} = req.params;
     if (idCuenta === "todos") {
-        const movimientos = await MovCaja.find({
-            $and:[
-                {fecha:{$lte:new Date(hasta)}},
-                {fecha:{$gte:new Date(desde)}},
-            ]
-        }) ;
+        try {
+            const movimientos = await MovCaja.find({
+                $and:[
+                    {fecha:{$lte:new Date(hasta)}},
+                    {fecha:{$gte:new Date(desde)}},
+                ]
+            });
+        } catch (error) {
+            console.log("Error en la linea 61")
+        }
         res.send(movimientos);
     }else{
-        const movimientos = await MovCaja.find({
-            $and:[
-                {fecha:{$lte:new Date(hasta)}},
-                {fecha:{$gte:new Date(desde)}},
-                {idCuenta:idCuenta}
-            ]
-        }) ;
+        try {
+            const movimientos = await MovCaja.find({
+                $and:[
+                    {fecha:{$lte:new Date(hasta)}},
+                    {fecha:{$gte:new Date(desde)}},
+                    {idCuenta:idCuenta}
+                ]
+            });
+        } catch (error) {
+            console.log('Error en la linea 74');
+        }
         res.send(movimientos);
     }
 };
 
 movCajaCTRL.getPriceBetweenDates = async(req,res)=>{
     const {desde,hasta} = req.params;
-    const movimientos = await MovCaja.find({
-        $and:[
-            {fecha:{$gte:new Date(desde)}},
-            {fecha:{$lte:new Date(hasta)}},
-        ]
-    });
+    try {
+        const movimientos = await MovCaja.find({
+            $and:[
+                {fecha:{$gte:new Date(desde)}},
+                {fecha:{$lte:new Date(hasta)}},
+            ]
+        });   
+    } catch (error) {
+        console.log(`Error en la linea 82`)
+    }
     let total = 0;
     for await(let movimiento of movimientos){
         if(movimiento.tMov === "I"){
