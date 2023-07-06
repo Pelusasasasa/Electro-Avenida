@@ -3,6 +3,8 @@ const { ipcRenderer } = require("electron");
 const inputs = document.querySelectorAll('input');
 const modificar = document.querySelector('#modificar');
 const grabar = document.querySelector('#grabar');
+const alerta = document.querySelector('.alerta');
+
 const cancelar = document.querySelector('#cancelar');
 const axios = require("axios");
 const { ultimasFacturas, redondear, configAxios, cerrarVentana } = require("../funciones");
@@ -106,18 +108,17 @@ async function cambiarPrecios(dolar) {
 
         return 0
     });
-    const esperar = document.querySelector('.esperar');
     const a = productos.filter(producto => producto.costodolar !== 0);
-    console.log(a)
 
     for await(let producto of a) {
-        esperar.classList.remove('none');
+        alerta.classList.remove('none');
         const costoMasIva = parseFloat(redondear((parseFloat(producto.impuestos)+parseFloat(producto.costodolar)),2))
         const costoTotal = parseFloat(redondear(dolar * costoMasIva,2));
         producto.precio_venta = (costoTotal+((parseFloat(producto.utilidad)*costoTotal/100))).toFixed(2);
         await axios.put(`${URL}productos/${producto._id}`,producto,configAxios);
     };
-        esperar.classList.add('none');
+    alerta.classList.add('none')
+        
 };
 
 

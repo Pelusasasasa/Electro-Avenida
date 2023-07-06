@@ -317,7 +317,9 @@ retencionIVA.addEventListener('focus',e=>{
 });
 
 total.addEventListener('focus',e=>{
-    aceptar.classList.remove('none')
+    if (modificar.classList.contains('none')) {
+        aceptar.classList.remove('none');
+    }
     total.select();
 });
 

@@ -117,7 +117,7 @@ async function listar(venta,afip,opciones){
         observaciones.innerText = venta.observaciones;
         for await(let producto of venta.comprobantes){
             listaProductos.innerHTML += `
-                <div class=cantidad>
+                <div class="cantidad  recibo">
                     <p>${producto.fecha}</p>
                     <p>${producto.numero}</p>
                     <p>${parseFloat(producto.pagado).toFixed(2)}</p>

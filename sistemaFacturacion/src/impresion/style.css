@@ -106,6 +106,19 @@ html {
     text-align: center;
 }
 
+.ticket .recibo{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+.ticket .recibo p:nth-child(2){
+    text-align: center;
+}
+
+.ticket .recibo p:nth-child(3){
+    text-align: end;
+}
+
 .ticket .version{
     font-size: 1rem;
     padding: 2rem 0;

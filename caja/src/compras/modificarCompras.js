@@ -39,13 +39,17 @@ window.addEventListener('load',async e=>{
 });
 
 desde.addEventListener('change',async e=>{
-    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`,configAxios)).data;
-    listarCompras(facturas)
+    if (desde.value) {
+        facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`,configAxios)).data;
+        listarCompras(facturas)
+    }
 });
 
 hasta.addEventListener('change',async e=>{
-    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`,configAxios)).data;
-    listarCompras(facturas)
+    if (hasta.value) {
+        facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`,configAxios)).data;
+        listarCompras(facturas);
+    }
 });
 
 const listarCompras = async(lista)=>{
