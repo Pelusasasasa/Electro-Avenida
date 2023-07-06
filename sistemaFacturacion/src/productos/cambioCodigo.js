@@ -48,7 +48,7 @@ aceptar.addEventListener('click',async e=>{
     const nuevoProducto=productos.data;
     nuevoProducto._id=nuevoCodigo.value;
     await axios.post(`${URL}productos`,nuevoProducto,configAxios)   
-    await axios.delete(`${URL}productos/${codigo.value}`,configAxios)
+    await axios.delete(`${URL}productos/${codigo.value}`,{data:{vendedor:"Defecto",lugar:"Cambio de Codigo"}},configAxios)
     location.reload()
 })
 

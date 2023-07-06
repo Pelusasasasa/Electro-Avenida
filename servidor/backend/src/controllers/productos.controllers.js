@@ -69,9 +69,9 @@ productosCTRL.modificarProductos = async(req,res)=>{
 
 productosCTRL.borrarProducto = async(req,res)=>{
     const {id} = req.params;
-    await Productos.findByIdAndDelete({_id:id})
-    console.log(`Producto ${id} borrado`)
-    res.send("Producto Borrado")
+    await Productos.findByIdAndDelete({_id:id});
+    console.log(`Producto ${id} borrado a la hora ${new Date()} por ${req.body.vendedor} desde el lugar ${req.body.lugar}`);
+    res.send("Producto Borrado");
 }
 
 productosCTRL.traerProductosPorRango = async(req,res)=>{

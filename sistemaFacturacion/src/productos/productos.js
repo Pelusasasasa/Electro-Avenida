@@ -14,6 +14,7 @@ function getParameterByName(name) {
 }
 //saber que pribilegios tiene los usuarios
 const acceso = getParameterByName('acceso');
+const vendedor = getParameterByName('vendedor');
 
 const resultado = document.querySelector('#resultado');
 const select = document.querySelector('#seleccion');
@@ -227,7 +228,6 @@ movimiento.addEventListener('click',async ()=>{
 ingresarMov.addEventListener('click',async e => {
     seleccionado = document.querySelector('.seleccionado');
    if (seleccionado) {
-        let vendedor = getParameterByName('vendedor');
         vendedor ?  ipcRenderer.send('abrir-ventana-movimiento-producto',[seleccionado.id,vendedor]) : sweet.fire({title:"Contraseña Incorrecta"});
    }else{
         await sweet.fire({
@@ -249,8 +249,8 @@ eliminar.addEventListener('click',async e=>{
             confirmButtonText:"Aceptar"
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
-                await axios.delete(`${URL}productos/${seleccionado.id}`,configAxios)
-                location.reload()        
+                await axios.delete(`${URL}productos/${seleccionado.id}`,{data:{vendedor,lugar:"Productos"}},configAxios)
+                location.reload();
             }
         })
     }else{
