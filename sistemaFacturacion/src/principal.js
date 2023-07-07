@@ -5,9 +5,18 @@ ipcRenderer.send('abrir-menu');
 const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
+
 let vendedores = [];
+let vendedor
+let acceso
+let empresa
+const sweet = require('sweetalert2');
+const { verEstadoServidorAfip, configAxios, verNombrePc } = require("./funciones");
+
 
 const notificaciones = require('node-notifier');
+
+verNombrePc();
 
 window.addEventListener('load',async e=>{
     setTimeout(async ()=>{
@@ -37,10 +46,12 @@ const avisarDolar = async()=>{
     return dolares;
 };
 
-const listaPedidos = document.querySelector('.listaPedidos')
+
 const body = document.querySelector('body')
-const emitirComprobante = document.querySelector('.emitirComprobante')
+const emitirComprobante = document.querySelector('.emitirComprobante');
+const listaPedidos = document.querySelector('.listaPedidos');
 const pedidos = document.querySelector('#pedidos');
+const verPedidos = document.querySelector('#verPedidos');
 const emitirRecibo = document.querySelector('.emitirRecibo');
 const resumenCuenta = document.querySelector('.resumenCuenta');
 const cuentaCorriente = document.querySelector('.cuentaCorriente');
@@ -49,6 +60,8 @@ const productos = document.querySelector('.productos');
 const clientes = document.querySelector('.clientes');
 const flecha = document.querySelector('.flecha');
 const salir = document.querySelector('.salir');
+
+
 
 listaPedidos.addEventListener('click', (e) =>{
     const handlePedidos = document.querySelector('.handlePedidos')
@@ -77,6 +90,10 @@ pedidos.addEventListener('click',e=>{
     validacionUsuario("pedidos/pedidos.html")
 });
 
+verPedidos.addEventListener('click',e=>{
+    validacionUsuario("pedidos/verPedidos.html");
+});
+
 emitirRecibo.addEventListener('click',e=>{
     validacionUsuario("emitirRecibo/emitirRecibo.html")
 });
@@ -101,14 +118,6 @@ body.addEventListener('keydown',e=>{
         validacionUsuario("clientes/clientes.html");
     }
 });
-
-let vendedor
-let acceso
-let empresa
-const sweet = require('sweetalert2');
-const { verEstadoServidorAfip, configAxios } = require("./funciones");
-
-// verEstadoServidorAfip()
 
 async function validacionUsuario(texto,botones = true) {
     await sweet.fire({
@@ -145,7 +154,7 @@ async function validacionUsuario(texto,botones = true) {
         console.log(error)
         location.reload()
        })
-}
+};
 
 ipcRenderer.on("validarUsuario",(e,args)=>{
 

@@ -2,7 +2,7 @@ const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
 
 const axios = require("axios");
-const { configAxios } = require("../funciones");
+const { configAxios, verCodComp, verNombrePc } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -13,7 +13,7 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-const vendedor = getParameterByName('vendedor')
+const vendedor = getParameterByName('vendedor');
 const nombre = document.querySelector("#nombre");
 const numero = document.querySelector("#telefono");
 const codigo = document.querySelector("#codigo");
@@ -127,6 +127,7 @@ grabar.addEventListener('click', async e =>{
         Pedido.stock = td.children[5].innerHTML;
         Pedido.observacion = td.children[6].children[0].value.toUpperCase();
         Pedido.vendedor = vendedor;
+        Pedido.maquina = verNombrePc();
         try {
             await axios.post(`${URL}pedidos`,Pedido,configAxios);
         } catch (error) {

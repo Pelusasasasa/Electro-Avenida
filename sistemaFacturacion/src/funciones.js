@@ -10,6 +10,7 @@ const sweet = require('sweetalert2');
 
 let Afip = require('@afipsdk/afip.js');
 let afip = new Afip({ CUIT: 27165767433 });
+const prueba = btoa(`electroAvenida:Elbio935`);
 
 
 function redondear(numero,decimales){
@@ -431,13 +432,18 @@ const verTipoPago = async(vendedor)=>{
         });
     }
 };
-const prueba = btoa(`electroAvenida:Elbio935`);
+
 const configAxios = {
     
     headers:{
         "ngrok-skip-browser-warning": "69420",
         "Authorization": `Basic ${prueba}`
     }
+};
+
+function verNombrePc(){
+    const os = require('os');
+    return os.hostname();
 }
 
 module.exports = {
@@ -455,5 +461,6 @@ module.exports = {
     generarMovimientoCaja,
     verTipoPago,
     verEstadoServidorAfip,
-    configAxios
+    configAxios,
+    verNombrePc
 }

@@ -1,9 +1,16 @@
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+
 const sweet = require('sweetalert2');
 const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const {copiar, recorrerFlechas, redondear, botonesSalir, configAxios} = require('../funciones');
+const {copiar, recorrerFlechas, redondear, botonesSalir, configAxios, verNombrePc} = require('../funciones');
 const { ipcRenderer } = require('electron');
 
 const tbody = document.querySelector("tbody");
@@ -15,6 +22,11 @@ let arreglo;
 let seleccionado;
 let subSeleccionado
 let inputSeleccionado;
+let acceso = getParameterByName('acceso');
+let vendedor = getParameterByName('vendedor');
+
+console.log(vendedor)
+console.log(acceso)
 
 //Mandamos a llamar a pedidos
 window.addEventListener('load',async e=>{
@@ -124,6 +136,8 @@ tbody.addEventListener("click" , e=>{
     //se ejecuta cuando escribimos en el input
     inputSeleccionado.addEventListener('keyup',async e=>{
         pedidoIdentificado.estadoPedido = e.target.value;
+        pedidoIdentificado.maquina = verNombrePc();
+        pedidoIdentificado.vendedorQueModifico = vendedor;
         await axios.put(`${URL}pedidos/${pedidoIdentificado._id}`,pedidoIdentificado,configAxios);
     })
 });
@@ -146,6 +160,8 @@ tbody.addEventListener('dblclick',async e=>{
             const pedido = (await axios.get(`${URL}pedidos/${seleccionado.id}`,configAxios)).data;
             pedido.cliente = seleccionado.children[4].innerText;
             pedido.telefono = seleccionado.children[5].innerText;
+            pedido.maquina = verNombrePc();
+            pedido.vendedorQueModifico = vendedor;
             await axios.put(`${URL}pedidos/${seleccionado.id}`,pedido,configAxios);
         }
     });
@@ -177,8 +193,11 @@ eliminarPedido.addEventListener("click", async e =>{
                 showCancelButton:true,
                 confirmButtonText:"Aceptar"
             }).then(async ({isConfirmed})=>{
-                await axios.delete(`${URL}pedidos/${seleccionado.id}`,configAxios);
-                location.reload();
+                if (isConfirmed) {
+                    await axios.delete(`${URL}pedidos/${seleccionado.id}`,{data:{vendedor,maquina:verNombrePc(),pedido:seleccionado.children[2].innerText}},configAxios);
+                    tbody.removeChild(seleccionado);
+                    seleccionado = "";
+                }
             })
         }else{
             sweet.fire({title:'Pedido no seleccionado'});
@@ -202,7 +221,11 @@ async function eliminarVariosPedidos() {
     }).then(async ({isConfirmed})=>{
         if (isConfirmed) {
             for await(let elem of pedidosAEliminar){    
-                await axios.delete(`${URL}pedidos/${elem.id}`,configAxios);
+                await axios.delete(`${URL}pedidos/${elem.id}`,{data:{
+                    vendedor,
+                    maquina:verNombrePc(),
+                    pedido:elem.children[2].innerText
+                }},configAxios);
                 tbody.removeChild(elem);
             }
         }
