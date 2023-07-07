@@ -30,11 +30,8 @@ window.addEventListener('load',async e=>{
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
 
-    const fecha = hasta.value.split('-',3);
-    let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2],20,59,59);
-    // nextDay.setDate(nextDay.getDate() + 1);
 
-    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay.toISOString()}`,configAxios)).data;
+    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.vlaue}`,configAxios)).data;
     const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
     movimientosPasados.sort((a,b)=>{
@@ -51,11 +48,8 @@ window.addEventListener('load',async e=>{
 
 desde.addEventListener('keypress',async e=>{
     if (e.keyCode === 13) {
-        const fecha = hasta.value.split('-',3);
-        let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
-        nextDay.setDate(nextDay.getDate() + 1);
 
-        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`,configAxios)).data;
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
         const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
         movimientosPasados.sort((a,b)=>{
@@ -74,11 +68,7 @@ desde.addEventListener('keypress',async e=>{
 
 hasta.addEventListener('keypress',async e=>{
     if(e.keyCode === 13){
-        const fecha = hasta.value.split('-',3);
-        let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2],20,59,59);
-        // nextDay.setDate(nextDay.getDate() + 1);
-
-        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay.toISOString()}`,configAxios)).data;
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
         const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
         movimientosPasados.sort((a,b)=>{

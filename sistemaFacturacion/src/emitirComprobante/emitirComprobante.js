@@ -815,8 +815,8 @@ ticketFactura.addEventListener('click',async (e) =>{
             numeroComprobante(tipoVenta);
             venta.empresa = inputEmpresa.value;
             venta.cod_comp = verCodComp(tipoVenta,conIva.value);
-            if (venta.precioFinal >= 10000 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
-                sweet.fire({title:"Factura mayor a 10000, poner datos cliente"});
+            if (venta.precioFinal >= 30767 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
+                sweet.fire({title:"Factura mayor a 30767, poner datos cliente"});
                 alerta.classList.add('none');
             }else{
                 try {

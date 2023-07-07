@@ -37,10 +37,7 @@ window.addEventListener('load',async e=>{
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
 
-    let nextDay = new Date(today);
-    nextDay.setDate(today.getDate() + 1);
-
-    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`,configAxios)).data;
+    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
 
     arregloEgresos = movimientos.filter(mov => (mov.pasado && mov.tMov === "E") && mov.pasado === true);
     arregloIngresos = movimientos.filter(mov => (mov.pasado && mov.tMov === "I") && mov.pasado === true);
@@ -173,9 +170,7 @@ desde.addEventListener('keypress',e=>{
 
 hasta.addEventListener('keypress', async e=>{
     if (e.key === "Enter") {
-        const fecha = hasta.value.split('-',3);
-        let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2],20,59,59);
-        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay.toISOString()}`,configAxios)).data;
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
 
         arregloEgresos = movimientos.filter(elem => (elem.pasado && elem.tMov === "E"));
         arregloIngresos = movimientos.filter(elem => (elem.pasado & elem.tMov === "I"));

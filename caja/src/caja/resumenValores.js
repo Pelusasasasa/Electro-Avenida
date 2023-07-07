@@ -44,10 +44,7 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
         let aux = args.hasta.split('-',3);
         desde = args.desde;
         hasta = new Date(`${aux[1]}/${aux[2]}/${aux[0]}`);
-
-        let nextDay = new Date(hasta);
-        nextDay.setDate(hasta.getDate() + 1);
-        const movimientos = (await axios.get(`${URL}movCajas/${desde}/${nextDay}`,configAxios)).data;
+        const movimientos = (await axios.get(`${URL}movCajas/${desde}/${hasta}`,configAxios)).data;
         for await(let mov of movimientos){
             if (mov.pasado) {
                 if (mov.tMov === "I") {
