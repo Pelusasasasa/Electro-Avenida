@@ -442,6 +442,7 @@ const configAxios = {
 };
 
 function verNombrePc(){
+    require('hostname-patcher');
     const os = require('os');
     return os.hostname();
 }

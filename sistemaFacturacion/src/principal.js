@@ -11,12 +11,11 @@ let vendedor
 let acceso
 let empresa
 const sweet = require('sweetalert2');
-const { verEstadoServidorAfip, configAxios, verNombrePc } = require("./funciones");
+const { verEstadoServidorAfip, configAxios } = require("./funciones");
 
 
 const notificaciones = require('node-notifier');
 
-verNombrePc();
 
 window.addEventListener('load',async e=>{
     setTimeout(async ()=>{
