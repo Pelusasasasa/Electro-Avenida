@@ -33,7 +33,7 @@ let costo = 0;
 let valorTasaIva = 26;
 let acceso;
 let producto; 
-
+let vendedor;
 
 //Traer el dolar
 window.addEventListener('load',async e=>{
@@ -65,7 +65,12 @@ ipcRenderer.on('acceso',(e,args)=>{
         document.querySelector('.costos').classList.add('none');
         document.querySelector('.utilidad').classList.add('none')
     }
-})
+});
+
+
+ipcRenderer.on('vendedor',(e,args)=>{
+    vendedor = args;
+});
 
 function asignarCampos(producto) {
     codigo.value = producto._id

@@ -2,7 +2,7 @@ const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
 
 const axios = require("axios");
-const { copiar, recorrerFlechas, configAxios } = require("../funciones");
+const { copiar, recorrerFlechas, configAxios, verNombrePc } = require("../funciones");
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -190,11 +190,10 @@ ipcRenderer.once('Historial',async(e,args)=>{
 
 
 //modificar el producto
-
 modificar.addEventListener('click',async e=>{
     seleccionado = document.querySelector('.seleccionado');
     if(seleccionado){
-        ipcRenderer.send('abrir-ventana-modificar-producto',[seleccionado.id,acceso,texto,select.value]);
+        ipcRenderer.send('abrir-ventana-modificar-producto',[seleccionado.id,acceso,texto,select.value,vendedor]);
     }else{
         await sweet.fire({
             title:'Producto no seleccionado',
@@ -206,9 +205,8 @@ modificar.addEventListener('click',async e=>{
 
 //Agregar producto
 agregarProducto.addEventListener('click',e=>{
-    ipcRenderer.send('abrir-ventana-agregar-producto');
-})
-
+    ipcRenderer.send('abrir-ventana-agregar-producto',vendedor);
+});
 
 //Info Movimiento de producto
 movimiento.addEventListener('click',async ()=>{
@@ -249,8 +247,13 @@ eliminar.addEventListener('click',async e=>{
             confirmButtonText:"Aceptar"
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
-                await axios.delete(`${URL}productos/${seleccionado.id}`,{data:{vendedor,lugar:"Productos"}},configAxios)
-                location.reload();
+                await axios.delete(`${URL}productos/${seleccionado.id}`,{data:{
+                    vendedor,
+                    maquina:verNombrePc(),
+                    producto:seleccionado.children[1].innerText
+                }},configAxios);
+                resultado.removeChild(seleccionado);
+                seleccionado = "";
             }
         })
     }else{
@@ -263,10 +266,9 @@ eliminar.addEventListener('click',async e=>{
 
 }
 
-)
- buscarProducto.addEventListener('keyup',filtrar);
+);
 
-
+buscarProducto.addEventListener('keyup',filtrar);
 buscarProducto.addEventListener('keypress',e=>{
     if (buscarProducto.value.length === 3 && e.key !== "-" && select.value === "codigo") {
         buscarProducto.value = buscarProducto.value + "-"

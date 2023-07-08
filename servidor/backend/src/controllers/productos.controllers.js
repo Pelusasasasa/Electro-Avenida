@@ -47,9 +47,9 @@ productosCTRL.getproducto = async(req,res)=>{
 productosCTRL.crearProducto = async(req,res)=>{
     const productonuevo = new Productos(req.body);
     await productonuevo.save();
-    console.log(`Producto ${req.body.descripcion} Creado a la hora ${req.body.fecha}`);
+    console.log(`Producto ${req.body.descripcion} Creado por el vendedor ${req.body.vendedor} en la maquina ${req.body.maquina} con la fecha y hora ${(new Date()).toLocaleString()}`);
     res.send("Producto Cargado");
-}
+};
 
 productosCTRL.modificarProducto = async(req,res)=>{
     const {id} = req.params;
@@ -69,8 +69,9 @@ productosCTRL.modificarProductos = async(req,res)=>{
 
 productosCTRL.borrarProducto = async(req,res)=>{
     const {id} = req.params;
+    const {vendedor,maquina,producto} = req.body;
     await Productos.findByIdAndDelete({_id:id});
-    console.log(`Producto ${id} borrado a la hora ${new Date()} por ${req.body.vendedor} desde el lugar ${req.body.lugar}`);
+    console.log(`Producto ${producto} borrado por el vendedor ${vendedor} de la maquina ${maquina} con la fecha y hora ${(new Date()).toLocaleString()}`);
     res.send("Producto Borrado");
 }
 

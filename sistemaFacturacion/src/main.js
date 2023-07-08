@@ -219,11 +219,12 @@ ipcMain.on('facturar_varios',(e,args)=>{
 
 //Abrir ventana para modificar un producto
 ipcMain.on('abrir-ventana-modificar-producto',  (e, args) => {
-    const [id,acceso,texto,seleccion] = args
+    const [id,acceso,texto,seleccion,vendedor] = args
     abrirVentana('productos/modificarProducto.html',1100,600,'noReinician')
     nuevaVentana.on('ready-to-show',async ()=>{
     nuevaVentana.webContents.send('id-producto', id)
-    nuevaVentana.webContents.send('acceso', JSON.stringify(acceso))
+    nuevaVentana.webContents.send('acceso', JSON.stringify(acceso));
+    nuevaVentana.webContents.send('vendedor', vendedor);
     })
     nuevaVentana.on('close', async()=> {
         ventanaPrincipal.once('ready-to-show',async ()=>{
@@ -240,7 +241,7 @@ ipcMain.on('productoModificado',(e,args)=>{
 
 //abrir ventana agregar producto
 ipcMain.on('abrir-ventana-agregar-producto',async(e,args)=>{
-    abrirVentana('productos/agregarProducto.html',1100,500)
+    abrirVentana('productos/agregarProducto.html',1100,500,false,args)
 })
 
 

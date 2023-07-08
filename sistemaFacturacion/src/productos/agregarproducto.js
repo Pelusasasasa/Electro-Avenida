@@ -1,6 +1,7 @@
 const axios = require('axios');
 const sweet = require('sweetalert2');
-const { redondear, configAxios } = require('../funciones');
+const { redondear, configAxios, verNombrePc } = require('../funciones');
+const { ipcRenderer } = require('electron');
 
 require('dotenv').config();
 const URL = process.env.URL;
@@ -32,6 +33,7 @@ let letraIva = "N"
 let costoT = 0 //costo total
 let precioV = 0 //Precio Venta
 let dolar = 0
+let vendedor;
 
 //No enviar el formulario al apretar enter
 document.addEventListener('DOMContentLoaded', () => {
@@ -48,6 +50,10 @@ window.addEventListener('load',async e=>{
     let rubros = (await axios.get(`${URL}rubros`,configAxios)).data;
     listarRubros(rubros)
     dolar = numeros.dolar;
+});
+
+ipcRenderer.on('informacion',(e,args)=>{
+    vendedor = args;
 });
 
 //Listamos los rubros que tenemos cargados
@@ -118,19 +124,21 @@ agregar.addEventListener('click' ,async  (e) =>{
     const producto = {
         _id: codigo.value,
         cod_fabrica: codFabrica.value,
-        descripcion: descripcion.value,
+        descripcion: descripcion.value.toUpperCase(),
         provedor: provedor.value,
-        marca: marca.value,
+        marca: marca.value.toUpperCase(),
         stock: stock.value,
         iva: letraIva,
-        observacion: observaciones.value,
+        observacion: observaciones.value.toUpperCase(),
         costo: costoPesos.value,
         costodolar: parseFloat(costoDolares.value),
         impuestos: ivaImp.value,
         utilidad: utilidad.value,
         precio_venta: precioVenta.value,
         unidad: unidad.value,
-        rubro:select.value
+        rubro:select.value,
+        vendedor:vendedor,
+        maquina:verNombrePc()
     }
 
     //Enviamos el producto al servidor
@@ -227,6 +235,7 @@ marca.addEventListener('keypress',e=>{
 
 tasaIva.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
+        e.preventDefault()
         costoPesos.focus();
     }
 });
