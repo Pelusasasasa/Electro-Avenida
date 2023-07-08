@@ -41,9 +41,8 @@ let ultimos = {};
 let total = 0;
     
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-        let aux = args.hasta.split('-',3);
         desde = args.desde;
-        hasta = new Date(`${aux[1]}/${aux[2]}/${aux[0]}`);
+        hasta = args.hasta;
         const movimientos = (await axios.get(`${URL}movCajas/${desde}/${hasta}`,configAxios)).data;
         for await(let mov of movimientos){
             if (mov.pasado) {
