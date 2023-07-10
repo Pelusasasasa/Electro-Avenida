@@ -2,7 +2,7 @@ const { ipcRenderer } = require("electron");
 require('dotenv').config();
 const URL = process.env.URL;
 const axios = require("axios");
-const { redondear, configAxios } = require("../funciones");
+const { redondear, configAxios, verNombrePc } = require("../funciones");
 let data = new FormData();
 
 
@@ -167,6 +167,8 @@ guardar.addEventListener('click',async e=>{
     producto.unidad = unidad.value
     producto.impuestos = ivaImp.value;
     producto.rubro = select.value;
+    producto.vendedor = vendedor;
+    producto.maquina = verNombrePc();
     
     await axios.put(`${URL}productos/${producto._id}`,producto,configAxios);
     if (imagen.files[0]) {

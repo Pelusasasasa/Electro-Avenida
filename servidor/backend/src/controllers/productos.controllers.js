@@ -53,8 +53,9 @@ productosCTRL.crearProducto = async(req,res)=>{
 
 productosCTRL.modificarProducto = async(req,res)=>{
     const {id} = req.params;
+    const {vendedor,maquina} = req.body;
     const productoModificado = await Productos.findByIdAndUpdate({_id:id},req.body);
-    console.log(`Producto ${req.body.descripcion} modificado`)
+    console.log(`Producto ${req.body.descripcion} modificado por el vendedor ${vendedor} de la maquina ${maquina} con la fecha y hora ${(new Date()).toLocaleString()}`);
     res.send("Producto Modificado")
 }
 
