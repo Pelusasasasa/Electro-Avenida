@@ -51,9 +51,9 @@ ipcRenderer.on('productoModificado',(e,args)=>{
     const tr = document.getElementById(`${producto._id}`)
     const aux = tr.children;
     aux[1].innerHTML = producto.descripcion;
-    aux[2].innerHTML = producto.precio_venta;
+    aux[2].innerHTML = producto.precio_venta.toFixed(2);
     aux[3].innerHTML = producto.marca;
-    aux[4].innerHTML = producto.stock;
+    aux[4].innerHTML = producto.stock.toFixed(2);
     aux[5].innerHTML = producto.cod_fabrica;
     aux[6].innerHTML = producto.observacion;
 });

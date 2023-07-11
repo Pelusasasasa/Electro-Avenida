@@ -31,7 +31,7 @@ window.addEventListener('load',async e=>{
     hasta.value = `${year}-${month}-${day}`;
 
 
-    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.vlaue}`,configAxios)).data;
+    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
     const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
     movimientosPasados.sort((a,b)=>{
