@@ -74,8 +74,11 @@ ipcMain.on('elegirPath',async e=>{
 })
 
 //abrir ventana agregar cliente
-ipcMain.on('abrir-ventana-agregar-cliente',e=>{
-    abrirVentana('clientes/agregarCliente.html',1100,500)
+ipcMain.on('abrir-ventana-agregar-cliente',(e,args)=>{
+    abrirVentana('clientes/agregarCliente.html',1100,500);
+    nuevaVentana.on('ready-to-show',()=>{
+        nuevaVentana.webContents.send('vendedor',args)
+    })
 })
 
 ipcMain.on('minimizar',e=>{
@@ -111,9 +114,10 @@ ipcMain.on('mando-el-producto', async (e, args) => {
 //Abrir ventana para modificar un cliente
 ipcMain.on('abrir-ventana-modificar-cliente', (e, args) => {
     abrirVentana("clientes/modificarCliente.html",1100,600)
-    const [idCliente,acceso] = args
+    const [idCliente,acceso,vendedor] = args
     nuevaVentana.on('ready-to-show',async ()=>{
-        nuevaVentana.webContents.send('datos-clientes', JSON.stringify([idCliente,acceso]))
+        nuevaVentana.webContents.send('datos-clientes', JSON.stringify([idCliente,acceso]));
+        nuevaVentana.webContents.send('vendedor',vendedor);
     })
     nuevaVentana.setMenuBarVisibility(false)
 })

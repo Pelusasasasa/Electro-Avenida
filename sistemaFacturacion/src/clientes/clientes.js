@@ -5,7 +5,7 @@ require('dotenv').config
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
-const { copiar, recorrerFlechas, configAxios} = require('../funciones');
+const { copiar, recorrerFlechas, configAxios, verNombrePc} = require('../funciones');
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -15,12 +15,15 @@ function getParameterByName(name) {
 };
 
 const acceso = getParameterByName("acceso");
+const vendedor = getParameterByName("vendedor");
 
 const buscarCliente = document.querySelector('#buscarCliente')
 const resultado = document.querySelector('#resultado')
 
 const modificar = document.querySelector('.modificar');
 const eliminar = document.querySelector('.eliminar');
+
+const salir = document.querySelector('.salir');
 
 acceso !== "0" && eliminar.classList.add('none') ;
 
@@ -125,13 +128,13 @@ resultado.addEventListener('click',e =>{
 
 const agregar = document.querySelector('.agregar')
 agregar.addEventListener('click',e=>{
-    ipcRenderer.send('abrir-ventana-agregar-cliente')
+    ipcRenderer.send('abrir-ventana-agregar-cliente',vendedor)
 });
 
 modificar.addEventListener('click',async () =>{
     seleccionado = document.querySelector('.seleccionado');
     if (seleccionado) {
-        ipcRenderer.send('abrir-ventana-modificar-cliente',[seleccionado.id,acceso])
+        ipcRenderer.send('abrir-ventana-modificar-cliente',[seleccionado.id,acceso,vendedor])
     }else{
         await sweet.fire({
             title:"Cliente no Seleccionado",
@@ -151,7 +154,11 @@ eliminar.addEventListener('click',async e=>{
             confirmButtonText:"Aceptar"
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
-                await axios.delete(`${URL}clientes/${clienteEliminar.id}`,configAxios);
+                await axios.delete(`${URL}clientes/${clienteEliminar.id}`,{data:{
+                    vendedor,
+                    maquina:verNombrePc(),
+                    cliente:seleccionado.children[1].innerText
+                }},configAxios);
                 location.reload()    
             }
         })
@@ -164,9 +171,8 @@ eliminar.addEventListener('click',async e=>{
         buscarCliente.select();
         buscarCliente.focus();
     }
-})
+});
 
-const salir = document.querySelector('.salir');
 salir.addEventListener('click',e=>{
     location.href = '../index.html'; 
 });

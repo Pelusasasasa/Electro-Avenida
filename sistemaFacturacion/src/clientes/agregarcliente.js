@@ -5,7 +5,8 @@ const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const { cerrarVentana, botonesSalir, configAxios } = require('../funciones');
+const { cerrarVentana, botonesSalir, configAxios, verNombrePc } = require('../funciones');
+const { ipcRenderer } = require('electron');
 
 const botonEnviar = document.querySelector('#boton-enviar')
 const nombre = document.querySelector('#nombre')
@@ -28,12 +29,17 @@ const saldo_p = "0"
 const listaVenta = [];
 
 let condicion = "";
+let vendedor = "";
 
 window.addEventListener('load',e=>{
     cerrarVentana();
     botonesSalir();
 });
 
+ipcRenderer.on('vendedor',(e,args)=>{
+    vendedor = args;
+    console.log(vendedor)
+})
 
 nombre.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
@@ -67,7 +73,8 @@ direccion.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         localidad.focus()
     }
-})
+});
+
 dnicuit.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         if((dnicuit.value.length !== 11 && conIva.value !== "Consumidor Final") || (dnicuit.value.length !== 8 && conIva.value === "Consumidor Final")){
@@ -140,7 +147,9 @@ botonEnviar.addEventListener('click',async e =>{
         saldo_p: saldo_p.value,
         cond_fact: condicionFacturacion.value,
         observacion: observaciones.value.toUpperCase(),
-        listaVenta: listaVenta.value
+        listaVenta: listaVenta.value,
+        maquina: verNombrePc(),
+        vendedor
     }
     const inicial = ((nombre.value)[0]).toUpperCase();
     let numero = (await axios.get(`${URL}clientes/crearCliente/${inicial}`,configAxios)).data;

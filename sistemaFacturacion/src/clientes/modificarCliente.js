@@ -1,7 +1,7 @@
 const { ipcRenderer } = require("electron")
 
 const axios = require("axios");
-const { configAxios } = require("../funciones");
+const { configAxios, verNombrePc } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -19,10 +19,14 @@ const moroso = document.querySelectorAll('input[name="moroso"]')
 const conFact = document.querySelector('#conFact')
 const observaciones = document.querySelector('#observaciones')
 
+const modificar = document.querySelector('.modificar');
+const guardar = document.querySelector('.guardar');
+
 let _id = ""
 let condicion
 let acceso
 let situacion = "blanco"
+let vendedor = "";
 
 ipcRenderer.on('datos-clientes',async(e,args)=>{
     cliente = (await axios.get(`${URL}clientes/id/${JSON.parse(args)[0]}`,configAxios)).data;
@@ -50,8 +54,10 @@ ipcRenderer.on('datos-clientes',async(e,args)=>{
     conIva.value = cliente.cond_iva;
 });
 
+ipcRenderer.on('vendedor',(e,args)=>{
+    vendedor = args
+})
 
-const modificar = document.querySelector('.modificar')
 modificar.addEventListener('click', (e)=>{
     e.preventDefault();
 
@@ -68,9 +74,8 @@ modificar.addEventListener('click', (e)=>{
     }
 
     nombre.focus();
-})
+});
 
-const guardar = document.querySelector('.guardar');
 guardar.addEventListener('click',async e =>{
     const nuevoCliente = {};
     for(let i of moroso){
@@ -91,6 +96,9 @@ guardar.addEventListener('click',async e =>{
     nuevoCliente.condicion = condicion;
     nuevoCliente.cond_fact = conFact.value;
     nuevoCliente.lim_compra = parseFloat(limite.value) ;
+    nuevoCliente.maquina = verNombrePc();
+    console.log(vendedor)
+    nuevoCliente.vendedor = vendedor;
     await axios.put(`${URL}clientes/${nuevoCliente._id}`,nuevoCliente,configAxios);
     window.close();
 })
