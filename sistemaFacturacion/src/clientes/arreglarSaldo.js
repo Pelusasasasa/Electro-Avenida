@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
-const { cerrarVentana, botonesSalir,verificarUsuarios, configAxios } = require("../funciones");
+const { cerrarVentana, botonesSalir,verificarUsuarios, configAxios, verNombrePc } = require("../funciones");
 
 require("dotenv").config;
 const URL = process.env.URL;
@@ -15,6 +15,8 @@ const guardar = document.querySelector('.guardar');
 
 let cliente = {}
 let acceso;
+let vendedor;
+
 ipcRenderer.on('acceso',(e,args)=>{
     acceso = JSON.parse(args);
     console.log(acceso)
@@ -24,7 +26,7 @@ ipcRenderer.on('acceso',(e,args)=>{
 });
 
 window.addEventListener('load',async e=>{
-    const vendedor = await verificarUsuarios();
+    vendedor = await verificarUsuarios();
     if (vendedor === "") {
         await sweet.fire({
             title:"Contraseña Incorrecta",
@@ -106,7 +108,8 @@ saldo_P.addEventListener('keypress',e=>{
 guardar.addEventListener('click',async e=>{
     cliente.saldo = saldo.value;
     cliente.saldo_p = saldo_P.value;
-    console.log(cliente)
+    cliente.vendedor = vendedor.nombre;
+    cliente.maquina = verNombrePc();
     await axios.put(`${URL}clientes/${cliente._id}`,cliente,configAxios);
     window.close();
 });

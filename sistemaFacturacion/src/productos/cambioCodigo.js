@@ -7,9 +7,11 @@ const cancelar = document.querySelector('.cancelar')
 const diescripcion = document.querySelector('#descripcion')
 
 const axios = require("axios");
-const { configAxios } = require("../funciones");
+const { configAxios, verNombrePc } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
+
+let vendedor = "";
 
 codigo.addEventListener('keydown',async e=>{
     if(e.key === "Enter" || e.key === "Tab"){  
@@ -26,8 +28,11 @@ codigo.addEventListener('keydown',async e=>{
         codigo.value = codigo.value + "-"
     }
 
-})
+});
 
+ipcRenderer.on('vendedor',(e,args)=>{
+    vendedor = JSON.parse(args).nombre
+});
 
 nuevoCodigo.addEventListener('keydown',async e=>{
     if (e.key === "Enter") {
@@ -47,8 +52,14 @@ aceptar.addEventListener('click',async e=>{
     const productos = await axios.get(`${URL}productos/${codigo.value}`,configAxios)
     const nuevoProducto=productos.data;
     nuevoProducto._id=nuevoCodigo.value;
+    nuevoProducto.maquina = verNombrePc();
+    nuevoProducto.vendedor = vendedor;
     await axios.post(`${URL}productos`,nuevoProducto,configAxios)   
-    await axios.delete(`${URL}productos/${codigo.value}`,{data:{vendedor:"Defecto",lugar:"Cambio de Codigo"}},configAxios)
+    await axios.delete(`${URL}productos/${codigo.value}`,{data:{
+        vendedor,
+        maquina:verNombrePc(),
+        producto:descripcion.value,
+    }},configAxios)
     location.reload()
 })
 

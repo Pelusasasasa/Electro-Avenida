@@ -90,13 +90,15 @@ const templateMenu = [
             {
                 label:"Listado de Stock",
                 click(){
+                    
                     abrirVentana("productos/listadoStock.html",1000,900)
                 }
             },
             {
                 label: "Cambio de codigo",
                 click(){
-                    abrirVentana("productos/cambioCodigo.html",700,300)
+                    ventanaPrincipal.webContents.send('cambioCodigo')
+                    // abrirVentana("productos/cambioCodigo.html",700,300)
                 }
             },{
                 label: "Aum porcentaje",

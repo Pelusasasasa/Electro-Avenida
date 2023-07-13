@@ -76,7 +76,7 @@ const listar = async(lista,tbody)=>{
         const tr = document.createElement('tr');
         tr.id = mov._id
             
-        const tdFecha = document.createElement('td')
+        const tdFecha = document.createElement('td');
         const tdNumero = document.createElement('td');
         const tdDescripcion = document.createElement('td');
         const tdTipo = document.createElement('td');
@@ -84,8 +84,8 @@ const listar = async(lista,tbody)=>{
 
         tdImporte.classList.add('text-right');
         const fecha = mov.fecha.slice(0,10).split('-',3);
-
-        tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`
+        const hora = mov.fecha.slice(11,19).split(':',3);
+        tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]} - ${hora[0]}:${hora[1]}:${hora[2]}`
         tdNumero.innerHTML = mov.nro_comp;
         tdDescripcion.innerHTML = mov.desc;
         tdTipo.innerHTML = mov.cuenta;

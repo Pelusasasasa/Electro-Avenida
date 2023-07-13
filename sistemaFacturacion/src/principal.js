@@ -11,7 +11,7 @@ let vendedor
 let acceso
 let empresa
 const sweet = require('sweetalert2');
-const { verEstadoServidorAfip, configAxios } = require("./funciones");
+const { verEstadoServidorAfip, configAxios, verificarUsuarios } = require("./funciones");
 
 
 const notificaciones = require('node-notifier');
@@ -191,6 +191,8 @@ ipcRenderer.on("validarUsuario",(e,args)=>{
                         }else{
                             ipcRenderer.send('abrir-ventana','clientes/arreglarCompensadaHistorica.html');
                         }
+                    }else if(JSON.parse(args) === "cambioCodigo"){
+                        ipcRenderer.send('abrir-ventana','productos/cambioCodigo.html');
                     }
                 }else{
                     sweet.fire({title:"Contraseña Incorrecta"})
@@ -198,6 +200,16 @@ ipcRenderer.on("validarUsuario",(e,args)=>{
             }
         })
 });
+
+ipcRenderer.on('cambioCodigo',async(e,args)=>{
+    console.log(args)
+    vendedor = await verificarUsuarios();
+
+    ipcRenderer.send('abrir-ventana-argumentos',{
+        path:'productos/cambioCodigo.html',
+        vendedor:JSON.stringify(vendedor)
+});
+})
 
 ipcRenderer.on('abrir-prestamo',(e)=>{
     validacionUsuario("emitirComprobante/emitirComprobante.html",false);

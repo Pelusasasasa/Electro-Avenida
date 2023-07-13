@@ -91,7 +91,7 @@ const recorrerFlechas = async (e) => {
 };
 
   //Para abrir todas las ventanas
-function abrirVentana(texto,width,height,reinicio,informacion = ""){
+function abrirVentana(texto,width,height,reinicio = false,informacion = "",vendedor){
   if (texto === "resumenCuenta") {
       nuevaVentana = new BrowserWindow({
           width: 800,
@@ -198,7 +198,8 @@ function abrirVentana(texto,width,height,reinicio,informacion = ""){
           slashes: true
       }));
       nuevaVentana.on('ready-to-show',()=>{
-          nuevaVentana.webContents.send('informacion',informacion)
+          nuevaVentana.webContents.send('informacion',informacion);
+          vendedor && nuevaVentana.webContents.send('vendedor',vendedor);
       })
       nuevaVentana.setMenuBarVisibility(false)
       nuevaVentana.on('close',e=>{

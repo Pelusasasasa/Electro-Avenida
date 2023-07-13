@@ -44,9 +44,17 @@
 .seccionCambioCodigo .inputs,.seccionCambioCodigo .inputs main{
     display: flex;
     flex-direction: column;
+    margin: 2rem;
 }
 
+.seccionCambioCodigo .botones{
+    align-self: flex-end;
+    padding-top: 5rem;
+}
 
+.seccionCambioCodigo input:not(#descripcion){
+    font-size: 3rem;
+}
 .seccionCambioCodigo #codigo,.seccionCambioCodigo #nuevoCodigo{
     width: 30%;
 }

@@ -66,11 +66,16 @@ function crearVentanaPrincipal() {
     ventanaPrincipal.once('listo para mostrar',()=>{
         autoUpdater.checkForUpdatesAndNotify();
     });
-}
+};
 
 ipcMain.on('elegirPath',async e=>{
      const path = (await dialog.showSaveDialog()).filePath;
      e.reply('mandoPath',path);
+});
+
+ipcMain.on('abrir-ventana-argumentos',(e,args)=>{
+    const {path,vendedor,width,height,reinicio,informacion} = args
+    abrirVentana(path,width,height,reinicio,informacion,vendedor)
 })
 
 //abrir ventana agregar cliente
@@ -79,7 +84,7 @@ ipcMain.on('abrir-ventana-agregar-cliente',(e,args)=>{
     nuevaVentana.on('ready-to-show',()=>{
         nuevaVentana.webContents.send('vendedor',args)
     })
-})
+});
 
 ipcMain.on('minimizar',e=>{
     ventanaPrincipal.minimize();
