@@ -171,7 +171,7 @@ seleccionarTBody.addEventListener('click',(e) =>{
 
 const imagen = document.querySelector('.imagen')
 async function mostrarImagen(id) {
-        const producto = (await axios.get(`${URL}productos/${id}`),configAxios).data;
+        const producto = (await axios.get(`${URL}productos/${id}`)).data;
         if (producto) {
             if (producto.imgURL) {
                 const path = `${URL}productos/${producto._id}/image`;

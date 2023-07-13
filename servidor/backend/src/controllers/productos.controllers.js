@@ -33,7 +33,7 @@ productosCTRL.traerProductos = async(req,res)=>{
 
 productosCTRL.getproducto = async(req,res)=>{
     const {id} = req.params
-    let producto
+    let producto;
     if(id === "stockNegativo"){
         productos = await Productos.find({stock:{$lt: 0}})
         res.send(productos)
