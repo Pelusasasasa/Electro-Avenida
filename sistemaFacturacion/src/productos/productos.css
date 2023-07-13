@@ -31,14 +31,29 @@
     border: .1rem solid black;
 }
 
+.aumentoPorcentaje{
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .aumentoPorcentaje .inputs{
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 2rem;
 }
 
 .aumentoPorcentaje .inputs main{
     display: flex;
     flex-direction: column;
+}
+
+.aumentoPorcentaje .inputs main input,.aumentoPorcentaje .inputs main select{
+    width: 100%;
+    font-size: 2.5rem;
 }
 
 .seccionCambioCodigo .inputs,.seccionCambioCodigo .inputs main{

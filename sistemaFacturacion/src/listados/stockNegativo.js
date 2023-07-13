@@ -7,11 +7,12 @@ const cambiar = document.querySelector('.cambiarBoton')
 const impirmir = document.querySelector('.imprimirBoton')
 
 const axios = require("axios");
-const { verificarUsuarios, configAxios } = require('../funciones');
+const { verificarUsuarios, configAxios, verNombrePc } = require('../funciones');
 require("dotenv").config;
 const URL = process.env.URL;
 
 let seleccionado;
+let subSeleccionado;
 let vendedor;
 
 
@@ -50,8 +51,8 @@ const listarStockNegativo = async(productos)=>{
     listarProductos(productos)
 }
 
-function listarProductos(lista) {
-    lista.forEach(producto => {
+async function listarProductos(lista) {
+    for await(let producto of lista){
         tbody.innerHTML += `
             <tr id="${producto._id}">
                 <td>${producto._id}</td>
@@ -60,21 +61,22 @@ function listarProductos(lista) {
                 <td class=text-end>${parseFloat(producto.stock).toFixed(2)}</td>
             </tr>
         `
-        inputseleccionado(tbody.firstElementChild)
-    });
-}
-
-const inputseleccionado = (e) =>{
-    const yaSeleccionado = document.querySelector('.seleccionado')
-    yaSeleccionado && yaSeleccionado.classList.remove('seleccionado')
-   e.classList.toggle('seleccionado')
+    };
+    seleccionado = tbody.firstElementChild;
+    subSeleccionado = seleccionado.children[1];
+    seleccionado.classList.add('seleccionado');
+    subSeleccionado.classList.add('subSeleccionado');
 }
 
 tbody.addEventListener('click',e=>{
-    seleccionado = e.path[1]
-    const sacarseleccion = document.querySelector('.seleccionado');
-    sacarseleccion.classList.remove('seleccionado');
-    seleccionado.classList.toggle('seleccionado')
+    seleccionado && seleccionado.classList.remove('seleccionado');
+    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+    
+    seleccionado = e.target.parentNode;
+    subSeleccionado = e.target;
+
+    seleccionado.classList.add('seleccionado');
+    subSeleccionado.classList.add('subSeleccionado');
 })
 
 cambiar.addEventListener('click',async e=>{
@@ -88,6 +90,8 @@ cambiar.addEventListener('click',async e=>{
             let producto = (await axios.get(`${URL}productos/${seleccionado.id}`,configAxios)).data
             await crearMovimiento(producto,value);
             producto.stock = value;
+            producto.vendedor = vendedor.nombre;
+            producto.maquina = verNombrePc();
             await axios.put(`${URL}productos/${seleccionado.id}`,producto,configAxios);
             if (parseFloat(producto.stock) > 0 ) {
                 tbody.removeChild(seleccionado);
@@ -106,6 +110,7 @@ const crearMovimiento = async(producto,stock)=>{
     movimiento.ingreso = parseFloat(stock) - parseFloat(producto.stock);
     movimiento.stock = stock;
     movimiento.vendedor = vendedor.nombre;
+    movimiento.maquina = verNombrePc();
     movimiento.tipo_comp = "+";
     movimiento.precio_unitario = producto.precio_venta;
     await axios.post(`${URL}movProductos`,[movimiento],configAxios);

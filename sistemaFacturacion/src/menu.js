@@ -10,6 +10,7 @@ const URL = process.env.URL;
 
 //menu de la aplciacion
 const templateMenu = [
+    //Descargas
     {
         label: 'Convertir excel',
         submenu: [{
@@ -27,6 +28,7 @@ const templateMenu = [
             }
         }]
     },
+    //Datos
     {
         label: "Datos",
         submenu: [
@@ -60,6 +62,7 @@ const templateMenu = [
             }
         ]
     },
+    //Clientes
     {
         label: "Clientes",
         submenu:[
@@ -83,6 +86,7 @@ const templateMenu = [
             }
         ]
     },
+    //Productos
     {
         label: "Productos",
         submenu:[
@@ -90,20 +94,19 @@ const templateMenu = [
             {
                 label:"Listado de Stock",
                 click(){
-                    
                     abrirVentana("productos/listadoStock.html",1000,900)
                 }
             },
             {
                 label: "Cambio de codigo",
                 click(){
-                    ventanaPrincipal.webContents.send('cambioCodigo')
-                    // abrirVentana("productos/cambioCodigo.html",700,300)
+                    ventanaPrincipal.webContents.send('cambioCodigo');
+
                 }
             },{
                 label: "Aum porcentaje",
                 click(){
-                    abrirVentana("./productos/aumPorcentaje.html",600,200);
+                    ventanaPrincipal.webContents.send('aumPorcentaje')
                 }
             },{
                 label: "Listado Por Marca",
@@ -119,6 +122,7 @@ const templateMenu = [
             }
         ]
     },
+    //Listados
     {
         label: "Listado",
         submenu:[
@@ -160,6 +164,7 @@ const templateMenu = [
             }
         ]
     },
+    //Utilidad
     {
         label: "Utilidad",
         submenu:[
@@ -195,6 +200,7 @@ const templateMenu = [
             }
         ]
     },
+    //Pestamos
     {
         label:"Prestamos",
         submenu:[

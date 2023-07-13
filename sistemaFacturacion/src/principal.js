@@ -202,13 +202,21 @@ ipcRenderer.on("validarUsuario",(e,args)=>{
 });
 
 ipcRenderer.on('cambioCodigo',async(e,args)=>{
-    console.log(args)
     vendedor = await verificarUsuarios();
-
     ipcRenderer.send('abrir-ventana-argumentos',{
         path:'productos/cambioCodigo.html',
         vendedor:JSON.stringify(vendedor)
+    });
 });
+
+ipcRenderer.on('aumPorcentaje',async(e,args)=>{
+    vendedor = await verificarUsuarios();
+    ipcRenderer.send('abrir-ventana-argumentos',{
+        path:'productos/aumPorcentaje.html',
+        vendedor:JSON.stringify(vendedor),
+        width:700,
+        height:300
+    })
 })
 
 ipcRenderer.on('abrir-prestamo',(e)=>{
