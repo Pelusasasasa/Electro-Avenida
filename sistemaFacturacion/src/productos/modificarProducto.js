@@ -98,16 +98,17 @@ function asignarCampos(producto) {
     precioVenta.value = producto.precio_venta;
     unidad.value = producto.unidad
     valorTasaIva = tasaIvas(producto.iva)
-}
+};
+
 tasaIva.addEventListener('click', (e) =>{
     valorTasaIva = tasaIvas(e.target.value);
-})
+});
 
 if (costoPesos.focus) {
         costoPesos.addEventListener('blur', (e) =>{
         costo = resultado(parseFloat(costoPesos.value),valorTasaIva);
     })
-    }
+}
 
 costoTotal.addEventListener('focus',()=>{
     console.log((costoPesos.value * valorTasaIva / 100))

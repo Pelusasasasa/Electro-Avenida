@@ -1,4 +1,4 @@
-const {BrowserWindow} = require('electron');
+const {BrowserWindow, ipcRenderer} = require('electron');
 const url = require('url');
 const path = require('path');
 const { clipboard } = require('electron/common');
@@ -448,6 +448,16 @@ function verNombrePc(){
     return os.hostname();
 }
 
+function clickderecho(e,texto){
+    const cordenadas = {
+        x: e.clientX,
+        y: e.clientY,
+        ventana: texto
+    }
+
+    ipcRenderer.send('mostrar-menu',cordenadas);
+}
+
 module.exports = {
     redondear,
     abrirVentana,
@@ -464,5 +474,6 @@ module.exports = {
     verTipoPago,
     verEstadoServidorAfip,
     configAxios,
-    verNombrePc
+    verNombrePc,
+    clickderecho
 }

@@ -3,7 +3,7 @@ const sweet = require('sweetalert2');
 
 
 const axios = require("axios");
-const { copiar,recorrerFlechas, configAxios } = require("../funciones");
+const { copiar,recorrerFlechas, configAxios, clickderecho } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -15,7 +15,7 @@ const compensada = document.querySelector('.compensada');
 const historica = document.querySelector('.historica');
 const actualizar = document.querySelector('.actualizar');
 const detalle = document.querySelector('.detalle');
-//
+
 const facturarVarios = document.querySelector('.facturarVarios');
 const botonFacturar = document.querySelector('#botonFacturar');
 const volver = document.querySelector('.volver');
@@ -36,7 +36,6 @@ let tipo = "compensada";
 
 copiar();
 
-
 //mostramos la base de datos cuenta historica del cliente
 historica.addEventListener('click',e=>{
     historica.classList.add("none")
@@ -45,7 +44,6 @@ historica.addEventListener('click',e=>{
     listarLista(listaHistorica,situacion,tipo)
 });
 
-
 //mostramos la base de datos cuenta compensada del cliente
 compensada.addEventListener('click',e=>{
     compensada.classList.add("none")
@@ -53,7 +51,6 @@ compensada.addEventListener('click',e=>{
     tipo = "compensada"
     listarLista(listaCompensada,situacion,tipo)
 });
-
 
 //Pasamos de negro a blanco o vicebersa
 document.addEventListener('keydown',async(event) =>{
@@ -83,7 +80,6 @@ document.addEventListener('keydown',async(event) =>{
   });
 });
 
-
 const labes = document.querySelectorAll('label')
 //Ocultado lo que tenemos en negro
 const ocultarNegro = ()=>{
@@ -100,7 +96,7 @@ const ocultarNegro = ()=>{
     facturarVarios.classList.add('none');
     body.classList.remove('mostrarNegro');
     actualizar.classList.add('none');
-}
+};
 
 //mostramos lo que tenemos en negro
 const mostrarNegro = ()=>{
@@ -366,7 +362,7 @@ actualizar.addEventListener('click',async e=>{
                         };
                         cliente.saldo_p = saldo.toFixed(2);
                         await axios.put(`${URL}cuentaHisto/id/${cuentaHistorica.nro_comp}`,cuentaHistorica,configAxios);
-                        await axios.put(`${URL}cuentaComp/numero/${cuentaCompensada.nro_comp}`,cuentaCompensada,configAxios);
+                        await axios.put(`${URL}cuentaComp/numeroYCliente/${cuentaCompensada.nro_comp}/${cuentaCompensada.codigo}`,cuentaCompensada,configAxios);
                         await axios.put(`${URL}clientes/${cliente._id}`,cliente,configAxios);
                         const cuentaCompensadaModificada  = (await axios.get(`${URL}cuentaComp/id/${seleccionado.id}`,configAxios)).data[0];
                         
@@ -485,7 +481,6 @@ const ponerDatosCliente = async (Cliente)=>{
     listarLista(compensadas,situacion,tipo)
 };
 
-
 detalle.addEventListener('click',e=>{
     seleccionado && seleccionado.classList.remove('seleccionado');
     seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
@@ -505,6 +500,39 @@ detalle.addEventListener('click',e=>{
     subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
     subSeleccionado.classList.add('subSeleccionado');
 });
+
+//Se ejecuta cunado hacemos click derecho un menu
+listar.addEventListener('contextmenu',(e) => {
+    clickderecho(e,"Cuenta Corriente")
+
+    seleccionado && seleccionado.classList.remove('seleccionado');
+    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }
+    subSeleccionado.classList.add('subSeleccionado');
+    seleccionado.classList.add('seleccionado');
+});
+
+ipcRenderer.on('CancelarCuenta',cancelarCuenta);
+//cuando se hace click en cancelar cuenta en el menu secundario se ejecuta esta funcion
+async function cancelarCuenta(e) {
+    const {isConfirmed} = await sweet.fire({
+        title:`Seguro quiere Eliminar el comprobante Nro ${seleccionado.children[2].innerText}`,
+        showCancelButton:true,
+        confirmButtonText:"Aceptar"
+    });
+
+    if (isConfirmed) {
+        const cuenta = (await axios.get(`${URL}cuentaComp/numeroYCliente/${seleccionado.children[2].innerText}/${codigoCliente.value}`,configAxios)).data;
+        cuenta.pagado = cuenta.importe;
+        cuenta.saldo = 0;
+        await axios.put(`${URL}cuentaComp/numeroYCliente/${cuenta.nro_comp}/${cuenta.codigo}`,cuenta,configAxios);
+        listar.removeChild(seleccionado);
+    }
+};
 
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {

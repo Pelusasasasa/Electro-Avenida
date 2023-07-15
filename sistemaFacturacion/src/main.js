@@ -8,32 +8,9 @@ const {autoUpdater} = require('electron-updater');
 
 const {abrirVentana, configAxios} = require('./funciones');
 const templateMenu = require('./menu');
-const [pedidos, ventas] = require('./descargas/descargas')
+const [pedidos, ventas] = require('./descargas/descargas');
+const { mostrarMenu } = require('./menuSecundario/menuSecundario');
 
-//Configuramos el menu secundario que va a aparecer alado del cursor
-const menuSecundario = new Menu();
-
-const seleccionarParaEliminar = new MenuItem({
-    label: "Seleccionar para Eliminar",
-    async click() {
-        ventanaPrincipal.webContents.send('seleccionarParaEliminar');    
-    }
-});
-
-const seleccionarParaReImprimir = new MenuItem({
-    label:"Re Imprimir",
-    async click(){
-        ventanaPrincipal.webContents.send('reImprimir');
-    }
-});
-
-const cambiarObservaciones = new MenuItem({
-    label:"Cambiar Observacion",
-    async click(){
-        ventanaPrincipal.webContents.send('cambiarObservacion')
-    }
-})
-//Fin de Menu Secundario
 
 let URL
 require('dotenv').config();
@@ -47,7 +24,12 @@ if (process.env.NODE_ENV === 'desarrollo') {
 global.nuevaVentana = null;
 global.ventanaPrincipal = null
 global.nuevaVentanaDos = null
-global.ventanaImprimir = null
+global.ventanaImprimir = null;
+
+ipcMain.on('mostrar-menu',(e,{ventana,x,y})=>{
+    e.preventDefault();
+    mostrarMenu(ventana,x,y)
+});
 
 function crearVentanaPrincipal() {
     ventanaPrincipal = new BrowserWindow({  
@@ -142,27 +124,9 @@ ipcMain.on('abrir-ventana-clientesConSaldo',async(e,args)=>{
 //FIN CLIENTES
 
 
-ipcMain.on('mostrar-menu',(e,{x,y,ventana})=>{
-    e.preventDefault();
-    if (ventana === "VerPedidos") {
-        if (!menuSecundario.items.find(menu => menu.label === "Seleccionar para Eliminar")) {
-            menuSecundario.append(seleccionarParaEliminar);   
-        }
-    };
-
-    if (ventana === "VerPrestamos") {
-        if (!menuSecundario.items.find(menu => menu.label === "Re Imprimir")) {
-            menuSecundario.append(seleccionarParaReImprimir);
-        }
-        if (!menuSecundario.items.find(menu => menu.label === "Cambiar Observacion")) {
-            menuSecundario.append(cambiarObservaciones);
-        }
-    };
-    
-    menuSecundario.popup({window:ventanaPrincipal,x,y:y+5})
-})
 
 //INICIO VENTAS
+
 //imprivimos una venta ya sea presupuesto o ticket factura
 ipcMain.on('imprimir-venta',async(e,args)=>{
     const [venta,cliente,condicion,cantidad,tipo,calculo,lista,show] = args;

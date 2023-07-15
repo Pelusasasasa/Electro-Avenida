@@ -42,7 +42,7 @@ cuentaCompCTRL.borrarCompensada = async(req,res)=>{
 
 cuentaCompCTRL.traerCompensadasPorNumero = async(req,res)=>{
     const {numero} = req.params;
-    const cuentas = await CuentaComp.find({nro_comp:numero});
+    const cuentas = await CuentaComp.findOne({nro_comp:numero});
     res.send(cuentas);
 }
 
