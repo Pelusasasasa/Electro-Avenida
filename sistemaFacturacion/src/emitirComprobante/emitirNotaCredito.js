@@ -341,6 +341,7 @@ factura.addEventListener('click',async e=>{
             venta.precioFinal = parseFloat(total.value);
             venta.vendedor = vendedor;
             venta.direccion = direccion.value;
+            venta.localidad = localidad.value;
             if (venta.precioFinal>10000 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
                 await sweet.fire({title:"Factura mayor a 10000, poner valores clientes"})
             }else{

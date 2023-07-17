@@ -21,6 +21,7 @@ const Venta = new Schema({
         type:Number,
     },
     direccion:String,
+    localidad:String,
     cliente: {
         type: String,
         required: true

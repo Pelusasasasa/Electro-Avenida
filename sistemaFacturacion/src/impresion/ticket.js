@@ -51,7 +51,12 @@ const venciCae = document.querySelector('.venciCae');
         cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`,configAxios)).data;
     }else{
         cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`,configAxios)).data;
-    }
+        cliente._id = venta.cliente;
+        cliente.cliente = venta.nombreCliente;
+        cliente.direcioon = venta.direccion;
+        cliente.cuit = venta.dnicuit;
+        cliente.cond_iva = venta.condIva;
+    };
     await infoComprobante(venta);
     await listarCliente(cliente);
     await listar(venta,afip,opciones);
