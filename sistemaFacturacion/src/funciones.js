@@ -369,6 +369,21 @@ const verificarUsuarios = async()=>{
     return vendedor
 };
 
+const ponerEnCuentaCorrienteCompensada = async(codigo,cliente,tipo_comp,nro_comp,importe,saldo,vendedor,maquina)=>{
+    const cuenta = {};
+    cuenta.codigo = codigo;
+    cuenta.cliente = cliente;
+    cuenta.tipo_comp = tipo_comp;
+    cuenta.nro_comp = nro_comp;
+    cuenta.importe = importe * -1;
+    cuenta.saldo = saldo * -1;
+    cuenta.vendedor = vendedor;4
+    cuenta.maquina = maquina;
+    console.log(cuenta)
+
+    await axios.post(`${URL}cuentaComp`,cuenta,configAxios);
+}
+
 const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,desc,codigo,cliente,vendedor)=>{
     const movimiento = {};
     movimiento.fecha = fecha;
@@ -470,6 +485,7 @@ module.exports = {
     verCodComp,
     ultimasFacturas,
     verificarUsuarios,
+    ponerEnCuentaCorrienteCompensada,
     generarMovimientoCaja,
     verTipoPago,
     verEstadoServidorAfip,

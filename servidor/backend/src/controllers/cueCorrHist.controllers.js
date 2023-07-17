@@ -14,7 +14,7 @@ cuentaHistoricaCTRL.cargarHistorica = async(req,res)=>{
         console.log(`No se pudo cargar la cuenta historica de ${req.body.codigo} a la fecha ${req.body.fecha} con el numero ${req.body.nro_comps}`);
         console.log(error)
     }
-    console.log(`Historica ${req.body.nro_comp} del cliente ${req.body.cliente} Guardada a la hora ${req.body.fecha}`);
+    console.log(`Cuenta Historica Nº ${req.body.nro_comp} Del cliente ${req.body.cliente} cargado por el vendedor ${req.body.vendedor} de la maquina ${req.body.maquina} con la hora y fecha ${(new Date()).toLocaleString()}`);
     res.send(`Historica ${req.body.nro_comp} Guardada`);
 }
 

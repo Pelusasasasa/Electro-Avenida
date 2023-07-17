@@ -13,7 +13,7 @@ const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const { copiar, verCodComp, redondear, generarMovimientoCaja, configAxios } = require('../funciones');
+const { copiar, verCodComp, redondear, generarMovimientoCaja, configAxios, verNombrePc, ponerEnCuentaCorrienteCompensada } = require('../funciones');
 
 
 const hoy = new Date();
@@ -375,6 +375,7 @@ imprimir.addEventListener('keydown',async e=>{
 const hacerRecibo = async()=>{
     //Pnemos en un arreglo las ventas que se modificaron, asi despues imprimimos el recibo
     let arregloParaImprimir = [];
+    let maquina = verNombrePc();
 
     alerta.classList.remove('none');
     const trs = document.querySelectorAll('tbody tr');
@@ -401,6 +402,7 @@ const hacerRecibo = async()=>{
      recibo.dnicuit = cuit.value;
      recibo.observaciones = valoresRecibidos.value ? valoresRecibidos.value.toUpperCase() : "EFECTIVO";
      recibo.comprobantes = arregloParaImprimir;
+     recibo.maquina = maquina;
      const aux = (situacion === "negro") ? "saldo_p" : "saldo"
      let saldoFavor = 0;
      recibo.descuento = 0;
@@ -412,6 +414,8 @@ const hacerRecibo = async()=>{
      //Tomamos el cliente y modificamos su saldo
      let clienteTraido = (await axios.get(`${URL}clientes/id/${recibo.codigo}`,configAxios)).data;
      clienteTraido[aux] = parseFloat(saldoNuevo);
+     clienteTraido.vendedor = Vendedor;
+     clienteTraido.maquina = maquina
      try {
         //modificamos las ventas en cuentas compensada
         await modificarVentasConpensadas(nuevaLista);
@@ -423,10 +427,10 @@ const hacerRecibo = async()=>{
         await modifcarNroRecibo(numeroAModificar,recibo.tipo_comp,clienteTraido.cond_iva);
 
         //Ponemos en la historica el Recibo
-        await ponerEnCuentaCorrienteHistorica(recibo);
+        await ponerEnCuentaCorrienteHistorica(recibo,Vendedor,maquina);
 
         //Ponemos en la compensada si le queda saldo a favor
-        parseFloat(saldoAfavor.value) !== 0 && await ponerEnCuentaCorrienteCompensada(recibo);
+        parseFloat(saldoAfavor.value) !== 0 && await ponerEnCuentaCorrienteCompensada(recibo.codigo,recibo.cliente,recibo.tipo_comp,recibo.nro_comp,parseFloat(saldoAfavor.value),parseFloat(saldoAfavor.value),Vendedor,maquina);
         
         await axios.put(`${URL}clientes/${recibo.codigo}`,clienteTraido,configAxios);
         await axios.post(`${URL}recibos`,recibo,configAxios);
@@ -515,18 +519,7 @@ todo.addEventListener('click',e=>{
     }
 });
 
-const ponerEnCuentaCorrienteCompensada = async(recibo)=>{
-    const cuenta = {};
-    cuenta.codigo = recibo.codigo;
-    cuenta.cliente = cliente.cliente;
-    cuenta.tipo_comp = recibo.tipo_comp;
-    cuenta.nro_comp = recibo.nro_comp;
-    cuenta.importe = parseFloat(saldoAfavor.value) * -1;
-    cuenta.saldo = parseFloat(saldoAfavor.value) * -1;
-    await axios.post(`${URL}cuentaComp`,cuenta,configAxios);
-}
-
-const ponerEnCuentaCorrienteHistorica = async(recibo)=>{
+const ponerEnCuentaCorrienteHistorica = async(recibo,vendedor,maquina)=>{
     const cuenta = {};
     cuenta.codigo = recibo.codigo;
     cuenta.cliente = cliente.cliente;
@@ -534,6 +527,8 @@ const ponerEnCuentaCorrienteHistorica = async(recibo)=>{
     cuenta.nro_comp = recibo.nro_comp;
     cuenta.haber = parseFloat(recibo.precioFinal);
     cuenta.saldo = cuenta.tipo_comp === "Recibos" ? parseFloat((parseFloat(saldo.value) - cuenta.haber).toFixed(2))  : parseFloat((parseFloat(saldo_p.value) - cuenta.haber).toFixed(2));
+    cuenta.vendedor = vendedor;
+    cuenta.maquina = maquina
     try {
         await axios.post(`${URL}cuentaHisto`,cuenta,configAxios);
     } catch (error) {
