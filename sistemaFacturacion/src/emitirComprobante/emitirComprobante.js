@@ -6,7 +6,7 @@ function getParameterByName(name) {
 }
 
 const sweet = require('sweetalert2');
-const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago, configAxios} = require('../funciones');
+const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago, configAxios, verNombrePc} = require('../funciones');
 const { ipcRenderer } = require("electron");
 const axios = require("axios");
 require("dotenv").config;
@@ -70,12 +70,17 @@ const alerta = document.querySelector('.alerta');
 const prestamo = document.querySelector('.prestamo');
 const cancelar = document.querySelector('.cancelar');
 
-//variables para caundo usamos el facturar varias facturas
+//variables para cuando usamos el facturar varias facturas
 let listaNumeros;
 let variasFacturas = false;
 
 inputEmpresa.value = empresa;
 
+
+let cliente = {};
+let venta = {};
+let listaProductos = [];
+let Preciofinal = 0;
 let situacion = "blanco"//para teclas alt y F9
 let totalPrecioProductos = 0;
 let seleccionado = "";
@@ -85,9 +90,11 @@ let borraNegro = false;
 let ventaDeCtaCte = "";
 let arregloMovimiento= [];
 let arregloProductosDescontarStock = [];
+let maquina = "";
 
 window.addEventListener('load',async e=>{
     copiar();
+    maquina = verNombrePc();
     if (!botones) {
         mostrarNegro();
         remito.classList.add('none');
@@ -120,11 +127,6 @@ body.addEventListener('keyup',e=>{
     recorrerFlechas(e);
 });
 
-let cliente = {};
-let venta = {};
-let listaProductos = [];
-let Preciofinal = 0;
-venta.vendedor = vendedor;
 
 //abrimos una ventana para buscar el cliente
 codigoC.addEventListener('keypress', async(e) =>{
@@ -628,6 +630,8 @@ presupuesto.addEventListener('click',async (e)=>{
                     //Le pasamos que es un presupuesto contado CD
                     venta.nro_comp = await traerUltimoNroComprobante(tipoVenta,venta.cod_comp,venta.tipo_pago);
                     venta.empresa = inputEmpresa.value;
+                    venta.maquina = maquina;
+                    venta.vendedor = vendedor;
                     let valorizadoImpresion = "valorizado"
                     if (!valorizado.checked && venta.tipo_pago === "CC") {
                         valorizadoImpresion="no valorizado";
@@ -642,7 +646,7 @@ presupuesto.addEventListener('click',async (e)=>{
                     
                     await axios.post(`${URL}presupuesto`,venta,configAxios);
                         
-                    venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,"Presupuesto","PP",venta.precioFinal,venta.nombreCliente ,venta.cliente,venta.nombreCliente,venta.vendedor);
+                    venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,"Presupuesto","PP",venta.precioFinal,venta.nombreCliente ,venta.cliente,venta.nombreCliente,venta.vendedor,maquina);
                             
                     await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp)
                      //si la venta es CC Sumamos un saldo al cliente y ponemos en cuenta corriente compensada y historica
@@ -843,7 +847,7 @@ ticketFactura.addEventListener('click',async (e) =>{
                     venta.tipo_pago === "CC" && sumarSaldoAlCliente(venta.precioFinal,venta.cliente,venta.nro_comp);
                     venta.tipo_pago === "CC" && ponerEnCuentaCorrienteCompensada(venta,true);
                     venta.tipo_pago === "CC" && ponerEnCuentaCorrienteHistorica(venta,true,saldo.value);
-                    venta.tipo_pago === "CD" && generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 1 ? "Factura A" : "Factura B",venta.cod_comp === 1 ? "FA" : "FB",venta.precioFinal,venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor);
+                    venta.tipo_pago === "CD" && generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 1 ? "Factura A" : "Factura B",venta.cod_comp === 1 ? "FA" : "FB",venta.precioFinal,venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor,maquina);
 
                     await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
                     nuevaVenta = await axios.post(`${URL}ventas`,venta,configAxios);
