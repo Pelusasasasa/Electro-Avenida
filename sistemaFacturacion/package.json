@@ -9,7 +9,10 @@
     "package": "electron-forge package",
     "make": "electron-forge make"
   },
-  "repository": {},
+  "repository": {
+    "type":"git",
+    "url":"git@github.com:Pelusasasasa/Electro-Avenida.git"
+  },
   "keywords": [],
   "author": "Pelusa",
   "license": "ISC",
@@ -39,6 +42,7 @@
     "puppeteer": "^20.2.0",
     "qrcode": "^1.5.3",
     "sweetalert2": "^11.4.8",
+    "update-electron-app": "^2.0.1",
     "xlsx": "^0.18.5"
   },
   "config": {

@@ -1,4 +1,5 @@
 
+require('update-electron-app')();
 require('dotenv').config();
 const axios = require("axios")
 const path = require('path');
