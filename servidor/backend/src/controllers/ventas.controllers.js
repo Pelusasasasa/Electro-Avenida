@@ -9,7 +9,7 @@ ventasCTRL.cargarVenta = async(req,res)=>{
     req.body._id = id ? id._id + 1 : 1;
     const venta = new Ventas(req.body);
     venta.save()
-    console.log(`Venta ${req.body.nro_comp} guardada a la hora ${req.body.fecha}`);
+    console.log(`Venta ${req.body.nro_comp} guardada por el vendedor ${req.body.vendedor} en la maquina ${req.body.maquina} con la hora ${(new Date()).toLocaleString()}`);
     res.send(venta)
 }
 
