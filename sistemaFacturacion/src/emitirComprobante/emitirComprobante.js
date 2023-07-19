@@ -769,12 +769,14 @@ remito.addEventListener('click',async e=>{
     venta = {};
     venta.fecha = new Date();
     venta.observaciones = "";
-    venta.vendedor = vendedor;
     venta.tipo_comp = "Remito";
     venta.cliente = nombre.value;
     venta.idCliente = codigoC.value;
     venta.tipo_pago = "RT";
     venta.nro_comp = await traerUltimoNroComprobante(tipoVenta,venta.cod_comp,venta.tipo_pago);
+    venta.vendedor = vendedor;
+    venta.maquina = maquina;
+
     for await(let producto of listaProductos){
         await movimientoProducto(producto.cantidad,producto.objeto,codigoC.value,nombre.value,"RT",venta.tipo_comp,venta.nro_comp,venta.vendedor);
     }
