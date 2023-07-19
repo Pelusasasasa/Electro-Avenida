@@ -8,7 +8,7 @@ prestamoCTRL.post = async(req,res)=>{
     req.body.fecha = new Date(req.body.fecha.slice(0,10) + "T" + p.slice(11));
     const prestamo = new Prestamo(req.body);
     await prestamo.save();
-    console.log(`Prestamo de ${req.body.cliente} cargado a la hora ${req.body.fecha}`);
+    console.log(`Prestamo de ${req.body.cliente} cargado por el vendedor ${req.body.vendedor} en la maquina ${req.body.maquina} con la hora y fecha ${(new Date()).toLocaleString()}`);
     res.end();
 };
 

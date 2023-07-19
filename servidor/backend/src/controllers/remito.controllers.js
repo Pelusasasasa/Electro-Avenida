@@ -7,7 +7,7 @@ remitoCTRL.postRemito = async(req,res)=>{
     await remito.save();
     const now = new Date();
     req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
-    console.log(`Remito con numero ${req.body.nro_comp} Cargado a las ${req.body.fecha}`);
+    console.log(`Remito con numero ${req.body.nro_comp} Cargado por el vendedor ${req.body.vendedor} en la maquina ${req.body.maquina} a las ${(new Date()).toLocaleString()}`);
     res.end();
 }
 

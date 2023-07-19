@@ -13,7 +13,7 @@ movCajaCTRL.post = async(req,res)=>{
         console.log("Error en " + req.body.fecha + "Con el numero de comprobante " + req.body.nro_comp + "Y tipo " + req.body.tPago + "Y descripcion " + req.body.desc );
         console.log(error);
     }
-    console.log(`Movimiento de caja ${req.body.desc} cargado a la hora ${req.body.fecha}`);
+    console.log(`Movimiento de caja ${req.body.desc} cargado por el vendedor ${req.body.vendedor} en la maquina ${req.body.maquina} con la hora ${(new Date()).toLocaleString()}`);
     res.send(`Moviemiento de caja Cargado`);
 }
 

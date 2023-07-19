@@ -384,7 +384,7 @@ const ponerEnCuentaCorrienteCompensada = async(codigo,cliente,tipo_comp,nro_comp
     await axios.post(`${URL}cuentaComp`,cuenta,configAxios);
 }
 
-const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,desc,codigo,cliente,vendedor)=>{
+const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,desc,codigo,cliente,vendedor,maquina)=>{
     const movimiento = {};
     movimiento.fecha = fecha;
     movimiento.tMov = tMov;
@@ -396,6 +396,7 @@ const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,des
     movimiento.codigo = codigo,
     movimiento.cliente = cliente;
     movimiento.vendedor = vendedor;
+    movimiento.maquina = maquina;
     try {
         await axios.post(`${URL}movCajas`,movimiento,configAxios);
     } catch (error) {

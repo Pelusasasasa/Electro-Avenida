@@ -11,7 +11,7 @@ function getParameterByName(name) {
 }
 
 const axios = require("axios");
-const { verCodComp, generarMovimientoCaja, redondear, configAxios } = require("../funciones");
+const { verCodComp, generarMovimientoCaja, redondear, configAxios, verNombrePc } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -69,6 +69,7 @@ let subSeleccionado;
 let totalPrecioProductos = 0;
 let arregloMovimiento = [];
 let arregloProductosDescontarStock = [];
+let maquina = verNombrePc();
 
 codigoC.addEventListener('keypress',async e=>{
     if ((e.key === "Enter")) {
@@ -378,7 +379,7 @@ factura.addEventListener('click',async e=>{
                 nuevaVenta = await axios.post(`${URL}ventas`,venta,configAxios);
 
                 //mandamos el movimiento de caja
-                venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 3 ? "Nota Credito A" : "Nota Credito B",venta.cod_comp === 3 ? "NTA" : "NTB",redondear(venta.precioFinal * -1,2),venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor);
+                venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 3 ? "Nota Credito A" : "Nota Credito B",venta.cod_comp === 3 ? "NTA" : "NTB",redondear(venta.precioFinal * -1,2),venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor,maquina);
 
                 //Imprimos el ticket
                 ipcRenderer.send('imprimir-venta',[venta,afip,true,1,'Ticket Factura']);

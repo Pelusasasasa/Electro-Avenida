@@ -6,7 +6,7 @@ function getParameterByName(name) {
 }
 
 const sweet = require('sweetalert2');
-const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago, configAxios} = require('../funciones');
+const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago, configAxios, verNombrePc} = require('../funciones');
 const { ipcRenderer } = require("electron");
 const axios = require("axios");
 require("dotenv").config;
@@ -54,7 +54,7 @@ const imprimirCheck = document.querySelector('.imprimirCheck');
 const impresion = document.querySelector('.impresion');
 const cuentaC = document.querySelector('.cuentaC');
 const cobrado = document.querySelector('#cobrado');
-
+const numeroDeFactura = document.querySelector('.numeroDeFactura')
 const nuevaCantidad = document.querySelector('#nuevaCantidad');
 
 //tipo ventas
@@ -70,12 +70,17 @@ const alerta = document.querySelector('.alerta');
 const prestamo = document.querySelector('.prestamo');
 const cancelar = document.querySelector('.cancelar');
 
-//variables para caundo usamos el facturar varias facturas
+//variables para cuando usamos el facturar varias facturas
 let listaNumeros;
 let variasFacturas = false;
 
 inputEmpresa.value = empresa;
 
+
+let cliente = {};
+let venta = {};
+let listaProductos = [];
+let Preciofinal = 0;
 let situacion = "blanco"//para teclas alt y F9
 let totalPrecioProductos = 0;
 let seleccionado = "";
@@ -85,9 +90,11 @@ let borraNegro = false;
 let ventaDeCtaCte = "";
 let arregloMovimiento= [];
 let arregloProductosDescontarStock = [];
+let maquina = "";
 
 window.addEventListener('load',async e=>{
     copiar();
+    maquina = verNombrePc();
     if (!botones) {
         mostrarNegro();
         remito.classList.add('none');
@@ -113,18 +120,15 @@ document.addEventListener('keydown',(event) =>{
             }
         })
     }
+    if (event.keyCode === 117) {
+        impresion.checked = !impresion.checked;
+    }
 });
 
 //lo usamos cunado reccorremos con flechas e la lista
 body.addEventListener('keyup',e=>{
     recorrerFlechas(e);
 });
-
-let cliente = {};
-let venta = {};
-let listaProductos = [];
-let Preciofinal = 0;
-venta.vendedor = vendedor;
 
 //abrimos una ventana para buscar el cliente
 codigoC.addEventListener('keypress', async(e) =>{
@@ -509,14 +513,14 @@ async function movimientoProducto(cantidad,objeto,idCliente,cliente,tipo_pago,ti
     movProducto.nro_comp = nro_comp;
     movProducto.egreso = cantidad;
     movProducto.stock = tipo_pago === "PP" ? objeto.stock : parseFloat((parseFloat(objeto.stock) - cantidad).toFixed(2));
-    movProducto.precio_unitario=objeto.precio_venta
-    movProducto.total=(parseFloat(movProducto.egreso)*parseFloat(movProducto.precio_unitario)).toFixed(2)
-    movProducto.vendedor = vendedor;
+    movProducto.precio_unitario=objeto.precio_venta;
+    movProducto.total=(parseFloat(movProducto.egreso)*parseFloat(movProducto.precio_unitario)).toFixed(2);
     movProducto.rubro = objeto.rubro;
     movProducto.tipo_pago = tipo_pago;
-    console.log(movProducto.tipo_pago)
+    movProducto.vendedor = vendedor;
+    movProducto.maquina = maquina;
     arregloMovimiento.push(movProducto);
-}
+};
 
 //FIN MOV PRODUCTOS
 function verNumero(condicion) {
@@ -525,23 +529,24 @@ function verNumero(condicion) {
     }else{
         return  "Ultima Factura B"
     }
-}
+};
 
 //Vemos el numero de factura para las tarjetas
-const numeroDeFactura = document.querySelector('.numeroDeFactura')
 numeroDeFactura.addEventListener('click', async () =>{
     const mostrar = document.querySelector('#numeroFactura');
     texto = verNumero(conIva.value);
      mostrar.value = ((await axios.get(`${URL}tipoVenta`,configAxios)).data)[texto];
-})
+});
 
 async function actualizarNumeroComprobante(comprobante,tipo_pago,codigoComp) {
-    let numero
-    let tipoFactura
-    let [n1,n2] = comprobante.split('-')
+    let numero;
+    let tipoFactura;
+    let [n1,n2] = comprobante.split('-');
+
     n2 = parseFloat(n2)+1;
     n2 = n2.toString().padStart(8,0);
     numero = n1+'-'+n2;
+
     if (comprobante.split('-')[0] === "0006") {
         tipoFactura = verQueVentaEs("Remito");
     }else if (comprobante.split('-')[0] !== "0005") {
@@ -557,26 +562,32 @@ async function actualizarNumeroComprobante(comprobante,tipo_pago,codigoComp) {
     }
     let numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
     numeros[tipoFactura] = numero;
+
     await axios.put(`${URL}tipoventa`,numeros,configAxios)
 };
 
 //pasamos el saldo en negro
 async function sumarSaldoAlClienteEnNegro(precio,codigo,valorizado,venta){
     !valorizado ? precio = "0.1" : precio;
+
     let cliente = (await axios.get(`${URL}clientes/id/${codigo}`,configAxios)).data
     let saldo_p = (parseFloat(precio) + parseFloat(cliente.saldo_p)).toFixed(2);
+
     cliente.saldo_p = saldo_p;
-    let lista = cliente.listaVentas;
-    lista.push(venta);
-    cliente.listaVentas = lista;
+    cliente.maquina = maquina;
+    cliente.vendedor = vendedor;
+
     await axios.put(`${URL}clientes/${codigo}`,cliente,configAxios);
 };
 
 async function sumarSaldoAlCliente(precio,codigo,venta) {
     let cliente = (await axios.get(`${URL}clientes/id/${codigo}`,configAxios)).data;
-    cliente.listaVentas.push(venta);
     let saldo = (parseFloat(precio)+parseFloat(cliente.saldo)).toFixed(2);
+
     cliente.saldo = saldo;
+    cliente.vendedor = vendedor;
+    cliente.maquina = maquina;
+
     await axios.put(`${URL}clientes/${codigo}`,cliente,configAxios);
 };
 
@@ -618,16 +629,18 @@ presupuesto.addEventListener('click',async (e)=>{
                 venta.productos = listaProductos;
                 try {
                     alerta.classList.remove('none');
+                    venta.fecha = new Date();
                     venta.nombreCliente = buscarCliente.value;
                     tipoVenta="Presupuesto";
                     venta.descuento = (descuentoN.value);
                     venta.precioFinal = redondear(total.value,2);
-                    venta.fecha = new Date();
                     venta.tipo_comp = tipoVenta;
+                    venta.nro_comp = await traerUltimoNroComprobante(tipoVenta,venta.cod_comp,venta.tipo_pago);//Le pasamos que es un presupuesto contado CD
                     venta.observaciones = observaciones.value;
-                    //Le pasamos que es un presupuesto contado CD
-                    venta.nro_comp = await traerUltimoNroComprobante(tipoVenta,venta.cod_comp,venta.tipo_pago);
                     venta.empresa = inputEmpresa.value;
+                    venta.maquina = maquina;
+                    venta.vendedor = vendedor;
+
                     let valorizadoImpresion = "valorizado"
                     if (!valorizado.checked && venta.tipo_pago === "CC") {
                         valorizadoImpresion="no valorizado";
@@ -641,10 +654,10 @@ presupuesto.addEventListener('click',async (e)=>{
                     }
                     
                     await axios.post(`${URL}presupuesto`,venta,configAxios);
-                        
-                    venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,"Presupuesto","PP",venta.precioFinal,venta.nombreCliente ,venta.cliente,venta.nombreCliente,venta.vendedor);
-                            
-                    await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp)
+        
+                    venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,"Presupuesto","PP",venta.precioFinal,venta.nombreCliente ,venta.cliente,venta.nombreCliente,venta.vendedor,maquina);        
+                    await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
+
                      //si la venta es CC Sumamos un saldo al cliente y ponemos en cuenta corriente compensada y historica
                      if (venta.tipo_pago === "CC") {
                         await sumarSaldoAlClienteEnNegro(venta.precioFinal,venta.cliente,valorizado.checked,venta.nro_comp);
@@ -756,12 +769,14 @@ remito.addEventListener('click',async e=>{
     venta = {};
     venta.fecha = new Date();
     venta.observaciones = "";
-    venta.vendedor = vendedor;
     venta.tipo_comp = "Remito";
     venta.cliente = nombre.value;
     venta.idCliente = codigoC.value;
     venta.tipo_pago = "RT";
     venta.nro_comp = await traerUltimoNroComprobante(tipoVenta,venta.cod_comp,venta.tipo_pago);
+    venta.vendedor = vendedor;
+    venta.maquina = maquina;
+
     for await(let producto of listaProductos){
         await movimientoProducto(producto.cantidad,producto.objeto,codigoC.value,nombre.value,"RT",venta.tipo_comp,venta.nro_comp,venta.vendedor);
     }
@@ -815,6 +830,8 @@ ticketFactura.addEventListener('click',async (e) =>{
             numeroComprobante(tipoVenta);
             venta.empresa = inputEmpresa.value;
             venta.cod_comp = verCodComp(tipoVenta,conIva.value);
+            venta.vendedor = vendedor;
+            venta.maquina = maquina;
             if (venta.precioFinal >= 30767 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
                 sweet.fire({title:"Factura mayor a 30767, poner datos cliente"});
                 alerta.classList.add('none');
@@ -843,10 +860,11 @@ ticketFactura.addEventListener('click',async (e) =>{
                     venta.tipo_pago === "CC" && sumarSaldoAlCliente(venta.precioFinal,venta.cliente,venta.nro_comp);
                     venta.tipo_pago === "CC" && ponerEnCuentaCorrienteCompensada(venta,true);
                     venta.tipo_pago === "CC" && ponerEnCuentaCorrienteHistorica(venta,true,saldo.value);
-                    venta.tipo_pago === "CD" && generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 1 ? "Factura A" : "Factura B",venta.cod_comp === 1 ? "FA" : "FB",venta.precioFinal,venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor);
+                    venta.tipo_pago === "CD" && generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,venta.cod_comp === 1 ? "Factura A" : "Factura B",venta.cod_comp === 1 ? "FA" : "FB",venta.precioFinal,venta.nombreCliente,venta.cliente,venta.nombreCliente,venta.vendedor,maquina);
 
                     await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
                     nuevaVenta = await axios.post(`${URL}ventas`,venta,configAxios);
+
                     const cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`,configAxios)).data;
 
                     alerta.children[1].children[0].innerHTML = "Imprimiendo Venta";//cartel de que se esta imprimiendo la venta
@@ -904,7 +922,9 @@ ticketFactura.addEventListener('click',async (e) =>{
                         await descontarSaldo(codigoC.value,total.value);
                         
                     };
+
                     !borraNegro ? (window.location = '../index.html') : window.close();
+                    
                 } catch (error) {
                         await sweet.fire({title:"No se puedo generar la Venta"});
                         console.log(error)
@@ -1289,7 +1309,9 @@ const ponerEnCuentaCorrienteCompensada = async(venta,valorizado)=>{
     cuenta.importe = valorizado ? parseFloat(venta.precioFinal) : 0.1;
     cuenta.saldo = valorizado ? parseFloat(venta.precioFinal) : 0.1;
     cuenta.observaciones = venta.observaciones;
-    await axios.post(`${URL}cuentaComp`,cuenta,configAxios)
+    cuenta.maquina = maquina;
+    cuenta.vendedor = vendedor;
+    await axios.post(`${URL}cuentaComp`,cuenta,configAxios);
 }
 
 //inicio historica
@@ -1302,6 +1324,8 @@ const ponerEnCuentaCorrienteHistorica = async(venta,valorizado,saldo)=>{
     cuenta.debe = valorizado ? parseFloat(venta.precioFinal) : 0.1;
     cuenta.saldo = parseFloat(saldo) + cuenta.debe;
     cuenta.observaciones = venta.observaciones;
+    cuenta.vendedor = vendedor;
+    cuenta.maquina = maquina;
     await axios.post(`${URL}cuentaHisto`,cuenta,configAxios);
 }
 

@@ -56,8 +56,7 @@ const cliente = new Schema({
     saldo_p: {
         type: Number,
         default: 0
-    },
-    listaVentas:[]
+    }
 })
 
 module.exports = model('Cliente',cliente)
