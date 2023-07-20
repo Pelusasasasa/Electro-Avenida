@@ -1,8 +1,22 @@
+.contenedor{
+    background-color: lightgreen;
+    height: calc(100vh - 25px);
+}
+
+.contenedor .img{
+    display: flex;
+    justify-content: center;
+}
+
+.contenedor .img img{
+    width: 300px;
+    height: 300px;
+}
+
 .buscador{
     display: flex;
     justify-content: space-around;
     gap: 20px;
-    background-color: lightgreen;
     padding: 20px;
 }
 
@@ -12,10 +26,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    text-align: center;
 }
 
 .informacion-adicional{
     display: flex;
     justify-content: space-around;
     gap: 20px;
+}
+
+.informacion-adicional span{
+    font-weight: bold;
 }

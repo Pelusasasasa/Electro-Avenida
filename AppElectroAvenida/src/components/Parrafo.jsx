@@ -1,6 +1,8 @@
-const Parrafo = ({text}) => {
+const Parrafo = ({text,claseAdd,textAdicional}) => {
   return (
-    <p>{text.toUpperCase()}</p>
+    <p className={claseAdd}>{textAdicional}
+      <span>{text ? text.toUpperCase() : ""}</span>
+    </p>
   )
 }
 
