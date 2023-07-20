@@ -1,5 +1,6 @@
 const productosCTRL = {};
 const path = require('path');
+const fs = require('fs');
 
 const Productos = require("../models/producto");
 
@@ -98,8 +99,7 @@ productosCTRL.productosPorMarca = async(req,res)=>{
     const {marca} = req.params;
     const productos = await Productos.find({marca:marca});
     res.send(productos)
-}
-
+};
 
 productosCTRL.subirImagen = async(req,res)=>{
     const file = req.file;
@@ -112,10 +112,15 @@ productosCTRL.subirImagen = async(req,res)=>{
 
 productosCTRL.mostrarImagen = async(req,res)=>{
     const {id} = req.params;
-    let producto = (await Productos.find({_id:id}))[0].imgURL;
-    const a = path.join(__dirname,'../../');
-    producto = producto.slice(0,8) + "/" + producto.slice(9);
-    res.sendFile(a + producto)
+    const direccion = path.join(__dirname,'../../') + `imagenes/` + id + ".jpg";
+    const imagenGenerica = path.join(__dirname,'../../') + "imagenes/Generica.jpg";
+    fs.access(direccion,fs.constants.F_OK,err=>{
+        if (err) {
+            res.sendFile(imagenGenerica);
+        }else{
+            res.sendFile(direccion);
+        }
+    });
 }
 
 module.exports = productosCTRL;

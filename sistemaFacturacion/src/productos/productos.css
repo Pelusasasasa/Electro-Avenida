@@ -220,3 +220,23 @@ table thead tr{
 table tr th{
     border: .1rem solid black;
 }
+
+
+.imagenGrande{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,.7);
+    z-index: 1;
+}
+
+
+.imagenGrande img{
+    cursor: pointer;
+    position: absolute;
+}
