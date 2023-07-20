@@ -19,17 +19,25 @@ const vendedor = getParameterByName('vendedor');
 const resultado = document.querySelector('#resultado');
 const select = document.querySelector('#seleccion');
 const buscarProducto = document.querySelector('#buscarProducto');
+const imagen = document.querySelector('.imagen');
 const modificar = document.querySelector('.modificar');
 const movimiento = document.querySelector('.movimiento');
 const ingresarMov = document.querySelector('.ingresar')
 const agregarProducto = document.querySelector('.agregarProducto');
 const eliminar = document.querySelector('.eliminar');
 const volver = document.querySelector('.volver');
+const seccionImagenGrande = document.querySelector('.imagenGrande');
+let seleccionarTBody = document.querySelector('tbody');
 
 let texto = "";
 let seleccionado = "";
 let subSeleccion;
 const body = document.querySelector('body');
+
+if (acceso === "2" || acceso === "1") {
+    eliminar.classList.add('none')
+}
+
 
 window.addEventListener('load',e=>{
     filtrar();
@@ -68,29 +76,6 @@ window.addEventListener('click',e=>{
         table.classList.remove('tablaFocus')
     }
 })
-
-async function filtrar(){
-    //obtenemos lo que se escribe en el input
-    texto = buscarProducto.value.toLowerCase();
-    texto = texto.replace('/','%2F');
-    let productos;
-    if (texto.indexOf('/') !== -1) {
-        const posicionBarra = texto.indexOf('/');
-        let nuevoTexto = texto.replace('/',"ALT47");    
-        let condicion = select.value;
-        condicion === "codigo" && (condicion = "_id")
-        productos = await axios.get(`${URL}productos/buscarProducto/${nuevoTexto}/${condicion}`,configAxios)
-    }else if(texto !== ""){ 
-        let condicion = select.value;
-        condicion === "codigo" && (condicion = "_id")
-        productos = await axios.get(`${URL}productos/buscarProducto/${texto}/${condicion}`,configAxios)
-    }else{
-        productos = await axios.get(`${URL}productos/buscarProducto/textoVacio/descripcion`,configAxios)
-    }
-    productos = productos.data
-    
-    ponerProductos(productos);
-}
 
 const ponerProductos = productos =>{
     resultado.innerHTML = '';
@@ -146,11 +131,11 @@ buscarProducto.addEventListener('keydown',e=>{
     }else if(e.keyCode === 40){
         buscarProducto.blur();
     }
-})
+});
 
+imagen.addEventListener('click',mostrarImagenGrande);
 
 //Hacemos que se seleccione un producto
-let seleccionarTBody = document.querySelector('tbody');
 seleccionarTBody.addEventListener('click',(e) =>{
 
     seleccionado && seleccionado.classList.remove('seleccionado');
@@ -168,18 +153,13 @@ seleccionarTBody.addEventListener('click',(e) =>{
     seleccionado && mostrarImagen(seleccionado.id)
 })
 
-
-const imagen = document.querySelector('.imagen')
 async function mostrarImagen(id) {
         const producto = (await axios.get(`${URL}productos/${id}`)).data;
         if (producto) {
-            if (producto.imgURL) {
-                const path = `${URL}productos/${producto._id}/image`;
-                console.log(path)
-                imagen.innerHTML = `<img class="imagenProducto" src=${path}>`
-            };
+            const path = `${URL}productos/${producto._id}/image`;
+            imagen.innerHTML = `<img id=${path} class="imagenProducto" src=${path}>`;
         }
-}
+};
 
 ipcRenderer.once('Historial',async(e,args)=>{
     const [textoA,seleccionA] = JSON.parse(args)
@@ -188,6 +168,77 @@ ipcRenderer.once('Historial',async(e,args)=>{
     filtrar()
 })
 
+buscarProducto.addEventListener('keyup',filtrar);
+buscarProducto.addEventListener('keypress',e=>{
+    if (buscarProducto.value.length === 3 && e.key !== "-" && select.value === "codigo") {
+        buscarProducto.value = buscarProducto.value + "-"
+    }
+});
+
+document.addEventListener('click',noneImagenGrande);
+
+//cuando se cambie la conidcion el codigo toma el foco
+select.addEventListener('keydown',e=>{
+    if(e.key === "ArrowUp" || e.key === "ArrowDown"){
+        buscarProducto.focus()
+    }else{
+        e.preventDefault();
+    }
+});
+
+volver.addEventListener('click',e=>{
+    location.href = "../index.html";
+});
+
+document.addEventListener('keydown',e=>{
+    if (e.key === "Escape") {
+        console.log(seccionImagenGrande)
+        if (!seccionImagenGrande.classList.contains('none')) {
+            seccionImagenGrande.classList.add('none')
+        }else{
+            location.href = "../index.html";
+        }
+    }
+});
+
+async function filtrar(){
+    //obtenemos lo que se escribe en el input
+    texto = buscarProducto.value.toLowerCase();
+    texto = texto.replace('/','%2F');
+    let productos;
+    if (texto.indexOf('/') !== -1) {
+        const posicionBarra = texto.indexOf('/');
+        let nuevoTexto = texto.replace('/',"ALT47");    
+        let condicion = select.value;
+        condicion === "codigo" && (condicion = "_id")
+        productos = await axios.get(`${URL}productos/buscarProducto/${nuevoTexto}/${condicion}`,configAxios)
+    }else if(texto !== ""){ 
+        let condicion = select.value;
+        condicion === "codigo" && (condicion = "_id")
+        productos = await axios.get(`${URL}productos/buscarProducto/${texto}/${condicion}`,configAxios)
+    }else{
+        productos = await axios.get(`${URL}productos/buscarProducto/textoVacio/descripcion`,configAxios)
+    }
+    productos = productos.data
+    
+    ponerProductos(productos);
+}
+
+function mostrarImagenGrande(e) {
+    seccionImagenGrande.children[0].src = e.target.id;
+    seccionImagenGrande.classList.remove('none');
+}
+
+function noneImagenGrande(e) {
+    if (e.target.classList.contains('imagenGrande')){
+        seccionImagenGrande.classList.add('none');
+    }
+}
+
+//Agregar producto
+agregarProducto.addEventListener('click',e=>{
+    ipcRenderer.send('abrir-ventana-agregar-producto',vendedor);
+});
 
 //modificar el producto
 modificar.addEventListener('click',async e=>{
@@ -203,13 +254,8 @@ modificar.addEventListener('click',async e=>{
     }
 });
 
-//Agregar producto
-agregarProducto.addEventListener('click',e=>{
-    ipcRenderer.send('abrir-ventana-agregar-producto',vendedor);
-});
-
 //Info Movimiento de producto
-movimiento.addEventListener('click',async ()=>{
+movimiento.addEventListener('click',async e=>{
     seleccionado = document.querySelector('.seleccionado');
     if (seleccionado) {
         ipcRenderer.send('abrir-ventana-info-movimiento-producto',seleccionado.id)
@@ -220,10 +266,10 @@ movimiento.addEventListener('click',async ()=>{
         });
         buscarProducto.focus();
     }
-})
+});
 
 //Ingresar movimientoProducto
-ingresarMov.addEventListener('click',async e => {
+ingresarMov.addEventListener('click',async e=>{
     seleccionado = document.querySelector('.seleccionado');
    if (seleccionado) {
         vendedor ?  ipcRenderer.send('abrir-ventana-movimiento-producto',[seleccionado.id,vendedor]) : sweet.fire({title:"Contraseña Incorrecta"});
@@ -234,10 +280,9 @@ ingresarMov.addEventListener('click',async e => {
         });
         buscarProducto.focus();
        }
-})
+});
 
 //Eliminar un producto
-
 eliminar.addEventListener('click',async e=>{
     seleccionado = document.querySelector('.seleccionado');
     if (seleccionado) {
@@ -267,40 +312,3 @@ eliminar.addEventListener('click',async e=>{
 }
 
 );
-
-buscarProducto.addEventListener('keyup',filtrar);
-buscarProducto.addEventListener('keypress',e=>{
-    if (buscarProducto.value.length === 3 && e.key !== "-" && select.value === "codigo") {
-        buscarProducto.value = buscarProducto.value + "-"
-    }
-})
-
-
-document.addEventListener('keydown',e=>{
-    if(e.key === "Escape"){
-        window.history.go(-1)
-    }
-})
-
-if (acceso === "2" || acceso === "1") {
-    eliminar.classList.add('none')
-}
-
-//cuando se cambie la conidcion el codigo toma el foco
-select.addEventListener('keydown',e=>{
-    if(e.key === "ArrowUp" || e.key === "ArrowDown"){
-        buscarProducto.focus()
-    }else{
-        e.preventDefault();
-    }
-});
-
-volver.addEventListener('click',e=>{
-    location.href = "../index.html";
-});
-
-document.addEventListener('keydown',e=>{
-    if (e.key === "Escape") {
-        location.href = "../index.html";
-    }
-})
