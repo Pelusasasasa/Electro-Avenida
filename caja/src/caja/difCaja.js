@@ -15,7 +15,7 @@ let seleccionado = "";
 let subSeleccionado = "";
 
 window.addEventListener('load',listarDirefencias);
-window.addEventListener('load',cerrarVentana)
+window.addEventListener('load',cerrarVentana);
 
 agregar.addEventListener('click',agregarDiferencia);
 
