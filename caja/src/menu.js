@@ -229,25 +229,6 @@ ipcRenderer.on('cobranzaFacturas',(e,args)=>{
     location.href = "caja/cobranzaFacturas.html"
 });
 
-const reingresarContraseña = async()=>{ 
-    let retorno = false
-    await sweet.fire({
-        title:"Contraseña",
-        input:"password",
-        confirmButtonText:"Aceptar",
-        showCancelButton:true
-    }).then(async({isConfirmed,value})=>{
-        if (isConfirmed && value === "54321") {
-            location.href = './caja/modificar.html';
-        }else if(isConfirmed && value !== "54321"){
-            await sweet.fire({
-                title:"Contraseña Incorrecta"
-            })
-            reingresarContraseña();
-        }
-    });
-};
-
 ipcRenderer.on('reordenarSaldo',async e=>{
     let select = "";
     const provedores = (await axios.get(`${URL}provedor`,configAxios)).data;
@@ -281,6 +262,24 @@ ipcRenderer.on('reordenarSaldo',async e=>{
     });
 });
 
+const reingresarContraseña = async()=>{ 
+    let retorno = false
+    await sweet.fire({
+        title:"Contraseña",
+        input:"password",
+        confirmButtonText:"Aceptar",
+        showCancelButton:true
+    }).then(async({isConfirmed,value})=>{
+        if (isConfirmed && value === "54321") {
+            location.href = './caja/modificar.html';
+        }else if(isConfirmed && value !== "54321"){
+            await sweet.fire({
+                title:"Contraseña Incorrecta"
+            })
+            reingresarContraseña();
+        }
+    });
+};
 
 async function reodernarSaldos(){
     const codigo = document.getElementById('provedores').value;

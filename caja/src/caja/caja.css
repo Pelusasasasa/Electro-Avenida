@@ -239,3 +239,35 @@
 .radio div{
     display: flex;
 }
+
+
+#difCaja .tabla{
+    height: 80vh;
+    background-color: white;
+    overflow: scroll;
+    border: .1rem solid black;
+}
+
+#difCaja .tabla table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#difCaja .tabla table th{
+    border: .1rem solid black;
+}
+
+#difCaja .agregar{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+#difCaja .agregar main{
+    display: flex;
+    flex-direction: column;
+}
+
+#difCaja main input,#difCaja main label{
+    font-size: 2rem;
+}

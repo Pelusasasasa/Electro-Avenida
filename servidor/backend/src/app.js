@@ -58,4 +58,6 @@ app.use('/api/recibos',require('./routes/recibo'));
 app.use('/api/remitos',require('./routes/remito'));
 //Prestamos
 app.use('/api/prestamos',require('./routes/prestamo'));
+//Diferencia de caja
+app.use('/api/difCaja',require('./routes/difCaja'));
 module.exports = app
