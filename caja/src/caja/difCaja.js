@@ -3,7 +3,7 @@ require('dotenv').config;
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
-const { redondear, cerrarVentana } = require('../assets/js/globales');
+const { redondear, cerrarVentana, alerta } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
 
@@ -13,13 +13,16 @@ const salir = document.getElementById('salir');
 let diferencias;
 let seleccionado = "";
 let subSeleccionado = "";
+let alertaActivo = false;
 
 window.addEventListener('load',listarDirefencias);
-window.addEventListener('load',cerrarVentana);
 
 agregar.addEventListener('click',agregarDiferencia);
 
 tbody.addEventListener('dblclick',modificarDiferencia);
+
+document.addEventListener('keyup',accionarTeclado)
+
 
 async function listarDirefencias (){
     diferencias = (await axios.get(`${URL}difCaja`)).data;
@@ -43,7 +46,7 @@ function listarElmento(elem){
         tdFecha.innerText = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         tdHora.innerText = elem.hora;
         tdImporte.innerText = elem.importe.toFixed(2);
-        tdDiferencia.innerText = elem.diferencia.toFixed(2);
+        tdDiferencia.innerText = elem.diferencia;
 
         tr.appendChild(tdFecha);
         tr.appendChild(tdHora);
@@ -51,16 +54,19 @@ function listarElmento(elem){
         tr.appendChild(tdDiferencia);
 
         tbody.appendChild(tr);
-}
+};
 
 async function agregarDiferencia(e){
+    const now = new Date();
+    const fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0,10);
+    alertaActivo = true;
     const agregar = await sweet.fire({
         title:"Agregar Diferencia",
         html:`
         <section class="agregar">
             <main>
                 <label htmlFor="date">Fecha</label>
-                <input autofocus type="date" name="date" id="date" />
+                <input value=${fecha} type="date" name="date" id="date" />
             </main>
             <main>
                 <label htmlFor="hora">Hora</label>
@@ -93,8 +99,8 @@ async function agregarDiferencia(e){
 
         await axios.post(`${URL}difCaja`,difCaja);
         listarElmento(difCaja)
-        
     }
+    alertaActivo = agregar.dismiss === "esc" ? true : false;
 };
 
 async function modificarDiferencia(e){
@@ -108,6 +114,7 @@ async function modificarDiferencia(e){
     subSeleccionado.classList.add('subSeleccionado');
     const fecha = seleccionado.children[0].innerText.split('/',3);
     const valueFecha = `${fecha[2]}-${fecha[1]}-${fecha[0]}`;
+    alertaActivo = true;
     const modificar = await sweet.fire({
         title:"Modificar diferencia",html:`
         <section class="agregar">
@@ -143,5 +150,16 @@ async function modificarDiferencia(e){
         difCaja.diferencia = - difCaja.importe + difCaja.diferencia + aux;
 
         await axios.put(`${URL}difCaja/id/${difCaja._id}`,difCaja);
+        tbody.removeChild(seleccionado);
+        listarElmento(difCaja);
     };
-}
+    alertaActivo = agregar.dismiss === "esc" ? true : false;
+};
+
+async function accionarTeclado(e){
+    if (e.keyCode === 27 && !alertaActivo) {
+        window.close();
+    }else if(e.keyCode === 27 && alertaActivo){
+        alertaActivo = false;
+    }
+};
