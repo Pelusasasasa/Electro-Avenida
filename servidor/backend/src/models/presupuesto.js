@@ -12,7 +12,7 @@ const Presupuesto = new Schema({
     },
     cliente:{
         type: String,
-        require: true
+        default: "9999"
     },
     tipo_comp: {
         type: String,

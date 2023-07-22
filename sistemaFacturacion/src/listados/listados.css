@@ -26,6 +26,20 @@
     border-bottom: .1rem solid black;
 }
 
+.porComprobante .alerta{
+    color: white;
+    font-size: 2rem;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.porComprobante .spinner{
+    border-top-color: white;
+    border-right-color: white;
+    border-bottom-color: white;
+    height: 5rem;
+    width: 5rem;
+}
+
 .stockNegativo .tbody td{
     border: .1rem solid black;
 }

@@ -4,6 +4,8 @@ const { configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
+const divAlerta = document.querySelector('.alerta');
+
 const hoy = new Date();
 let dia = hoy.getDate();
 let mes = hoy.getMonth() + 1
@@ -56,32 +58,15 @@ hasta.addEventListener('keypress',async e=>{
     }
 });
 
-contado.addEventListener('click',e=>{
-    totalFactura = 0;
-    totalPresupuesto = 0;
-    totalRecibos = 0;
+contado.addEventListener('click',listarContado);
 
-    const recibos_P = ventas.filter(venta=>venta.tipo_comp === "Recibos_P");
-    const recibos = ventas.filter(venta=>venta.tipo_comp === "Recibos");
-    const ventasContado = ventas.filter(venta => (venta.tipo_pago === "CD"))
-    contado.classList.add('seleccionado');
-    cteCorriente.classList.remove('seleccionado');
-    listarVentas([...ventasContado,...recibos,...recibos_P]);
-});
-
-cteCorriente.addEventListener('click',e=>{
-    totalFactura = 0;
-    totalPresupuesto = 0;
-    totalRecibos = 0;
-
-    const ventasContado = ventas.filter(venta => venta.tipo_pago === "CC")
-    cteCorriente.classList.add('seleccionado');
-    contado.classList.remove('seleccionado');
-    listarVentas(ventasContado);
-});
+cteCorriente.addEventListener('click',listarCuentaCorriente);
 
 
 async function listarVentas(lista) {
+    divAlerta.classList.remove('none');
+    contado.removeEventListener('click',listarContado);
+    cteCorriente.removeEventListener('click',listarCuentaCorriente);
     tbody.innerHTML = "";
 
     lista.sort((a,b)=>{
@@ -104,6 +89,7 @@ async function listarVentas(lista) {
         }else{
             tipo = "R";
         };
+        
         const fecha = venta.fecha.slice(0,10).split('-',3);
         const hora = venta.fecha.slice(11,19).split(':',3);
         let hoy = fecha[2]
@@ -211,11 +197,38 @@ async function listarVentas(lista) {
             <td>${totalRecibos.toFixed(2)}</td>
         </tr>
     `
-}
 
+    contado.addEventListener('click',listarContado);
+    cteCorriente.addEventListener('click',listarCuentaCorriente);
+    divAlerta.classList.add('none');
+}
 
 document.addEventListener('keydown',e=>{
     if (e.key === "Escape") {
         window.close()
     }
-})
+});
+
+async function listarContado(){
+    totalFactura = 0;
+    totalPresupuesto = 0;
+    totalRecibos = 0;
+
+    const recibos_P = ventas.filter(venta=>venta.tipo_comp === "Recibos_P");
+    const recibos = ventas.filter(venta=>venta.tipo_comp === "Recibos");
+    const ventasContado = ventas.filter(venta => (venta.tipo_pago === "CD"))
+    contado.classList.add('seleccionado');
+    cteCorriente.classList.remove('seleccionado');
+    listarVentas([...ventasContado,...recibos,...recibos_P]);
+};
+
+async function listarCuentaCorriente() {
+    totalFactura = 0;
+    totalPresupuesto = 0;
+    totalRecibos = 0;
+
+    const ventasContado = ventas.filter(venta => venta.tipo_pago === "CC")
+    cteCorriente.classList.add('seleccionado');
+    contado.classList.remove('seleccionado');
+    listarVentas(ventasContado);
+}

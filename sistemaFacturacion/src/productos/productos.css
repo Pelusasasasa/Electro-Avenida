@@ -23,8 +23,14 @@
     font-size: 1rem;
 }
 
+.imagen{
+    margin-left: auto;
+}
+
 .imagenProducto{
     width: 10rem;
+    height: 8rem;
+    cursor: pointer;
 }
 
 .listadoPorMarca .lista table tr th,.listadoPorMarca .lista table tr td,.listadoStock .listar table tr th,.listadoStock .listar table tr td{

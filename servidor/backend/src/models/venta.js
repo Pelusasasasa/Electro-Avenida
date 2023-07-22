@@ -24,7 +24,7 @@ const Venta = new Schema({
     localidad:String,
     cliente: {
         type: String,
-        required: true
+        default:"9999"
     },
     cod_comp: {
         type: Number,
