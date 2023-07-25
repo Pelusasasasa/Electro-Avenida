@@ -3,7 +3,7 @@ require('dotenv').config;
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
-const { redondear, cerrarVentana, alerta } = require('../assets/js/globales');
+const { redondear, cerrarVentana, alerta, configAxios } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
 
@@ -25,7 +25,7 @@ document.addEventListener('keyup',accionarTeclado)
 
 
 async function listarDirefencias (){
-    diferencias = (await axios.get(`${URL}difCaja`)).data;
+    diferencias = (await axios.get(`${URL}difCaja`,configAxios)).data;
     for(let elem of diferencias){
         listarElmento(elem);
     }
@@ -97,7 +97,7 @@ async function agregarDiferencia(e){
         difCaja.importe = parseFloat(document.getElementById('importe').value);
         difCaja.diferencia = redondear(difCaja.importe - aux,2);
 
-        await axios.post(`${URL}difCaja`,difCaja);
+        await axios.post(`${URL}difCaja`,difCaja,configAxios);
         listarElmento(difCaja)
     }
     alertaActivo = agregar.dismiss === "esc" ? true : false;
@@ -137,7 +137,7 @@ async function modificarDiferencia(e){
     });
 
     if (modificar.isConfirmed) {
-        const difCaja = (await axios.get(`${URL}difCaja/id/${seleccionado.id}`)).data;
+        const difCaja = (await axios.get(`${URL}difCaja/id/${seleccionado.id}`,configAxios)).data;
         const aux = JSON.parse(difCaja.importe)
         
         const fecha = document.getElementById('date').value
@@ -149,7 +149,7 @@ async function modificarDiferencia(e){
         difCaja.importe = importe;
         difCaja.diferencia = - difCaja.importe + difCaja.diferencia + aux;
 
-        await axios.put(`${URL}difCaja/id/${difCaja._id}`,difCaja);
+        await axios.put(`${URL}difCaja/id/${difCaja._id}`,difCaja,configAxios);
         tbody.removeChild(seleccionado);
         listarElmento(difCaja);
     };
