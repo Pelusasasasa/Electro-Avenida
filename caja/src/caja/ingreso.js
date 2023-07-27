@@ -41,9 +41,7 @@ window.addEventListener('load',async e=>{
 });
 
 select.addEventListener('change',async e=>{
-    let nextDay = new Date(hasta.value);
-    nextDay.setDate(today.getDate() + 1);
-    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`,configAxios)).data
+    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}/${select.value}`,configAxios)).data
     listar(ingresos);
 });
 

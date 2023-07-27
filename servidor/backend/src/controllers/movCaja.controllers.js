@@ -24,12 +24,16 @@ movCajaCTRL.getAll = async(req,res)=>{
 
 movCajaCTRL.getBetweenDates = async(req,res)=>{
     const {desde,hasta} = req.params;
-    let movimientos = await MovCaja.find({
+    try {
+        let movimientos = await MovCaja.find({
             $and:[
                 {fecha:{$gte:new Date(desde + "T00:00:00.000Z")}},
                 {fecha:{$lte:new Date(hasta + "T23:59:59.000Z")}}
             ]
         });
+    } catch (error) {
+        console.log("Error en la linea 35")
+    }
     res.send(movimientos)
 }
 
