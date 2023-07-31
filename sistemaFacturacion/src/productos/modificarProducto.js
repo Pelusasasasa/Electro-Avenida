@@ -75,11 +75,11 @@ ipcRenderer.on('vendedor',(e,args)=>{
 });
 
 function asignarCampos(producto) {
-    codigo.value = producto._id
-    codFabrica.value = producto.cod_fabrica
-    descripcion.value = producto.descripcion
-    provedor.value = producto.provedor
-    marca.value = producto.marca
+    codigo.value = producto._id;
+    codFabrica.value = producto.cod_fabrica;
+    descripcion.value = producto.descripcion;
+    provedor.value = producto.provedor;
+    marca.value = producto.marca;
     stock.value = producto.stock
     tasaIva.value = producto.iva;
     select.value = producto.rubro ? producto.rubro : select.value = "0";
@@ -91,48 +91,23 @@ function asignarCampos(producto) {
         costo = parseFloat(costoDolares.value);
         costoTotal.value = ((costo+parseFloat(producto.impuestos))*dolar).toFixed(3);
     }else{
-        ivaImp.value = parseFloat(producto.impuestos)
-        costo = parseFloat(costoPesos.value)
-        costoTotal.value = ((costo+parseFloat(producto.impuestos))).toFixed(3)
+        ivaImp.value = parseFloat(producto.impuestos);
+        costo = parseFloat(costoPesos.value);
+        costoTotal.value = ((costo+parseFloat(producto.impuestos))).toFixed(3);
     }
-    observaciones.value = producto.observacion
-    utilidad.value=(parseFloat(producto.utilidad)).toFixed(2)
+    observaciones.value = producto.observacion;
+    oferta.checked = producto.oferta;
+    precioOferta.value = producto.precioOferta;
+    utilidad.value=(parseFloat(producto.utilidad)).toFixed(2);
     precioVenta.value = producto.precio_venta;
-    unidad.value = producto.unidad
-    valorTasaIva = tasaIvas(producto.iva)
+    unidad.value = producto.unidad;
+    valorTasaIva = tasaIvas(producto.iva);
 };
 
 tasaIva.addEventListener('click', (e) =>{
     valorTasaIva = tasaIvas(e.target.value);
 });
 
-if (costoPesos.focus) {
-        costoPesos.addEventListener('blur', (e) =>{
-        costo = resultado(parseFloat(costoPesos.value),valorTasaIva);
-    })
-}
-
-costoTotal.addEventListener('focus',()=>{
-    console.log((costoPesos.value * valorTasaIva / 100))
-    ivaImp.value = (parseFloat(costoDolares.value) !== 0) ? (parseFloat((costoDolares.value * valorTasaIva / 100).toFixed(2))) :  (costoPesos.value * valorTasaIva / 100).toFixed(2)
-    
-    costoT = parseFloat(ivaImp.value)
-    let costoP = 0
-    
-    if (parseFloat(costoDolares.value) !== 0) {
-        const costoMasIVa = parseFloat(redondear(parseFloat(ivaImp.value) + parseFloat(costoDolares.value),2));
-        costoTotal.value = redondear(costoMasIVa*dolar,2);
-    }else{
-        costoP = parseFloat(costoPesos.value)
-        costoTotal.value = redondear((parseFloat(ivaImp.value) + costoP),2);
-    }
-})
-
-precioVenta.addEventListener('focus',e=>{
-    
-    const aux = (parseFloat(utilidad.value)*parseFloat(costoTotal.value)/100).toFixed(2)
-    precioVenta.value = Math.round((parseFloat(aux) + parseFloat(costoTotal.value))).toFixed(2)
-});
 
 modificar.addEventListener('click',e=>{
     modificar.classList.add('none');
@@ -151,6 +126,9 @@ modificar.addEventListener('click',e=>{
     unidad.removeAttribute('disabled');
     rubros.removeAttribute('disabled');
     oferta.removeAttribute('disabled');
+    if (oferta.checked) {
+        precioOferta.removeAttribute('disabled');
+    }
 })
 
 guardar.addEventListener('click',async e=>{
@@ -164,10 +142,12 @@ guardar.addEventListener('click',async e=>{
     producto.iva = tasaIva.value
     producto.costo = costoPesos.value
     producto.costodolar = parseFloat(costoDolares.value)
-    producto.observacion = observaciones.value
-    producto.utilidad = utilidad.value
-    producto.precio_venta = precioVenta.value
-    producto.unidad = unidad.value
+    producto.observacion = observaciones.value;
+    producto.oferta = oferta.value;
+    producto.precioOferta = precioOferta.value;
+    producto.utilidad = utilidad.value;
+    producto.precio_venta = precioVenta.value;
+    producto.unidad = unidad.value;
     producto.impuestos = ivaImp.value;
     producto.rubro = select.value;
     producto.vendedor = vendedor;
@@ -185,7 +165,7 @@ guardar.addEventListener('click',async e=>{
     }
     ipcRenderer.send('productoModificado',producto);
     window.close()
-})
+});
 
 salir.addEventListener('click',e=>{
     window.close();
@@ -195,11 +175,11 @@ document.addEventListener('keydown',e=>{
     if (e.key === "Escape") {
         window.close()
     }
-})
+});
 
 function resultado(numero1,numero2,dolar=1) {
     return numero1*numero2*dolar/100;
-}
+};
 
 function tasaIvas(palabra) {
     if (palabra === "N") {
@@ -207,69 +187,69 @@ function tasaIvas(palabra) {
     }else{
         return 15;
     }
-}
+};
 
 codigo.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        codFabrica.focus()
+        codFabrica.focus();
     }
 })
 
 codFabrica.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        descripcion.focus()
+        descripcion.focus();
     }
 });
 
 descripcion.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        unidad.focus()
+        unidad.focus();
     }
 });
 
 unidad.addEventListener('keypress',e=>{
     e.preventDefault();
     if (e.key === "Enter") {
-        provedor.focus()
+        provedor.focus();
     }
 });
     
 stock.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        provedor.focus()
+        provedor.focus();
     }
 });
     
 provedor.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        marca.focus()
+        marca.focus();
     }
 });
     
 marca.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        tasaIva.focus()
+        tasaIva.focus();
     }
 })
 
 tasaIva.addEventListener('keypress',e=>{
     e.preventDefault();
     if (e.key === "Enter") {
-        costoPesos.focus()
-        costoPesos.select()
+        costoPesos.focus();
+        costoPesos.select();
     }
 })
     
 costoPesos.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        costoDolares.focus()
-        costoDolares.select()
+        costoDolares.focus();
+        costoDolares.select();
     }
 })
     
 costoDolares.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        costoTotal.focus()
+        costoTotal.focus();
     }
 })
     
@@ -287,7 +267,23 @@ costoTotal.addEventListener('keypress',e=>{
     
 observaciones.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        utilidad.focus()
+        oferta.focus()
+    }
+});
+
+oferta.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        if (oferta.checked) {
+            precioOferta.focus()
+        }else{
+            utilidad.focus();
+        };
+    }
+});
+
+precioOferta.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        utilidad.focus();
     }
 })
     
@@ -349,8 +345,38 @@ costoTotal.addEventListener('focus',e=>{
 
 observaciones.addEventListener('focus',e=>{
     observaciones.select();
+});
+
+precioOferta.addEventListener('focus',e=>{
+    precioOferta.select();
 })
+
+costoTotal.addEventListener('focus',()=>{
+    console.log((costoPesos.value * valorTasaIva / 100))
+    ivaImp.value = (parseFloat(costoDolares.value) !== 0) ? (parseFloat((costoDolares.value * valorTasaIva / 100).toFixed(2))) :  (costoPesos.value * valorTasaIva / 100).toFixed(2)
+    
+    costoT = parseFloat(ivaImp.value)
+    let costoP = 0
+    
+    if (parseFloat(costoDolares.value) !== 0) {
+        const costoMasIVa = parseFloat(redondear(parseFloat(ivaImp.value) + parseFloat(costoDolares.value),2));
+        costoTotal.value = redondear(costoMasIVa*dolar,2);
+    }else{
+        costoP = parseFloat(costoPesos.value)
+        costoTotal.value = redondear((parseFloat(ivaImp.value) + costoP),2);
+    }
+});
 
 precioVenta.addEventListener('focus',e=>{
     precioVenta.select();
-})
+    const aux = (parseFloat(utilidad.value)*parseFloat(costoTotal.value)/100).toFixed(2)
+    precioVenta.value = Math.round((parseFloat(aux) + parseFloat(costoTotal.value))).toFixed(2)
+});
+
+oferta.addEventListener('change',e =>{
+    if (oferta.checked) {
+        precioOferta.removeAttribute('disabled');
+    }else{
+        precioOferta.setAttribute('disabled','');
+    }
+});
