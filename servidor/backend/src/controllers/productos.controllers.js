@@ -2,7 +2,7 @@ const productosCTRL = {};
 const path = require('path');
 const fs = require('fs');
 
-const Productos = require("../models/producto");
+const Productos = require("../models/Producto");
 
 productosCTRL.traerProductos = async(req,res)=>{
     let {texto,tipoBusqueda} = req.params;

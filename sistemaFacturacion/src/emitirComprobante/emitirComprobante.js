@@ -262,17 +262,16 @@ codigo.addEventListener('keypress',async (e) => {
                         showCancelButton:true,
                         confirmButtonText:"Aceptar"
                     }).then(async ({isConfirmed,value})=>{
-                        console.log(value)
                         if (isConfirmed && value !== "" && value !== ".") {
                             if (value === undefined || value === "" || parseFloat(value) === 0) {
                                 e.target.value = await "";
-                                codigo.focus()
+                                codigo.focus();
                             }else{
                                 if (!Number.isInteger(parseFloat(value)) && producto.unidad === "U") {
                                     await sweet.fire({title:"La cantidad de este producto no puede ser en decimal"});
                                 }else{
                                     producto.stock < 0 && await sweet.fire({title:"Stock En Negativo"});
-                                    (parseFloat(producto.precio_venta) === 0 && await sweet.fire({title:"Precio del producto en 0"}));
+                                    parseFloat(producto.precio_venta) === 0 && await sweet.fire({title:"Precio del producto en 0"});
                                     parseFloat(producto.stock) === 0 && await sweet.fire({title:"Producto con Stock en 0"})
                                     await mostrarVentas(producto,parseFloat(value));
                                     e.target.value="";
@@ -294,22 +293,23 @@ ipcRenderer.on('mando-el-producto',async (e,args) => {
 })
 
 let id = 1 //id de la tabla de ventas
+
 function mostrarVentas(objeto,cantidad) {
-    Preciofinal += (parseFloat(objeto.precio_venta)*cantidad);
-    total.value = redondear(Preciofinal,2)
+    Preciofinal += objeto.oferta ? objeto.precioOferta * cantidad : objeto.precio_venta * cantidad;
+    total.value = redondear(Preciofinal,2);
     resultado.innerHTML += `
         <tr id=${id}>
         <td class="tdEnd">${(cantidad).toFixed(2)}</td>
         <td>${objeto._id}</td>
         <td>${objeto.descripcion} ${objeto.marca}</td>
         <td class="tdEnd">${(objeto.iva === "R" ? 10.50 : 21).toFixed(2)}</td>
-        <td class="tdEnd">${parseFloat(objeto.precio_venta).toFixed(2)}</td>
-        <td class="tdEnd">${(parseFloat(objeto.precio_venta)*(cantidad)).toFixed(2)}</td>
+        <td class="tdEnd">${objeto.oferta ? objeto.precioOferta.toFixed(2) : parseFloat(objeto.precio_venta).toFixed(2)}</td>
+        <td class="tdEnd">${objeto.oferta ? (objeto.precioOferta * cantidad).toFixed(2) : (parseFloat(objeto.precio_venta)*(cantidad)).toFixed(2)}</td>
         </tr>
     `
     objeto.identificadorTabla = `${id}`;
     id++;
-    totalPrecioProductos += objeto.precio_venta * cantidad;
+    totalPrecioProductos += (objeto.oferta) ? objeto.precioOferta * cantidad : objeto.precio_venta * cantidad;
     listaProductos.push({objeto,cantidad});
 }
 

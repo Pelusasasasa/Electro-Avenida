@@ -41,6 +41,18 @@ const Producto = new Schema({
         type: String,
         default: "0"
     },
+    observacion: {
+        type: String,
+        default: ""
+    },
+    oferta:{
+        type:Boolean,
+        default:false
+    },
+    precioOferta:{
+        type:Number,
+        defatul:0
+    },
     utilidad: {
         type: String,
         default: "0"
@@ -48,10 +60,6 @@ const Producto = new Schema({
     precio_venta: {
         type: String,
         default: "0" 
-    },
-    observacion: {
-        type: String,
-        default: ""
     },
     unidad: {
         type: String,
