@@ -19,6 +19,8 @@ const costoDolares = document.querySelector('#costoDolares');
 const ivaImp = document.querySelector('#ivaImp')
 const costoTotal = document.querySelector('#costoTotal');
 const observaciones = document.querySelector('#observaciones');
+const oferta = document.querySelector('#oferta');
+const precioOferta = document.querySelector('#precioOferta');
 const utilidad = document.querySelector('#utilidad');
 const precioVenta = document.querySelector('#precioVenta');
 const unidad = document.querySelector('#unidad');
@@ -27,6 +29,7 @@ const select = document.querySelector('#rubros');
 //Botones
 const modificar = document.querySelector('.modificar');
 const guardar = document.querySelector('.guardar');
+const salir = document.querySelector('.salir')
 
 let dolar = 0;
 let costo = 0;
@@ -66,7 +69,6 @@ ipcRenderer.on('acceso',(e,args)=>{
         document.querySelector('.utilidad').classList.add('none')
     }
 });
-
 
 ipcRenderer.on('vendedor',(e,args)=>{
     vendedor = args;
@@ -148,7 +150,7 @@ modificar.addEventListener('click',e=>{
     precioVenta.removeAttribute("disabled"); 
     unidad.removeAttribute('disabled');
     rubros.removeAttribute('disabled');
-
+    oferta.removeAttribute('disabled');
 })
 
 guardar.addEventListener('click',async e=>{
@@ -185,7 +187,6 @@ guardar.addEventListener('click',async e=>{
     window.close()
 })
 
-const salir = document.querySelector('.salir')
 salir.addEventListener('click',e=>{
     window.close();
 })
@@ -200,154 +201,156 @@ function resultado(numero1,numero2,dolar=1) {
     return numero1*numero2*dolar/100;
 }
 
-    function tasaIvas(palabra) {
-        if (palabra === "N") {
-            return 26;
-        }else{
-            return 15;
-        }
+function tasaIvas(palabra) {
+    if (palabra === "N") {
+        return 26;
+    }else{
+        return 15;
     }
+}
 
-    codigo.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            codFabrica.focus()
-        }
-    })
-    codFabrica.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            descripcion.focus()
-        }
-    })
-    descripcion.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            unidad.focus()
-        }
-    })
+codigo.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        codFabrica.focus()
+    }
+})
 
-    unidad.addEventListener('keypress',e=>{
-        e.preventDefault();
-        if (e.key === "Enter") {
-            provedor.focus()
-        }
-    })
+codFabrica.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        descripcion.focus()
+    }
+});
+
+descripcion.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        unidad.focus()
+    }
+});
+
+unidad.addEventListener('keypress',e=>{
+    e.preventDefault();
+    if (e.key === "Enter") {
+        provedor.focus()
+    }
+});
     
-    stock.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            provedor.focus()
-        }
-    })
+stock.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        provedor.focus()
+    }
+});
     
-    provedor.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            marca.focus()
-        }
-    })
+provedor.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        marca.focus()
+    }
+});
     
-    marca.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            tasaIva.focus()
-        }
-    })
+marca.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        tasaIva.focus()
+    }
+})
 
-    tasaIva.addEventListener('keypress',e=>{
-        e.preventDefault();
-        if (e.key === "Enter") {
-            costoPesos.focus()
-            costoPesos.select()
-        }
-    })
+tasaIva.addEventListener('keypress',e=>{
+    e.preventDefault();
+    if (e.key === "Enter") {
+        costoPesos.focus()
+        costoPesos.select()
+    }
+})
     
-    costoPesos.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            costoDolares.focus()
-            costoDolares.select()
-        }
-    })
+costoPesos.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        costoDolares.focus()
+        costoDolares.select()
+    }
+})
     
-    costoDolares.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            costoTotal.focus()
-        }
-    })
+costoDolares.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        costoTotal.focus()
+    }
+})
     
-    ivaImp.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            costoTotal.focus()
-        }
-    })
+ivaImp.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        costoTotal.focus()
+    }
+})
     
-    costoTotal.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            observaciones.focus()
-        }
-    })
+costoTotal.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        observaciones.focus()
+    }
+})
     
-    observaciones.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            utilidad.focus()
-        }
-    })
+observaciones.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        utilidad.focus()
+    }
+})
     
-    utilidad.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            precioVenta.focus()
-        }
-    })
+utilidad.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        precioVenta.focus()
+    }
+})
     
-    precioVenta.addEventListener('keypress',e=>{
-        if (e.key === "Enter") {
-            guardar.focus();
-        }
-    })
+precioVenta.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        guardar.focus();
+    }
+})
 
-    utilidad.addEventListener('focus',e=>{
-        utilidad.select();
-    })
+utilidad.addEventListener('focus',e=>{
+    utilidad.select();
+})
 
-    costoPesos.addEventListener('focus',e=>{
-        costoPesos.select();
-    })
+costoPesos.addEventListener('focus',e=>{
+    costoPesos.select();
+})
 
-    costoDolares.addEventListener('focus',e=>{
-        costoDolares.select();
-    })
+costoDolares.addEventListener('focus',e=>{
+    costoDolares.select();
+})
 
-    marca.addEventListener('focus',e=>{
-        marca.select();
-    })
+marca.addEventListener('focus',e=>{
+    marca.select();
+})
 
-    stock.addEventListener('focus',e=>{
-        stock.select();
-    })
+stock.addEventListener('focus',e=>{
+    stock.select();
+})
 
-    provedor.addEventListener('focus',e=>{
-        provedor.select();
-    })
+provedor.addEventListener('focus',e=>{
+    provedor.select();
+})
 
-    descripcion.addEventListener('focus',e=>{
-        descripcion.select();
-    })
+descripcion.addEventListener('focus',e=>{
+    descripcion.select();
+})
 
-    codigo.addEventListener('focus',e=>{
-        codigo.select();
-    })
+codigo.addEventListener('focus',e=>{
+    codigo.select();
+})
 
-    codFabrica.addEventListener('focus',e=>{
-        codFabrica.select();
-    })
+codFabrica.addEventListener('focus',e=>{
+    codFabrica.select();
+})
 
-    ivaImp.addEventListener('focus',e=>{
-        ivaImp.select();
-    })
+ivaImp.addEventListener('focus',e=>{
+    ivaImp.select();
+})
 
-    costoTotal.addEventListener('focus',e=>{
-        costoTotal.select();
-    })
+costoTotal.addEventListener('focus',e=>{
+    costoTotal.select();
+})
 
-    observaciones.addEventListener('focus',e=>{
-        observaciones.select();
-    })
+observaciones.addEventListener('focus',e=>{
+    observaciones.select();
+})
 
-    precioVenta.addEventListener('focus',e=>{
-        precioVenta.select();
-    })
+precioVenta.addEventListener('focus',e=>{
+    precioVenta.select();
+})

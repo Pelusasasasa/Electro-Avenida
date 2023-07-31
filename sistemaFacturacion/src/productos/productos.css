@@ -167,11 +167,19 @@
 }
 
 .agregarProducto .observaciones,.modificarProducto .observaciones{
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2rem;
 }
-.agregarProducto .observaciones main,.modificarProducto .observaciones main{
-    width: 70%;
+
+.agregarProducto .observaciones .oferta,.modificarProducto .observaciones .oferta{
+    text-align: center;
+}
+
+.agregarProducto .observaciones .oferta input,.modificarProducto .observaciones .oferta input{
+    transform: scale(1.8);
+    width: fit-content;
+    align-self: center;
 }
 
 .agregarProducto .precioFinal,.modificarProducto .precioFinal{

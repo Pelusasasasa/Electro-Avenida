@@ -13,6 +13,12 @@ rubrosCTRL.getsAll = async(req,res)=>{
     res.send(rubros);
 }
 
+rubrosCTRL.getForCodigo = async(req,res)=>{
+    const {codigo} = req.params;
+    const rubro = await Rubro.findOne({codigo:codigo});
+    res.send(rubro)
+}
+
 rubrosCTRL.getsLastCodigo = async(req,res)=>{
     const lastRubro = (await Rubro.find({}).sort({$natural:-1}).limit(1))[0]
     const codigo = lastRubro ? lastRubro.codigo + 1 : 1;

@@ -19,6 +19,8 @@ const costoDolares = document.querySelector('#costoDolares');
 const ivaImp = document.querySelector('#ivaImp');
 const costoTotal = document.querySelector('#costoTotal');
 const observaciones = document.querySelector('#observaciones'); 
+const oferta = document.querySelector('#oferta'); 
+const precioOferta = document.querySelector('#precioOferta'); 
 const utilidad = document.querySelector('#utilidad');
 const precioVenta = document.querySelector('#precioVenta');
 const imagen = document.querySelector('#imagen');
@@ -138,9 +140,10 @@ agregar.addEventListener('click' ,async  (e) =>{
         unidad: unidad.value,
         rubro:select.value,
         vendedor:vendedor,
-        maquina:verNombrePc()
+        maquina:verNombrePc(),
+        oferta:oferta.checked,
+        precioOferta:precioOferta.value
     }
-
     //Enviamos el producto al servidor
     await axios.post(`${URL}productos`,producto,configAxios);
     //enviamos la imagen si es que tiene
@@ -181,7 +184,7 @@ document.addEventListener('keydown',e=>{
     if (e.key === "Escape") {
         window.close()
     }
-})
+});
 
 codigo.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
@@ -260,7 +263,31 @@ costoTotal.addEventListener('keypress',e=>{
 
 observaciones.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        utilidad.focus()
+        oferta.focus()
+    }
+});
+
+oferta.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        if (oferta.checked) {
+            precioOferta.focus();
+        }else{
+            utilidad.focus();
+        }
+    }
+});
+
+oferta.addEventListener('change',(e)=>{
+    if (oferta.checked) {
+        precioOferta.removeAttribute('disabled')
+    }else{
+        precioOferta.setAttribute('disabled','')
+    }
+});
+
+precioOferta.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        utilidad.focus();
     }
 });
 
@@ -322,6 +349,10 @@ costoTotal.addEventListener('focus',e=>{
 
 observaciones.addEventListener('focus',e=>{
     observaciones.select();
+});
+
+precioOferta.addEventListener('focus',e=>{
+    precioOferta.select();
 });
 
 salir.addEventListener('click',e=>{
