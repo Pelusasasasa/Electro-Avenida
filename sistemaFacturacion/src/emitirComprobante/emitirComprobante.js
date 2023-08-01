@@ -311,7 +311,7 @@ function mostrarVentas(objeto,cantidad) {
     id++;
     totalPrecioProductos += (objeto.oferta) ? objeto.precioOferta * cantidad : objeto.precio_venta * cantidad;
     listaProductos.push({objeto,cantidad});
-}
+};
 
 resultado.addEventListener('click',e=>{
     seleccionado && seleccionado.classList.remove('seleccionado');
@@ -332,7 +332,7 @@ resultado.addEventListener('click',e=>{
         agregariva.classList.remove('none');
         agregariva.children[0].value = seleccionado.children[3].innerHTML === "10.50" ? "R" : "N";
     }
-})
+});
 
 //Para Cambiar el precio de un producto
 cambioPrecio.children[0].addEventListener('keypress',async (e)=>{
@@ -340,6 +340,7 @@ cambioPrecio.children[0].addEventListener('keypress',async (e)=>{
         const  producto = listaProductos.find(({objeto,cantidad})=> objeto.identificadorTabla === seleccionado.id);
         await borrarUnProductoDeLaLista(seleccionado);
         producto.objeto.precio_venta = cambioPrecio.children[0].value !== "" ? parseFloat(cambioPrecio.children[0].value) : producto.objeto.precio_venta;
+        producto.objeto.precioOferta = cambioPrecio.children[0].value !== "" ? parseFloat(cambioPrecio.children[0].value) : producto.objeto.precio_venta;
         producto.cantidad = nuevaCantidad.value !== "" ? nuevaCantidad.value : producto.cantidad;
         producto.objeto.iva = agregariva.children[0].value;
         mostrarVentas(producto.objeto,parseFloat(producto.cantidad));
@@ -351,7 +352,7 @@ cambioPrecio.children[0].addEventListener('keypress',async (e)=>{
         nuevaCantidadDiv.classList.add('none');
         codigo.focus()
     }
-})
+});
 
 //Para cambiar la cantidad
 nuevaCantidad.addEventListener('keypress',e=>{
@@ -513,7 +514,7 @@ async function movimientoProducto(cantidad,objeto,idCliente,cliente,tipo_pago,ti
     movProducto.nro_comp = nro_comp;
     movProducto.egreso = cantidad;
     movProducto.stock = tipo_pago === "PP" ? objeto.stock : parseFloat((parseFloat(objeto.stock) - cantidad).toFixed(2));
-    movProducto.precio_unitario=objeto.precio_venta;
+    movProducto.precio_unitario = objeto.oferta ? objeto.precioOferta : objeto.precio_venta;
     movProducto.total=(parseFloat(movProducto.egreso)*parseFloat(movProducto.precio_unitario)).toFixed(2);
     movProducto.rubro = objeto.rubro;
     movProducto.tipo_pago = tipo_pago;

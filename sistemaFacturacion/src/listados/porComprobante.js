@@ -123,7 +123,8 @@ async function listarVentas(lista) {
                 tdVendedor.innerHTML = venta.vendedor.substr(-20,3);
                 tdCantidad.innerHTML = venta.tipo_comp === "Nota Credito" ? (mov.egreso * -1).toFixed(2) : mov.egreso.toFixed(2);
                 tdPrecio.innerHTML = mov.precio_unitario;
-                tdTotal.innerHTML = venta.tipo_comp === "Nota Credito" ? (objeto.precio_venta*cantidad*-1).toFixed(2) : (mov.precio_unitario*mov.egreso).toFixed(2);
+                
+                tdTotal.innerHTML = venta.tipo_comp === "Nota Credito" ? (mov.precio_unitario.precio_venta*mov.egreso*-1).toFixed(2) : (mov.precio_unitario*mov.egreso).toFixed(2);
     
                 tr.appendChild(tdTipo);
                 tr.appendChild(tdNumero);

@@ -15,7 +15,6 @@ const URL = process.env.URL;
 
 const { copiar, verCodComp, redondear, generarMovimientoCaja, configAxios, verNombrePc, ponerEnCuentaCorrienteCompensada } = require('../funciones');
 
-
 const hoy = new Date();
 let diaDeHoy =  hoy.getDate();
 let mesDeHoy = hoy.getMonth() + 1;
@@ -231,6 +230,10 @@ const listarLista = (lista,situacion)=>{
             inputActual.type = "number";
             inputActual.value = "0.00";
 
+            inputActual.addEventListener('blur',saldoPagado);
+            inputActual.addEventListener('blur',calculartotal);
+            inputActual.addEventListener('keypress',saltoAOtroPago);
+
             if (venta.importe === 0.1) {
                 inputActual.setAttribute('disabled','')
             }
@@ -273,53 +276,6 @@ listar.addEventListener('click',e=>{
     subseleccionado.classList.add('subseleccionado');
 });
 
-inputSeleccionado.addEventListener('keyup',async (e)=>{
-    //si se apreta enter o tab vamos a resolver todo
-    if ((e.key==="Tab" || e.key === "Enter")) {
-        if (inputSeleccionado.value === "") {
-            inputSeleccionado.value = "0.00"
-        };
-        //aux va a tomar el valor del saldo;
-        const aux = trSeleccionado.children[6].innerHTML;
-        
-        if (inputSeleccionado.value !== "") {
-            //a saldo vamos a poner el valor el importe - pagado - pagado Actual
-            trSeleccionado.children[6].innerHTML = (parseFloat(trSeleccionado.children[3].innerHTML)-parseFloat(trSeleccionado.children[4].innerHTML) - parseFloat(inputSeleccionado.value)).toFixed(2)
-        }
-        if ((parseFloat(trSeleccionado.children[3].innerHTML)>0 && parseFloat(trSeleccionado.children[6].innerHTML)<0) || (parseFloat(trSeleccionado.children[3].innerHTML)<0 && parseFloat(trSeleccionado.children[6].innerHTML)>0)) {
-            await sweet.fire({title:"El monto abonado es mayor al de la venta"})
-            trSeleccionado.children[6].innerHTML = aux;
-            trSeleccionado.children[5].children[0].value = "";
-        }else{
-            //tomamos todos los inputs y ponemos el total.value
-            const inputs = document.querySelectorAll('tr input');
-                let totalInputs = 0;
-                inputs.forEach(input => {
-                    totalInputs += input.value !== "" ? parseFloat(input.value) : 0
-                });
-            total.value = totalInputs.toFixed(2);
-
-
-            const tr = trSeleccionado.children;
-            trSeleccionado.children[6].innerHTML = (parseFloat(tr[3].innerHTML) - parseFloat(tr[4].innerHTML) - parseFloat(tr[5].children[0].value)).toFixed(2);
-            
-            //lo que hacemos es pasar al siguiente tr si es que hay
-            if(trSeleccionado.nextElementSibling){
-                trSeleccionado = trSeleccionado.nextElementSibling;
-                inputSeleccionado = trSeleccionado.children[5].children[0];
-                inputSeleccionado.focus();//ponemos el foco en el input
-                inputSeleccionado.select();
-            }
-        }
-        if ((parseFloat(total.value) === parseFloat(cliente.saldo) && situacion === "blanco") || (parseFloat(total.value) === parseFloat(cliente.saldo_p) && situacion === "negro")) {
-            const saldoAFavor = document.querySelector('#saldoAFavor');
-            saldoAFavor.removeAttribute('disabled')
-        }else{
-            saldoAFavor.setAttribute('disabled',"")
-        }
-        }
-});
-
 let saldoAFavorAnterior = "0"
 saldoAfavor.addEventListener('change',e=>{
     if (!total.value) {
@@ -331,7 +287,7 @@ saldoAfavor.addEventListener('change',e=>{
         saldoAfavor.value = parseFloat(saldoAfavor.value).toFixed(2)
         imprimir.focus();
     }
-})
+});
 
 imprimir.addEventListener('click',async e=>{
     e.preventDefault();
@@ -349,28 +305,7 @@ imprimir.addEventListener('click',async e=>{
            hacerRecibo();
     }
     
-})
-
-imprimir.addEventListener('keydown',async e=>{
-    e.preventDefault();
-    total.value = total.value === "" && 0;
-    if (e.key === "Enter") {
-        if(parseFloat(total.value) === 0){
-            await sweet.fire({
-                title:"RECIBO EN 0,DESEA CONTINUAR?",
-                showCancelButton:true,
-                confirmButtonText:"Aceptar"
-            }).then(({isConfirmed})=>{
-                if (isConfirmed) {
-                    hacerRecibo();
-                }
-            })
-        }else{
-               hacerRecibo();
-        }
-    }
-})
-
+});
 
 const hacerRecibo = async()=>{
     //Pnemos en un arreglo las ventas que se modificaron, asi despues imprimimos el recibo
@@ -450,13 +385,13 @@ const hacerRecibo = async()=>{
     }finally{
         alerta.classList.add('none');   
     }
-}
+};
 
 const traerUltimoNroRecibo = async ()=>{
     let numero = await axios.get(`${URL}tipoVenta`,configAxios);
     numero = numero.data["Ultimo Recibo"];
     return numero
-}
+};
 
 const modifcarNroRecibo = async(numero,tipo_comp,iva)=>{
     let numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
@@ -469,7 +404,7 @@ const modifcarNroRecibo = async(numero,tipo_comp,iva)=>{
         })
     }
 
-}
+};
 
 const modificarVentasConpensadas = async (lista)=>{
     const trs = document.querySelectorAll('tbody tr');
@@ -489,7 +424,7 @@ const modificarVentasConpensadas = async (lista)=>{
             }
         }
     }
-}
+};
 
 cancelar.addEventListener('click',async e=>{
     await sweet.fire({
@@ -501,22 +436,6 @@ cancelar.addEventListener('click',async e=>{
             location.href = "../index.html";
         }
     })
-});
-
-//si hacemos click en pagar todo se compensan todas las ventas que aparecen
-todo.addEventListener('click',e=>{
-    total.value = situacion === "blanco" ? saldo.value : saldo_p.value;
-    saldoAfavor.removeAttribute('disabled');
-
-    const trs = document.querySelectorAll('.listar tr');
-    for(let tr of trs){
-        if (tr.children[3].innerHTML !== "0.10") {
-            tr.children[5].children[0].value = tr.children[6].innerHTML;
-            tr.children[6].innerHTML = "0.00";
-        }else{
-            total.value = redondear(parseFloat(total.value) - parseFloat(tr.children[3].innerHTML),2);
-        }
-    }
 });
 
 const ponerEnCuentaCorrienteHistorica = async(recibo,vendedor,maquina)=>{
@@ -537,6 +456,79 @@ const ponerEnCuentaCorrienteHistorica = async(recibo,vendedor,maquina)=>{
         })
     }
 };
+
+//Calculamos el td saldo
+async function saldoPagado(e){
+    const tr = e.target.parentNode.parentNode;
+    const aux = tr.children[6].innerText;
+    e.target.value === "" && (e.target.value = "0.00");
+    tr.children[6].innerText = redondear(parseFloat(tr.children[3].innerText) - parseFloat(tr.children[4].innerText) - parseFloat(e.target.value),2);
+
+    if ((tr.children[6].innerText < 0 && parseFloat(tr.children[3].innerText) > 0) || (tr.children[6].innerText > 0 && parseFloat(tr.children[3].innerText) < 0)) {
+        await sweet.fire({
+            title:"Pagado Actual Es Mayor Al saldo",
+            showConfirmButton:true,
+            timer:1600,
+            icon:"error"
+        });
+        tr.children[6].innerText = aux;
+        tr.children[5].children[0].value = "0.00";
+        tr.children[5].children[0].focus();
+        tr.children[5].children[0].select();
+        trSeleccionado = tr;
+
+        total.value = redondear(parseFloat(total.value) - parseFloat(aux)),2;
+    };
+};
+
+//Saltamos a otro tr si hay lugar
+function saltoAOtroPago(e) {
+    if (e.keyCode === 13) {
+        if (trSeleccionado.nextElementSibling) {
+            trSeleccionado.nextElementSibling.children[5].children[0].focus();
+            trSeleccionado.nextElementSibling.children[5].children[0].select();
+            trSeleccionado = trSeleccionado.nextElementSibling;
+        }else{
+            imprimir.focus();
+        }
+    }
+};
+
+//Calculamos el total de los inputs
+async function calculartotal() {
+    const trs = document.querySelectorAll('.listar tr');
+
+    let sum = 0;
+    for await(let tr of trs){
+        sum += parseFloat(tr.children[5].children[0].value);
+    };
+
+    if (situacion === "negro" && cliente.saldo_p === sum) {
+        saldoAfavor.removeAttribute('disabled');
+    };
+
+    if(situacion === 'blanco' && cliente.saldo === sum){
+        saldoAfavor.removeAttribute('disabled');
+    };
+
+    total.value = sum + parseFloat(saldoAfavor.value);  
+};
+
+//si hacemos click en pagar todo se compensan todas las ventas que aparecen
+todo.addEventListener('click',e=>{
+    total.value = situacion === "blanco" ? saldo.value : saldo_p.value;
+    saldoAfavor.removeAttribute('disabled');
+
+    const trs = document.querySelectorAll('.listar tr');
+    for(let tr of trs){
+        if (tr.children[3].innerHTML !== "0.10") {
+            tr.children[5].children[0].value = tr.children[6].innerHTML;
+            tr.children[6].innerHTML = "0.00";
+        }else{
+            total.value = redondear(parseFloat(total.value) - parseFloat(tr.children[3].innerHTML),2);
+        }
+    }
+});
 
 codigo.addEventListener('focus',e=>{
     codigo.select();

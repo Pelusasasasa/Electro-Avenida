@@ -101,9 +101,7 @@ const verTipoPago = async ()=>{
          a = await e.checked ? e.value : a;
     })
     return a
-}
-
-
+};
 
  //Ponemos valores a los inputs
  async function ponerInputsClientes(cliente) {
@@ -147,8 +145,7 @@ observaciones.addEventListener('keypress',(e)=>{
     if (e.key === "Enter") {
         codigo.focus()
     }
-}) 
-
+});
 
 //Cuando buscamos un producto
 codigo.addEventListener('keypress',async (e) => {
@@ -256,27 +253,25 @@ ipcRenderer.on('mando-el-producto',async(e,args)=>{
         await mostrarVentas(producto,cantidad);
 });
 
-let id = 1
+let id = 1;
 const mostrarVentas = (objeto,cantidad)=>{
-    totalPrecioProductos += (parseFloat(objeto.precio_venta)*parseFloat(cantidad));
+    totalPrecioProductos += objeto.oferta ? objeto.precioOferta * cantidad : (objeto.precio_venta * cantidad);
     total.value = totalPrecioProductos.toFixed(2);
+    console.log(objeto.precio_venta)
     resultado.innerHTML += `
         <tr id=${id}>
         <td class="text-end">${(parseFloat(cantidad)).toFixed(2)}</td>
         <td>${objeto._id}</td>
         <td>${objeto.descripcion}</td>
         <td class="text-end" >${(objeto.iva === "R" ? 10.50 : 21).toFixed(2)}</td>
-        <td class="text-end">${parseFloat(objeto.precio_venta).toFixed(2)}</td>
-        <td class="text-end">${(parseFloat(objeto.precio_venta)*(cantidad)).toFixed(2)}</td>
+        <td class="text-end">${objeto.oferta ? objeto.precioOferta.toFixed(2) : (objeto.precio_venta)}</td>
+        <td class="text-end">${objeto.oferta ? (objeto.precioOferta * cantidad).toFixed(2) : (parseFloat(objeto.precio_venta) * cantidad).toFixed(2)}</td>
         </tr>
     `
     objeto.identificadorTabla = `${id}`
     id++;
     listaProductos.push({objeto,cantidad});
-}
-
-
-
+};
 const contado = document.querySelector('#CD');
 
 cobrado.addEventListener('blur',e=>{
@@ -432,7 +427,7 @@ const movimientoProducto = async(objeto,cantidad,venta)=>{
     movProducto.nro_comp=venta.nro_comp;
     movProducto.ingreso = cantidad;
     movProducto.stock = objeto.stock;
-    movProducto.precio_unitario=objeto.precio_venta;
+    movProducto.precio_unitario = objeto.oferta ? objeto.precioOferta : objeto.precio_venta;
     movProducto.total=(parseFloat(movProducto.ingreso)*parseFloat(movProducto.precio_unitario)).toFixed(2)
     movProducto.vendedor = venta.vendedor;
     arregloMovimiento.push(movProducto)
@@ -513,19 +508,31 @@ divNuevaCantidad.children[0].addEventListener('keypress',e=>{
 divNuevoPrecio.children[0].addEventListener('keypress',e=>{
     if(e.key === "Enter"){
         let nuevoTotal = parseFloat(total.value);
+
         const producto = listaProductos.find(({objeto,cantidad})=>objeto.identificadorTabla === seleccionado.id);
-        nuevoTotal -= parseFloat(producto.cantidad) * parseFloat(producto.objeto.precio_venta);
+        if (producto.objeto.oferta) {
+            nuevoTotal -= (parseFloat(producto.cantidad) * parseFloat(producto.objeto.precioOferta));
+        }else{
+            nuevoTotal -= parseFloat(producto.cantidad) * parseFloat(producto.objeto.precio_venta);
+        }
+        
+        //Cambiamos los valores de los productos
         producto.cantidad = divNuevaCantidad.children[0].value !== "" ? divNuevaCantidad.children[0].value : producto.cantidad;
         producto.objeto.precio_venta = divNuevoPrecio.children[0].value !== "" ? divNuevoPrecio.children[0].value : producto.objeto.precio_venta;
+        producto.objeto.precioOferta = divNuevoPrecio.children[0].value !== "" ? divNuevoPrecio.children[0].value : producto.objeto.precioOferta;
         producto.objeto.iva = agregarIva.children[0].value;
+
+        //Ponemos en el tr del tbody los valores
         const tr = document.getElementById(`${seleccionado.id}`);
         tr.children[0].innerHTML = parseFloat(producto.cantidad).toFixed(2);
         tr.children[3].innerHTML = producto.objeto.iva === "R" ? "10.50%" : "21.00";
         tr.children[4].innerHTML = parseFloat(producto.objeto.precio_venta).toFixed(2);
         tr.children[5].innerHTML = (parseFloat(producto.cantidad) * parseFloat(producto.objeto.precio_venta)).toFixed(2);
+
         nuevoTotal += parseFloat(producto.cantidad) * parseFloat(producto.objeto.precio_venta);
         totalPrecioProductos = nuevoTotal;
         total.value = nuevoTotal.toFixed(2);
+
         divNuevaCantidad.classList.add('none');
         divNuevoPrecio.classList.add('none');
         agregarIva.classList.add('none');
