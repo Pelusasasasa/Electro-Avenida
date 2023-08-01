@@ -1,7 +1,6 @@
 const { ipcRenderer } = require("electron")
 const sweet = require('sweetalert2');
 
-
 const axios = require("axios");
 const { copiar,recorrerFlechas, configAxios, clickderecho } = require("../funciones");
 require("dotenv").config;
@@ -311,8 +310,9 @@ actualizar.addEventListener('click',async e=>{
                 descripcion:movimiento.descripcion,
                 _id:movimiento.codProd,
                 marca:""
-            }
-            total =  parseFloat((total + parseFloat(movimiento.egreso)*parseFloat(producto.precio_venta)).toFixed(2));
+            };
+            let aux = producto.oferta ? producto.precioOferta : parseFloat(producto.precio_venta);
+            total = parseFloat((total + parseFloat(movimiento.egreso)* aux).toFixed(2));
             productos.push({cantidad:movimiento.egreso,objeto:producto});
         };
             venta.productos = productos;
@@ -336,7 +336,7 @@ actualizar.addEventListener('click',async e=>{
 
         for(let mov of movimientos){
             let producto =(await axios.get(`${URL}productos/${mov.codProd}`,configAxios)).data;
-            mov.precio_unitario = parseFloat(producto.precio_venta);
+            mov.precio_unitario = producto.oferta ? producto.precioOferta : parseFloat(producto.precio_venta);
             mov.total = parseFloat((mov.egreso*mov.precio_unitario).toFixed(2));
         }
       
