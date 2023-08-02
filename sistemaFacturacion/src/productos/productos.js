@@ -59,9 +59,15 @@ ipcRenderer.on('productoModificado',(e,args)=>{
     const tr = document.getElementById(`${producto._id}`)
     const aux = tr.children;
     aux[1].innerHTML = producto.descripcion;
-    aux[2].innerHTML = producto.precio_venta.toFixed(2);
+    aux[2].innerHTML = producto.oferta 
+    ? `<p class=oferta>
+        <span>${producto.precioOferta.toFixed(2)}</span>
+        <span>${producto.precio_venta}</span>
+       </p>
+    `
+    : producto.precio_venta;
     aux[3].innerHTML = producto.marca;
-    aux[4].innerHTML = producto.stock.toFixed(2);
+    aux[4].innerHTML = producto.stock;
     aux[5].innerHTML = producto.cod_fabrica;
     aux[6].innerHTML = producto.observacion;
 });
@@ -96,7 +102,13 @@ const ponerProductos = productos =>{
 
         tdId.innerHTML = producto._id;
         tdDscripcion.innerHTML = producto.descripcion;
-        tdPrecio.innerHTML = parseFloat(producto.precio_venta).toFixed(2);
+        // PLAFON CUBETO 1 LUZ G9 WENGUE
+        tdPrecio.innerHTML = producto.oferta 
+        ? ` <p class=oferta>
+                <span>${producto.precioOferta}</span>
+                <span>${producto.precio_venta}</span>
+            </p>` 
+        : producto.precio_venta;
         tdMarca.innerHTML = producto.marca;
         tdStock.innerHTML = parseFloat(producto.stock).toFixed(2);
         tdcodFabrica.innerHTML = producto.cod_fabrica;

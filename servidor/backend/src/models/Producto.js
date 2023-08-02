@@ -58,8 +58,8 @@ const Producto = new Schema({
         default: "0"
     },
     precio_venta: {
-        type: String,
-        default: "0" 
+        type: Number,
+        default: 0 
     },
     unidad: {
         type: String,

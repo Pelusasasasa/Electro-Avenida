@@ -85,7 +85,12 @@ async function filtrar(){
 
         thCodigo.innerHTML = producto._id;
         tdDescripcion.innerHTML = producto.descripcion;
-        tdPrecio.innerHTML = parseFloat(producto.precio_venta).toFixed(2);
+        tdPrecio.innerHTML = producto.oferta 
+        ? ` <p class=oferta>
+                <span>${producto.precioOferta}</span>
+                <span>${producto.precio_venta}</span>
+            </p>`
+        : producto.precio_venta
         tdMarca.innerHTML = producto.marca;
         tdStock.innerHTML = parseFloat(producto.stock).toFixed(2);
         tdFabrica.innerHTML = producto.cod_fabrica;
