@@ -295,6 +295,9 @@ ipcRenderer.on('mando-el-producto',async (e,args) => {
 let id = 1 //id de la tabla de ventas
 
 function mostrarVentas(objeto,cantidad) {
+    descuento.value = "0.00";
+    descuentoN.value = "0.00";
+    cobrado.value = "0.00";
     Preciofinal += objeto.oferta ? objeto.precioOferta * cantidad : objeto.precio_venta * cantidad;
     total.value = redondear(Preciofinal,2);
     resultado.innerHTML += `
@@ -855,6 +858,7 @@ ticketFactura.addEventListener('click',async (e) =>{
                     borraNegro && (venta.observaciones = ventaAnterior.nro_comp);//Se hace por si pasamos de presupuesto a factura
 
                     const afip = await subirAAfip(venta);
+                    asd
                     venta.nro_comp = `0005-${(afip.numero).toString().padStart(8,'0')}`;
                     venta.comprob = venta.nro_comp;
 
@@ -945,13 +949,16 @@ ticketFactura.addEventListener('click',async (e) =>{
     let gravado105 = 0 
     ventas.forEach(({objeto,cantidad}) =>{
         if (objeto.iva === "N") {
-            gravado21 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta)/1.21) ;
+            gravado21 += (cantidad * (parseFloat(objeto.precio_venta)/1.21)) ;
+            console.log("El precio de venta es de" + objeto.precio_venta)
+            console.log(gravado21)
             totalIva21 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta)/1.21) * 21 / 100;
         }else{
             gravado105 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta/1.105));
             totalIva105 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta/1.105)) * 10.5 / 100;
         }
-    })
+    });
+    gravado21 = parseFloat(gravado21.toFixed(2))
     let cantIva = 1
     if (gravado105 !== 0 && gravado21 !== 0) {
         cantIva = 2;
@@ -959,74 +966,15 @@ ticketFactura.addEventListener('click',async (e) =>{
     return [parseFloat(totalIva21.toFixed(2)),parseFloat(totalIva105.toFixed(2)),parseFloat(gravado21.toFixed(2)),parseFloat(gravado105.toFixed(2)),cantIva]
 }
 
-//funcion que busca en la afip a una persona
-buscarAfip.addEventListener('click',  async (e)=>{
-    let cliente = (await axios.get(`${URL}clientes/cuit/${dnicuit.value}`,configAxios)).data;
-        if (cliente !== "") {
-            await ponerInputsClientes(cliente)
-        }else{
-                if (dnicuit.value) {
-                   if (dnicuit.value.length>8) {
-                        buscarPersonaPorCuit(dnicuit.value)
-                   }else{
-                    const Http = new XMLHttpRequest();
-                    const url=`https://afip.tangofactura.com/Index/GetCuitsPorDocumento/?NumeroDocumento=${dnicuit.value}`;
-                    Http.open("GET", url);
-                    Http.send()
-                    Http.onreadystatechange = (e) => {
-                        buscarPersonaPorCuit(JSON.parse(Http.responseText).data[0])
-                        }
-                   }
-                }
-            }
-    cuentaC.classList.add('none');
-    observaciones.focus();
-});
 
- //Funcion para buscar una persona directamente por el cuit
- async function buscarPersonaPorCuit(cuit) {
-        const Https = new XMLHttpRequest();
-        const url=`https://afip.tangofactura.com/REST/GetContribuyente?cuit=${cuit}`;
-        await Https.open("GET", url);
-        await Https.send()
-        Https.onreadystatechange =async  (e) => {
-            if (Https.responseText !== "") {
-                const persona = JSON.parse(Https.responseText)
-                if (persona.errorGetData === false) {
-                    const {nombre,domicilioFiscal,EsRI,EsMonotributo,EsExento,EsConsumidorFinal} = persona.Contribuyente;
-                    const cliente = {};
-                    cliente.cliente=nombre;
-                    cliente.localidad = domicilioFiscal.localidad;
-                    cliente.direccion = domicilioFiscal.direccion;
-                    cliente.provincia = domicilioFiscal.nombreProvincia;
-                    buscarCliente.value = nombre;
-                    localidad.value=domicilioFiscal.localidad;
-                    direccion.value = domicilioFiscal.direccion;
-                    provincia.value = domicilioFiscal.nombreProvincia;
-                    if (EsRI) {
-                        cliente.cond_iva="Inscripto";
-                    }else if (EsExento) {
-                        cliente.cond_iva="Exento";
-                    } else if (EsMonotributo) {
-                        cliente.cond_iva="Monotributista";
-                    } else if(EsConsumidorFinal) {
-                        cliente.cond_iva="Consumidor Final";
-                    }
-                    cliente.cuit = dnicuit.value;
-                    cliente._id = "9999";
-                    await ponerInputsClientes(cliente);
-                }else{
-                    sweet.fire({title:"Persona no encontrada"});
-                }
-            }
-        }
-         
-}
 
  //lo usamos para borrar un producto de la tabla
 borrarProducto.addEventListener('click',e=>{
     nuevaCantidadDiv.classList.add('none');
     cambioPrecio.classList.add('none');
+    cobrado.value = "0.00";
+    descuento.value = "0.00";
+    descuentoN.value = "0.00";
     borrarUnProductoDeLaLista(seleccionado);
 });
 
@@ -1346,7 +1294,7 @@ const ponerEnCuentaCorrienteHistorica = async(venta,valorizado,saldo)=>{
     ticketFactura.classList.add('none')
     ventaValorizado.classList.remove('none')
     imprimirCheck.classList.remove('none')
-}
+};
 
 function ocultarNegro() {
     const bodyNegro = document.querySelector('.emitirComprobante')
@@ -1370,7 +1318,7 @@ function ocultarNegro() {
     ticketFactura.classList.remove('none')
     ventaValorizado.classList.add('none')
     imprimirCheck.classList.add('none')
-}
+};
 
 
 //Seccion de Facturar Prestamos
@@ -1428,6 +1376,70 @@ async function traerProductosPrestamo(arreglo) {
     };
     return listaProductos
 };
+
+//funcion que busca en la afip a una persona
+buscarAfip.addEventListener('click',  async (e)=>{
+    let cliente = (await axios.get(`${URL}clientes/cuit/${dnicuit.value}`,configAxios)).data;
+        if (cliente !== "") {
+            await ponerInputsClientes(cliente)
+        }else{
+                if (dnicuit.value) {
+                   if (dnicuit.value.length>8) {
+                        buscarPersonaPorCuit(dnicuit.value)
+                   }else{
+                    const Http = new XMLHttpRequest();
+                    const url=`https://afip.tangofactura.com/Index/GetCuitsPorDocumento/?NumeroDocumento=${dnicuit.value}`;
+                    Http.open("GET", url);
+                    Http.send()
+                    Http.onreadystatechange = (e) => {
+                        buscarPersonaPorCuit(JSON.parse(Http.responseText).data[0])
+                        }
+                   }
+                }
+            }
+    cuentaC.classList.add('none');
+    observaciones.focus();
+});
+
+ //Funcion para buscar una persona directamente por el cuit
+ async function buscarPersonaPorCuit(cuit) {
+        const Https = new XMLHttpRequest();
+        const url=`https://afip.tangofactura.com/REST/GetContribuyente?cuit=${cuit}`;
+        await Https.open("GET", url);
+        await Https.send()
+        Https.onreadystatechange =async  (e) => {
+            if (Https.responseText !== "") {
+                const persona = JSON.parse(Https.responseText)
+                if (persona.errorGetData === false) {
+                    const {nombre,domicilioFiscal,EsRI,EsMonotributo,EsExento,EsConsumidorFinal} = persona.Contribuyente;
+                    const cliente = {};
+                    cliente.cliente=nombre;
+                    cliente.localidad = domicilioFiscal.localidad;
+                    cliente.direccion = domicilioFiscal.direccion;
+                    cliente.provincia = domicilioFiscal.nombreProvincia;
+                    buscarCliente.value = nombre;
+                    localidad.value=domicilioFiscal.localidad;
+                    direccion.value = domicilioFiscal.direccion;
+                    provincia.value = domicilioFiscal.nombreProvincia;
+                    if (EsRI) {
+                        cliente.cond_iva="Inscripto";
+                    }else if (EsExento) {
+                        cliente.cond_iva="Exento";
+                    } else if (EsMonotributo) {
+                        cliente.cond_iva="Monotributista";
+                    } else if(EsConsumidorFinal) {
+                        cliente.cond_iva="Consumidor Final";
+                    }
+                    cliente.cuit = dnicuit.value;
+                    cliente._id = "9999";
+                    await ponerInputsClientes(cliente);
+                }else{
+                    sweet.fire({title:"Persona no encontrada"});
+                }
+            }
+        }
+         
+}
 
 //Seccion de Facturar Prestamos
 
