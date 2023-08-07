@@ -948,14 +948,14 @@ ticketFactura.addEventListener('click',async (e) =>{
     let gravado21 = 0 
     let gravado105 = 0 
     ventas.forEach(({objeto,cantidad}) =>{
+        const precio = objeto.oferta ? objeto.precioOferta : parseFloat(objeto.precio_venta)
+
         if (objeto.iva === "N") {
-            gravado21 += (cantidad * (parseFloat(objeto.precio_venta)/1.21)) ;
-            console.log("El precio de venta es de" + objeto.precio_venta)
-            console.log(gravado21)
-            totalIva21 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta)/1.21) * 21 / 100;
+            gravado21 += (cantidad * precio / 1.21);
+            totalIva21 += (cantidad * (precio / 1.21)) * 21 / 100;
         }else{
-            gravado105 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta/1.105));
-            totalIva105 += parseFloat(cantidad)*(parseFloat(objeto.precio_venta/1.105)) * 10.5 / 100;
+            gravado105 += (cantidad * precio / 1.105);
+            totalIva105 += (cantidad * objeto.precio_venta/1.105)  * 10.5 / 100;
         }
     });
     gravado21 = parseFloat(gravado21.toFixed(2))
