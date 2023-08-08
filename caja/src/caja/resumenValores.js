@@ -7,6 +7,7 @@ const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
 
+const cambio = document.querySelector('#cambio');
 const efectivoCaja = document.querySelector('#efectivoCaja');
 const cheques = document.querySelector('#cheques');
 const cien = document.querySelector('#cien');
@@ -65,9 +66,7 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
         ultimos = (await axios.get(`${URL}ultimos`,configAxios)).data;
     
         ponerValores(ultimos);
-    });
-
-
+});
 
 document.addEventListener('keyup',async e=>{
     if ((e.keyCode === 27)) {
@@ -117,6 +116,8 @@ const ponerValores = (obj) =>{
         valesEfectivo.value = redondear(parseFloat(chequesEfectivo.value) + parseFloat(totalVales.value),2);
 
         diferencia.value = redondear(-parseFloat(caja1.value) + parseFloat(valesEfectivo.value),2);
+
+        modificarCambio();
     }
 };
 
@@ -219,7 +220,6 @@ salir.addEventListener('click',async e=>{
     }
 });
 
-
 efectivoCaja.addEventListener('change',e=>{
     cambiarTotales(e.target)
 });
@@ -229,23 +229,28 @@ cheques.addEventListener('change',e=>{
 });
 
 cien.addEventListener('change',e=>{
-    cambiarTotales(e.target)
+    cambiarTotales(e.target);
+    modificarCambio();
 });
 
 cincuenta.addEventListener('change',e=>{
-    cambiarTotales(e.target)
+    cambiarTotales(e.target);
+    modificarCambio();
 });
 
 veinte.addEventListener('change',e=>{
-    cambiarTotales(e.target)
+    cambiarTotales(e.target);
+    modificarCambio();
 });
 
 diez.addEventListener('change',e=>{
     cambiarTotales(e.target)
+    modificarCambio();
 });
 
 monedas.addEventListener('change',e=>{
-    cambiarTotales(e.target)
+    cambiarTotales(e.target);
+    modificarCambio();
 });
 
 guardado.addEventListener('change',e=>{
@@ -275,4 +280,14 @@ maleta.addEventListener('change',e=>{
 const cambiarTotales = (input)=>{
     ultimos[input.id] = parseFloat(input.value)
     ponerValores(ultimos);
-}
+};
+
+function modificarCambio(){
+    const cienInput = parseFloat(cien.value);
+    const cincuentaInput = parseFloat(cincuenta.value);
+    const veinteInput = parseFloat(veinte.value);
+    const diezInput = parseFloat(diez.value);
+    const monedaInput = parseFloat(monedas.value);
+    
+    cambio.value = redondear(cienInput + cincuentaInput + veinteInput + diezInput + monedaInput,2);
+};

@@ -858,7 +858,6 @@ ticketFactura.addEventListener('click',async (e) =>{
                     borraNegro && (venta.observaciones = ventaAnterior.nro_comp);//Se hace por si pasamos de presupuesto a factura
 
                     const afip = await subirAAfip(venta);
-                    asd
                     venta.nro_comp = `0005-${(afip.numero).toString().padStart(8,'0')}`;
                     venta.comprob = venta.nro_comp;
 
@@ -948,7 +947,7 @@ ticketFactura.addEventListener('click',async (e) =>{
     let gravado21 = 0 
     let gravado105 = 0 
     ventas.forEach(({objeto,cantidad}) =>{
-        const precio = objeto.oferta ? objeto.precioOferta : parseFloat(objeto.precio_venta)
+        const precio = objeto.oferta ? objeto.precioOferta : parseFloat(objeto.precio_venta);
 
         if (objeto.iva === "N") {
             gravado21 += (cantidad * precio / 1.21);

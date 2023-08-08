@@ -271,3 +271,14 @@
 #difCaja main input,#difCaja main label{
     font-size: 2rem;
 }
+
+.cambioCaja{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.cambioCaja input{
+    /* padding: 1rem; */
+    font-size: 2rem;
+}

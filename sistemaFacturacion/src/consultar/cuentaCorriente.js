@@ -40,7 +40,7 @@ historica.addEventListener('click',e=>{
     historica.classList.add("none")
     compensada.classList.remove('none')
     tipo = "historica"
-    listarLista(listaHistorica,situacion,tipo)
+    listarLista(listaHistorica,situacion,tipo);
 });
 
 //mostramos la base de datos cuenta compensada del cliente
@@ -137,6 +137,8 @@ ipcRenderer.on('mando-el-cliente',async(e,args)=>{
     let cliente = (await axios.get(`${URL}clientes/id/${args}`,configAxios)).data
     ponerDatosCliente(cliente);
 });
+
+ipcRenderer.on('CancelarCuenta',cancelarCuenta);
 
 //si hacemos click en el tbody vamos a seleccionar una cuenta compensada o historica y pasamos a mostrar los detalles de la cuenta
 listar.addEventListener('click',e=>{
@@ -516,7 +518,6 @@ listar.addEventListener('contextmenu',(e) => {
     seleccionado.classList.add('seleccionado');
 });
 
-ipcRenderer.on('CancelarCuenta',cancelarCuenta);
 //cuando se hace click en cancelar cuenta en el menu secundario se ejecuta esta funcion
 async function cancelarCuenta(e) {
     const {isConfirmed} = await sweet.fire({
