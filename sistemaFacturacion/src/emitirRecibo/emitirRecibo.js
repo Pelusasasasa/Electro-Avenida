@@ -152,8 +152,8 @@ const inputsCliente = async (cliente)=>{
     codigo.value = cliente._id;
     nombre.value = cliente.cliente;
     (cliente.cond_iva === "") ? (cond_iva.value = "Consumidor Final") : (cond_iva.value = cliente.cond_iva);
-    saldo.value = cliente.saldo;
-    saldo_p.value = cliente.saldo_p
+    saldo.value = cliente.saldo.toFixed(2);
+    saldo_p.value = cliente.saldo_p.toFixed(2);
     direccion.value = cliente.direccion;
     localidad.value = cliente.localidad;
     cuit.value = cliente.cuit;

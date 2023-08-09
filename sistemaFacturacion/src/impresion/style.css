@@ -199,10 +199,19 @@ svg{
 .presupuesto table thead tr{
     border: .1rem solid black;
 }
-.presupuesto .total{
+.presupuesto .precios{
     display: flex;
     border: .1rem solid black;
     justify-content: space-around;
+    align-items: center;
+}
+
+.presupuesto .precios .total{
+    font-size: 2rem;
+}
+
+.presupuesto .precios p{
+    margin: 1rem;
 }
 
 .negrita{

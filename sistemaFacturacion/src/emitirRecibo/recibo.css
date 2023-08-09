@@ -17,8 +17,18 @@
 
 .emitirRecibo .cliente .nombre{
     display: grid;
-    grid-template-columns: 1fr 3fr 1fr 1fr;
+    grid-template-columns: 1fr 3fr 1fr;
     gap: 2rem;
+}
+
+.emitirRecibo .cliente .nombre input{
+    font-size: 2rem;
+}
+
+.emitirRecibo .cliente main #saldo,.emitirRecibo .cliente main #saldo_p{
+    background-color: white;
+    font-weight: 900;
+    text-align: end;
 }
 
 .emitirRecibo .cliente .nombre div,.emitirRecibo .cliente .direccion div,.emitirRecibo .cliente .cuit div{

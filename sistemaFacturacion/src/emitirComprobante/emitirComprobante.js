@@ -343,7 +343,7 @@ cambioPrecio.children[0].addEventListener('keypress',async (e)=>{
         const  producto = listaProductos.find(({objeto,cantidad})=> objeto.identificadorTabla === seleccionado.id);
         await borrarUnProductoDeLaLista(seleccionado);
         producto.objeto.precio_venta = cambioPrecio.children[0].value !== "" ? parseFloat(cambioPrecio.children[0].value) : producto.objeto.precio_venta;
-        producto.objeto.precioOferta = cambioPrecio.children[0].value !== "" ? parseFloat(cambioPrecio.children[0].value) : producto.objeto.precio_venta;
+        producto.objeto.precioOferta = cambioPrecio.children[0].value !== "" ? parseFloat(cambioPrecio.children[0].value) : producto.objeto.precioOferta;
         producto.cantidad = nuevaCantidad.value !== "" ? nuevaCantidad.value : producto.cantidad;
         producto.objeto.iva = agregariva.children[0].value;
         mostrarVentas(producto.objeto,parseFloat(producto.cantidad));
