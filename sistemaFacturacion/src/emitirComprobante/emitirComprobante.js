@@ -993,7 +993,7 @@ const borrarUnProductoDeLaLista =async  (productoSeleccionado)=>{
             for await(let e of listaProductos){
                 if (productoSeleccionado.id === e.objeto.identificadorTabla) {
                         listaProductos = listaProductos.filter(e=>e.objeto.identificadorTabla !== productoSeleccionado.id);
-                        totalPrecioProductos -= (e.objeto.precio_venta*e.cantidad);
+                        totalPrecioProductos -= e.objeto.oferta ? e.objeto.precioOferta * e.cantidad : (e.objeto.precio_venta*e.cantidad);
                 }
             };
             productoSeleccionado.parentNode.removeChild(productoSeleccionado);
@@ -1320,7 +1320,7 @@ function ocultarNegro() {
 };
 
 
-//Seccion de Facturar Prestamos
+//SECCION DE PRESTAMOS
 let facturarPrestamo = getParameterByName('facturarPrestamo');
 facturarPrestamo = facturarPrestamo ? JSON.parse(facturarPrestamo) : false
 
@@ -1375,6 +1375,8 @@ async function traerProductosPrestamo(arreglo) {
     };
     return listaProductos
 };
+
+//FIN SECCION DE PRESTAMOS
 
 //funcion que busca en la afip a una persona
 buscarAfip.addEventListener('click',  async (e)=>{
