@@ -28,16 +28,10 @@ const { ipcRenderer } = require("electron");
                 const tabla = document.querySelector('.tabla');
                 tabla.classList.add('hojaGrande');
             } 
-            const tomarFecha = new Date(venta.fecha);
-            let dia = tomarFecha.getDate(); 
-            let mes = tomarFecha.getMonth() + 1;
-            const anio = tomarFecha.getFullYear();
-            const hora = tomarFecha.getHours();
-            const minuto = tomarFecha.getMinutes();
-            const segundo = tomarFecha.getSeconds();
-
-            dia = dia<10 ? `0${dia}` : dia;
-            mes = mes<10 ? `0${mes}` : mes;
+            const now = new Date(venta.fecha);
+            const date = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+            const [anio,mes,dia] = date.slice(0,10).split('-',3);
+            const [hora,minuto,segundo] = date.slice(11,19).split(':',3);
 
             numero.innerHTML=venta.nro_comp;
             venta.observaciones !== "" ? clientes.innerHTML += ` (${venta.observaciones})` : "";
@@ -55,7 +49,7 @@ const { ipcRenderer } = require("electron");
                 precioFinal.innerText = ""
                 subtotal.innerText=""
                 descuento.innerText= ""
-            }
+            };
 
             tbody.innerHTML = "";
              for await (let elem of lista) {

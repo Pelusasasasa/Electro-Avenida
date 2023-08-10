@@ -511,7 +511,7 @@ async function calculartotal() {
         saldoAfavor.removeAttribute('disabled');
     };
 
-    total.value = sum + parseFloat(saldoAfavor.value);  
+    total.value = redondear(sum + parseFloat(saldoAfavor.value),2);  
 };
 
 //si hacemos click en pagar todo se compensan todas las ventas que aparecen

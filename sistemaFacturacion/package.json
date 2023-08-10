@@ -7,11 +7,12 @@
     "start": "electron-forge start",
     "dev": "nodemon src/index.js",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "publish": "electron-forge publish"
   },
   "repository": {
-    "type":"git",
-    "url":"git@github.com:Pelusasasasa/Electro-Avenida.git"
+    "type": "git",
+    "url": "git@github.com:Pelusasasasa/Electro-Avenida.git"
   },
   "keywords": [],
   "author": "Pelusa",

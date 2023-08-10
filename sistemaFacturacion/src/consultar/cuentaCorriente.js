@@ -201,36 +201,75 @@ const listarLista = (lista,situacion,tipo)=>{
     listar.innerHTML = '';
     listaGlobal.forEach(venta => {
         vendedor = venta.vendedor
-        let importe = venta.importe;
-        let saldo = venta.saldo;
-        let pagado = venta.pagado;
         if (venta.length !== 0) {
             let fecha = venta.fecha.slice(0,10).split('-',3);
-            if (tipo === "compensada") {
-                listar.innerHTML += `
-                <tr id="${venta.nro_comp}">
-                <td>${fecha[2]}/${fecha[1]}/${fecha[0]}</td>
-                    <td>${venta.tipo_comp}</td>
-                    <td>${venta.nro_comp}</td>
-                    <td class = "importe">${parseFloat(importe).toFixed(2)}</td>
-                    <td class = "pagado">${parseFloat(pagado).toFixed(2)}</td>
-                    <td class = "saldo">${(parseFloat(saldo).toFixed(2))}</td>
-                    <td><input class="${venta.nro_comp}" type="text" value="${venta.observaciones}" /></td>
-                </tr>
-            `
-            }else{
-                listar.innerHTML += `
-                <tr id="${venta.nro_comp}">
-                <td>${fecha[2]}/${fecha[1]}/${fecha[0]}</td>
-                    <td>${venta.tipo_comp}</td>
-                    <td>${venta.nro_comp}</td>
-                    <td class = "importe">${(venta.debe).toFixed(2)}</td>
-                    <td class = "pagado">${(venta.haber).toFixed(2)}</td>
-                    <td class = "saldo">${(venta.saldo).toFixed(2)}</td>
-                    <td>${venta.observaciones}</td>
-                </tr>
-            `
-            }
+
+            const tr = document.createElement('tr');
+
+            const tdFecha = document.createElement('td');
+            const tdTipo = document.createElement('td');
+            const tdNumero = document.createElement('td');
+            const tdImporte = document.createElement('td');
+            const tdPagado = document.createElement('td');
+            const tdSaldo = document.createElement('td');
+            const tdObservaciones = document.createElement('td');
+            
+            const inputObservaciones = document.createElement('input');
+
+            tdFecha.innerText = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
+            tdTipo.innerText = venta.tipo_comp;
+            tdNumero.innerText = venta.nro_comp;
+            tdImporte.innerText = tipo === "compensada" ? venta.importe : venta.debe;
+            tdPagado.innerText = tipo === "compensada" ? venta.pagado : venta.haber;
+            tdSaldo.innerText = tipo === "compensada" ? venta.saldo : venta.saldo;
+
+            inputObservaciones.value = venta.observaciones;
+
+            tdObservaciones.appendChild(inputObservaciones);
+
+            tr.id = venta.nro_comp;
+
+            tdImporte.classList.add('importe');
+            tdPagado.classList.add('pagado');
+            tdSaldo.classList.add('saldo');
+
+            inputObservaciones.classList.add(venta.nro_comp);
+
+            tr.appendChild(tdFecha);
+            tr.appendChild(tdTipo);
+            tr.appendChild(tdNumero);
+            tr.appendChild(tdImporte);
+            tr.appendChild(tdPagado);
+            tr.appendChild(tdSaldo);
+            tr.appendChild(tdObservaciones);
+
+            listar.appendChild(tr);
+
+            // if (tipo === "compensada") {
+            //     listar.innerHTML += `
+            //     <tr id="${venta.nro_comp}">
+            //         <td>${fecha[2]}/${fecha[1]}/${fecha[0]}</td>
+            //         <td>${venta.tipo_comp}</td>
+            //         <td>${venta.nro_comp}</td>
+            //         <td class = "importe">${parseFloat(importe).toFixed(2)}</td>
+            //         <td class = "pagado">${parseFloat(pagado).toFixed(2)}</td>
+            //         <td class = "saldo">${(parseFloat(saldo).toFixed(2))}</td>
+            //         <td><input class="${venta.nro_comp}" type="text" value="${venta.observaciones}" /></td>
+            //     </tr>
+            // `
+            // }else{
+            //     listar.innerHTML += `
+            //     <tr id="${venta.nro_comp}">
+            //     <td>${fecha[2]}/${fecha[1]}/${fecha[0]}</td>
+            //         <td>${venta.tipo_comp}</td>
+            //         <td>${venta.nro_comp}</td>
+            //         <td class = "importe">${(venta.debe).toFixed(2)}</td>
+            //         <td class = "pagado">${(venta.haber).toFixed(2)}</td>
+            //         <td class = "saldo">${(venta.saldo).toFixed(2)}</td>
+            //         <td>${venta.observaciones}</td>
+            //     </tr>
+            // `
+            // }
         }
     });
 };
