@@ -159,8 +159,8 @@ const listar = async(tarjetas)=>{
         const tdEliminarVarios = document.createElement('td');
 
         const fecha = tarjeta.fecha.slice(0,10).split('-',3);
-        
-        tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`
+        const hora = tarjeta.fecha.slice(11,19).split(':',3);
+        tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]} - ${hora[0]}:${hora[1]}:${hora[2]}`;
         tdTarjeta.innerHTML = tarjeta.tarjeta;
         tdCliente.innerHTML = tarjeta.cliente
         tdImporte.innerHTML = (tarjeta.imp).toFixed(2);
