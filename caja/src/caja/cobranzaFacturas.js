@@ -23,12 +23,23 @@ let seleccionado;
 let subSeleccionado;
 let movimientos;
 
+setInterval(async () => {
+    let movimientosAux = (await axios.get(`${URL}movCajas/forPased`,configAxios)).data;
+    if (movimientos.length !== movimientosAux.length) {
+        console.log("El tamaño de movimientos es: " + movimientos.length);
+        console.log("El tamaño de movimientosAux es: " + movimientosAux.length);
+        listarUltimoMovimiento(movimientosAux[movimientosAux.length - 1]);
+        movimientos.push(movimientosAux[movimientosAux.length - 1]);
+    }
+}, 2000);
+
 window.addEventListener('load',async e=>{  
     movimientos = (await axios.get(`${URL}movCajas/forPased`,configAxios)).data;
     listar(movimientos);
 });
 
 const listar = async(lista)=>{
+    tbody.innerHTML = "";
     for await(let elem of lista){
         const tr = document.createElement('tr');
         tr.id = elem._id;
@@ -111,6 +122,7 @@ aceptar.addEventListener('click',async e=>{
     movimiento.fecha = p;
     try {
         await axios.put(`${URL}movCajas/id/${movimiento._id}`,movimiento,configAxios);
+        movimientos = movimientos.filter(mov => mov._id !== seleccionado.id);
         tbody.removeChild(seleccionado);
         total.value = "0.00";
         cobrado.value = "0.00";
@@ -197,3 +209,35 @@ document.addEventListener('keydown',e=>{
         location.href = '../index.html';
     }
 });
+
+function listarUltimoMovimiento(mov) {
+    const tr = document.createElement('tr');
+
+    tr.id = mov._id;
+
+    const tdFecha = document.createElement('td');
+    const tdCodigo = document.createElement('td');
+    const tdCliente = document.createElement('td');
+    const tdComprob = document.createElement('td');
+    const tdNumero = document.createElement('td');
+    const tdImporte = document.createElement('td');
+    const tdVendedor = document.createElement('td');
+
+    tdFecha.innerText = mov.fecha
+    tdCodigo.innerText = mov.codigo;
+    tdCliente.innerText = mov.cliente;
+    tdComprob.innerText = mov.cuenta;
+    tdNumero.innerText = mov.nro_comp;
+    tdImporte.innerText = mov.imp;
+    tdVendedor.innerText = mov.vendedor;
+
+    tr.appendChild(tdFecha);
+    tr.appendChild(tdCodigo);
+    tr.appendChild(tdCliente);
+    tr.appendChild(tdComprob);
+    tr.appendChild(tdNumero);
+    tr.appendChild(tdImporte);
+    tr.appendChild(tdVendedor);
+
+    tbody.appendChild(tr);
+};
