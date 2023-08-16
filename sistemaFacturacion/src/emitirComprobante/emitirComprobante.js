@@ -604,126 +604,131 @@ const sacarIdentificadorTabla = (arreglo)=>{
 //Aca mandamos la venta en presupuesto
 presupuesto.addEventListener('click',async (e)=>{
     e.preventDefault();
-    let seguro;
-    await sweet.fire({
+
+    if (codigoC.value === "") {
+        await sweet.fire({title:"Poner codigo de cliente"});
+        codigoC.focus();
+        return;
+    }else if (listaProductos.length === 0) {
+        await sweet.fire({title:"Cargar Productos"});
+        return;
+    }else if(parseFloat(descuento.value) < -10 || parseFloat(descuento.value) > 10 && codigoC.value !== "L082" && vendedor !== "ELBIO"){
+        await sweet.fire({title:"Descuento no autorizado"});
+        return;
+    }else if(document.getElementById('cuentaCorriente').checked && listaProductos.find(producto => producto.objeto._id === "999-999")){
+        await sweet.fire({title: "Producto con 999-999 no se puedo hacer Cuenta Corriente"});
+        return;
+    }else if(await verElTipoDeVenta(tiposVentas) === "Ninguno"){
+        await sweet.fire({title:"Seleccionar un modo de venta"});
+        return;
+    };
+
+    const {isConfirmed} = await sweet.fire({
         title:"Presupuesto?",
         confirmButtonText:"Aceptar",
         showCancelButton:true
-    }).then(async({isConfirmed})=>{
-        if (isConfirmed) {
-            seguro = true;
-        }
-    })
-    if(!seguro){
+    });
+    
+    if (!isConfirmed) {
+        return;
+    };
 
-    }else if (listaProductos.length===0) {
-        //Avisamos que no se puede hacer una venta sin productos
-        sweet.fire({title:"Cargar Productos"});
-    }else if((parseFloat(descuento.value) < -10 || parseFloat(descuento.value) > 10) && codigoC.value !== "L082" && vendedor!=="ELBIO"){
-        await sweet.fire({title:"Descuento no autorizado"});
-    }else if(document.getElementById('cuentaCorriente').checked && listaProductos.find(producto => producto.objeto._id === "999-999")){
-        await sweet.fire({title: "Producto con 999-999 no se puedo hacer Cuenta Corriente"});
-    }else{
-        venta.tipo_pago = await verElTipoDeVenta(tiposVentas); //vemos si es CD,CC o PP en el input[radio]
-        if (venta.tipo_pago === "Ninguno") {
-            await sweet.fire({title:"Seleccionar un modo de venta"});
-        }else{
-                //creamos una lista sin los descuentos para imprimirlos
-                const listaSinDescuento = JSON.parse(JSON.stringify(listaProductos));
-                venta.productos = listaProductos;
-                try {
-                    alerta.classList.remove('none');
-                    venta.fecha = new Date();
-                    venta.nombreCliente = buscarCliente.value;
-                    tipoVenta="Presupuesto";
-                    venta.descuento = (descuentoN.value);
-                    venta.precioFinal = redondear(total.value,2);
-                    venta.tipo_comp = tipoVenta;
-                    venta.nro_comp = await traerUltimoNroComprobante(tipoVenta,venta.cod_comp,venta.tipo_pago);//Le pasamos que es un presupuesto contado CD
-                    venta.observaciones = observaciones.value;
-                    venta.empresa = inputEmpresa.value;
-                    venta.maquina = maquina;
-                    venta.vendedor = vendedor;
+    venta.tipo_pago = await verElTipoDeVenta(tiposVentas); //vemos si es CD,CC o PP en el input[radio]
+    //creamos una lista sin los descuentos para imprimirlos
+    const listaSinDescuento = JSON.parse(JSON.stringify(listaProductos));
+    venta.productos = listaProductos;
+        try {
+            alerta.classList.remove('none');
+            venta.fecha = new Date();
+            venta.nombreCliente = buscarCliente.value;
+            tipoVenta="Presupuesto";
+            venta.descuento = (descuentoN.value);
+            venta.precioFinal = redondear(total.value,2);
+            venta.tipo_comp = tipoVenta;
+            venta.nro_comp = await traerUltimoNroComprobante(tipoVenta,venta.cod_comp,venta.tipo_pago);//Le pasamos que es un presupuesto contado CD
+            venta.observaciones = observaciones.value;
+            venta.empresa = inputEmpresa.value;
+            venta.maquina = maquina;
+            venta.vendedor = vendedor;
 
-                    let valorizadoImpresion = "valorizado"
-                    if (!valorizado.checked && venta.tipo_pago === "CC") {
-                        valorizadoImpresion="no valorizado";
-                    }
+            let valorizadoImpresion = "valorizado"
+            if (!valorizado.checked && venta.tipo_pago === "CC") {
+                    valorizadoImpresion="no valorizado";
+            };
                     
-                    for await (let producto of venta.productos){
-                        if (parseFloat(descuentoN.value) !== 0 && descuentoN.value !== "" ) {
-                            producto.objeto.precio_venta =  (parseFloat(producto.objeto.precio_venta)) - parseFloat(producto.objeto.precio_venta)*parseFloat(descuento.value)/100
-                           producto.objeto.precio_venta = producto.objeto.precio_venta.toFixed(2)
-                        }
-                    }
+            for await (let producto of venta.productos){
+                if (parseFloat(descuentoN.value) !== 0 && descuentoN.value !== "" ) {
+                    producto.objeto.precio_venta =  (parseFloat(producto.objeto.precio_venta)) - parseFloat(producto.objeto.precio_venta)*parseFloat(descuento.value)/100
+                    producto.objeto.precio_venta = producto.objeto.precio_venta.toFixed(2)
+                }
+            };
                     
-                    await axios.post(`${URL}presupuesto`,venta,configAxios);
+            await axios.post(`${URL}presupuesto`,venta,configAxios);
         
-                    venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,"Presupuesto","PP",venta.precioFinal,venta.nombreCliente ,venta.cliente,venta.nombreCliente,venta.vendedor,maquina);        
-                    await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
+            venta.tipo_pago === "CD" && await generarMovimientoCaja(venta.fecha,"I",venta.nro_comp,"Presupuesto","PP",venta.precioFinal,venta.nombreCliente ,venta.cliente,venta.nombreCliente,venta.vendedor,maquina);        
+            await actualizarNumeroComprobante(venta.nro_comp,venta.tipo_pago,venta.cod_comp);
 
-                     //si la venta es CC Sumamos un saldo al cliente y ponemos en cuenta corriente compensada y historica
-                     if (venta.tipo_pago === "CC") {
-                        await sumarSaldoAlClienteEnNegro(venta.precioFinal,venta.cliente,valorizado.checked,venta.nro_comp);
-                        await  ponerEnCuentaCorrienteCompensada(venta,valorizado.checked);
-                        await ponerEnCuentaCorrienteHistorica(venta,valorizado.checked,saldo_p.value);
-                    }
-                    //si la venta es distinta de presupuesto o de prestamo sacamos el stock y movimiento de producto 
-                    for(let producto of venta.productos){
-                        if(venta.tipo_pago !== "PP" && !facturarPrestamo){
-                            producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
-                        }
-                        await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente,venta.tipo_pago,venta.tipo_comp,venta.nro_comp,venta.vendedor);
-                    };
+            //si la venta es CC Sumamos un saldo al cliente y ponemos en cuenta corriente compensada y historica
+            if (venta.tipo_pago === "CC") {
+                    await sumarSaldoAlClienteEnNegro(venta.precioFinal,venta.cliente,valorizado.checked,venta.nro_comp);
+                    await  ponerEnCuentaCorrienteCompensada(venta,valorizado.checked);
+                    await ponerEnCuentaCorrienteHistorica(venta,valorizado.checked,saldo_p.value);
+            };
 
-                    if (venta.tipo_pago !== "PP" && !facturarPrestamo) {
-                       await axios.put(`${URL}productos`,arregloProductosDescontarStock,configAxios);
-                    };
+            //si la venta es distinta de presupuesto o de prestamo sacamos el stock y movimiento de producto 
+            for(let producto of venta.productos){
+                if(venta.tipo_pago !== "PP" && !facturarPrestamo){
+                    producto.objeto._id !== "999-999" &&  await sacarStock(producto.cantidad,producto.objeto);
+                }
+                await movimientoProducto(producto.cantidad,producto.objeto,venta.cliente,venta.nombreCliente,venta.tipo_pago,venta.tipo_comp,venta.nro_comp,venta.vendedor);
+            };
 
-                    !facturarPrestamo && await axios.post(`${URL}movProductos`,arregloMovimiento,configAxios);
+            if (venta.tipo_pago !== "PP" && !facturarPrestamo) {
+                await axios.put(`${URL}productos`,arregloProductosDescontarStock,configAxios);
+            };
 
-                    if(impresion.checked) {
-                        let cliente = {
-                            id:codigoC.value,
-                            cliente: buscarCliente.value,
-                            cuit: dnicuit.value,
-                            direccion: direccion.value,
-                            localidad: localidad.value,
-                            cond_iva: conIva.value
-                        }
-                        if (venta.tipo_pago === "CC") {
-                            await ipcRenderer.send('imprimir-venta',[venta,cliente,true,2,"imprimir-comprobante",valorizadoImpresion,arregloMovimiento])
-                        }else{
-                            await ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,arregloMovimiento])
-                        }
-                    };
+            !facturarPrestamo && await axios.post(`${URL}movProductos`,arregloMovimiento,configAxios);
 
-                    if (facturarPrestamo) {
-                        await movimientos.map(mov=>{
-                            mov.nro_comp = venta.nro_comp;
-                            mov.tipo_comp = venta.tipo_comp;
-                            mov.tipo_pago = venta.tipo_pago;
-                        });
+            if(impresion.checked) {
+                let cliente = {
+                    id:codigoC.value,
+                    cliente: buscarCliente.value,
+                    cuit: dnicuit.value,
+                    direccion: direccion.value,
+                    localidad: localidad.value,
+                    cond_iva: conIva.value
+                };
+                if (venta.tipo_pago === "CC") {
+                    await ipcRenderer.send('imprimir-venta',[venta,cliente,true,2,"imprimir-comprobante",valorizadoImpresion,arregloMovimiento])
+                }else{
+                    await ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,arregloMovimiento])
+                }
+            };
 
-                        //Lo que hacemos es modificar los movimientos que estan como prestamos a el tipo de venta
-                        await axios.put(`${URL}movProductos`,movimientos,configAxios);
+            if (facturarPrestamo) {
+                await movimientos.map(mov=>{
+                        mov.nro_comp = venta.nro_comp;
+                        mov.tipo_comp = venta.tipo_comp;
+                        mov.tipo_pago = venta.tipo_pago;
+                });
 
-                        //Anulamos el prestamo anterior
-                        let lista = JSON.parse(getParameterByName('arregloPrestamo'));
-                        await axios.put(`${URL}prestamos/anularVarios/${venta.nro_comp}`,lista);
-                    }
+                //Lo que hacemos es modificar los movimientos que estan como prestamos a el tipo de venta
+                await axios.put(`${URL}movProductos`,movimientos,configAxios);
 
-                    arregloMovimiento = [];
-                    arregloProductosDescontarStock = [];
-                    window.location = "../index.html";  
-                } catch (error) {
-                    console.log(error)
-                    await sweet.fire({title:"No se puedo cargar la venta"});
-            }finally{
-                alerta.classList.add('none');
-            }       
+                //Anulamos el prestamo anterior
+                let lista = JSON.parse(getParameterByName('arregloPrestamo'));
+                await axios.put(`${URL}prestamos/anularVarios/${venta.nro_comp}`,lista);
+            }
+
+            arregloMovimiento = [];
+            arregloProductosDescontarStock = [];
+            window.location = "../index.html";  
+        } catch (error) {
+            console.log(error)
+            await sweet.fire({title:"No se puedo cargar la venta"});
+        }finally{
+            alerta.classList.add('none');
         }
-    }
 });
 
 //Boton para hacer un prestamo
@@ -801,6 +806,12 @@ remito.addEventListener('click',async e=>{
 //Aca mandamos la venta con tikect Factura
 ticketFactura.addEventListener('click',async (e) =>{
     e.preventDefault();
+
+    if (codigoC.value === "") {
+        await sweet.fire({title:"Agregar un codigo al cliente"});
+        return;
+    };
+
     tipoVenta = "Ticket Factura";
     venta.tipo_pago = await verElTipoDeVenta(tiposVentas)//vemos si es contado,cuenta corriente o presupuesto en el input[radio]
     //Vemos si algun producto tiene lista negativa
