@@ -217,41 +217,19 @@ codigo.addEventListener('keypress',async (e) => {
                 descripcionAgregar.children[0].focus();
                 
             }else if(codigo.value === "888-888"){
-                const precio = document.querySelector('.parte-producto_precio')
-                let descripcion = document.querySelector('.parte-producto_descripcion');
-                descripcion.classList.remove('none')
-                let producto = (await axios.get(`${URL}productos/888-888`,configAxios)).data;
-                descripcion.children[0].value = producto.descripcion;
+                //tomamos los valores de los div y les sacamos la propiedad none
+                let descripcion = document.querySelector('.descripcion');
+                const precio = document.querySelector('.precio');
+
+                descripcion.classList.remove('none');
                 precio.classList.remove('none');
+
+                descripcion.children[0].value = "FINANCIACION TARJETA CREDITO"
                 precio.children[0].focus();
-                precio.addEventListener('keypress',async e=>{
-                    if (e.key === "Enter") {
-                        const product = {
-                            marca:"",
-                            descripcion: descripcion.children[0].value,
-                            precio_venta: parseFloat(precio.children[0].value === "" ? 0 :precio.children[0].value),
-                            _id:codigo.value
-                        }
-                        sweet.fire({
-                            title:"Cantidad",
-                            showCancelButton:true,
-                            confirmButtonText:"Aceptar",
-                            input:"text"
-                        }).then(async ({isConfirmed,value})=>{
-                            if (isConfirmed && value !== "") {
-                                await mostrarVentas(product,parseFloat(value));
-                                codigo.value = "";
-                                precio.children[0].value = "";
-                                descripcion.children[0].value = "";
-                                await codigo.focus();
-                                precio.classList.add('none')
-                                descripcion.classList.add('none')    
-                            }
-                        })
-                    }
-                })
+                //Funcion que hace que se genere el producto y lo mande a listas de produtos
+                precio.addEventListener('keypress',(e) => ponerPrecioFinanciacionTarjeta(e,descripcion,precio));
             }else{
-            let producto = (await axios.get(`${URL}productos/${e.target.value}`,configAxios)).data;
+                let producto = (await axios.get(`${URL}productos/${e.target.value}`,configAxios)).data;
                 if (producto.length === 0) {
                         sweet.fire({title:"No existe ese Producto"});
                         codigo.value = "";
@@ -1014,7 +992,8 @@ const borrarUnProductoDeLaLista =async  (productoSeleccionado)=>{
         let nuevoTotal = 0;
         listaProductos.forEach(({objeto,cantidad})=>{
             nuevoTotal += (objeto.precio_venta * cantidad);
-        })
+        });
+        console.log(listaProductos);
         descuentoN.value = (nuevoTotal*parseFloat(descuento.value)/100).toFixed(2);
         borrarProducto.classList.add('none');
         codigo.focus();
@@ -1488,3 +1467,24 @@ provincia.addEventListener('focus',e=>{
 observaciones.addEventListener('focus',e=>{
     observaciones.select();
 });
+
+
+async function ponerPrecioFinanciacionTarjeta(e,descripcion,precio){
+    if (e.key === "Enter") {
+        //Creamos el producto de financiacion de tarjeta de credito
+        const product = {
+            marca:"",
+            descripcion: descripcion.children[0].value,
+            precio_venta: parseFloat(precio.children[0].value === "" ? 0 :precio.children[0].value),
+            _id:codigo.value
+        };
+        await mostrarVentas(product,1);
+        
+        codigo.value = "";
+        precio.children[0].value = "";
+        descripcion.children[0].value = "";
+        await codigo.focus();
+        precio.classList.add('none');
+        descripcion.classList.add('none');    
+    };
+};
