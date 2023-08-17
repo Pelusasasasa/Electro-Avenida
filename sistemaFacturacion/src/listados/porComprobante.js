@@ -21,6 +21,7 @@ mes = mes < 10 ? `0${mes}` : mes;
 const fechaDeHoy = (`${hoy.getFullYear()}-${mes}-${dia}`)
 const contado = document.querySelector('.contado');
 const cteCorriente = document.querySelector('.cteCorriente');
+const imprimir = document.querySelector('.imprimir');
 const desde =  document.querySelector('#desde')
 const hasta =  document.querySelector('#hasta')
 desde.value = fechaDeHoy;
@@ -61,6 +62,8 @@ hasta.addEventListener('keypress',async e=>{
 contado.addEventListener('click',listarContado);
 
 cteCorriente.addEventListener('click',listarCuentaCorriente);
+
+imprimir.addEventListener('click',imprimirVentas);
 
 
 async function listarVentas(lista) {
@@ -232,4 +235,17 @@ async function listarCuentaCorriente() {
     cteCorriente.classList.add('seleccionado');
     contado.classList.remove('seleccionado');
     listarVentas(ventasContado);
-}
+};
+
+async function imprimirVentas() {
+    document.querySelector('.buscador').classList.add('none');
+    document.querySelector('.elegir').classList.add('none');
+    document.querySelector('.listar').classList.add('impresion');
+
+    window.print();
+
+    document.querySelector('.buscador').classList.remove('none');
+    document.querySelector('.elegir').classList.remove('none');
+
+    document.querySelector('.listar').classList.remove('impresion');
+};

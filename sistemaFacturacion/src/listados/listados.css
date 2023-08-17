@@ -129,3 +129,12 @@
     padding: 0 .3rem;
     white-space: nowrap;
 }
+
+
+.porComprobante .impresion{
+overflow: hidden;
+}
+
+.porComprobante .impresion table thead th,.porComprobante .impresion table tbody td{
+    font-size: 1.1rem;
+}
