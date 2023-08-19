@@ -71,14 +71,20 @@ tbody tr:hover{
 }
 
 .tool{
+  width: 50%;
   position: relative;
   /* color: blue; */
+}
+
+.tool span{
+  width: 100%;
+  text-align: center;
 }
 
 .tooltip{
   position: absolute;
   border: .1rem solid black;
-  right: 2.5rem;
+  right: 4.5rem;
   top: -1rem;
   background-color: gray;
   color: white;

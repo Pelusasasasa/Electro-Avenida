@@ -6,6 +6,7 @@ const sweet = require('sweetalert2');
 const { redondear, cerrarVentana, alerta, configAxios } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
+const tabla = document.querySelector('.tabla');
 
 const agregar = document.getElementById('agregar');
 const salir = document.getElementById('salir');
@@ -19,16 +20,17 @@ window.addEventListener('load',listarDirefencias);
 
 agregar.addEventListener('click',agregarDiferencia);
 
+tbody.addEventListener('click',clickTbody);
 tbody.addEventListener('dblclick',modificarDiferencia);
 
 document.addEventListener('keyup',accionarTeclado)
 
-
 async function listarDirefencias (){
     diferencias = (await axios.get(`${URL}difCaja`,configAxios)).data;
-    for(let elem of diferencias){
+    for await(let elem of diferencias){
         listarElmento(elem);
-    }
+    };
+    tabla.scrollTop = (tabla.scrollHeight);
 };
 
 function listarElmento(elem){
@@ -43,15 +45,30 @@ function listarElmento(elem){
         const tdDiferencia = document.createElement('td');
         const tdAcciones = document.createElement('td');
 
+        tdAcciones.classList.add('acciones');
+
         tdFecha.innerText = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         tdHora.innerText = elem.hora;
         tdImporte.innerText = elem.importe.toFixed(2);
         tdDiferencia.innerText = elem.diferencia;
+        tdAcciones.innerHTML = `
+            <div class=tool>
+                <span class=material-icons>edit</span>
+                <p class=tooltip>Modificar</p>
+            </div>
+            <div class=tool>
+                <span class=material-icons>delete</span>
+                <p class=tooltip>Eliminar</p>
+            </div>
+        `;
+
+        tdAcciones.addEventListener('click',clickAccionar);
 
         tr.appendChild(tdFecha);
         tr.appendChild(tdHora);
         tr.appendChild(tdImporte);
         tr.appendChild(tdDiferencia);
+        tr.appendChild(tdAcciones);
 
         tbody.appendChild(tr);
 };
@@ -112,48 +129,7 @@ async function modificarDiferencia(e){
 
     seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
-    const fecha = seleccionado.children[0].innerText.split('/',3);
-    const valueFecha = `${fecha[2]}-${fecha[1]}-${fecha[0]}`;
-    alertaActivo = true;
-    const modificar = await sweet.fire({
-        title:"Modificar diferencia",html:`
-        <section class="agregar">
-            <main>
-                <label htmlFor="date">Fecha</label>
-                <input autofocus type="date" value=${valueFecha} name="date" id="date" />
-            </main>
-            <main>
-                <label htmlFor="hora">Hora</label>
-                <input value=${seleccionado.children[1].innerText} type="text" name="hora" id="hora" />
-            </main>
-            <main>
-                <label htmlFor="importe">Importe</label>
-                <input value=${seleccionado.children[2].innerText} type="number" name="importe" id="importe" />
-            </main>
-        </section>
-        `,
-        confirmButtonText:"Modificar",
-        showCancelButton:true
-    });
-
-    if (modificar.isConfirmed) {
-        const difCaja = (await axios.get(`${URL}difCaja/id/${seleccionado.id}`,configAxios)).data;
-        const aux = JSON.parse(difCaja.importe)
-        
-        const fecha = document.getElementById('date').value
-        const hora = document.getElementById('hora').value;
-        const importe = parseFloat(document.getElementById('importe').value);
-        
-        difCaja.fecha = fecha;
-        difCaja.hora = hora;
-        difCaja.importe = importe;
-        difCaja.diferencia = - difCaja.importe + difCaja.diferencia + aux;
-
-        await axios.put(`${URL}difCaja/id/${difCaja._id}`,difCaja,configAxios);
-        tbody.removeChild(seleccionado);
-        listarElmento(difCaja);
-    };
-    alertaActivo = agregar.dismiss === "esc" ? true : false;
+    
 };
 
 async function accionarTeclado(e){
@@ -162,4 +138,88 @@ async function accionarTeclado(e){
     }else if(e.keyCode === 27 && alertaActivo){
         alertaActivo = false;
     }
+};
+
+async function clickTbody(e){
+    seleccionado && seleccionado.classList.remove('seleccionado');
+    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+
+    if (e.target.nodeName === "TD") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }else if (e.target.nodeName === "SPAN") {
+        seleccionado = e.target.parentNode.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode.parentNode;
+    }else  if (e.target.nodeName === "P") {
+        seleccionado = e.target.parentNode.parentNode.parentNode;
+        subSeleccionado = e.target.parentNode.parentNode;
+    };
+
+    seleccionado.classList.add('seleccionado');
+    subSeleccionado.classList.add('subSeleccionado');
+}
+
+async function clickAccionar(e){
+    if (e.target.innerText === "delete") {
+        const {isConfirmed} = await sweet.fire({
+            title:"Seguro quiere borrar diferencia de caja",
+            showCancelButton:true,
+            confirmButtonText:"Aceptar"
+        });
+
+        if (isConfirmed) {
+            const mensaje = await axios.delete(`${URL}difCaja/id/${seleccionado.id}`,configAxios);
+            if (mensaje) {
+                tbody.removeChild(seleccionado);
+                seleccionado = "";
+            }
+        }
+    }else if(e.target.innerText === "edit"){
+        const tr = e.target.parentNode.parentNode.parentNode;
+        const fecha = tr.children[0].innerText.split('/',3);
+        const valueFecha = `${fecha[2]}-${fecha[1]}-${fecha[0]}`;
+        alertaActivo = true;
+
+        const modificar = await sweet.fire({
+            title:"Modificar diferencia",html:`
+            <section class="agregar">
+                <main>
+                    <label htmlFor="date">Fecha</label>
+                    <input autofocus type="date" value=${valueFecha} name="date" id="date" />
+                </main>
+                <main>
+                    <label htmlFor="hora">Hora</label>
+                    <input value=${tr.children[1].innerText} type="text" name="hora" id="hora" />
+                </main>
+                <main>
+                    <label htmlFor="importe">Importe</label>
+                    <input value=${tr.children[2].innerText} type="number" name="importe" id="importe" />
+                </main>
+            </section>
+            `,
+            confirmButtonText:"Modificar",
+            showCancelButton:true
+        });
+
+    if (modificar.isConfirmed) {
+        const difCaja = (await axios.get(`${URL}difCaja/id/${tr.id}`,configAxios)).data;
+        const aux = JSON.parse(difCaja.importe);
+        console.log(difCaja._id)
+        
+        const fecha = document.getElementById('date').value
+        const hora = document.getElementById('hora').value;
+        const importe = parseFloat(document.getElementById('importe').value);
+        
+        difCaja.fecha = fecha;
+        difCaja.hora = hora;
+        difCaja.importe = importe;
+        difCaja.diferencia = redondear(+difCaja.importe + difCaja.diferencia - aux,2);
+        difCaja.maquina = "PELUSA";
+
+        await axios.put(`${URL}difCaja/id/${difCaja._id}`,difCaja,configAxios);
+        tbody.removeChild(seleccionado);
+        listarElmento(difCaja);
+    };
+    alertaActivo = agregar.dismiss === "esc" ? true : false;
+    };
 };

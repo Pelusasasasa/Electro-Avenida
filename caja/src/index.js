@@ -209,7 +209,7 @@ const templateMenu = [
       {
         label:"Diferencia de Caja",
         click(){
-          abrirVentana('caja/difCaja.html',600,900)
+          abrirVentana('caja/difCaja.html',600,550)
         }
       }
     ]
