@@ -16,7 +16,7 @@ let newWS = XLSX.utils.json_to_sheet(Pedidos)
 
 XLSX.utils.book_append_sheet(wb, newWS,'Pedidos');
 XLSX.writeFile(wb,path + "." + extencion );
-}
+};
 
 const ventas = (Ventas,path)=>{
 
@@ -93,6 +93,48 @@ const ventas = (Ventas,path)=>{
     extencion = path.split('.')[1] ? path.split('.')[1] : extencion;
     path = path.split('.')[0];
     XLSX.writeFile(wb,path + "." + extencion)
+};
+
+const comprobantes = async (datos,path) =>{
+
+    let wb = XLSX.utils.book_new();
+
+    wb.props = {
+        Title: "Por Comprobante",
+        subject: "Test",
+        Author: "Electro Avenida"
+    };
+
+    for await (let elem of datos){
+
+        if (elem.nombreCliente) {
+            elem.codCliente = elem.cliente;
+            elem.cliente = elem.nombreCliente;
+        };
+
+        if (elem.precioFinal) {
+            elem.total = elem.precioFinal;
+        }
+
+        delete elem._id ;
+        delete elem.rubro;
+        delete elem.stock;
+        delete elem.empresa;
+        delete elem.productos;
+        delete elem.__v;
+        delete elem.observaciones;
+        delete elem.descuento;
+        delete elem.nombreCliente;
+        delete elem.precioFinal;
+    }
+
+    let newWs = XLSX.utils.json_to_sheet(datos)
+
+    XLSX.utils.book_append_sheet(wb,newWs,'Por Cimprbante');
+    let extencion = "xlsx";
+    extencion = path.split('.')[1] ? path.split('.')[1] : extencion;
+    path = path.split('.')[0];
+    XLSX.writeFile(wb,path + "." + extencion);
 }
 
-module.exports = [pedidos,ventas];
+module.exports = [pedidos,ventas,comprobantes];

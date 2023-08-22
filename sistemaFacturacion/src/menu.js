@@ -13,7 +13,8 @@ const templateMenu = [
     //Descargas
     {
         label: 'Convertir excel',
-        submenu: [{
+        submenu: [
+        {
             label: 'Pedidos',
             async click() {
                 const path = (await dialog.showSaveDialog()).filePath;
@@ -26,7 +27,15 @@ const templateMenu = [
                 abrirVentana('fechas/fechas.html',600,300);
 
             }
-        }]
+        },
+        {
+            label:"Por Comprobante",
+            click(){
+                abrirVentana('fechas/fechas.html',600,300,false,'porComprobante');
+            }
+        }
+        
+    ]
     },
     //Datos
     {

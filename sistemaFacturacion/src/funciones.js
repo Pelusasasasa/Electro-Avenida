@@ -269,6 +269,7 @@ async function generarQR(texto) {
     const QR = await qrCode.toDataURL(url);
     return QR;
 }
+
 const verEstadoServidorAfip = async()=>{
     const serverStatus = await afip.ElectronicBilling.getServerStatus();
     console.log(serverStatus);
@@ -472,7 +473,8 @@ function clickderecho(e,texto){
     }
 
     ipcRenderer.send('mostrar-menu',cordenadas);
-}
+};
+
 
 module.exports = {
     redondear,

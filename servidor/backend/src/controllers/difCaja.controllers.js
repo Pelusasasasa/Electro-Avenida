@@ -22,9 +22,23 @@ difCajaCTRL.getForId = async(req,res)=>{
 
 difCajaCTRL.putForId = async(req,res)=>{
     const {id} = req.params;
+    console.log(id)
     const difCaja = await DifCaja.findOneAndUpdate({_id:id},req.body);
-    console.log(`Diferencia de caja cargada por ${req.body.vendedor} en la maquina ${req.body.maquina} con la fecha y hora ${(new Date()).toLocaleString()}`);;
+    console.log(`Diferencia de caja modificada por ${req.body.vendedor} en la maquina ${req.body.maquina} con la fecha y hora ${(new Date()).toLocaleString()}`);;
     res.end();
+};
+
+difCajaCTRL.deletForId = async(req,res)=>{
+    const {id} = req.params;
+    let bandera;
+    try {
+        await DifCaja.findOneAndDelete({_id:id});
+        bandera = true;
+        console.log(`Diferencia de caja se elimino`);
+    } catch (error) {
+        bandera = error;
+    }
+    res.send(bandera);
 };
 
 module.exports = difCajaCTRL;

@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const router = Router();
 
-const {post,getAll,getForId, putForId} = require('../controllers/difCaja.controllers');
+const {post,getAll,getForId,putForId,deletForId} = require('../controllers/difCaja.controllers');
 
 router.route('/')
     .get(getAll)
@@ -9,6 +9,7 @@ router.route('/')
 router.route('/id/:id')
     .get(getForId)
     .put(putForId)
+    .delete(deletForId)
 
 
 

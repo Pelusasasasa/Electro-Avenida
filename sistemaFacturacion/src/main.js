@@ -9,7 +9,7 @@ const {autoUpdater} = require('electron-updater');
 
 const {abrirVentana, configAxios} = require('./funciones');
 const templateMenu = require('./menu');
-const [pedidos, ventas] = require('./descargas/descargas');
+const [pedidos, ventas, comprobantes] = require('./descargas/descargas');
 const { mostrarMenu } = require('./menuSecundario/menuSecundario');
 
 
@@ -51,9 +51,9 @@ function crearVentanaPrincipal() {
     });
 };
 
-ipcMain.on('elegirPath',async e=>{
+ipcMain.handle('elegirPath',async e=>{
      const path = (await dialog.showSaveDialog()).filePath;
-     e.reply('mandoPath',path);
+     return path;
 });
 
 ipcMain.on('abrir-ventana-argumentos',(e,args)=>{
@@ -244,7 +244,13 @@ ipcMain.on('abrir-ventana-info-movimiento-producto',async (e,args)=>{
 
 
 ipcMain.on('enviar-arreglo-descarga',(e,args)=>{
-    descargas('Ventas',args[0],args[1]);
+    const informacion = args[2];
+    if (informacion === "porComprobante") {
+        //Hasta aca llega
+        descargas('PorComprobante',args[0],args[1]);
+    }else{
+        descargas('Ventas',args[0],args[1]);
+    }
 });
 
 //AbrirVentanaParaBuscarUnCliente
@@ -291,10 +297,13 @@ const abrirVentanaImprimir = async(texto,width,height,reinicio,show=false)=>{
 //Aca hacemos que se descargue un excel Ya sea con los pedidos o con las ventas
 
 async function descargas(nombreFuncion,ventasTraidas,path) {
+    console.log(nombreFuncion)
     if(nombreFuncion === "Pedidos"){
         pedidos((await axios.get(`${URL}pedidos`,configAxios)).data,path)
     }else if(nombreFuncion === "Ventas"){
         ventas(ventasTraidas,path);
+    }else if(nombreFuncion === "PorComprobante"){
+        comprobantes(ventasTraidas,path);
     }
 }
 
