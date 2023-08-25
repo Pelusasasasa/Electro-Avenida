@@ -338,8 +338,8 @@ factura.addEventListener('click',async e=>{
             venta.vendedor = vendedor;
             venta.direccion = direccion.value;
             venta.localidad = localidad.value;
-            if (venta.precioFinal>10000 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
-                await sweet.fire({title:"Factura mayor a 10000, poner valores clientes"})
+            if (venta.precioFinal>37070 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
+                await sweet.fire({title:"Factura mayor a 37070, poner valores clientes"})
             }else{
                 //modifcamos el precio del producto correspondiente con el descuenta
                 for (let producto of venta.productos){

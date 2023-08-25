@@ -163,7 +163,7 @@ const listar = async(tarjetas)=>{
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]} - ${hora[0]}:${hora[1]}:${hora[2]}`;
         tdTarjeta.innerHTML = tarjeta.tarjeta;
         tdCliente.innerHTML = tarjeta.cliente
-        tdImporte.innerHTML = (tarjeta.imp).toFixed(2);
+        tdImporte.innerHTML = tarjeta.imp ? (tarjeta.imp).toFixed(2) : "";
         tdVendedor.innerHTML = tarjeta.vendedor;
         tdAcciones.innerHTML = `
             <div id=edit class=tool>
