@@ -40,7 +40,16 @@ movProductosCTRL.traerMoviemientoPorNumeroYTipo = async(req,res)=>{
     const {numero,tipo} = req.params;
     const movimientos = await movProducto.find({nro_comp:numero,tipo_comp:tipo});
     res.send(movimientos);
-}
+};
+
+movProductosCTRL.traerMoviemientoPorNumeroTipoYCliente = async(req,res)=>{
+    console.log("a")
+    const {numero,tipo,cliente} = req.params;
+    const movimientos = await movProducto.find({nro_comp:numero,tipo_comp:tipo,codCliente:cliente});
+    console.log(movimientos)
+    res.send(movimientos);
+
+};
 
 movProductosCTRL.modificarMovimiento = async(req,res)=>{
     const {id} = req.params;

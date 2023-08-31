@@ -72,14 +72,12 @@ const traerSaldo = async()=>{
 traerSaldo();
 
 const descargar = document.querySelector('.descargar')
-
-descargar.addEventListener('click',e=>{
-    ipcRenderer.send('elegirPath');
-    let path;
+descargar.addEventListener('click',async e=>{
+    console.log("a")
+    let path = await ipcRenderer.invoke('elegirPath');
+    console.log(path)
     let extencion = "xlsx";
-    ipcRenderer.on('mandoPath',async(e,args)=>{
         let wb = XLSX.utils.book_new();
-        path = args;
         extencion = path.split('.')[1] ? path.split('.')[1] : extencion;
         wb.props = {
             Title: "Listado Saldo",
@@ -96,8 +94,7 @@ descargar.addEventListener('click',e=>{
 
         XLSX.utils.book_append_sheet(wb,newWS,'Saldos');
         XLSX.writeFile(wb,path + "." + extencion);
-    })
-})
+});
 
 document.addEventListener('keyup',e=>{
     if (e.key === "Escape") {

@@ -101,8 +101,9 @@ async function listarVentas(lista) {
         let minutes = hora[1]
         let seconds = hora[2]
         let anio = fecha[0]
-
-        const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`,configAxios)).data;
+        console.log("a")
+        const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`,configAxios)).data;
+        console.log(movimientos)
         for await(let mov of movimientos){
                 const tr = document.createElement('tr');
     

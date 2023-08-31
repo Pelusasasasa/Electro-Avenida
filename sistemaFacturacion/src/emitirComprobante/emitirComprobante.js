@@ -191,7 +191,6 @@ precioAgregar.addEventListener('keypress',e=>{
             }
         });
     }
-
 })
 
 
@@ -228,6 +227,20 @@ codigo.addEventListener('keypress',async (e) => {
                 precio.children[0].focus();
                 //Funcion que hace que se genere el producto y lo mande a listas de produtos
                 precio.addEventListener('keypress',(e) => ponerPrecioFinanciacionTarjeta(e,descripcion,precio));
+            }else if(codigo.value === "777-058"){
+                //tomamos los valores de los div y le sacamos la propiedad none
+                let descripcion = document.querySelector('.descripcion');
+                const porcentaje = document.querySelector('.porcentaje');
+
+                descripcion.classList.remove('none');
+                porcentaje.classList.remove('none');
+
+                descripcion.children[0].value = "FINANCIACION BANCO DE ENTRE RIOS";
+                porcentaje.children[0].placeholder = "Porcentaje"
+                porcentaje.children[0].focus();
+
+                porcentaje.addEventListener('keypress',e => ponerFinanciacionBancoEntreRios(e,descripcion,porcentaje));
+
             }else{
                 let producto = (await axios.get(`${URL}productos/${e.target.value}`,configAxios)).data;
                 if (producto.length === 0) {
@@ -277,6 +290,8 @@ function mostrarVentas(objeto,cantidad) {
     descuentoN.value = "0.00";
     cobrado.value = "0.00";
     Preciofinal += objeto.oferta ? objeto.precioOferta * cantidad : objeto.precio_venta * cantidad;
+    console.log(objeto.precio_venta)
+    console.log(Preciofinal)
     total.value = redondear(Preciofinal,2);
     resultado.innerHTML += `
         <tr id=${id}>
@@ -797,7 +812,7 @@ ticketFactura.addEventListener('click',async (e) =>{
     //mostramos alertas
     if(stockNegativo){
         sweet.fire({title:"Ticket Factura no puede ser productos en negativo"});
-    }else if(( parseFloat(descuento.value) < -10 || parseFloat(descuento.value) > 10) && vendedor!=="ELBIO"){
+    }else if(parseFloat(descuento.value) > 10 && vendedor!=="ELBIO"){
         await sweet.fire({title:"Descuento No Autorizado"})
     }else if(listaProductos.length===0){
         await sweet.fire({title:"Ningun producto cargado"});
@@ -1065,7 +1080,7 @@ async function ponerInputsClientes(cliente) {
         telefono.setAttribute('disabled',"");
         conIva.setAttribute('disabled',"");
     }
-}
+};
 
 let ventaAnterior;
 ipcRenderer.once('venta',async (e,args)=>{
@@ -1142,99 +1157,6 @@ const borrarCuentaHistorica = async(numero,cliente,tipoComp)=>{
 const borrarVenta = async(numero)=>{
     await axios.delete(`${URL}presupuesto/${numero}`,configAxios);
 };
-
-telefono.addEventListener('focus',e=>{
-    telefono.select()
-});
-
-buscarCliente.addEventListener('focus',e=>{
-    buscarCliente.select()
-});
-
-localidad.addEventListener('focus',e=>{
-    localidad.select()
-});
-
-provincia.addEventListener('focus',e=>{
-    provincia.select()
-});
-
-direccion.addEventListener('focus',e=>{
-    direccion.select()
-});
-
-dnicuit.addEventListener('focus',e=>{
-    dnicuit.select()
-});
-
-descuento.addEventListener('focus',e=>{
-    descuento.select()
-});
-
-cobrado.addEventListener('focus',e=>{
-    cobrado.select()
-});
-
-buscarCliente.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        telefono.focus()
-    }
-});
-
-telefono.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        direccion.focus()
-    }
-});
-
-direccion.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        localidad.focus()
-    }
-});
-
-localidad.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        provincia.focus()
-    }
-});
-
-provincia.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        conIva.focus()
-    }
-});
-
-conIva.addEventListener('keypress',e=>{
-    e.preventDefault()
-    if (e.key === "Enter") {
-        dnicuit.focus()
-    }
-});
-
-dnicuit.addEventListener('blur',async e=>{
-    if (dnicuit.value.length !== 8 && dnicuit.value.length !== 11 && dnicuit.value.length !== 0) {
-        await sweet.fire({
-            title:"Cadena DNI o CUIT Erronea",
-        }).then(() => {
-            dnicuit.focus();
-        })
-    }
-});
-
-dnicuit.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        observaciones.focus();
-    }
-});
-
-descuento.addEventListener('keypress',e=>{
-    if (e.key === "Enter" && situacion==="blanco") {
-        ticketFactura.focus()
-    }else if(e.key === "Enter" && situacion==="negro"){
-        presupuesto.focus()
-    }
-});
 
 //Inicio Compensada
 const ponerEnCuentaCorrienteCompensada = async(venta,valorizado)=>{
@@ -1392,8 +1314,8 @@ buscarAfip.addEventListener('click',  async (e)=>{
     observaciones.focus();
 });
 
- //Funcion para buscar una persona directamente por el cuit
- async function buscarPersonaPorCuit(cuit) {
+//Funcion para buscar una persona directamente por el cuit
+async function buscarPersonaPorCuit(cuit) {
         const Https = new XMLHttpRequest();
         const url=`https://afip.tangofactura.com/REST/GetContribuyente?cuit=${cuit}`;
         await Https.open("GET", url);
@@ -1430,9 +1352,160 @@ buscarAfip.addEventListener('click',  async (e)=>{
             }
         }
          
-}
+};
+
+async function ponerPrecioFinanciacionTarjeta(e,descripcion,precio){
+    if (e.key === "Enter") {
+        //Creamos el producto de financiacion de tarjeta de credito
+        const product = {
+            marca:"",
+            descripcion: descripcion.children[0].value,
+            precio_venta: parseFloat(precio.children[0].value === "" ? 0 :precio.children[0].value),
+            _id:codigo.value
+        };
+        await mostrarVentas(product,1);
+        
+        codigo.value = "";
+        precio.children[0].value = "";
+        descripcion.children[0].value = "";
+        await codigo.focus();
+        precio.classList.add('none');
+        descripcion.classList.add('none');    
+    };
+};
+
+function ponerFinanciacionBancoEntreRios(e,descripcion,porcentaje) {
+    const valor = (parseFloat(porcentaje.children[0].value) / 100) + 1;
+    if (e.keyCode === 13) {
+        total.value = "0.00";
+        Preciofinal = 0;
+        totalPrecioProductos = 0;
+        console.log(total.value);
+        resultado.innerHTML = "";
+        listaProductos.map(({cantidad,objeto})=>{
+            if (objeto.oferta) {
+                objeto.precioOferta *= valor;
+                objeto.precioOferta = parseFloat(objeto.precioOferta.toFixed(2));
+            }else{
+                objeto.precio_venta *= valor;
+                objeto.precio_venta = parseFloat(objeto.precio_venta.toFixed(2));
+            }
+            mostrarVentas(objeto,cantidad);
+        });
+
+    descripcion.children[0].value = "";
+    porcentaje.children[0].value = "";
+    codigo.value = "";
+
+    descripcion.classList.add('none');
+    porcentaje.classList.add('none');
+    
+    const notificacion = document.querySelector('.notificacion');
+    notificacion.classList.remove('none');
+    document.getElementById('notificacion-texto').innerText = "Aumento Banco Entre Rios Activado";
+    document.getElementById('notificacion-close').addEventListener('click',()=>{notificacion.classList.add('none')});
+
+    setInterval(() => {
+        notificacion.classList.add('none');
+    }, 1500);
+
+    }
+};
 
 //Seccion de Facturar Prestamos
+
+telefono.addEventListener('focus',e=>{
+    telefono.select()
+});
+
+buscarCliente.addEventListener('focus',e=>{
+    buscarCliente.select()
+});
+
+localidad.addEventListener('focus',e=>{
+    localidad.select()
+});
+
+provincia.addEventListener('focus',e=>{
+    provincia.select()
+});
+
+direccion.addEventListener('focus',e=>{
+    direccion.select()
+});
+
+dnicuit.addEventListener('focus',e=>{
+    dnicuit.select()
+});
+
+descuento.addEventListener('focus',e=>{
+    descuento.select()
+});
+
+cobrado.addEventListener('focus',e=>{
+    cobrado.select()
+});
+
+buscarCliente.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        telefono.focus()
+    }
+});
+
+telefono.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        direccion.focus()
+    }
+});
+
+direccion.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        localidad.focus()
+    }
+});
+
+localidad.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        provincia.focus()
+    }
+});
+
+provincia.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        conIva.focus()
+    }
+});
+
+conIva.addEventListener('keypress',e=>{
+    e.preventDefault()
+    if (e.key === "Enter") {
+        dnicuit.focus()
+    }
+});
+
+dnicuit.addEventListener('blur',async e=>{
+    if (dnicuit.value.length !== 8 && dnicuit.value.length !== 11 && dnicuit.value.length !== 0) {
+        await sweet.fire({
+            title:"Cadena DNI o CUIT Erronea",
+        }).then(() => {
+            dnicuit.focus();
+        })
+    }
+});
+
+dnicuit.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        observaciones.focus();
+    }
+});
+
+descuento.addEventListener('keypress',e=>{
+    if (e.key === "Enter" && situacion==="blanco") {
+        ticketFactura.focus()
+    }else if(e.key === "Enter" && situacion==="negro"){
+        presupuesto.focus()
+    }
+});
 
 observaciones.addEventListener('keypress',e=>{
     if (e.key==='Enter') {
@@ -1467,24 +1540,3 @@ provincia.addEventListener('focus',e=>{
 observaciones.addEventListener('focus',e=>{
     observaciones.select();
 });
-
-
-async function ponerPrecioFinanciacionTarjeta(e,descripcion,precio){
-    if (e.key === "Enter") {
-        //Creamos el producto de financiacion de tarjeta de credito
-        const product = {
-            marca:"",
-            descripcion: descripcion.children[0].value,
-            precio_venta: parseFloat(precio.children[0].value === "" ? 0 :precio.children[0].value),
-            _id:codigo.value
-        };
-        await mostrarVentas(product,1);
-        
-        codigo.value = "";
-        precio.children[0].value = "";
-        descripcion.children[0].value = "";
-        await codigo.focus();
-        precio.classList.add('none');
-        descripcion.classList.add('none');    
-    };
-};
