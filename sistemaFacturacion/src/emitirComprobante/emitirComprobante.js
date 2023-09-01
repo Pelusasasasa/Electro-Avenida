@@ -279,8 +279,24 @@ codigo.addEventListener('keypress',async (e) => {
 
 ipcRenderer.on('mando-el-producto',async (e,args) => {
     const {id,cantidad} = JSON.parse(args);
-    const producto = (await axios.get(`${URL}productos/${id}`,configAxios)).data;
-    mostrarVentas(producto,parseFloat(cantidad))
+    if (id === "777-058") {
+        const descripcion = document.querySelector('.descripcion');
+        const porcentaje = document.querySelector('.porcentaje');
+
+        descripcion.classList.remove('none');
+        porcentaje.classList.remove('none');
+
+        codigo.value = id;
+        descripcion.children[0].value = "FINANCIACION BANCO DE ENTRE RIOS";
+        porcentaje.children[0].placeholder = "Porcentaje";
+
+        porcentaje.children[0].focus();
+
+        porcentaje.children[0].addEventListener('keypress',e => ponerFinanciacionBancoEntreRios(e,descripcion,porcentaje));
+    }else{
+        const producto = (await axios.get(`${URL}productos/${id}`,configAxios)).data;
+        mostrarVentas(producto,parseFloat(cantidad))
+    };
 })
 
 let id = 1 //id de la tabla de ventas
@@ -969,8 +985,6 @@ ticketFactura.addEventListener('click',async (e) =>{
     return [parseFloat(totalIva21.toFixed(2)),parseFloat(totalIva105.toFixed(2)),parseFloat(gravado21.toFixed(2)),parseFloat(gravado105.toFixed(2)),cantIva]
 }
 
-
-
  //lo usamos para borrar un producto de la tabla
 borrarProducto.addEventListener('click',e=>{
     nuevaCantidadDiv.classList.add('none');
@@ -1377,11 +1391,12 @@ async function ponerPrecioFinanciacionTarjeta(e,descripcion,precio){
 function ponerFinanciacionBancoEntreRios(e,descripcion,porcentaje) {
     const valor = (parseFloat(porcentaje.children[0].value) / 100) + 1;
     if (e.keyCode === 13) {
+
         total.value = "0.00";
         Preciofinal = 0;
         totalPrecioProductos = 0;
-        console.log(total.value);
         resultado.innerHTML = "";
+
         listaProductos.map(({cantidad,objeto})=>{
             if (objeto.oferta) {
                 objeto.precioOferta *= valor;
@@ -1401,13 +1416,20 @@ function ponerFinanciacionBancoEntreRios(e,descripcion,porcentaje) {
     porcentaje.classList.add('none');
     
     const notificacion = document.querySelector('.notificacion');
+    notificacion.addEventListener('animationend',(e)=>{
+        if (e.animationName === 'cierre') {
+            notificacion.classList.add('none');
+        }
+    });
+
     notificacion.classList.remove('none');
+
     document.getElementById('notificacion-texto').innerText = "Aumento Banco Entre Rios Activado";
-    document.getElementById('notificacion-close').addEventListener('click',()=>{notificacion.classList.add('none')});
+    document.getElementById('notificacion-close').addEventListener('click',()=>{notificacion.classList.add('cerrando')});
 
     setInterval(() => {
-        notificacion.classList.add('none');
-    }, 1500);
+        notificacion.classList.add('cerrando');
+    }, 5000);
 
     }
 };
