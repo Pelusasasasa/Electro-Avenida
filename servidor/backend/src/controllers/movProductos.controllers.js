@@ -43,7 +43,6 @@ movProductosCTRL.traerMoviemientoPorNumeroYTipo = async(req,res)=>{
 };
 
 movProductosCTRL.traerMoviemientoPorNumeroTipoYCliente = async(req,res)=>{
-    console.log("a")
     const {numero,tipo,cliente} = req.params;
     const movimientos = await movProducto.find({nro_comp:numero,tipo_comp:tipo,codCliente:cliente});
     console.log(movimientos)
