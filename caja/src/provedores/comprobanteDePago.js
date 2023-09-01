@@ -11,6 +11,8 @@ let date;
 let comprobantes;
 let valores;
 
+console.log("a")
+
 ipcRenderer.on('recibir-informacion',async (e,informacion)=>{
     provedor.innerHTML = informacion.provedor;  
     date = informacion.fecha.slice(0,10).split('-',3);

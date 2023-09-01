@@ -26,8 +26,6 @@ let movimientos;
 setInterval(async () => {
     let movimientosAux = (await axios.get(`${URL}movCajas/forPased`,configAxios)).data;
     if (movimientos.length !== movimientosAux.length) {
-        console.log("El tamaño de movimientos es: " + movimientos.length);
-        console.log("El tamaño de movimientosAux es: " + movimientosAux.length);
         listarUltimoMovimiento(movimientosAux[movimientosAux.length - 1]);
         movimientos.push(movimientosAux[movimientosAux.length - 1]);
     }
@@ -223,12 +221,14 @@ function listarUltimoMovimiento(mov) {
     const tdImporte = document.createElement('td');
     const tdVendedor = document.createElement('td');
 
-    tdFecha.innerText = mov.fecha
+    tdImporte.classList.add('text-right');
+    console.log(mov.fecha.slice(0,10).split('-',3).reverse().join('/'));
+    tdFecha.innerText = mov.fecha.slice(0,10).split('-',3).reverse().join('/');
     tdCodigo.innerText = mov.codigo;
     tdCliente.innerText = mov.cliente;
     tdComprob.innerText = mov.cuenta;
     tdNumero.innerText = mov.nro_comp;
-    tdImporte.innerText = mov.imp;
+    tdImporte.innerText = mov.imp.toFixed(2);
     tdVendedor.innerText = mov.vendedor;
 
     tr.appendChild(tdFecha);
