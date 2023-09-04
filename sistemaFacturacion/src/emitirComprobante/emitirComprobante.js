@@ -306,8 +306,6 @@ function mostrarVentas(objeto,cantidad) {
     descuentoN.value = "0.00";
     cobrado.value = "0.00";
     Preciofinal += objeto.oferta ? objeto.precioOferta * cantidad : objeto.precio_venta * cantidad;
-    console.log(objeto.precio_venta)
-    console.log(Preciofinal)
     total.value = redondear(Preciofinal,2);
     resultado.innerHTML += `
         <tr id=${id}>
@@ -962,10 +960,12 @@ ticketFactura.addEventListener('click',async (e) =>{
 
  //sacamos el gravado y el iva de una venta
  const gravadoMasIva = (ventas)=>{
-    let totalIva105 = 0
-    let totalIva21=0
-    let gravado21 = 0 
-    let gravado105 = 0 
+    
+    let totalIva105 = 0;
+    let totalIva21 = 0;
+    let gravado21 = 0; 
+    let gravado105 = 0; 
+
     ventas.forEach(({objeto,cantidad}) =>{
         const precio = objeto.oferta ? objeto.precioOferta : parseFloat(objeto.precio_venta);
 
@@ -975,8 +975,9 @@ ticketFactura.addEventListener('click',async (e) =>{
         }else{
             gravado105 += (cantidad * precio / 1.105);
             totalIva105 += (cantidad * objeto.precio_venta/1.105)  * 10.5 / 100;
-        }
+        };
     });
+
     gravado21 = parseFloat(gravado21.toFixed(2))
     let cantIva = 1
     if (gravado105 !== 0 && gravado21 !== 0) {
@@ -1245,7 +1246,6 @@ function ocultarNegro() {
     imprimirCheck.classList.add('none')
 };
 
-
 //SECCION DE PRESTAMOS
 let facturarPrestamo = getParameterByName('facturarPrestamo');
 facturarPrestamo = facturarPrestamo ? JSON.parse(facturarPrestamo) : false
@@ -1396,8 +1396,10 @@ function ponerFinanciacionBancoEntreRios(e,descripcion,porcentaje) {
         Preciofinal = 0;
         totalPrecioProductos = 0;
         resultado.innerHTML = "";
+        const listaAux = JSON.parse(JSON.stringify(listaProductos));//Creamos una lista auxiliar para borrar la otra lista de productos
+        listaProductos = [];
 
-        listaProductos.map(({cantidad,objeto})=>{
+        listaAux.map(({cantidad,objeto})=>{
             if (objeto.oferta) {
                 objeto.precioOferta *= valor;
                 objeto.precioOferta = parseFloat(objeto.precioOferta.toFixed(2));
@@ -1434,7 +1436,6 @@ function ponerFinanciacionBancoEntreRios(e,descripcion,porcentaje) {
     }
 };
 
-//Seccion de Facturar Prestamos
 
 telefono.addEventListener('focus',e=>{
     telefono.select()

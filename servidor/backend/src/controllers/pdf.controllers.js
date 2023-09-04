@@ -10,7 +10,6 @@ const path = require('path');
 
 let html = fs.readFileSync(__dirname + '/pdf.html','utf8');
 
-
 pdfCTRL.crearPdf = async(req,res)=>{
 
     const [venta,cliente,{QR,cae,vencimientoCae,texto,numero}] = req.body;
@@ -41,7 +40,7 @@ pdfCTRL.crearPdf = async(req,res)=>{
                                 <td>${parseFloat(ticket.pagado).toFixed(2)}</td>
                            </tr>`;
             });
-    }
+    };
 
     const date = new Date(venta.fecha);
     let day = date.getDate();
@@ -55,12 +54,9 @@ pdfCTRL.crearPdf = async(req,res)=>{
     const codigoComprobante = verCodigoComp(venta.cod_comp);
     const tipoCompropobante = verTipoComp(venta.cod_comp);
     
-    
-    // const qr = (await qrcode.toDataURL(QR)).split('/\r\n|\r|\n/');
     const a = await generarQR(texto);
     
     const img = (await qrcode.toDataURL(a));
-
 
     //Generamos el qr
     async function generarQR(texto) {
@@ -122,7 +118,7 @@ pdfCTRL.crearPdf = async(req,res)=>{
     html = (venta.condIva === "Inscripto" && (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{importeNeto}}',`<p class="IVA neto">Importe Neto Gravado: $<span>${venta.gravado21 + venta.gravado105}</span></p>`) : html.replace('{{importeNeto}}',"");
     html = (venta.condIva === "Inscripto" && (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{iva21}}',`<p class="IVA iva21">IVA 21%: $<span>${venta.iva21.toFixed(2)}</span></p>`) : html.replace('{{iva21}}',"");
     html = (venta.condIva === "Inscripto" && (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{iva105}}',`<p class="IVA iva105">IVA 10.5%: $<span>${venta.iva105.toFixed(2)}</span></p>`) : html.replace('{{iva105}}',"");
-    html = venta.condIva !== "Inscripto" || venta.tipo_comp === "Recibos" ? html.replace('{{subtotal}}',`<p class="SinIVA">Subtotal: $<span>${(venta.precioFinal + parseFloat(venta.descuento))}</span></p>`) : html.replace('{{subtotal}}',"");
+    html = venta.condIva !== "Inscripto" || venta.tipo_comp === "Recibos" ? html.replace('{{subtotal}}',`<p class="SinIVA">Subtotal: $<span>${(parseFloat(venta.precioFinal) + parseFloat(venta.descuento))}</span></p>`) : html.replace('{{subtotal}}',"");
     html = html.replace('{{descuento}}', venta.tipo_comp === "Recibos" ? "0.00" : parseFloat(venta.descuento));
     html = html.replace('{{precioFinal}}',venta.precioFinal);
 
@@ -138,9 +134,7 @@ pdfCTRL.crearPdf = async(req,res)=>{
             html = fs.readFileSync(__dirname + '/pdf.html','utf8');
         })
         res.send("a");
-}
-
-
+};
 
 const verCodigoComp = (codigoComprobante)=>{
     if (codigoComprobante === 6) {
@@ -156,7 +150,7 @@ const verCodigoComp = (codigoComprobante)=>{
     }else if(codigoComprobante === 9){
         return "Cod: 009"
     }
-}
+};
 
 const verTipoComp = (codigo)=>{
     if(codigo === 1 || codigo === 4 ||  codigo === 3){
@@ -164,7 +158,7 @@ const verTipoComp = (codigo)=>{
     }else{
         return "B"
     }
-}
+};
 
 module.exports = pdfCTRL;
 
