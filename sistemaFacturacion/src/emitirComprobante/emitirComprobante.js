@@ -6,7 +6,7 @@ function getParameterByName(name) {
 }
 
 const sweet = require('sweetalert2');
-const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago, configAxios, verNombrePc} = require('../funciones');
+const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago, configAxios, verNombrePc, ponerNotificaciones} = require('../funciones');
 const { ipcRenderer } = require("electron");
 const axios = require("axios");
 require("dotenv").config;
@@ -1417,21 +1417,7 @@ function ponerFinanciacionBancoEntreRios(e,descripcion,porcentaje) {
     descripcion.classList.add('none');
     porcentaje.classList.add('none');
     
-    const notificacion = document.querySelector('.notificacion');
-    notificacion.addEventListener('animationend',(e)=>{
-        if (e.animationName === 'cierre') {
-            notificacion.classList.add('none');
-        }
-    });
-
-    notificacion.classList.remove('none');
-
-    document.getElementById('notificacion-texto').innerText = "Aumento Banco Entre Rios Activado";
-    document.getElementById('notificacion-close').addEventListener('click',()=>{notificacion.classList.add('cerrando')});
-
-    setInterval(() => {
-        notificacion.classList.add('cerrando');
-    }, 5000);
+    ponerNotificaciones('Aumento Banco Entre Rios Activado');
 
     }
 };

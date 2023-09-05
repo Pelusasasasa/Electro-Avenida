@@ -348,7 +348,25 @@ const subirAAfip = async(venta)=>{
             texto:textoQR,
             numero:ultimoElectronica + 1
         }
-}
+};
+
+const ponerNotificaciones = async(texto)=>{
+    const notificacion = document.querySelector('.notificacion');
+    notificacion.addEventListener('animationend',(e)=>{
+        if (e.animationName === 'cierre') {
+            notificacion.classList.add('none');
+        }
+    });
+
+    notificacion.classList.remove('none');
+
+    document.getElementById('notificacion-texto').innerText = texto;
+    document.getElementById('notificacion-close').addEventListener('click',()=>{notificacion.classList.add('cerrando')});
+
+    setInterval(() => {
+        notificacion.classList.add('cerrando');
+    }, 5000);
+};
 
 const ultimasFacturas = async(puntoVenta,tipoComp)=>{
     const lastVoucher = await afip.ElectronicBilling.getLastVoucher(puntoVenta,tipoComp);
@@ -494,5 +512,6 @@ module.exports = {
     verEstadoServidorAfip,
     configAxios,
     verNombrePc,
-    clickderecho
+    clickderecho,
+    ponerNotificaciones
 }

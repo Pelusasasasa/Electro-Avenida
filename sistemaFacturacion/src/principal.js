@@ -11,7 +11,7 @@ let vendedor
 let acceso
 let empresa
 const sweet = require('sweetalert2');
-const { verEstadoServidorAfip, configAxios, verificarUsuarios } = require("./funciones");
+const { verEstadoServidorAfip, configAxios, verificarUsuarios, ponerNotificaciones } = require("./funciones");
 
 
 const notificaciones = require('node-notifier');
@@ -23,10 +23,7 @@ window.addEventListener('load',async e=>{
         const dolarBNA = parseFloat((await avisarDolar()).replace(',','.')) + 1;
         
         if (dolarBNA !== dolarSistema) {
-            notificaciones.notify({
-                title:"Dolares distintos",
-                message:`El dolar del sistema: ${dolarSistema} es distinto al dolar de el BNA: ${dolarBNA}`
-            });
+            ponerNotificaciones(`El dolar del sistema: ${dolarSistema} es distinto al dolar de el BNA: ${dolarBNA}`)
         }
 
         vendedores = (await axios.get(`${URL}usuarios`,configAxios)).data;
@@ -34,7 +31,7 @@ window.addEventListener('load',async e=>{
 });
 
 const avisarDolar = async()=>{
-   const browser = await puppetter.launch();
+   const browser = await puppetter.launch({headless: true});
    const page = await browser.newPage();
    await page.goto('https://www.bna.com.ar/Personas');
     const selector = '.cotizacion';
@@ -42,6 +39,7 @@ const avisarDolar = async()=>{
         const tr = document.querySelector('.cotizacion tbody tr ');
         return tr.children[2].innerText
     });
+    
     return dolares;
 };
 
