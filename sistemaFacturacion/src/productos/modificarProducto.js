@@ -164,7 +164,8 @@ guardar.addEventListener('click',async e=>{
         });
     }
     ipcRenderer.send('productoModificado',producto);
-    window.close()
+
+    window.close();
 });
 
 salir.addEventListener('click',e=>{

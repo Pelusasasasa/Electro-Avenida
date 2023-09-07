@@ -1,3 +1,9 @@
+:root{
+  --exito: #3ab65c;
+  --error: #bf333b;
+  --info: #1898c0
+}
+
 html {
     box-sizing: border-box;
     font-size: 62.5%;
@@ -140,10 +146,21 @@ select{
   max-width: 400px;
   border-radius: 10px;
   padding-left: 1.5rem;
-  background-color: #1898c0;
   overflow: hidden;
 
   animation: apertura 200ms ease-out;
+}
+
+.notificacion.info{
+  background-color: var(--info);
+}
+
+.notificacion.exito{
+  background-color: var(--exito);
+}
+
+.notificacion.error{
+  background-color: var(--error);
 }
 
 .notificacion .icon{

@@ -208,14 +208,19 @@ ipcMain.on('abrir-ventana-modificar-producto',  (e, args) => {
     })
 });
 
+ipcMain.on('producto-agregado',(e,args)=>{
+    ventanaPrincipal.webContents.send('producto-agregado',JSON.stringify(args));
+
+})
+
 ipcMain.on('productoModificado',(e,args)=>{
-    ventanaPrincipal.webContents.send('productoModificado',JSON.stringify(args))
+    ventanaPrincipal.webContents.send('productoModificado',JSON.stringify(args));
 });
 
 
 //abrir ventana agregar producto
 ipcMain.on('abrir-ventana-agregar-producto',async(e,args)=>{
-    abrirVentana('productos/agregarProducto.html',1100,500,false,args)
+    abrirVentana('productos/agregarProducto.html',1100,500,'noReinician',args)
 })
 
 

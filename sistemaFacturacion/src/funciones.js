@@ -201,7 +201,8 @@ function abrirVentana(texto,width,height,reinicio = false,informacion = "",vende
           nuevaVentana.webContents.send('informacion',informacion);
           vendedor && nuevaVentana.webContents.send('vendedor',vendedor);
       })
-      nuevaVentana.setMenuBarVisibility(false)
+      nuevaVentana.setMenuBarVisibility(false),
+      
       nuevaVentana.on('close',e=>{
           nuevaVentana = null;
           reinicio !== "noReinician" && ventanaPrincipal.reload()
@@ -350,7 +351,7 @@ const subirAAfip = async(venta)=>{
         }
 };
 
-const ponerNotificaciones = async(texto)=>{
+const ponerNotificaciones = async(texto,titulo='!Info')=>{
     const notificacion = document.querySelector('.notificacion');
     notificacion.addEventListener('animationend',(e)=>{
         if (e.animationName === 'cierre') {
@@ -361,6 +362,7 @@ const ponerNotificaciones = async(texto)=>{
     notificacion.classList.remove('none');
 
     document.getElementById('notificacion-texto').innerText = texto;
+    document.getElementById('notificacion-titulo').innerText = titulo;
     document.getElementById('notificacion-close').addEventListener('click',()=>{notificacion.classList.add('cerrando')});
 
     setInterval(() => {

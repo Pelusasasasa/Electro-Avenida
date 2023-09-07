@@ -25,6 +25,8 @@ const utilidad = document.querySelector('#utilidad');
 const precioVenta = document.querySelector('#precioVenta');
 const imagen = document.querySelector('#imagen');
 const unidad = document.querySelector('#unidad');
+
+//Botones
 const salir = document.querySelector('.salir');
 const agregar = document.querySelector('.agregar');
 const select = document.querySelector('#rubros');
@@ -115,13 +117,11 @@ precioVenta.addEventListener('focus', (e) =>{
 
 agregar.addEventListener('click' ,async  (e) =>{
     e.preventDefault();
-
     if (descripcion.value === "") {
         await sweet.fire({
             title:"Falta Descripcion del producto"
         });
     }else{
-
 
     const producto = {
         _id: codigo.value,
@@ -143,7 +143,8 @@ agregar.addEventListener('click' ,async  (e) =>{
         maquina:verNombrePc(),
         oferta:oferta.checked,
         precioOferta:precioOferta.value
-    }
+    };
+
     //Enviamos el producto al servidor
     await axios.post(`${URL}productos`,producto,configAxios);
     //enviamos la imagen si es que tiene
@@ -156,6 +157,8 @@ agregar.addEventListener('click' ,async  (e) =>{
             }
         });
     }
+
+    ipcRenderer.send('producto-agregado',producto.descripcion);
     window.close();
     }
 })

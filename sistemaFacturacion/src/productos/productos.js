@@ -2,7 +2,7 @@ const { ipcRenderer } = require("electron");
 const sweet = require('sweetalert2');
 
 const axios = require("axios");
-const { copiar, recorrerFlechas, configAxios, verNombrePc } = require("../funciones");
+const { copiar, recorrerFlechas, configAxios, verNombrePc, ponerNotificaciones } = require("../funciones");
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -29,6 +29,11 @@ const volver = document.querySelector('.volver');
 const seccionImagenGrande = document.querySelector('.imagenGrande');
 let seleccionarTBody = document.querySelector('tbody');
 
+const table = document.querySelector('.m-0')
+
+//Notificacion
+const notificacion = document.querySelector('.notificacion');
+
 let texto = "";
 let seleccionado = "";
 let subSeleccion;
@@ -36,8 +41,7 @@ const body = document.querySelector('body');
 
 if (acceso === "2" || acceso === "1") {
     eliminar.classList.add('none')
-}
-
+};  
 
 window.addEventListener('load',e=>{
     filtrar();
@@ -52,6 +56,12 @@ body.addEventListener('keyup',async e=>{
         inline:'center',
         behavior:"smooth"
       });
+});
+
+ipcRenderer.on('producto-agregado',(e,args)=>{
+    
+
+    ponerNotificaciones(`Producto ${args} Agregado con Exito`,'!Exito');
 });
 
 ipcRenderer.on('productoModificado',(e,args)=>{
@@ -70,18 +80,18 @@ ipcRenderer.on('productoModificado',(e,args)=>{
     aux[4].innerHTML = producto.stock;
     aux[5].innerHTML = producto.cod_fabrica;
     aux[6].innerHTML = producto.observacion;
+
+    ponerNotificaciones(`Producto ${producto.descripcion} modificado con exito`,'!Exito');
 });
 
-
 //Lo que hacemos es cuando se hace click en la tabla se le agrega una clase que dice que el foco lo tiene la tabla o no
-const table = document.querySelector('.m-0')
 window.addEventListener('click',e=>{
     if (table.contains(e.target)) {
         table.classList.add('tablaFocus')
     }else{
         table.classList.remove('tablaFocus')
     }
-})
+});
 
 const ponerProductos = productos =>{
     resultado.innerHTML = '';
@@ -178,7 +188,7 @@ ipcRenderer.once('Historial',async(e,args)=>{
     buscarProducto.value = await textoA;
     select.value = await seleccionA;
     filtrar()
-})
+});
 
 buscarProducto.addEventListener('keyup',filtrar);
 buscarProducto.addEventListener('keypress',e=>{
@@ -196,10 +206,6 @@ select.addEventListener('keydown',e=>{
     }else{
         e.preventDefault();
     }
-});
-
-volver.addEventListener('click',e=>{
-    location.href = "../index.html";
 });
 
 document.addEventListener('keydown',e=>{
@@ -309,8 +315,12 @@ eliminar.addEventListener('click',async e=>{
                     maquina:verNombrePc(),
                     producto:seleccionado.children[1].innerText
                 }},configAxios);
+                
+                ponerNotificaciones(`Producto ${seleccionado.children[1].innerText} eliminado`,'Exito');
+                
                 resultado.removeChild(seleccionado);
                 seleccionado = "";
+
             }
         })
     }else{
@@ -324,3 +334,7 @@ eliminar.addEventListener('click',async e=>{
 }
 
 );
+
+volver.addEventListener('click',e=>{
+    location.href = "../index.html";
+});
