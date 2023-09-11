@@ -139,6 +139,7 @@ ipcRenderer.on('mando-el-cliente',async(e,args)=>{
 });
 
 ipcRenderer.on('CancelarCuenta',cancelarCuenta);
+ipcRenderer.on('CompensarCuenta',compensarCuenta);
 
 //si hacemos click en el tbody vamos a seleccionar una cuenta compensada o historica y pasamos a mostrar los detalles de la cuenta
 listar.addEventListener('click',e=>{
@@ -573,6 +574,16 @@ async function cancelarCuenta(e) {
         listar.removeChild(seleccionado);
     }
 };
+
+async function compensarCuenta(e) {
+    const cuenta = (await axios.get(`${URL}cuentaComp/numeroYCliente/${seleccionado.id}/${codigoCliente.value}`,configAxios)).data;
+
+    cuenta.saldo = cuenta.importe;
+    cuenta.pagado = 0;
+    
+    listaCompensada.push(cuenta);
+    await axios.put(`${URL}cuentaComp/numeroYCliente/${seleccionado.id}/${codigoCliente.value}`,cuenta,configAxios);
+}
 
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {

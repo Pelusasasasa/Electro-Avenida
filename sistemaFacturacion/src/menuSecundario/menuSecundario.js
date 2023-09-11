@@ -24,12 +24,20 @@ const cambiarObservaciones = new MenuItem({
     }
 });
 
-const compensarCuenta = new MenuItem({
+const cancelarCuenta = new MenuItem({
     label:"Cancelar Cuenta",
     async click(){
         ventanaPrincipal.webContents.send('CancelarCuenta');
     }
-})
+});
+
+const compensarCuenta = new MenuItem({
+    label:"Compensar Cuenta",
+    async click(){
+        ventanaPrincipal.webContents.send('CompensarCuenta');
+    }
+});
+
 //Fin de Menu Secundario
 
 
@@ -50,8 +58,11 @@ function mostrarMenu(ventana,x,y){
     };
 
     if (ventana === "Cuenta Corriente") {
-        if (!menuSecundario.items.find(menu => menu.label === "Cancelar Cuenta")) {
+        if (!menuSecundario.items.find(menu => menu.label === "Compensar Cuenta")) {
             menuSecundario.append(compensarCuenta);
+        }
+        if (!menuSecundario.items.find(menu => menu.label === "Cancelar Cuenta")) {
+            menuSecundario.append(cancelarCuenta);
         }
         
     }
