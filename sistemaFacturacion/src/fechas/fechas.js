@@ -7,7 +7,6 @@ const URL = process.env.URL;
 
 const desde = document.querySelector('#desde');
 const hasta = document.querySelector('#hasta');
-const select = document.querySelector('#hora');
 const aceptar = document.querySelector('.aceptar');
 const cancelar = document.querySelector('.cancelar');
 
@@ -23,12 +22,6 @@ let day = date.getDate();
 let month = date.getMonth() + 1;
 let year = date.getFullYear();
 let hora = date.getHours();
-
-if (hora>14) {
-    select.value = "PM";
-}else{
-    select.value = "AM"
-}
 
 day = day<10 ? `0${day}` : day;
 month = month<10 ? `0${month}` : month;
@@ -99,12 +92,6 @@ async function porVenta(tickets,presupuesto,recibos) {
          });
 
          let arreglo = [...ticketsDelDia,...presupuestosDelDia,...recibos];
-
-         if (select.value === "AM") {
-             arreglo = arreglo.filter(venta=>parseFloat(venta.fecha.slice(11,13))<14);
-         }else if(select.value === "PM"){
-             arreglo = arreglo.filter(venta=>parseFloat(venta.fecha.slice(11,13))>14);
-         };
 
          return arreglo;
 }
