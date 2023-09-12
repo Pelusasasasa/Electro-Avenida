@@ -1,12 +1,11 @@
 const {ipcRenderer} = require('electron')
 
 ipcRenderer.on('info-para-imprimir',(e,args)=>{
-    const [Venta,Cliente,arreglo,total,opciones] = JSON.parse(args)
-    listar(Venta,Cliente,arreglo,total,opciones);
+    const [venta,cliente,arreglo,tipo,opciones] = JSON.parse(args)
+    listar(venta,cliente,arreglo,tipo,opciones);
 });
 
-const listar = async(venta,Cliente,lista,precio,opciones)=>{
-
+const listar = async(venta,Cliente,lista,tipo,opciones)=>{
 const numero = document.querySelector('.numero');
 const fecha = document.querySelector('.fecha');
 const cliente = document.querySelector('.cliente');
@@ -86,7 +85,7 @@ if (venta.saldoAFavor !== 0) {
 
     tbody.appendChild(tr);
 }
-total.value = precio;
+total.value = venta.precioFinal;
 
 await ipcRenderer.send('imprimir',JSON.stringify(opciones));
 }

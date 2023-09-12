@@ -188,6 +188,12 @@ const templateMenu = [
                 }
             },
             {
+                label:"Imprimir Recibo",
+                click(){
+                    abrirVentana("utilidad/imprimirPresupuesto.html",400,200)
+                }
+            },
+            {
                 label:"Agregar tarjeta",
                 click(){
                     abrirVentana("utilidad/cargarTarjeta.html",500,500)

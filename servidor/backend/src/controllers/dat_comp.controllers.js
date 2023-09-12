@@ -41,7 +41,6 @@ datCompCTRL.getBetween = async(req,res)=>{
 
 datCompCTRL.getFechaImpt = async(req,res)=>{
     const {desde,hasta} = req.params;
-    console.log(hasta)
 
     let hastaMes = parseInt(hasta.split('-',2)[1]) + 1;
     const hastaYear = hasta.split('-',3)[0];
@@ -51,10 +50,8 @@ datCompCTRL.getFechaImpt = async(req,res)=>{
 
     const auxMesSig = hastaYear + '-' + hastaMes;
     const mes = new Date(desde + "-01T00:00:00.000Z");
-    const mesSig = new Date(auxMesSig + "-01T00:00:00.000Z");
-    console.log(auxMesSig)
+    const mesSig = new Date(auxMesSig + "-01T00:00:00.000Z")
     let compras
-    // console.log(asd);
     try {
         compras = await DatComp.find({$and:[
             {fecha_imput:{$gte:mes}},

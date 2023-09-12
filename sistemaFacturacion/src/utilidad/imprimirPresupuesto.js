@@ -36,8 +36,17 @@ aceptar.addEventListener('click',async e=>{
         cliente = (await axios.get(`${URL}clientes/id/${venta.idCliente}`,configAxios)).data;
     };
     
-    const movimientos  = (await axios.get(`${URL}movProductos/${comprobante}/${tipoVenta}`)).data;;
-    ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante","valorizado",movimientos])
+    const movimientos  = (venta.tipo_comp === "Recibos_P" || venta.tipo_comp === "recibos") 
+    ? venta.comprobantes
+    : (await axios.get(`${URL}movProductos/${comprobante}/${tipoVenta}`)).data;
+
+    if (venta.tipo_comp === "Recibos_P" || venta.tipo_comp === "recibos") {
+        ipcRenderer.send('imprimir-recibo',[venta,cliente,movimientos,venta.tipo_comp]);
+    } else {
+        ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,venta.tipo_comp,movimientos]);
+    }
+        
+    
 });
 
 puntoVenta.addEventListener('keypress',e=>{
@@ -45,6 +54,7 @@ puntoVenta.addEventListener('keypress',e=>{
         numero.focus();
     }
 });
+
 
 numero.addEventListener('keypress',e=>{
     if (e.key === "Enter") {

@@ -381,7 +381,7 @@ const hacerRecibo = async()=>{
         recibo.productos = arregloParaImprimir;
         // arregloParaImprimir contiene todos las ventas que tiene pagadas y total contiene el total del recibo
         alerta.children[1].children[0].innerHTML = "Imprimiendo Recibo";
-        recibo.tipo_comp === "Recibos_P" ? await ipcRenderer.send('imprimir-venta',[recibo,cliente,false,1,recibo.tipo_comp,arregloParaImprimir,total.value]) : await ipcRenderer.send('imprimir-venta',[recibo,clienteTraido,true,1,"Recibos"]);
+        recibo.tipo_comp === "Recibos_P" ? await ipcRenderer.send('imprimir-recibo',[recibo,cliente,arregloParaImprimir,recibo.tipo_comp]) : await ipcRenderer.send('imprimir-recibo',[recibo,cliente,arregloParaImprimir,venta.tipo_comp]);
         //Mandar Recibo para que se guarde como pdf
         recibo.tipo_comp === "Recibos" && (alerta.children[1].children[0].innerHTML = "Guardando Recibo Como PDF");
         recibo.tipo_comp === "Recibos" && await axios.post(`${URL}crearPdf`,[recibo,cliente,{}],configAxios);

@@ -706,9 +706,9 @@ presupuesto.addEventListener('click',async (e)=>{
                     cond_iva: conIva.value
                 };
                 if (venta.tipo_pago === "CC") {
-                    await ipcRenderer.send('imprimir-venta',[venta,cliente,true,2,"imprimir-comprobante",valorizadoImpresion,arregloMovimiento])
+                    await ipcRenderer.send('imprimir-venta',[venta,cliente,true,2,venta.tipo_comp,valorizadoImpresion,arregloMovimiento])
                 }else{
-                    await ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,"imprimir-comprobante",valorizadoImpresion,arregloMovimiento])
+                    await ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,venta.tipo_comp,valorizadoImpresion,arregloMovimiento])
                 }
             };
 

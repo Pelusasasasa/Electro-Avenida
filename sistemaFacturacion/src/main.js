@@ -132,7 +132,7 @@ ipcMain.on('abrir-ventana-clientesConSaldo',async(e,args)=>{
 ipcMain.on('imprimir-venta',async(e,args)=>{
     const [venta,cliente,condicion,cantidad,tipo,calculo,lista,show] = args;
     let options
-    if (tipo === "Ticket Factura" || tipo === "Recibos") {
+    if (tipo === "Ticket Factura") {
         options = {
             silent: condicion,
             copies: cantidad,
@@ -153,7 +153,24 @@ ipcMain.on('imprimir-venta',async(e,args)=>{
     };
     const pasar = [venta,cliente,calculo,lista,options];
     await imprimir(pasar);
-})
+});
+
+ipcMain.on('imprimir-recibo',async(e,args)=>{
+    const [recibo,cliente,lista,tipo] = args;
+    let options = {};
+    if (tipo === "Recibos") {
+        options = {
+            silent: condicion,
+            copies: cantidad,
+            deviceName: "SAM4S GIANT-100"
+        };
+    }else if(tipo === "Recibos_P"){
+        abrirVentanaImprimir("emitirRecibo/imprimirRecibo.html",1000,900,"noReinician");
+    };
+
+    await imprimir([recibo,cliente,lista,tipo,options]);    
+    
+});
 
 //funcion para imprimir presupuesto
 const imprimir = (info)=>{;

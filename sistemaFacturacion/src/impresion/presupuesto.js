@@ -77,7 +77,7 @@ const { ipcRenderer } = require("electron");
     };
 
     ipcRenderer.on('info-para-imprimir',async(e,args)=>{
-        [venta,cliente,valorizado,lista,opciones] = JSON.parse(args);
+        [venta,cliente,lista,valorizado,opciones] = JSON.parse(args);
         await listar(venta,valorizado,lista,opciones);
         await listarCliente(cliente);
         await ipcRenderer.send('imprimir',JSON.stringify(opciones));
