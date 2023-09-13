@@ -146,7 +146,7 @@ ipcMain.on('imprimir-venta',async(e,args)=>{
     }
     
     if(tipo === "Ticket Factura"){
-        abrirVentanaImprimir("impresion/ticket.html",1000,900,"noReinician",false)
+        abrirVentanaImprimir("impresion/ticket.html",1000,900,"noReinician",show)
     }else{
         abrirVentanaImprimir("impresion/presupuesto.html",1000,500,"noReinician",show);
     };

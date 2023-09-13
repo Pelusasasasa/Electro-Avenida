@@ -72,10 +72,10 @@ tbody.addEventListener('click',e=>{
     if (e.target.nodeName === "BUTTON") {
         if (seleccionado.children[2].innerText === "Recibos") {
             const recibo = recibos.find(elem => elem.nro_comp === seleccionado.id);
-            ipcRenderer.send('imprimir-venta',[recibo,,false,1,"Recibos",,]);
+            ipcRenderer.send('imprimir-recibo',[recibo,,false,1,"Recibos",,]);
         }else{
             const venta = ventas.find(elem =>elem.nro_comp === seleccionado.id);
-            ipcRenderer.send('imprimir-venta',[venta,,false,1,"Ticket Factura",,]);
+            ipcRenderer.send('imprimir-venta',[venta,,false,1,"Ticket Factura",,,true]);
         }
         
     }

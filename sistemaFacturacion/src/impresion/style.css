@@ -30,6 +30,10 @@ html {
     justify-content: center;
 }
 
+.ticket .container{
+    margin-right: 1rem;
+}
+
 .ticket .infoFactura{
     display: flex;
     flex-direction: column;

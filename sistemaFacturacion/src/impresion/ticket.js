@@ -66,27 +66,16 @@ const venciCae = document.querySelector('.venciCae');
 
 async function infoComprobante(venta) {
     //fecha y hora
-    let date = new Date(venta.fecha);
-    let day = date.getDate();
-    let month = date.getMonth() + 1;
-    let year = date.getFullYear();
-    let hour = date.getHours();
-    let minuts = date.getMinutes();
-    let seconds = date.getSeconds();
+    let date = venta.fecha.slice(0,10).split('-',3).reverse().join('/')
+    let time = venta.fecha.slice(11,19).split(':',3).join(':');
 
-    month = month === 13 ? 1 : month;
-    month = month < 10 ? `0${month}` : month;
-    day = day < 10 ? `0${day}` : day;
-    hour = hour < 10 ? `0${hour}` : hour;
-    minuts = minuts < 10 ? `0${minuts}` : minuts;
-    seconds = seconds < 10 ? `0${seconds}` : seconds;
     const tipoFactura = verTipoFactura(venta.cod_comp)
     codFactura.innerHTML = venta.cod_comp ?  "0"+venta.cod_comp : "06";
     tipo.innerHTML = tipoFactura;
     numeroFactura.innerHTML = venta.nro_comp;
 
-    fecha.innerHTML = `${day}/${month}/${year}`;
-    hora.innerHTML = `${hour}:${minuts}:${seconds}`;
+    fecha.innerHTML = date;
+    hora.innerHTML = time;
     venta.numeroAsociado && (numeroAsociado.innerHTML = "Comp Original Nº:" + venta.numeroAsociado);
 
     //Totales
@@ -160,7 +149,6 @@ async function listar(venta,afip,opciones){
 };
 
 async function listarCliente(cliente) {
-    console.log(cliente)
        nombre.innerText = cliente.cliente;
        cuit.innerText = cliente.cuit.length === 11 ? `CUIT: ${cliente.cuit}` : `DNI: ${cliente.cuit}`;
        condIva.innerHTML = venta.condIva.toUpperCase();
