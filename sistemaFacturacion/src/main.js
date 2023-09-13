@@ -144,9 +144,8 @@ ipcMain.on('imprimir-venta',async(e,args)=>{
             copies: cantidad,
         };
     }
-    if (tipo === "Recibos_P") {
-        abrirVentanaImprimir("emitirRecibo/imprimirRecibo.html",1000,900,"noReinician",show);
-    }else if(tipo === "Ticket Factura" || tipo === "Recibos"){
+    
+    if(tipo === "Ticket Factura"){
         abrirVentanaImprimir("impresion/ticket.html",1000,900,"noReinician",false)
     }else{
         abrirVentanaImprimir("impresion/presupuesto.html",1000,500,"noReinician",show);
@@ -290,7 +289,7 @@ const abrirVentanaImprimir = async(texto,width,height,reinicio,show=false)=>{
         modal:true,
         width: width,
         height: height,
-        show:true,
+        show:show,
         webPreferences: {
             contextIsolation: false,
             nodeIntegration: true

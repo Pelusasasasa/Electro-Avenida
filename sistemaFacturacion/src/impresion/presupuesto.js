@@ -77,13 +77,14 @@ const { ipcRenderer } = require("electron");
     };
 
     ipcRenderer.on('info-para-imprimir',async(e,args)=>{
-        [venta,cliente,lista,valorizado,opciones] = JSON.parse(args);
+        console.log(JSON.parse(args))
+        const [venta,cliente,valorizado,lista,opciones] = JSON.parse(args);
         await listar(venta,valorizado,lista,opciones);
-        await listarCliente(cliente);
+        await listarCliente(cliente,venta);
         await ipcRenderer.send('imprimir',JSON.stringify(opciones));
     });
 
-    async function listarCliente() {
+    async function listarCliente(cliente,venta) {
         clientes.innerHTML = cliente.cliente + `(${venta.observaciones.toUpperCase()})`;
         idCliente.innerHTML = cliente._id ? cliente._id : cliente.id;
         cuit.innerHTML = cliente.cuit;
@@ -95,7 +96,6 @@ const { ipcRenderer } = require("electron");
             cond_iva.innerHTML = "Consumidor Final"
         }
     };
-
 
     document.addEventListener('keydown',e=>{
         if(e.key === "Escape"){

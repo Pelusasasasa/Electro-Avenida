@@ -43,7 +43,7 @@ aceptar.addEventListener('click',async e=>{
     if (venta.tipo_comp === "Recibos_P" || venta.tipo_comp === "recibos") {
         ipcRenderer.send('imprimir-recibo',[venta,cliente,movimientos,venta.tipo_comp]);
     } else {
-        ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,venta.tipo_comp,movimientos]);
+        ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,venta.tipo_comp,"valorizado",movimientos,false]);
     }
         
     

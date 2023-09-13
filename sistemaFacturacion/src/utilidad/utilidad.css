@@ -69,13 +69,21 @@
     width: 15rem;
 }
 
-.imprimirPresupuesto main{
-    display: flex;
-    gap: 2rem;
+.imprimirPresupuesto{
+    display: grid;
+    height: calc(100vh - 2rem);
 }
+
 
 .imprimirPresupuesto main #puntoVenta{
     width: 25%;
+}
+
+.imprimirPresupuesto .numeros{
+    display: flex;
+    align-items: start;
+    gap: 2rem;
+    justify-content: center;
 }
 
 .imprimirPresupuesto main #numero{
@@ -83,5 +91,5 @@
 }
 
 .imprimirPresupuesto .botones{
-    margin: 5rem;
+    align-self: flex-end;
 }
