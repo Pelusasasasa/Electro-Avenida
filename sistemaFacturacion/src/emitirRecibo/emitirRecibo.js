@@ -13,7 +13,7 @@ const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
 
-const { copiar, verCodComp, redondear, generarMovimientoCaja, configAxios, verNombrePc, ponerEnCuentaCorrienteCompensada } = require('../funciones');
+const { copiar, verCodComp, redondear, generarMovimientoCaja, configAxios, verNombrePc, ponerEnCuentaCorrienteCompensada, validarRecibo } = require('../funciones');
 
 const hoy = new Date();
 let diaDeHoy =  hoy.getDate();
@@ -53,7 +53,6 @@ const cancelar = document.querySelector('.cancelar');
 const vendedor = document.querySelector('.vendedor');
 const saldoAfavor = document.querySelector('#saldoAFavor');
 const total = document.querySelector('#total');
-
 
 const Vendedor = getParameterByName('vendedor');
 let situacion = "blanco";//es con la situacion que empezamos a ver
@@ -315,6 +314,7 @@ const hacerRecibo = async()=>{
         
         return;
      }
+
     //Pnemos en un arreglo las ventas que se modificaron, asi despues imprimimos el recibo
     let arregloParaImprimir = [];
     let maquina = verNombrePc();
@@ -345,7 +345,7 @@ const hacerRecibo = async()=>{
      recibo.observaciones = valoresRecibidos.value ? valoresRecibidos.value.toUpperCase() : "EFECTIVO";
      recibo.comprobantes = arregloParaImprimir;
      recibo.maquina = maquina;
-     const aux = (situacion === "negro") ? "saldo_p" : "saldo"
+     const aux = (situacion === "negro") ? "saldo_p" : "saldo";
      let saldoFavor = 0;
      recibo.descuento = 0;
      saldoFavor = (saldoAfavor.value !== "") && parseFloat(saldoAFavor.value);
@@ -357,14 +357,17 @@ const hacerRecibo = async()=>{
      let clienteTraido = (await axios.get(`${URL}clientes/id/${recibo.codigo}`,configAxios)).data;
      clienteTraido[aux] = parseFloat(saldoNuevo);
      clienteTraido.vendedor = Vendedor;
-     clienteTraido.maquina = maquina
-     try {
+     clienteTraido.maquina = maquina;
+     recibo.nro_comp = await traerUltimoNroRecibo();
+
+     const {bandera,message} = await validarRecibo(recibo);
+     
+     if(bandera) {
         //modificamos las ventas en cuentas compensada
         await modificarVentasConpensadas(nuevaLista);
 
 
         //modificamos el numero del recibo
-        recibo.nro_comp = await traerUltimoNroRecibo();
         const numeroAModificar = parseFloat(recibo.nro_comp.split('-')[1])
         await modifcarNroRecibo(numeroAModificar,recibo.tipo_comp,clienteTraido.cond_iva);
 
@@ -386,11 +389,11 @@ const hacerRecibo = async()=>{
         recibo.tipo_comp === "Recibos" && (alerta.children[1].children[0].innerHTML = "Guardando Recibo Como PDF");
         recibo.tipo_comp === "Recibos" && await axios.post(`${URL}crearPdf`,[recibo,cliente,{}],configAxios);
         location.href = "../index.html";
-    } catch (error) {
-        console.log(error)
-        sweet.fire({title:"No se pudo generar el recibo"})
-    }finally{
-        alerta.classList.add('none');   
+    }else{
+        alerta.classList.add('none');
+        await sweet.fire({
+            title:message
+        })
     }
 };
 
@@ -545,4 +548,4 @@ document.addEventListener('keydown',e=>{
     if(e.key === "Escape"){
         location.href = '../index.html';
     }
-}) ;
+});

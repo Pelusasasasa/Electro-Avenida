@@ -495,6 +495,39 @@ function clickderecho(e,texto){
     ipcRenderer.send('mostrar-menu',cordenadas);
 };
 
+function validarRecibo(recibo) {
+    if (!recibo.codigo) {
+        return {
+            bandera: false,
+            message: "No se puede hacer recibo, falta Codigo Cliente"
+        }
+    };
+    if(!recibo.cliente){
+        return {
+            bandera: false,
+            message: "No se puede hacer recibo, falta Nombre Cliente"
+        }
+    };
+
+    if(!recibo.precioFinal){
+        return {
+            bandera: false,
+            message: "No se puede hacer recibo, falta Precio Final"
+        }
+    };
+
+    if (!recibo.nro_comp) {
+        return {
+            bandera: false,
+            message: "No se puede hacer recibo, falta el numero comprobate"
+        }
+    }
+
+    return {
+        bandera: true,
+        message: ""
+    }
+}
 
 module.exports = {
     redondear,
@@ -515,5 +548,8 @@ module.exports = {
     configAxios,
     verNombrePc,
     clickderecho,
-    ponerNotificaciones
-}
+    ponerNotificaciones,
+
+    //Recibo
+    validarRecibo
+};
