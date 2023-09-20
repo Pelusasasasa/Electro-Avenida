@@ -5,6 +5,7 @@ const axios = require("axios");
 const { cerrarVentana, configAxios } = require("../funciones");
 
 const select = document.querySelector('#marcas');
+const imprimir = document.querySelector('#imprimir');
 const tbody = document.querySelector('tbody');
 
 
@@ -52,3 +53,10 @@ const listar = async ()=>{
         `
     };
 };
+
+imprimir.addEventListener('click',async e=>{
+    select.parentNode.parentNode.classList.add('none');
+    tbody.parentNode.parentNode.style.overflow = 'visible';
+    tbody.parentNode.children[0].classList.add('none');
+    window.print();
+});

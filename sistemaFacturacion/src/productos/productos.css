@@ -1,6 +1,6 @@
 .listadoPorMarca .marcas{
     display: flex;
-    flex-direction: column;
+    justify-content: space-around;
     align-items: flex-start;
     margin-bottom: 1rem;
 }

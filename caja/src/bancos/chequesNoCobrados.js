@@ -6,8 +6,6 @@ const URL = process.env.URL;
 
 const tbody = document.querySelector('tbody');
 
-
-
 window.addEventListener('load',async e=>{
     cerrarVentana();
     const chequesNoCobrados = (await axios.get(`${URL}cheques/sinFechaPagoYPropios`,configAxios)).data;
