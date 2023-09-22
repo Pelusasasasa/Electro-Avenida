@@ -140,6 +140,32 @@ tbody tr:hover{
     margin: .5rem;
 }
 
+.listas{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
+}
+
+.listas main{
+    border: .1rem solid black;
+}
+
+#facturacion .facturas,#facturacion .notaCreditos,#facturacion .compras{
+    background-color: white;
+    min-height: calc(100vh - 7rem);
+}
+
+#facturacion .facturas table,#facturacion .notaCreditos table,#facturacion .compras table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#facturacion .facturas table thead th,#facturacion .tbodyFacturas td,#facturacion .notaCreditos thead th,#facturacion .notaCreditos td,#facturacion .compras th,#facturacion .compras td{
+    border: .1rem solid black;
+}
+
+
+
 @media print{
     .table{
         overflow: hidden;

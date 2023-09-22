@@ -52,6 +52,7 @@ ventasCTRL.entreFechas = async(req,res) => {
     });
     res.send(ventas)
 }
+
 ventasCTRL.entreFechasConId = async(req,res) => {
     const {id,desde,hasta} = req.params
     const ventaARetornar =  await Ventas.find(
@@ -81,6 +82,23 @@ ventasCTRL.eliminarVenta = async(req,res)=>{
     const a = await Ventas.findOneAndDelete({nro_comp:id}); 
     console.log(`Venta ${id} Eliminada`);
     res.send(a);
-}
+};
+
+ventasCTRL.getVentasForMonth = async(req,res)=>{
+    const {month,year} = req.params;
+
+    const ventas = await Ventas.find({
+        $expr:{
+            $and:[
+                {$eq:[{$month:"$fecha"},month]},
+                {$eq:[{$year:"$fecha"},year]}
+            ]
+        }
+    });
+
+    res.send(ventas);
+
+
+};
 
 module.exports = ventasCTRL;

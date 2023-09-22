@@ -72,5 +72,22 @@ datCompCTRL.getForNumeroCompAndProv = async(req,res)=>{
         {codProv:codProv}
     ]},{total:1,tipo_comp:1,codProv:1,nro_comp:1});
     res.send(datComp)
-}
+};
+
+datCompCTRL.getForMonthAndYear = async(req,res)=>{
+
+    const {month,year} = req.params;
+
+    const datos = await DatComp.find({
+        $expr:{
+            $and:[
+                {$eq:[{$month:"$fecha_comp"},month]},
+                {$eq:[{$year:"$fecha_comp"},year]},
+                {$ne:["$tipo_comp","Presupuesto"]}
+            ]}
+    });
+
+    res.send(datos);
+
+};
 module.exports = datCompCTRL;

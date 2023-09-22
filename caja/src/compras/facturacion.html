@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./style.css">
+    <title>Facturacion</title>
+</head>
+<body id="facturacion">
+
+    <header class="botones">
+        <div>
+            <label for="mes">Mes</label>
+            <input type="month" name="mes" id="mes">
+        </div>
+        <div>
+            <button id="buscar">Buscar</button>
+        </div>
+    </header>
+
+    <section class="listas">
+        <main class="facturas">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dia</th>
+                        <th>Gravado</th>
+                        <th>Iva 21</th>
+                        <th>Iva 10.5</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody class="tbodyFacturas"></tbody>
+            </table>
+        </main>
+        <main class="notaCreditos">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dia</th>
+                        <th>Gravado</th>
+                        <th>Iva 21</th>
+                        <th>Iva 10.5</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody class="tbodyNotaCreditos"></tbody>
+            </table>
+        </main>
+        <main class="compras">
+            <table>
+                <thead>
+                    <th>Iva</th>
+                    <th>P. Bru.</th>
+                    <th>R. Bru</th>
+                    <th>P. Iva</th>
+                    <th>R. Iva</th>
+                </thead>
+                <tbody class="tbodyCompras">
+                </tbody>
+            </table>
+        </main>
+    </section>
+
+</body>
+<script src="./facturacion.js"></script>
+</html>

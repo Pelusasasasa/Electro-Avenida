@@ -275,6 +275,14 @@ const templateMenu = [
         click(){
           ventanaPrincipal.webContents.send('deCompras');
         }
+      },
+      {
+        label: "Facturacion",
+        click(){
+          ventanaPrincipal.loadFile(path.join(__dirname, 'compras/facturacion.html'));
+          
+          ventanaPrincipal.webContents.send('facturacion');
+        }
       }
     ]
   },
