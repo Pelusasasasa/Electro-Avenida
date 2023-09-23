@@ -164,7 +164,37 @@ tbody tr:hover{
     border: .1rem solid black;
 }
 
+#facturacion .listas{
+    margin-top: 1rem;
+}
 
+#facturacion table td{
+    text-align: right;
+}
+
+
+#facturacion .totales{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+#facturacion .totales div{
+    background-color: lightgray;
+}
+
+
+#facturacion .totales p{
+    margin: 0;
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    font-weight: bold;
+}
+
+#facturacion .totales p span{
+    font-weight: 600;
+}
 
 @media print{
     .table{
