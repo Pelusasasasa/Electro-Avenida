@@ -81,8 +81,8 @@ datCompCTRL.getForMonthAndYear = async(req,res)=>{
     const datos = await DatComp.find({
         $expr:{
             $and:[
-                {$eq:[{$month:"$fecha_imput"},month]},
-                {$eq:[{$year:"$fecha_imput"},year]},
+                {$eq:[{$month:"$fecha_imput"},Number(month)]},
+                {$eq:[{$year:"$fecha_imput"},Number(year)]},
                 {$ne:["$tipo_comp","Presupuesto"]}
             ]}
     });

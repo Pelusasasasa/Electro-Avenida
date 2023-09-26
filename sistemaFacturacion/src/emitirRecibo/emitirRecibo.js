@@ -307,14 +307,6 @@ imprimir.addEventListener('click',async e=>{
 });
 
 const hacerRecibo = async()=>{
-    if(!eval(total.value)){
-        await sweet.fire({
-            title:"No se puede hacer recibo con el total en NAN"
-        });
-        
-        return;
-     }
-
     //Pnemos en un arreglo las ventas que se modificaron, asi despues imprimimos el recibo
     let arregloParaImprimir = [];
     let maquina = verNombrePc();
@@ -361,7 +353,7 @@ const hacerRecibo = async()=>{
      recibo.nro_comp = await traerUltimoNroRecibo();
 
      const {bandera,message} = await validarRecibo(recibo);
-     
+     console.log(message)
      if(bandera) {
         //modificamos las ventas en cuentas compensada
         await modificarVentasConpensadas(nuevaLista);

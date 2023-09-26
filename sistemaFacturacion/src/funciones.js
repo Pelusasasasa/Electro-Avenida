@@ -496,6 +496,7 @@ function clickderecho(e,texto){
 };
 
 function validarRecibo(recibo) {
+    console.log(!recibo.precioFinal)
     if (!recibo.codigo) {
         return {
             bandera: false,
@@ -509,7 +510,7 @@ function validarRecibo(recibo) {
         }
     };
 
-    if(!recibo.precioFinal){
+    if(!recibo.precioFinal && recibo.precioFinal !== 0){
         return {
             bandera: false,
             message: "No se puede hacer recibo, falta Precio Final"

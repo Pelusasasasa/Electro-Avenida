@@ -90,8 +90,8 @@ ventasCTRL.getVentasForMonth = async(req,res)=>{
     const ventas = await Ventas.find({
         $expr:{
             $and:[
-                {$eq:[{$month:"$fecha"},month]},
-                {$eq:[{$year:"$fecha"},year]}
+                {$eq:[{$month:"$fecha"},Number(month)]},
+                {$eq:[{$year:"$fecha"},Number(year)]}
             ]
         }
     });
