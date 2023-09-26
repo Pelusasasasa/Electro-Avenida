@@ -14,6 +14,7 @@ const { ipcRenderer } = require("electron");
         const precioFinal = document.querySelector('.precioFinal');
         const tipoPago = document.querySelector('.tipoPago');
         const tbody = document.querySelector('.tbody');
+        const atencion = document.querySelector('#atencion');
         const presupuesto = document.querySelector('#presupuesto');
         const tipoFactura = document.querySelector('.tipoFactura');
         const descuento = document.querySelector('.descuento');
@@ -73,11 +74,12 @@ const { ipcRenderer } = require("electron");
                     </tr>
                     `
                 }
-             };
+            };
+
+        venta.tipo_pago === "PP" && atencion.classList.remove('none');
     };
 
     ipcRenderer.on('info-para-imprimir',async(e,args)=>{
-        console.log(JSON.parse(args))
         const [venta,cliente,valorizado,lista,opciones] = JSON.parse(args);
         await listar(venta,valorizado,lista,opciones);
         await listarCliente(cliente,venta);

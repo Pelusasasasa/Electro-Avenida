@@ -203,6 +203,10 @@ svg{
 .presupuesto table thead tr{
     border: .1rem solid black;
 }
+
+.presupuesto #atencion{
+    font-weight: bold;
+}
 .presupuesto .precios{
     display: flex;
     border: .1rem solid black;
@@ -220,4 +224,8 @@ svg{
 
 .negrita{
     font-weight: bold;
+}
+
+.none{
+    display: none;
 }
