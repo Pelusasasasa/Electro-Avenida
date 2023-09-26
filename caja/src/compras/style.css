@@ -196,6 +196,13 @@ tbody tr:hover{
     font-weight: 600;
 }
 
+#facturacion aside main{
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
 @media print{
     .table{
         overflow: hidden;

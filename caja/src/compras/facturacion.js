@@ -279,6 +279,37 @@ async function totales() {
     const total = document.getElementById('total');
     total.innerText = redondear(parseFloat(gravadoT.innerText) + parseFloat(ivaT.innerText),2);
 
+    //DGR
+    const dgr = document.getElementById('dgr');
+    const retencion = document.getElementById('retencion');
+    const totalDGR = document.getElementById('totalDGR');
+
+    dgr.innerText = redondear(parseFloat(gravadoT.innerText) * 0.04,2);
+    
+    const auxRetencion = parseFloat(document.getElementById('pBru').innerText) + parseFloat(document.getElementById('rBru').innerText);
+    retencion.innerText = redondear(auxRetencion,2);
+
+    totalDGR.innerText = redondear(parseFloat(dgr.innerText) - parseFloat(retencion.innerText),2);
+
+    //Municipal
+    const municipal = document.getElementById('municipal');
+    const fdo = document.getElementById('fdo');
+    const totalMunicipal = document.getElementById('totalMunicipal');
+
+    municipal.innerText = redondear(parseFloat(gravadoT.innerText) * 0.02,2);
+    fdo.innerText = redondear(parseFloat(municipal.innerText)*0.15,2);
+    totalMunicipal.innerText = redondear(parseFloat(municipal.innerText) + parseFloat(fdo.innerText),2);
+
+    const totalIva = document.getElementById('totalIva');
+    const ivas = document.getElementById('ivas');
+    const porcentajeIva = document.getElementById('porcentajeIva');
+    
+    totalIva.innerText = redondear((parseFloat(ivaT.innerText - parseFloat(document.getElementById('ivaC').innerText)) - parseFloat(document.getElementById('pIva').innerText)),2);
+    ivas.innerText = redondear( parseFloat(ivaT.innerText) - parseFloat(document.getElementById('ivaC').innerText),2);
+
+    porcentajeIva.innerText = redondear( parseFloat(ivas.innerText) / parseFloat(document.getElementById('ivaC').innerText) * 100,3)
+    
+
 };
 
 document.addEventListener('keydown',(e)=>{
