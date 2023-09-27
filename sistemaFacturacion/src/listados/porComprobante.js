@@ -101,9 +101,7 @@ async function listarVentas(lista) {
         let minutes = hora[1]
         let seconds = hora[2]
         let anio = fecha[0]
-        console.log("a")
         const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`,configAxios)).data;
-        console.log(movimientos)
         for await(let mov of movimientos){
                 const tr = document.createElement('tr');
     
@@ -125,10 +123,10 @@ async function listarVentas(lista) {
                 tdId.innerHTML = mov.codProd;
                 tdDescripcion.innerHTML = mov.descripcion.slice(0,22);
                 tdVendedor.innerHTML = venta.vendedor.substr(-20,3);
-                tdCantidad.innerHTML = venta.tipo_comp === "Nota Credito" ? (mov.egreso * -1).toFixed(2) : mov.egreso.toFixed(2);
-                tdPrecio.innerHTML = mov.precio_unitario;
+                tdCantidad.innerHTML = venta.tipo_comp === "Nota Credito" ? (mov.ingreso * -1).toFixed(2) : mov.egreso.toFixed(2);
+                tdPrecio.innerHTML = mov.precio_unitario.toFixed(2);
                 
-                tdTotal.innerHTML = venta.tipo_comp === "Nota Credito" ? (mov.precio_unitario.precio_venta*mov.egreso*-1).toFixed(2) : (mov.precio_unitario*mov.egreso).toFixed(2);
+                tdTotal.innerHTML = venta.tipo_comp === "Nota Credito" ? (mov.precio_unitario*mov.ingreso*-1).toFixed(2) : (mov.precio_unitario*mov.egreso).toFixed(2);
     
                 tr.appendChild(tdTipo);
                 tr.appendChild(tdNumero);

@@ -319,15 +319,16 @@ async function mostrarDetalles(id,tipo,vendedor) {
     let movimientos1 = productos.filter(movimiento => movimiento.codCliente === clienteTraido._id);
     let movimientos2 = productos.filter(movimiento => movimiento.codigo === clienteTraido._id);
     productos = [...movimientos1,...movimientos2]
+    console.log(movimientos1[0])
     productos.forEach((producto) =>{
-        let {codProd,descripcion,vendedor,egreso,precio_unitario} = producto;
+        let {codProd,tipo_comp,descripcion,vendedor,ingreso,egreso,precio_unitario} = producto;
         detalle.innerHTML += `
         <tr id=${seleccionado.id} class="detalle">
             <td>${codProd}</td>
             <td>${descripcion}</td>
-            <td>${egreso.toFixed(2)}</td>
+            <td>${tipo_comp === "Nota Credito" ? ingreso.toFixed(2) : egreso.toFixed(2)}</td>
             <td>${precio_unitario.toFixed(2)}</td>
-            <td>${(egreso*precio_unitario).toFixed(2)}</td>
+            <td>${tipo_comp === 'Nota Credito' ? (ingreso*precio_unitario*-1).toFixed(2) : (egreso*precio_unitario).toFixed(2)}</td>
             <td>${vendedor}</td>
         </tr>
         `

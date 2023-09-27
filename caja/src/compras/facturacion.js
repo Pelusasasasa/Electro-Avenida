@@ -9,9 +9,11 @@ const tbodyCompras = document.querySelector('.tbodyCompras');
 
 const mes = document.getElementById('mes');
 const buscar = document.getElementById('buscar');
+const excel = document.getElementById('excel');
 
 window.addEventListener('load',inicio);
 buscar.addEventListener('click',busqueda);
+excel.addEventListener('click',exportar);
 
 async function getFacturas() {
     const month = mes.value.split('-')[1];
@@ -319,4 +321,74 @@ document.addEventListener('keydown',(e)=>{
 
 });
 
+async function exportar(){
+    const XLSX = require('xlsx');
 
+    // Crea una hoja de cálculo en blanco
+    const workbook = XLSX.utils.book_new();
+    const sheetName = 'Hoja1';
+    let sheetData = [];
+
+    sheetData = await facturasXLSX(sheetData);
+
+    // Fusiona las celdas A1 a C1 para el título
+    const mergeTitle = { s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }; // Fusiona desde A1 hasta C1
+
+    // sheetData = await NotasXLSX(sheetData)
+
+    // Crea una hoja de trabajo y asigna los datos
+    const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
+
+    // Agrega las fusiones a la hoja de trabajo
+    if (!worksheet['!merges']) worksheet['!merges'] = [];
+    worksheet['!merges'].push(mergeTitle);
+
+    // Agrega la hoja de trabajo al libro de trabajo
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+
+    // Crea un archivo de Excel
+    XLSX.writeFile(workbook, 'mi_archivo.xlsx');
+};
+
+function facturasXLSX(sheetData) {
+
+    //INICIO FACTURAS
+    const iva21F = document.getElementById('iva21F').innerText;
+    const iva105F = document.getElementById('iva105F').innerText;
+
+    // Agrega el título en la celda A1
+    sheetData.push(['FACTURAS']);
+
+    // Agrega datos a otras celdas (por ejemplo, datos en A4)
+    sheetData.push(["Gravado:", document.getElementById('gravadoT').innerText])
+    sheetData.push(["Iva Ventas 21%:", iva21F])
+    sheetData.push(["Iva Ventas 105%:", iva105F])
+    sheetData.push(["Total Iva Ventas:", redondear(parseFloat(iva21F) + parseFloat(iva105F),2)])
+
+    sheetData.push([]);
+
+    return sheetData;
+//FIN FACTURAS
+
+
+};
+
+function NotasXLSX(sheetData) {
+    //INICIO NOTA CREDITOS
+
+        // Agrega el título en la celda A1
+        sheetData.push(['NOTAS DE CREDITO']);
+
+        // Fusiona las celdas A1 a C1 para el título
+        const mergeTitle = { s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }; // Fusiona desde A1 hasta C1
+
+        // Agrega datos a otras celdas (por ejemplo, datos en A4)
+        sheetData.push(["Gravado:", document.getElementById('gravadoT').innerText])
+        sheetData.push(["Iva Ventas 21%:", iva21F])
+        sheetData.push(["Iva Ventas 105%:", iva105F])
+        sheetData.push(["Total Iva Ventas:", redondear(parseFloat(iva21F) + parseFloat(iva105F),2)])
+
+        sheetData.push([]);
+        return sheetData;
+    //FIN NOTA CREDITOS 
+}
