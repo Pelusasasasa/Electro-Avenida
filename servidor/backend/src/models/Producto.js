@@ -27,7 +27,7 @@ const Producto = new Schema({
     },
     iva: {
         type: String,
-        dafault: "0"
+        dafault: "N"
     },
     costo: {
         type: String,

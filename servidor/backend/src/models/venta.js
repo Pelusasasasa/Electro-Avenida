@@ -40,10 +40,6 @@ const Venta = new Schema({
     comprob: {
         type: String,
     },
-    productos: {
-        type: [],
-        required: false
-    },
     tipo_pago: String,
     cod_doc: Number, //Blanco
     dnicuit: String, //Blanco
@@ -64,7 +60,10 @@ const Venta = new Schema({
     gravado105: Number,
     iva21:Number,
     iva105:Number,
-    cant_iva:Number
+    cant_iva:Number,
+    qr:String,
+    cae:String,
+    vencimientoCae:String
 })
 
 module.exports = model('Venta',Venta)

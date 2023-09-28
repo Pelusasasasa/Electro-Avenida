@@ -33,8 +33,7 @@ movProductosCTRL.cargarMovimientoProducto = async(req,res)=>{
         console.log(`Movimiento del producto ${movimiento.descripcion} Cargado por el vendedor ${movimiento.vendedor} de la maquina ${movimiento.maquina} con la fecha y hora ${(new Date()).toLocaleString()}`);
     }
     res.send("movimientos guardado");
-}
-
+};
 
 movProductosCTRL.traerMoviemientoPorNumeroYTipo = async(req,res)=>{
     const {numero,tipo} = req.params;

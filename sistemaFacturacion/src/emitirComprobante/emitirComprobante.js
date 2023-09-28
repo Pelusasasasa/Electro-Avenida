@@ -453,7 +453,7 @@ function verQueVentaEs(tipo,cod_comp) {
     }else if(tipo === "Remito"){
         return "Ultimo Remito";
     }
-}
+};
 
 //numero de comprobante de ticket factura
 async function traerUltimoNroComprobante(tipoCom,codigoComprobante,tipo_pago) {
@@ -480,17 +480,7 @@ async function traerUltimoNroComprobante(tipoCom,codigoComprobante,tipo_pago) {
             const tipoVenta = ((await axios.get(`${URL}tipoVenta`,configAxios))).data[numeroFactura];
             return tipoVenta
         }
-}
-
-    //propiedad comprobante
-function numeroComprobante(tipo){
-        if (tipo === "Ticket Factura") {
-            venta.cod_doc = codDoc(dnicuit.value)
-            venta.dnicuit = dnicuit.value
-            venta.condIva = conIva.value
-        }
-
-}
+};
 
 //propiedad cod_doc vemos si es dni o cuit para retornar el codDoc
 function codDoc(dniocuit) {
@@ -500,7 +490,7 @@ function codDoc(dniocuit) {
         return 96
     }
     return 99
-}
+};
 
 //Vamos a descontar el stock 
 async function sacarStock(cantidad,objeto) {
@@ -508,7 +498,7 @@ async function sacarStock(cantidad,objeto) {
     const descontar = parseInt(producto.stock) - parseFloat(cantidad);
     producto.stock = descontar.toFixed(2);
     arregloProductosDescontarStock.push(producto);
-}
+};
 
 //INICIO MOVPRODUCTOS
 
@@ -523,6 +513,7 @@ async function movimientoProducto(cantidad,objeto,idCliente,cliente,tipo_pago,ti
     movProducto.tipo_comp = tipo_comp;
     movProducto.nro_comp = nro_comp;
     movProducto.egreso = cantidad;
+    movProducto.iva = objeto.iva;
     movProducto.stock = tipo_pago === "PP" ? objeto.stock : parseFloat((parseFloat(objeto.stock) - cantidad).toFixed(2));
     movProducto.precio_unitario = objeto.oferta ? objeto.precioOferta : objeto.precio_venta;
     movProducto.total=(parseFloat(movProducto.egreso)*parseFloat(movProducto.precio_unitario)).toFixed(2);
@@ -600,12 +591,6 @@ async function sumarSaldoAlCliente(precio,codigo,venta) {
     cliente.maquina = maquina;
 
     await axios.put(`${URL}clientes/${codigo}`,cliente,configAxios);
-};
-
-const sacarIdentificadorTabla = (arreglo)=>{
-    arreglo.forEach(producto=>{
-        delete producto.objeto.identificadorTabla  
-    })
 };
 
 //Aca mandamos la venta en presupuesto
@@ -839,21 +824,33 @@ ticketFactura.addEventListener('click',async (e) =>{
             sweet.fire({title:"Seleccionar un modo de venta"});
         }else{
             alerta.classList.remove('none');
-            const listaSinDescuento = JSON.parse(JSON.stringify(listaProductos));
-            venta.productos = listaProductos;
-            venta.nombreCliente = buscarCliente.value;
-            venta.observaciones = observaciones.value;
+
+            //Informacion Principal
             venta.fecha = new Date();
+            venta.productos = listaProductos;
+            venta.tipo_comp = tipoVenta;
+
+            //cliente
+            venta.nombreCliente = buscarCliente.value;
             venta.direccion = direccion.value;
             venta.localidad = localidad.value;
+            venta.cod_doc = codDoc(dnicuit.value)
+            venta.dnicuit = dnicuit.value
+            venta.condIva = conIva.value
+            
+            venta.cod_comp = verCodComp(tipoVenta,conIva.value);
+            
+            //precios
             venta.descuento = (descuentoN.value);
             venta.precioFinal = redondear(total.value,2);
-            venta.tipo_comp = tipoVenta;
-            numeroComprobante(tipoVenta);
+
+            //Informacion Adicional
+            venta.observaciones = observaciones.value;
             venta.empresa = inputEmpresa.value;
-            venta.cod_comp = verCodComp(tipoVenta,conIva.value);
             venta.vendedor = vendedor;
             venta.maquina = maquina;
+
+
             if (venta.precioFinal >= 30767 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
                 sweet.fire({title:"Factura mayor a 30767, poner datos cliente"});
                 alerta.classList.add('none');
@@ -876,6 +873,12 @@ ticketFactura.addEventListener('click',async (e) =>{
                     borraNegro && (venta.observaciones = ventaAnterior.nro_comp);//Se hace por si pasamos de presupuesto a factura
 
                     const afip = await subirAAfip(venta);
+
+                    //afip
+                    venta.qr = JSON.stringify(afip.QR);
+                    venta.cae = afip.cae;
+                    venta.vencimientoCae = afip.vencimientoCae
+
                     venta.nro_comp = `0005-${(afip.numero).toString().padStart(8,'0')}`;
                     venta.comprob = venta.nro_comp;
 

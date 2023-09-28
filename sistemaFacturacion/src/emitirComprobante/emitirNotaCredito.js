@@ -320,24 +320,32 @@ factura.addEventListener('click',async e=>{
         }else{
             venta.productos = listaProductos
             venta.fecha = new Date()
-            venta.cliente = codigoC.value;
-            venta.nombreCliente = buscarCliente.value;
+            
             venta.tipo_comp = "Nota Credito";
-            venta.observaciones = observaciones.value;
             venta.descuento = descuentoN.value;
             venta.cod_comp = verCodComp(venta.tipo_comp,conIva.value);
-            venta.productos = listaProductos;
-            venta.numeroAsociado = facturaOriginal.value;
+
+            //cliente
+            venta.cliente = codigoC.value;
+            venta.nombreCliente = buscarCliente.value;
             venta.dnicuit = dnicuit.value;
             venta.cod_doc = (venta.dnicuit.length > 8) ? 80 : 96;
-            venta.cod_doc = venta.dnicuit === "00000000" ? 99 : venta.cod_doc
-            venta.condIva = conIva.value;
-            venta.empresa = empresa;
-            venta.descuento = parseFloat(descuentoN.value);
-            venta.precioFinal = parseFloat(total.value);
-            venta.vendedor = vendedor;
             venta.direccion = direccion.value;
             venta.localidad = localidad.value;
+            
+            venta.cod_doc = venta.dnicuit === "00000000" ? 99 : venta.cod_doc
+            venta.condIva = conIva.value;
+            venta.numeroAsociado = facturaOriginal.value;
+
+            
+            venta.descuento = parseFloat(descuentoN.value);
+            venta.precioFinal = parseFloat(total.value);
+            
+            //Informacion Adicional
+            venta.observaciones = observaciones.value;
+            venta.vendedor = vendedor;
+            venta.empresa = empresa;
+            
             if (venta.precioFinal>37070 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
                 await sweet.fire({title:"Factura mayor a 37070, poner valores clientes"})
             }else{
@@ -360,6 +368,11 @@ factura.addEventListener('click',async e=>{
                 let ventaRelacionada = (await axios.get(`${URL}ventas/factura/${venta.numeroAsociado}/${"Ticket Factura"}/${venta.condIva}`,configAxios)).data;
                 //subimos a la afip la factura electronica
                 let afip = await subirAAfip(venta,ventaRelacionada);
+                
+                venta.qr = afip.QR;
+                venta.cae = afip.cae;
+                venta.vencimientoCae = afip.vencimientoCae;
+
                 venta.nro_comp = `0005-${(afip.numero).toString().padStart(8,'0')}`;
                 await actualizarNroCom(venta.nro_comp,venta.cod_comp);
 
@@ -425,6 +438,7 @@ const movimientoProducto = async(objeto,cantidad,venta)=>{
     movProducto.comprobante = "Nota de Credito";
     movProducto.tipo_comp = venta.tipo_comp;
     movProducto.nro_comp=venta.nro_comp;
+    movProducto.iva = objeto.iva;
     movProducto.ingreso = cantidad;
     movProducto.stock = objeto.stock;
     movProducto.precio_unitario = objeto.oferta ? objeto.precioOferta : objeto.precio_venta;

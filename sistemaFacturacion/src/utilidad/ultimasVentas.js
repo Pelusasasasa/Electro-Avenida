@@ -60,7 +60,7 @@ hasta.addEventListener('keypress',async e=>{
     }
 })
 
-tbody.addEventListener('click',e=>{
+tbody.addEventListener('click',async e=>{
     seleccionado && seleccionado.classList.remove('seleccionado');
     seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target.parentNode.parentNode;
     seleccionado.classList.add('seleccionado');
@@ -75,7 +75,13 @@ tbody.addEventListener('click',e=>{
             ipcRenderer.send('imprimir-recibo',[recibo,,false,1,"Recibos",,]);
         }else{
             const venta = ventas.find(elem =>elem.nro_comp === seleccionado.id);
-            ipcRenderer.send('imprimir-venta',[venta,,false,1,"Ticket Factura",,,true]);
+            const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`,configAxios)).data;
+            const afip = {
+                QR: JSON.parse(venta.qr),
+                cae:venta.cae,
+                vencimientoCae: venta.vencimientoCae
+            };
+            ipcRenderer.send('imprimir-venta',[venta,afip,false,1,"Ticket Factura",,movimientos,true]);
         }
         
     }

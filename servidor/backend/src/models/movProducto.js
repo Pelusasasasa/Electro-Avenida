@@ -40,6 +40,10 @@ const movProducto = new Schema({
         type:String,
         default:""
     },
+    iva:{
+        type:String,
+        default:"N"
+    },
     stock:Number,
     precio_unitario: {
         type: Number,

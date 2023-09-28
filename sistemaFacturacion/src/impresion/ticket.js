@@ -44,7 +44,7 @@ const venciCae = document.querySelector('.venciCae');
 
 
  ipcRenderer.on('info-para-imprimir',async (e,args)=>{
-    [venta,afip,,,opciones] = JSON.parse(args);
+    [venta,afip,,movimientos,opciones] = JSON.parse(args);
     let cliente;
 
     if (venta.tipo_comp === "Recibos") {
@@ -59,6 +59,7 @@ const venciCae = document.querySelector('.venciCae');
     };
     await infoComprobante(venta);
     await listarCliente(cliente);
+    await listaMovimientos(movimientos);
     await listar(venta,afip,opciones);
     await listarAfip(afip);
     await ipcRenderer.send('imprimir',JSON.stringify(opciones));
@@ -87,20 +88,22 @@ async function infoComprobante(venta) {
 async function listar(venta,afip,opciones){
     
     if (venta.tipo_comp !== "Recibos") {
-        for await(let {objeto,cantidad} of venta.productos){
-            const iva = objeto.iva === "N" ? 1.21 : 1.105;
-            listaProductos.innerHTML += `
-                <div class="cantidad">
-                    <p>${cantidad}/${venta.condIva === "Inscripto" ? (objeto.precio_venta/iva).toFixed(2)  : objeto.precio_venta}</p>
-                    <p class=iva>${objeto.iva === "N" ? "(21.00)" : "(10.50)"}</p>
-                    <p></p>
-                </div>
-                <div class="descripcionProducto">
-                    <p>${objeto.descripcion.slice(0,27)}</p>
-                    <p>${venta.condIva === "Inscripto" ? ((objeto.precio_venta/iva)*cantidad).toFixed(2) : (objeto.precio_venta * cantidad).toFixed(2)}</p>
-                </div>
-            `
-        };
+        if(venta.productos){    
+            for await(let {objeto,cantidad} of venta.productos){
+                const iva = objeto.iva === "N" ? 1.21 : 1.105;
+                listaProductos.innerHTML += `
+                    <div class="cantidad">
+                        <p>${cantidad}/${venta.condIva === "Inscripto" ? (objeto.precio_venta/iva).toFixed(2)  : objeto.precio_venta}</p>
+                        <p class=iva>${objeto.iva === "N" ? "(21.00)" : "(10.50)"}</p>
+                        <p></p>
+                    </div>
+                    <div class="descripcionProducto">
+                        <p>${objeto.descripcion.slice(0,27)}</p>
+                        <p>${venta.condIva === "Inscripto" ? ((objeto.precio_venta/iva)*cantidad).toFixed(2) : (objeto.precio_venta * cantidad).toFixed(2)}</p>
+                    </div>
+                `
+        
+        }};
     }else{
         cantidadPrecio.innerHTML = "";
         iva.innerHTML = "";
@@ -148,6 +151,24 @@ async function listar(venta,afip,opciones){
     }
 };
 
+async function listaMovimientos(movimientos) {
+    movimientos.map(({tipo_comp,iva,egreso,ingreso,descripcion,precio_unitario})=>{
+        const ivaAux = iva === "N" ? 1.21 : 1.105;
+        listaProductos.innerHTML += `
+                    <div class="cantidad">
+                        <p>${tipo_comp === "Nota Credito" ? ingreso/ivaAux.toFixed(2) : egreso.toFixed(2)}
+                        /${venta.condIva === "Inscripto" ? (precio_unitario/ivaAux).toFixed(2)  : precio_unitario.toFixed(2)}</p>
+                        <p class=iva>${iva === "N" ? "(21.00)" : "(10.50)"}</p>
+                        <p></p>
+                    </div>
+                    <div class="descripcionProducto">
+                        <p>${descripcion.slice(0,27)}</p>
+                        <p>${venta.condIva === "Inscripto" ? ((precio_unitario/ivaAux)*egreso).toFixed(2) : (precio_unitario * egreso).toFixed(2)}</p>
+                    </div>
+                `
+    })
+}
+
 async function listarCliente(cliente) {
        nombre.innerText = cliente.cliente;
        cuit.innerText = cliente.cuit.length === 11 ? `CUIT: ${cliente.cuit}` : `DNI: ${cliente.cuit}`;
@@ -165,8 +186,7 @@ async function listarAfip(afip) {
     }
 }
 
-
- const verTipoFactura = (codigo)=>{
+const verTipoFactura = (codigo)=>{
      if (codigo === 6) {
          return "Factura B";
      }else if(codigo === 1){
@@ -182,4 +202,4 @@ async function listarAfip(afip) {
     }else{
         return "Recibos"
     }
- };
+};
