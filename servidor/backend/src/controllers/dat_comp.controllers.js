@@ -58,7 +58,6 @@ datCompCTRL.getFechaImpt = async(req,res)=>{
             {fecha_imput:{$lt:mesSig}}
         ]});
     } catch (error) {
-        console.log(mesSig)
         console.log(error)
     }
 

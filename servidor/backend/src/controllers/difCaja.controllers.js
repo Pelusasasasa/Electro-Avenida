@@ -22,7 +22,6 @@ difCajaCTRL.getForId = async(req,res)=>{
 
 difCajaCTRL.putForId = async(req,res)=>{
     const {id} = req.params;
-    console.log(id)
     const difCaja = await DifCaja.findOneAndUpdate({_id:id},req.body);
     console.log(`Diferencia de caja modificada por ${req.body.vendedor} en la maquina ${req.body.maquina} con la fecha y hora ${(new Date()).toLocaleString()}`);;
     res.end();
