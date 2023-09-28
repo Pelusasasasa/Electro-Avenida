@@ -8,6 +8,7 @@ function getParameterByName(name) {
 const sweet = require('sweetalert2');
 const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago, configAxios, verNombrePc, ponerNotificaciones} = require('../funciones');
 const { ipcRenderer } = require("electron");
+
 const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
@@ -17,8 +18,8 @@ let vendedor = getParameterByName('vendedor');
 let empresa = getParameterByName('empresa');
 let botones = getParameterByName('botones') === "false" ? false : true;
 
-const usuario = document.querySelector(".usuario")
-const textoUsuario = document.createElement("P")
+const usuario = document.querySelector(".usuario");
+const textoUsuario = document.createElement("P");
 textoUsuario.innerHTML = vendedor
 usuario.appendChild(textoUsuario)
 
@@ -191,8 +192,7 @@ precioAgregar.addEventListener('keypress',e=>{
             }
         });
     }
-})
-
+});
 
 //Cuando buscamos un producto
 codigo.addEventListener('keypress',async (e) => {
@@ -813,6 +813,8 @@ ticketFactura.addEventListener('click',async (e) =>{
         sweet.fire({title:"Ticket Factura no puede ser productos en negativo"});
     }else if(parseFloat(descuento.value) > 10 && vendedor!=="ELBIO"){
         await sweet.fire({title:"Descuento No Autorizado"})
+    }else if(dnicuit.value === ""){
+        await sweet.fire({title: "Falta valor del DNI o CUIT"});
     }else if(listaProductos.length===0){
         await sweet.fire({title:"Ningun producto cargado"});
     }else if(dnicuit.value.length === 11 && conIva.value === "Consumidor Final"){
@@ -959,7 +961,7 @@ ticketFactura.addEventListener('click',async (e) =>{
             }
             }
     };
-    });
+});
 
  //sacamos el gravado y el iva de una venta
  const gravadoMasIva = (ventas)=>{

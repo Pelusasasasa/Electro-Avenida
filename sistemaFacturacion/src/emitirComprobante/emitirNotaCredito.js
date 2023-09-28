@@ -427,7 +427,7 @@ const agregarStock = async (codigo,cantidad)=>{
     const descontar = parseFloat(producto.stock) + parseFloat(cantidad);
     producto.stock = descontar.toFixed(2);
     arregloProductosDescontarStock.push(producto);
-}
+};
 
 const movimientoProducto = async(objeto,cantidad,venta)=>{
     let movProducto = {}
