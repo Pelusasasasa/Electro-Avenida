@@ -196,6 +196,48 @@ tbody tr:hover{
     font-weight: 600;
 }
 
+#facturacion{
+    position: relative;
+
+}
+
+#facturacion aside{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: lightgray;
+    height: 100%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+}
+
+.aside_flechas{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: gray;
+    height: 100%;
+    top: 0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    position: fixed;
+    cursor: pointer;
+}
+
+.aside_flechas:hover{
+    background-color: rgb(170,170,170);
+}
+
+#facturacion aside section{
+    height: 100%;
+    width: 100%;
+    padding-left: 1rem;
+    color: white;
+    background-color: rgb(131, 88, 88);
+}
+
 #facturacion aside main{
     display: flex;
     justify-content: space-around;

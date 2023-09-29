@@ -7,6 +7,11 @@ const tbodyFacturas = document.querySelector('.tbodyFacturas');
 const tbodyNotaCreditos = document.querySelector('.tbodyNotaCreditos');
 const tbodyCompras = document.querySelector('.tbodyCompras');
 
+const aside = document.querySelector('aside section');
+const aside_flechas = document.querySelector('.aside_flechas');
+const flecha_forward = document.getElementById('flecha_forward');
+const flecha_back = document.getElementById('flecha_back');
+
 const mes = document.getElementById('mes');
 const buscar = document.getElementById('buscar');
 const excel = document.getElementById('excel');
@@ -14,6 +19,7 @@ const excel = document.getElementById('excel');
 window.addEventListener('load',inicio);
 buscar.addEventListener('click',busqueda);
 excel.addEventListener('click',exportar);
+aside_flechas.addEventListener('click',mostrarAside);
 
 async function getFacturas() {
     const month = mes.value.split('-')[1];
@@ -312,6 +318,13 @@ async function totales() {
     
 
 };
+
+async function mostrarAside() {
+    aside.classList.toggle('none');
+    aside.parentNode.style.width === '15px' ? aside.parentNode.style.width = '50%' : aside.parentNode.style.width = '15px';
+    flecha_forward.classList.toggle('none');
+    flecha_back.classList.toggle('none');
+}
 
 document.addEventListener('keydown',(e)=>{
 

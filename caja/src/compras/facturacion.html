@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="./style.css">
+    <link href="../../node_modules/material-icons/iconfont/material-icons.css" rel="stylesheet">
     <title>Facturacion</title>
 </head>
 <body id="facturacion">
@@ -88,26 +89,32 @@
     </section>
 
     <aside>
-        <main id="aside-total">
-            <p>Gravado: <span id="gravadoT"></span></p>
-            <p>Iva: <span id="ivaT"></span></p>
-            <p>Total: <span id="total"></span></p>
-        </main>
-        <main>
-            <p>DGR: <span id="dgr"></span></p>
-            <p>Retencion: <span id="retencion"></span></p>
-            <p>Total DGR: <span id="totalDGR"></span></p>
-        </main>
-        <main>
-            <p>Municipal: <span id="municipal"></span></p>
-            <p>Fdo. Insf. 15%: <span id="fdo"></span></p>
-            <p>Total Municipal: <span id="totalMunicipal"></span></p>
-        </main>
-        <main>
-            <p>Total Iva: <span id="totalIva"></span></p>
-            <p>Iva Ventas/Iva Compras: <span id="ivas"></span></p>
-            <p>% de Iva Pagado: <span id="porcentajeIva"></span></p>
-        </main>
+        <div class="aside_flechas">
+            <span id="flecha_forward" class="material-icons">arrow_forward_ios</span>
+            <span id="flecha_back" class="material-icons none">arrow_back_ios</span>
+        </div>
+        <section>
+            <main id="aside-total">
+                <p>Gravado: <span id="gravadoT"></span></p>
+                <p>Iva: <span id="ivaT"></span></p>
+                <p>Total: <span id="total"></span></p>
+            </main>
+            <main>
+                <p>DGR: <span id="dgr"></span></p>
+                <p>Retencion: <span id="retencion"></span></p>
+                <p>Total DGR: <span id="totalDGR"></span></p>
+            </main>
+            <main>
+                <p>Municipal: <span id="municipal"></span></p>
+                <p>Fdo. Insf. 15%: <span id="fdo"></span></p>
+                <p>Total Municipal: <span id="totalMunicipal"></span></p>
+            </main>
+            <main>
+                <p>Total Iva: <span id="totalIva"></span></p>
+                <p>Iva Ventas/Iva Compras: <span id="ivas"></span></p>
+                <p>% de Iva Pagado: <span id="porcentajeIva"></span></p>
+            </main>
+        </section>
     </aside>
 
 </body>
