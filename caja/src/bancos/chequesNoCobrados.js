@@ -14,9 +14,9 @@ window.addEventListener('load',async e=>{
 
 listarCheques = (lista)=>{
     lista.sort((a,b)=>{
-        if (a.f_cheque > b.f_cheque) {
+        if (a.f_recibido > b.f_recibido) {
             return 1
-        }else if(a.f_cheque < b.f_cheque){
+        }else if(a.f_recibido < b.f_recibido){
             return -1
         }
         return 0

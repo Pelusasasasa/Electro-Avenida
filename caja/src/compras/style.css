@@ -207,7 +207,7 @@ tbody tr:hover{
     right: 0;
     background: lightgray;
     height: 100%;
-    width: 50%;
+    width: 55%;
     display: flex;
     align-items: center;
 }
@@ -233,7 +233,7 @@ tbody tr:hover{
 #facturacion aside section{
     height: 100%;
     width: 100%;
-    padding-left: 1rem;
+    padding-left: 5rem;
     color: white;
     background-color: rgb(131, 88, 88);
 }

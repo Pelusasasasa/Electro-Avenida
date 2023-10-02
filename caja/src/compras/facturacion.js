@@ -1,5 +1,5 @@
 const axios = require('axios');
-const { redondear } = require('../assets/js/globales');
+const { redondear, configAxios } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -25,7 +25,7 @@ async function getFacturas() {
     const month = mes.value.split('-')[1];
     const year = mes.value.split('-')[0];
 
-    const ventas = (await axios.get(`${URL}ventas/forMonthAndYear/${month}/${year}`)).data;
+    const ventas = (await axios.get(`${URL}ventas/forMonthAndYear/${month}/${year}`,configAxios)).data;
     return ventas
 };
 
@@ -33,7 +33,7 @@ async function getCompras(){
     const month = mes.value.split('-')[1];
     const year = mes.value.split('-')[0];
 
-    const compras = (await axios.get(`${URL}dat_comp/forMonthAndYear/${month}/${year}`)).data;
+    const compras = (await axios.get(`${URL}dat_comp/forMonthAndYear/${month}/${year}`,configAxios)).data;
 
     return compras
 };
@@ -62,6 +62,7 @@ async function busqueda(){
 };
 
 async function listarFacturas(facturas){
+    tbodyFacturas.innerHTML = "";
 
     let auxTotal = 0;
     let auxIva21 = 0;
@@ -129,6 +130,8 @@ async function listarFacturas(facturas){
 };
 
 async function listarNotas(facturas){
+    tbodyNotaCreditos.innerHTML = "";
+
     let totalIva21 = 0;
     let totalIva105 = 0;
     let totalPrecio = 0;
@@ -193,6 +196,7 @@ async function listarNotas(facturas){
 };
 
 async function listarCompras(compras){
+    tbodyCompras.innerHTML = "";
     
     let auxIva = 0;
     let pDgrC = 0;
