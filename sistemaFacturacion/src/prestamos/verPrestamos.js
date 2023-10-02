@@ -27,6 +27,16 @@ botonFacturar.addEventListener('click',facturarPrestamos);
 
 //Listamos los prestamos traidos
 async function listarPrestamos(lista) {
+
+    lista.sort((a,b) => {
+        if(a.observaciones > b.observaciones){
+            return 1;
+        }else if(a.observaciones < b.observaciones){
+            return -1;
+        };
+        return 0;
+    });
+
     tbody.innerText = "";
     for(let elem of lista){
         const tr = document.createElement('tr');
