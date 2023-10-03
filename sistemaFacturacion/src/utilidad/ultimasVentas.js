@@ -76,8 +76,9 @@ tbody.addEventListener('click',async e=>{
         }else{
             const venta = ventas.find(elem =>elem.nro_comp === seleccionado.id);
             const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`,configAxios)).data;
+
             const afip = {
-                QR: JSON.parse(venta.qr),
+                QR: venta.qr ? JSON.parse(venta.qr) : "",
                 cae:venta.cae,
                 vencimientoCae: venta.vencimientoCae
             };

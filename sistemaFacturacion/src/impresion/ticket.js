@@ -59,7 +59,7 @@ const venciCae = document.querySelector('.venciCae');
     };
     await infoComprobante(venta);
     await listarCliente(cliente);
-    await listaMovimientos(movimientos);
+    movimientos && await listaMovimientos(movimientos);
     await listar(venta,afip,opciones);
     await listarAfip(afip);
     await ipcRenderer.send('imprimir',JSON.stringify(opciones));
