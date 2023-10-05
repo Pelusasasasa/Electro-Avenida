@@ -29,11 +29,12 @@ let seleccionado;
 let subSeleccionado;
 let aux = 0;
 
-let date = new Date();
+const now = new Date();
+let date = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
 
 hoy.addEventListener('change',e=>{
     if(hoy.checked){
-        const tarjetasHoy = tarjetas.filter(tarjeta => tarjeta.fecha.slice(0,10) === date.toISOString().slice(0,10));
+        const tarjetasHoy = tarjetas.filter(tarjeta => tarjeta.fecha.slice(0,10) === date.slice(0,10));
         total = 0;
         listar(tarjetasHoy);
     }else{
