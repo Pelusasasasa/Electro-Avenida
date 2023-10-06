@@ -94,8 +94,8 @@ agregar.addEventListener('click',async e=>{
 
 modificar.addEventListener('click',async e=>{
     const cheque = {};
-
-    cheque.f_recibido = f_cheque.value;
+    cheque._id = modificar.id;
+    cheque.f_recibido = f_entrega.value;
     cheque.n_cheque = n_cheque.value;
     cheque.banco = banco.value.toUpperCase();
     cheque.plaza = plaza.value.toUpperCase();
@@ -109,6 +109,7 @@ modificar.addEventListener('click',async e=>{
     
     try {
         await axios.put(`${URL}cheques/id/${modificar.id}`,cheque,configAxios);
+        ipcRenderer.send('enviar-info-ventana-principal',cheque);
         window.close();
     } catch (error) {
         await sweet.fire({

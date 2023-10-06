@@ -52,7 +52,7 @@ agregar.addEventListener('click',async e=>{
         height:700,
         reinicio:true
     })
-})
+});
 
 //Seleccionamos cheques
 tbody.addEventListener('click',async e=>{
@@ -96,7 +96,7 @@ tbody.addEventListener('click',async e=>{
             path:"./cheques/agregar-modificarCheques.html",
             width:500,
             height:700,
-            reinicio:true,
+            reinicio:false,
             informacion: seleccionado.id
         });
     }
@@ -178,3 +178,21 @@ document.addEventListener('keyup',e=>{
         location.href = "../index.html";
     }
 });
+
+ipcRenderer.on('recibir-informacion',modificarInputs);
+
+function modificarInputs(e,cheque) {
+    const tr = document.getElementById(cheque._id);
+    
+    tr.children[0].innerText = cheque.f_recibido.split('-',3).reverse().join('/');
+    tr.children[1].innerText = cheque.n_cheque;
+    tr.children[2].innerText = cheque.banco;
+    tr.children[3].innerText = cheque.plaza;
+    tr.children[4].innerText = cheque.f_cheque.split('-',3).reverse().join('/');;
+    tr.children[5].innerText = cheque.i_cheque.toixed(2);
+    tr.children[6].innerText = cheque.ent_por;
+    tr.children[7].innerText = cheque.entreg_a;
+    tr.children[8].innerText = cheque.domicilio;
+    tr.children[9].innerText = cheque.telefono;
+    tr.children[10].innerText = cheque.propio;
+}
