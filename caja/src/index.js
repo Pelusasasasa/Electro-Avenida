@@ -138,7 +138,6 @@ const templateMenu = [
             label:"Provedores",
             click(){
               ventanaPrincipal.loadFile(path.join(__dirname, 'datos/provedores.html'))
-              // abrirVentana("datos/provedores.html",600,500)
             }
           },
           {
@@ -167,7 +166,7 @@ const templateMenu = [
       {
         label:"Cobranza Facturas",
         click(){
-          ventanaPrincipal.send('cobranzaFacturas')
+          ventanaPrincipal.loadFile(path.join(__dirname, 'caja/cobranzaFacturas.html'));
         }
       },
       {
@@ -220,37 +219,37 @@ const templateMenu = [
       {
         label:"Facturas A Cobrar",
         click(){
-          ventanaPrincipal.webContents.send('facturas');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'vales/facturasACobrar.html'));
         }
       },
       {
         label:"A Cobrar/Pagar",
         click(){
-          ventanaPrincipal.webContents.send('valesACobrar');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'vales/valesACobrar.html'));
         }
       },
       {
         label:"Personal",
         click(){
-          ventanaPrincipal.webContents.send('valesPersonal');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'vales/valesPersonal.html'));
         }
       },
       {
         label:"Incobrables",
         click(){
-          ventanaPrincipal.webContents.send('valesIncobrables');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'vales/valesIncobrables.html'));
         }
       },
       {
         label:"Tarjetas de Credito",
         click(){
-          ventanaPrincipal.webContents.send('tarjetas');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'tarjetas/tarjetas.html'));
         }
       },
       {
         label:"Cheques",
         click(){
-          ventanaPrincipal.webContents.send('cheques');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'cheques/cheques.html'));
         }
       },
     ]
@@ -261,27 +260,25 @@ const templateMenu = [
       {
         label:"Ingreso Facturas",
         click(){
-          ventanaPrincipal.webContents.send('ingresoFacturas');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'compras/ingresoFacturas.html'));
         }
       },
       {
         label:"Modificar Compras",
         click(){
-          ventanaPrincipal.webContents.send('modificarCompras');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'compras/modificarCompras.html'));
         }
       },
       {
         label: "De Compras",
         click(){
-          ventanaPrincipal.webContents.send('deCompras');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'compras/deCompras.html'));
         }
       },
       {
         label: "Facturacion",
         click(){
           ventanaPrincipal.loadFile(path.join(__dirname, 'compras/facturacion.html'));
-          
-          ventanaPrincipal.webContents.send('facturacion');
         }
       }
     ]
@@ -292,7 +289,7 @@ const templateMenu = [
       {
         label:"Emitir Pago",
         click(){
-          ventanaPrincipal.webContents.send('emitirPago')
+          ventanaPrincipal.loadFile(path.join(__dirname, 'provedores/emitirPago.html'));
         }
       },
       {
@@ -311,7 +308,6 @@ const templateMenu = [
         label:"Reordenar Saldo",
         click(){
           ventanaPrincipal.webContents.send('reordenarSaldo');
-          // abrirVentana('provedores/reordenarSaldo.html',400,500)
         }
       }
     ]

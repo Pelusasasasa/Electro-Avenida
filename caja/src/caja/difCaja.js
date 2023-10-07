@@ -223,3 +223,6 @@ async function clickAccionar(e){
     alertaActivo = agregar.dismiss === "esc" ? true : false;
     };
 };
+
+
+salir.addEventListener('click',cerrarVentana())

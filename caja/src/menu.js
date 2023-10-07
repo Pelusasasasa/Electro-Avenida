@@ -133,7 +133,6 @@ ipcRenderer.on('fecha',(e,args)=>{
 ipcRenderer.on('saldoInicial',async (e,args)=>{
     const numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
     const saldo = numeros["saldo Inicial"];
-    console.log(saldo)
     sweet.fire({
         title:"Saldo Inicial",
         html:`<input id='saldoInicial' value=${saldo} type:number>`,
@@ -183,50 +182,6 @@ const primeroDelMes = (id)=>{
 
 ipcRenderer.on('modificar',async e=>{
     await reingresarContraseña();
-});
-
-ipcRenderer.on('facturas',(e,args)=>{
-    location.href = "vales/facturasACobrar.html";
-});
-
-ipcRenderer.on('valesACobrar',(e,args)=>{
-    location.href = "vales/valesACobrar.html";
-});
-
-ipcRenderer.on('valesPersonal',(e,args)=>{
-    location.href = "vales/valesPersonal.html";
-});
-
-ipcRenderer.on('valesIncobrables',(e,args)=>{
-    location.href = "vales/valesIncobrables.html";
-});
-
-ipcRenderer.on('tarjetas',(e,args)=>{
-    location.href = "tarjetas/tarjetas.html";
-});
-
-ipcRenderer.on('cheques',(e,args)=>{
-    location.href = "cheques/cheques.html";
-});
-
-ipcRenderer.on('ingresoFacturas',(e,args)=>{
-    location.href = "compras/ingresoFacturas.html";
-});
-
-ipcRenderer.on('modificarCompras',(e,args)=>{
-    location.href = "compras/modificarCompras.html";
-});
-
-ipcRenderer.on('deCompras',(e,args)=>{
-    location.href = "compras/deCompras.html";
-});
-
-ipcRenderer.on('emitirPago',(e,args)=>{
-    location.href = "provedores/emitirPago.html";
-});
-
-ipcRenderer.on('cobranzaFacturas',(e,args)=>{
-    location.href = "caja/cobranzaFacturas.html"
 });
 
 ipcRenderer.on('reordenarSaldo',async e=>{
