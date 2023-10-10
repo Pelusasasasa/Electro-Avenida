@@ -75,7 +75,7 @@ ipcRenderer.on('productoModificado',(e,args)=>{
         <span>${producto.precio_venta}</span>
        </p>
     `
-    : producto.precio_venta;
+    : parseFloat(producto.precio_venta).toFixed(2);
     aux[3].innerHTML = producto.marca;
     aux[4].innerHTML = producto.stock;
     aux[5].innerHTML = producto.cod_fabrica;
@@ -118,7 +118,7 @@ const ponerProductos = productos =>{
                 <span>${producto.precioOferta}</span>
                 <span>${producto.precio_venta}</span>
             </p>` 
-        : producto.precio_venta;
+        : parseFloat(producto.precio_venta).toFixed(2);
         tdMarca.innerHTML = producto.marca;
         tdStock.innerHTML = parseFloat(producto.stock).toFixed(2);
         tdcodFabrica.innerHTML = producto.cod_fabrica;
