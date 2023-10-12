@@ -5,7 +5,8 @@
 body{
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
-    font-size: 1.3rem;
+    font-size: 1.4rem;
+    margin-right: 2rem;
 }
   
 html {
@@ -19,13 +20,13 @@ html {
     box-sizing: inherit;
 }
 
-.ticket .w-10{
+.w-10{
     width: 18rem;
 }
 .ticket .w-12{  
     width: 12rem;
 }
-.ticket .logo{
+.logo{
     display: flex;
     justify-content: center;
 }
@@ -71,18 +72,22 @@ html {
     flex-direction: column;
 }
 
-.ticket .texto-final{
+.texto-final{
     text-align: end;
 }
-.ticket .texto-grande{
+.texto-grande{
     font-size: 1.5rem;
 }
-.ticket .texto-bold{
+.texto-bold{
     font-weight: bold;
 }
 
-.ticket .texto-center{
+.texto-center{
     text-align: center  ;
+}
+
+.texto-normal{
+    font-weight: normal;
 }
 
 .ticket p{
@@ -228,4 +233,25 @@ svg{
 
 .none{
     display: none;
+}
+
+.ticketRecibo .infoPrincipal p,.ticketRecibo .infoFactura p{
+    margin: 0.5rem auto;
+}
+
+.ticketRecibo .listaComprobantes div{
+    display: flex;
+    justify-content: space-around;
+}
+
+.ticketRecibo .listaComprobantes div p,.ticketRecibo .listaComprobantes div h3{
+    margin: 0.5rem auto;
+}
+
+.ticketRecibo .fecha p,.ticketRecibo .cliente p{
+    font-weight: bold;
+}
+
+.ticketRecibo .fecha p span,.ticketRecibo .cliente p span{
+    font-weight: normal;
 }

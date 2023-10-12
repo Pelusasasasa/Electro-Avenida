@@ -159,10 +159,11 @@ ipcMain.on('imprimir-recibo',async(e,args)=>{
     let options = {};
     if (tipo === "Recibos") {
         options = {
-            silent: condicion,
-            copies: cantidad,
+            silent: true,
+            copies: 1,
             deviceName: "SAM4S GIANT-100"
         };
+        abrirVentanaImprimir("impresion/ticketRecibo.html",500,1200,"noReinician",true);
     }else if(tipo === "Recibos_P"){
         abrirVentanaImprimir("emitirRecibo/imprimirRecibo.html",1000,900,"noReinician");
     };

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Ticket Recibo</title>
+</head>
+<body class="imprimir ticketRecibo">
+    <section class="container">
+        <main class="logo">
+            <img class="w-10" src="../imagenes/Logo.jpg" alt="">
+        </main>
+          <main class="infoPrincipal">
+            <p>GIANOVI MARINA ISABEL</p>
+            <p>INGRESO BRUTOS: 27165767433</p>
+            <p>C.U.I.T Nro: 27165767433</p>
+            <p>AV.9 DE JULIO-3380 (3228)</p>
+            <p>CHAJARI E.R.</p>
+            <p>INICIO DE ACTIVIDADES: 02-03-07</p>
+            <p>IVA RESPONSABLE INSCRIPTO</p>
+            <p>-------------------------------------------</p>
+       </main>
+       <main class="infoFactura">
+            <div class="factura">
+                <p class="texto-bold">Tipo: <span class="texto-normal">Recibo</span></p>
+                <p class="numeroFactura"></p>
+            </div>
+           <div class="fecha">
+                <p>Fecha: <span class="dia"></span></p>
+                <p>Hora: <span class="hora"></span></p>
+           </div>
+           <p>-------------------------------------------</p>
+        </main>
+        <main class="cliente">
+           <p>CLIENTE: <span class="nombre"></span></p>
+           <p class="cuit"></p>
+           <p>CONDICION IVA: <span class="condIva"></span></p>
+           <p>DIRECCION: <span class="direccion"></span></p>
+           <p>-------------------------------------------</p>
+        </main>
+
+        <main class="listaComprobantes">
+            <div>
+                <h3>Fecha:</h3>
+                <h3>Numero:</h3>
+                <h3>Pagado:</h3>
+            </div>
+        </main>
+
+       <main>
+           <p class="texto-final ">DESCUENTO $<span class="descuento"></span></p>
+           <p class="texto-final texto-grande texto-bold">TOTAL: $<span class="total"></span></p>
+           <p>Recibi(mos)</p>
+           <p>Valores Recibidos: <span class="observaciones"></span></p>
+           <p class="texto-final texto-grande texto-bold">CAMBIO $0.00</p>
+           <p class="texto-center texto-bold texto-grande">*MUCHAS GRACIAS*</p>
+       </main>
+
+    </section>
+</body>
+<script src="./ticketRecibo.js"></script>
+</html>

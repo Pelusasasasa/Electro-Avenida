@@ -72,7 +72,8 @@ tbody.addEventListener('click',async e=>{
     if (e.target.nodeName === "BUTTON") {
         if (seleccionado.children[2].innerText === "Recibos") {
             const recibo = recibos.find(elem => elem.nro_comp === seleccionado.id);
-            ipcRenderer.send('imprimir-recibo',[recibo,,false,1,"Recibos",,]);
+            const cliente = (await axios.get(`${URL}clientes/${recibo.cliente}`,configAxios)).data[0];
+            ipcRenderer.send('imprimir-recibo',[recibo,cliente,recibo.comprobantes,"Recibos"]);
         }else{
             const venta = ventas.find(elem =>elem.nro_comp === seleccionado.id);
             const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`,configAxios)).data;
