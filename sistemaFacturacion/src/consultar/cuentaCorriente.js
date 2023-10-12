@@ -19,10 +19,6 @@ const facturarVarios = document.querySelector('.facturarVarios');
 const botonFacturar = document.querySelector('#botonFacturar');
 const volver = document.querySelector('.volver');
 
-volver.addEventListener('click',e=>{
-    location.href = '../index.html';
-});
-
 let listaCompensada=[];
 let listaHistorica=[];
 let clienteTraido = {};
@@ -221,7 +217,7 @@ const listarLista = (lista,situacion,tipo)=>{
             tdTipo.innerText = venta.tipo_comp;
             tdNumero.innerText = venta.nro_comp;
             tdImporte.innerText = tipo === "compensada" ? venta.importe : venta.debe;
-            tdPagado.innerText = tipo === "compensada" ? venta.pagado : venta.haber;
+            tdPagado.innerText = tipo === "compensada" ? venta.pagado.toFixed(2) : venta.haber;
             tdSaldo.innerText = tipo === "compensada" ? venta.saldo : venta.saldo;
 
             inputObservaciones.value = venta.observaciones;
@@ -245,32 +241,6 @@ const listarLista = (lista,situacion,tipo)=>{
             tr.appendChild(tdObservaciones);
 
             listar.appendChild(tr);
-
-            // if (tipo === "compensada") {
-            //     listar.innerHTML += `
-            //     <tr id="${venta.nro_comp}">
-            //         <td>${fecha[2]}/${fecha[1]}/${fecha[0]}</td>
-            //         <td>${venta.tipo_comp}</td>
-            //         <td>${venta.nro_comp}</td>
-            //         <td class = "importe">${parseFloat(importe).toFixed(2)}</td>
-            //         <td class = "pagado">${parseFloat(pagado).toFixed(2)}</td>
-            //         <td class = "saldo">${(parseFloat(saldo).toFixed(2))}</td>
-            //         <td><input class="${venta.nro_comp}" type="text" value="${venta.observaciones}" /></td>
-            //     </tr>
-            // `
-            // }else{
-            //     listar.innerHTML += `
-            //     <tr id="${venta.nro_comp}">
-            //     <td>${fecha[2]}/${fecha[1]}/${fecha[0]}</td>
-            //         <td>${venta.tipo_comp}</td>
-            //         <td>${venta.nro_comp}</td>
-            //         <td class = "importe">${(venta.debe).toFixed(2)}</td>
-            //         <td class = "pagado">${(venta.haber).toFixed(2)}</td>
-            //         <td class = "saldo">${(venta.saldo).toFixed(2)}</td>
-            //         <td>${venta.observaciones}</td>
-            //     </tr>
-            // `
-            // }
         }
     });
 };
@@ -503,12 +473,6 @@ facturarVarios.addEventListener('click',async e=>{
     })
 });
 
-document.addEventListener('keydown',e=>{
-    if(e.key === "Escape"){
-        location.href === '../index.html';
-    }
-});
-
 //Ponemos los datos del cliente en los inputs y traemos las compensadas e historicas
 const ponerDatosCliente = async (Cliente)=>{
     clienteTraido = Cliente
@@ -589,5 +553,16 @@ async function compensarCuenta(e) {
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {
         location.href = '../index.html'
+    }
+});
+
+volver.addEventListener('click',e=>{
+    location.href = '../index.html';
+});
+
+
+document.addEventListener('keydown',e=>{
+    if(e.key === "Escape"){
+        location.href === '../index.html';
     }
 });
