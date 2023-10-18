@@ -13,6 +13,10 @@ const Recibo = new Schema({
         type:String,
         default: "A Consumidor Final"
     },
+    tipo_comp:{
+        type:String,
+        required:true
+    },
     direccion:{
         type:String,
         default:""
@@ -31,10 +35,6 @@ const Recibo = new Schema({
     },
     precioFinal:{
         type:Number,
-        required:true
-    },
-    tipo_comp:{
-        type:String,
         required:true
     },
     nro_comp:{

@@ -28,6 +28,16 @@ const ventas = (Ventas,path)=>{
         Author: "Electro Avenida"
     }
 
+    //Lo que hacemos es ordenar el array por fechas
+    Ventas.sort((a,b)=>{
+        if(a.fecha > b.fecha){
+            return 1;
+        }else if(a.fecha < b.fecha){
+            return -1
+        }
+        return 0
+    });
+
     //borraos las propiedades que no son necesarias
     Ventas.forEach(venta => {
         delete venta._id
@@ -47,6 +57,13 @@ const ventas = (Ventas,path)=>{
         delete venta.gravado105
         delete venta.iva105
         delete venta.cant_iva;
+        delete venta.qr;
+        delete venta.cae;
+        delete venta.vencimientoCae;
+        delete venta.localidad;
+        delete venta.precioSinDescuento;
+        delete venta.comprobantes;
+
 
         //si es unn recibo o un recibo_p le pasamos al nombrecliente el cliente
         if (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") {
@@ -58,16 +75,6 @@ const ventas = (Ventas,path)=>{
         (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") && delete venta.codigo;
         (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") && delete venta.localidad;
         (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") && delete venta.saldoAFavor;
-    });
-
-    //Lo que hacemos es ordenar el array por fechas
-    Ventas.sort((a,b)=>{
-        if(a.fecha > b.fecha){
-            return 1;
-        }else if(a.fecha < b.fecha){
-            return -1
-        }
-        return 0
     });
 
     Ventas.forEach(venta=>{

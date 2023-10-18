@@ -25,9 +25,6 @@ let inputSeleccionado;
 let acceso = getParameterByName('acceso');
 let vendedor = getParameterByName('vendedor');
 
-console.log(vendedor)
-console.log(acceso)
-
 //Mandamos a llamar a pedidos
 window.addEventListener('load',async e=>{
     copiar();

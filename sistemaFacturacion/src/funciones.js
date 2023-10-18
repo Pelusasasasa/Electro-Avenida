@@ -528,6 +528,19 @@ function validarRecibo(recibo) {
         bandera: true,
         message: ""
     }
+};
+
+async function verProductoConCero(lista) {
+    let bandera = false;
+
+    for await(let {objeto} of lista){
+        if (objeto.oferta) {
+            bandera = objeto.precioOferta === 0  && true;     
+        }else{
+            bandera = objeto.precio_venta === 0 && true;
+        }
+    };
+    return bandera;
 }
 
 module.exports = {
@@ -550,6 +563,9 @@ module.exports = {
     verNombrePc,
     clickderecho,
     ponerNotificaciones,
+
+    //Emitircomprobante
+    verProductoConCero,
 
     //Recibo
     validarRecibo

@@ -1,5 +1,6 @@
 const XLSX = require('xlsx');
 const axios = require('axios');
+const { configAxios } = require('../funciones');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -11,7 +12,7 @@ const tablaNuevo = document.querySelector('.tablaNuevo tbody');
 
 
 window.addEventListener('load',async e=>{
-    const marcas = (await axios.get(`${URL}productos`)).data;
+    const marcas = (await axios.get(`${URL}productos`,configAxios)).data;
     marcas.sort((a,b)=>{
         if(a<b){
             return -1

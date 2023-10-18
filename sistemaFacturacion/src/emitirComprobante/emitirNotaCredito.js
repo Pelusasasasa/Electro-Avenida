@@ -11,7 +11,7 @@ function getParameterByName(name) {
 }
 
 const axios = require("axios");
-const { verCodComp, generarMovimientoCaja, redondear, configAxios, verNombrePc } = require("../funciones");
+const { verCodComp, generarMovimientoCaja, redondear, configAxios, verNombrePc, verProductoConCero } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -311,10 +311,12 @@ factura.addEventListener('click',async e=>{
         venta.tipo_pago = await verTipoPago();
         if (facturaOriginal.value === "") {
             await sweet.fire({title:"No se escribio el numero de la factura Original",returnFocus:false})
-            facturaOriginal.focus()
+            facturaOriginal.focus();
         }else if(listaProductos.length === 0){
             await sweet.fire({title:"No se cargo productos",returnFocus:false});
             codigo.focus();
+        }else if(await (verProductoConCero(listaProductos))){
+            await sweet.fire({title:"Hay productos sin precio",returnFocus:false});
         }else if(venta.tipo_pago === "NINGUNO"){
             await sweet.fire({title:"Elegir tipo de pago"});
         }else{

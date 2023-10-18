@@ -134,6 +134,15 @@ ipcRenderer.on('mando-el-cliente',async(e,args)=>{
     inputsCliente(cliente);
 });
 
+ipcRenderer.on('actualizarCuenta',async (e)=>{
+    console.log(trSeleccionado.id)
+
+    await sweet.fire({
+        title: `Cuenta ${trSeleccionado.id} Actualizada`,
+        icon: "success"
+    })
+})
+
 //rellenamos los inputs del cliente
 const inputsCliente = async (cliente)=>{
     const obtenerFecha = new Date();
@@ -305,6 +314,20 @@ imprimir.addEventListener('click',async e=>{
     }
     
 });
+
+document.addEventListener('contextmenu',clickderecho);
+
+function clickderecho(e){
+    const cordenadas = {
+        x: e.clientX,
+        y: e.clientY,
+        ventana: "Emitir Recibo",
+    };
+
+    trSeleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target.parentNode.parentNode ;
+
+    ipcRenderer.send('mostrar-menu',cordenadas);
+}
 
 const hacerRecibo = async()=>{
     //Pnemos en un arreglo las ventas que se modificaron, asi despues imprimimos el recibo
@@ -515,6 +538,8 @@ async function calculartotal() {
 
     total.value = redondear(sum + parseFloat(saldoAfavor.value),2);  
 };
+
+
 
 //si hacemos click en pagar todo se compensan todas las ventas que aparecen
 todo.addEventListener('click',e=>{

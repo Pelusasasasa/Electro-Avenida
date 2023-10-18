@@ -6,7 +6,7 @@ function getParameterByName(name) {
 }
 
 const sweet = require('sweetalert2');
-const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago, configAxios, verNombrePc, ponerNotificaciones} = require('../funciones');
+const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago, configAxios, verNombrePc, ponerNotificaciones, verProductoConCero} = require('../funciones');
 const { ipcRenderer } = require("electron");
 
 const axios = require("axios");
@@ -613,7 +613,10 @@ presupuesto.addEventListener('click',async (e)=>{
     }else if(await verElTipoDeVenta(tiposVentas) === "Ninguno"){
         await sweet.fire({title:"Seleccionar un modo de venta"});
         return;
-    };
+    }else if(await verProductoConCero(listaProductos) && !document.getElementById('presupuesto').checked){
+        await sweet.fire({title:"Hay un producto que no contiene precio"});
+        return;
+    }
 
     const {isConfirmed} = await sweet.fire({
         title:"Presupuesto?",
@@ -812,11 +815,13 @@ ticketFactura.addEventListener('click',async (e) =>{
     if(stockNegativo){
         sweet.fire({title:"Ticket Factura no puede ser productos en negativo"});
     }else if(parseFloat(descuento.value) > 10 && vendedor!=="ELBIO"){
-        await sweet.fire({title:"Descuento No Autorizado"})
+        await sweet.fire({title:"Descuento No Autorizado"});
     }else if(dnicuit.value === ""){
         await sweet.fire({title: "Falta valor del DNI o CUIT"});
     }else if(listaProductos.length===0){
         await sweet.fire({title:"Ningun producto cargado"});
+    }else if(await verProductoConCero(listaProductos)){
+        await sweet.fire({title:"Hay un producto que no contiene precio"});
     }else if(dnicuit.value.length === 11 && conIva.value === "Consumidor Final"){
         await sweet.fire({title:"No se puede Consumidor Final con Cuit"});
     }else if(dnicuit.value.length === 8 && conIva.value !== "Consumidor Final"){

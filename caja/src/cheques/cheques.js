@@ -189,7 +189,7 @@ function modificarInputs(e,cheque) {
     tr.children[2].innerText = cheque.banco;
     tr.children[3].innerText = cheque.plaza;
     tr.children[4].innerText = cheque.f_cheque.split('-',3).reverse().join('/');;
-    tr.children[5].innerText = cheque.i_cheque.toixed(2);
+    tr.children[5].innerText = cheque.i_cheque.toFixed(2);
     tr.children[6].innerText = cheque.ent_por;
     tr.children[7].innerText = cheque.entreg_a;
     tr.children[8].innerText = cheque.domicilio;

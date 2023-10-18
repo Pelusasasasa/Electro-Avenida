@@ -38,6 +38,13 @@ const compensarCuenta = new MenuItem({
     }
 });
 
+const actualizarCuenta = new MenuItem({
+    label: "Actualizar Cuenta",
+    async click(){
+        ventanaPrincipal.webContents.send('actualizarCuenta');
+    }
+});
+
 //Fin de Menu Secundario
 
 
@@ -64,6 +71,14 @@ function mostrarMenu(ventana,x,y){
         if (!menuSecundario.items.find(menu => menu.label === "Cancelar Cuenta")) {
             menuSecundario.append(cancelarCuenta);
         }
+        
+    }
+
+    if(ventana === "Emitir Recibo"){
+        if (!menuSecundario.items.find(menu => menu.label === "Actualizar Cuenta")) {
+            menuSecundario.append(actualizarCuenta);
+        } 
+            
         
     }
     

@@ -10,8 +10,9 @@ const desde = document.querySelector('#desde');
 const hasta = document.querySelector('#hasta');
 const tbodyIngreso = document.querySelector('.tbodyIngreso');
 const tbodyEgreso = document.querySelector('.tbodyEgreso');
+
+const exportar = document.getElementById('exportar');
 const salir = document.querySelector('.salir');
-const modificar = document.querySelector('.modificar');
 
 const today = new Date();
 
@@ -273,30 +274,9 @@ const seleccionarTr = (e)=>{
     subSeleccionado.classList.add('subSeleccionado');
 };
 
-modificar.addEventListener('click',async e=>{
-    const arreglo = [];
-    for(let elem of arregloDeMovimientosAModificar){
-        const agregarEgreso = arregloEgresos.find(mov=>mov._id === elem);
-        const agregarIngreso = arregloIngresos.find(mov=>mov._id === elem);
-        if (agregarEgreso !== undefined) {
-            agregarEgreso.imp = parseFloat(document.getElementById(elem).children[3].children[0].value)
-            arreglo.push(agregarEgreso);
-        }
-        if (agregarIngreso !== undefined) {
-            agregarIngreso.imp = parseFloat(document.getElementById(elem).children[3].children[0].value);
-            arreglo.push(agregarIngreso)
-        }
-    }
-
-    try {
-        await axios.put(`${URL}movCajas`,arreglo,configAxios);
-        location.reload();
-    } catch (error) {
-        await sweet.fire({
-            title:"No se pudieron modificar los movimientos"
-        });
-    }
-
+exportar.addEventListener('click',e=>{
+    console.log(arregloEgresos)
+    console.log(arregloIngresos)
 });
 
 salir.addEventListener('click',e=>{
