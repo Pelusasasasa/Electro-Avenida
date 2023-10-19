@@ -340,7 +340,7 @@ const templateMenu = [
 const mainMenu = Menu.buildFromTemplate(templateMenu);
 Menu.setApplicationMenu(mainMenu);
 
-ipcMain.on('elegirPath',async (e,args)=>{
+ipcMain.handle('elegirPath',async (e,args)=>{
   const path = (await dialog.showSaveDialog()).filePath;
-  e.reply('mandoPath',path);
+  return path;
 });

@@ -160,34 +160,28 @@ sumar.addEventListener('click',async e=>{
     })
 });
 
-exportar.addEventListener('click',e=>{
-    ipcRenderer.send('elegirPath');
-    ipcRenderer.on('mandoPath',(e,args)=>{
+exportar.addEventListener('click',async e=>{
+    let path = await ipcRenderer.invoke('elegirPath');
 
-        let wb = XLSX.utils.book_new();
-        let path;
-        let extencion = "xlsx";
+    let wb = XLSX.utils.book_new();
+    let extencion = "xlsx";
 
-        extencion = args.split('.')[1] ? args.split('.')[1] : extencion;
-        path = args.split('.')[0];
-
-        vales.forEach(vale=>{
-            delete vale._id;
-            delete vale.__v;
-        });
-        
-        wb.props = {
-            Title: "Vales",
-            subject: "Test",
-            Author: "Electro Avenida"
-        }
-
-        let newWs = XLSX.utils.json_to_sheet(vales);
-
-        XLSX.utils.book_append_sheet(wb,newWs,'Vales');
-        XLSX.writeFile(wb,path + "." + extencion);
-
+    vales.forEach(vale=>{
+        delete vale._id;
+        delete vale.__v;
     });
+        
+    wb.props = {
+        Title: "Vales",
+        subject: "Test",
+        Author: "Electro Avenida"
+    }
+
+    let newWs = XLSX.utils.json_to_sheet(vales);
+
+    XLSX.utils.book_append_sheet(wb,newWs,'Vales');
+    XLSX.writeFile(wb,path + "." + extencion);
+
 });
 
 salir.addEventListener('click',e=>{

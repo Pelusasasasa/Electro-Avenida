@@ -45,33 +45,27 @@ hasta.addEventListener('change',async e=>{
     listarDatos(datos.filter(dato=>(dato.tipo_comp !== "Presupuesto" && dato.tipo_comp !== "Descuento")));
 });
 
-exportar.addEventListener('click',e=>{
-    ipcRenderer.send('elegirPath');
-    ipcRenderer.on('mandoPath',(e,args)=>{
-        let wb = XLSX.utils.book_new();
-        let path;
-        let extencion = 'xlsx';
+exportar.addEventListener('click',async e=>{
+    let path = await ipcRenderer.invoke('elegirPath');
+    let wb = XLSX.utils.book_new();
+    let extencion = 'xlsx';
 
-        extencion = args.split('.')[1] ? args.split('.')[1] : extencion;
-        path = args.split('.')[0];
+    wb.props = {
+        Title: "Compras",
+        subject: "Test",
+        Author: "Electro Avenida"
+    };
 
-        wb.props = {
-            Title: "Compras",
-            subject: "Test",
-            Author: "Electro Avenida"
-        };
+    datos = datos.filter(dato => dato.tipo_comp !== "Descuento");
 
-        datos = datos.filter(dato => dato.tipo_comp !== "Descuento");
-
-        datos.forEach(dato => {
-            delete dato._id;
-        });
-        
-        let newWs = XLSX.utils.json_to_sheet(datos);
-
-        XLSX.utils.book_append_sheet(wb,newWs,'Compras');
-        XLSX.writeFile(wb,path + "." + extencion);
+    datos.forEach(dato => {
+        delete dato._id;
     });
+    
+    let newWs = XLSX.utils.json_to_sheet(datos);
+
+    XLSX.utils.book_append_sheet(wb,newWs,'Compras');
+    XLSX.writeFile(wb,path + "." + extencion);
 });
 
 const listarDatos = (lista)=>{

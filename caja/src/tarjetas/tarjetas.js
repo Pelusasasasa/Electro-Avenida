@@ -211,34 +211,29 @@ sumar.addEventListener('click',e=>{
     };
 });
 
-exportar.addEventListener('click',e=>{
-    ipcRenderer.send('elegirPath');
-    ipcRenderer.on('mandoPath',(e,args)=>{
-        let wb = XLSX.utils.book_new();
-        let path;
-        let extencion = "xlsx";
+exportar.addEventListener('click',async e=>{
+    let path = await ipcRenderer.invoke('elegirPath');
+    let wb = XLSX.utils.book_new();
+    
+    let extencion = "xlsx";
 
-        tarjetas.forEach(tarjeta=>{
-            delete tarjeta._id;
-            delete tarjeta.__v;
-            const fecha = tarjeta.fecha.slice(0,10).split('-',3)
-            tarjeta.fecha = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
-        });
-
-        extencion = args.split('.')[1] ? args.split('.')[1] : extencion;
-        path = args.split('.')[0];
-
-        wb.props = {
-            Title: "Tarjetas",
-            subject: "Test",
-            Author: "Electro Avenida"
-        };
-
-        let newWs = XLSX.utils.json_to_sheet(tarjetas);
-
-        XLSX.utils.book_append_sheet(wb,newWs,'Tarjetas');
-        XLSX.writeFile(wb,path + "." + extencion);
+    tarjetas.forEach(tarjeta=>{
+        delete tarjeta._id;
+        delete tarjeta.__v;
+        const fecha = tarjeta.fecha.slice(0,10).split('-',3)
+        tarjeta.fecha = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
     });
+
+    wb.props = {
+        Title: "Tarjetas",
+        subject: "Test",
+        Author: "Electro Avenida"
+    };
+
+    let newWs = XLSX.utils.json_to_sheet(tarjetas);
+
+    XLSX.utils.book_append_sheet(wb,newWs,'Tarjetas');
+    XLSX.writeFile(wb,path + "." + extencion);
 });
 
 eliminarVarios.addEventListener('click',async e=>{

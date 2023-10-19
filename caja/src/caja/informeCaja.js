@@ -2,7 +2,7 @@ const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
 
-const {clipboard} = require('electron')
+const {clipboard, ipcRenderer} = require('electron')
 const sweet = require('sweetalert2');
 const { redondear, configAxios } = require('../assets/js/globales');
 
@@ -274,12 +274,47 @@ const seleccionarTr = (e)=>{
     subSeleccionado.classList.add('subSeleccionado');
 };
 
-exportar.addEventListener('click',e=>{
-    console.log(arregloEgresos)
-    console.log(arregloIngresos)
+exportar.addEventListener('click',async e=>{
+
+    const XLSX = require('xlsx');
+    let wb = XLSX.utils.book_new();
+
+    let extencion = 'xlsx';
+    let path = await ipcRenderer.invoke('elegirPath');
+    let sheetData = []
+
+    wb.props = {
+        Title: "Informe de Caja",
+        Author: "Electro Avenida"
+    };
+
+    sheetData = await ponerDatos(sheetData,arregloIngresos);
+    sheetData = await ponerDatos(sheetData,arregloEgresos);
+    const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
+    worksheet['!cols'] = [{wch:40}]
+
+    XLSX.utils.book_append_sheet(wb,worksheet,'ingresos');
+    XLSX.writeFile(wb,path + "." + extencion); 
+
 });
 
 salir.addEventListener('click',e=>{
     window.close();
 });
 
+async function  ponerDatos(sheetData,arreglo) {
+    let cuenta = arreglo[0].cuenta;
+    let total = 0;
+
+    for await(let ingreso of arreglo){
+        if (ingreso.cuenta !== cuenta) {
+            sheetData.push([cuenta,total]);
+            total = 0;
+            cuenta = ingreso.cuenta;
+        };
+        total += ingreso.imp;
+    };
+
+    sheetData.push([cuenta,total]);
+    return sheetData;
+}
