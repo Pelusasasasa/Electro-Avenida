@@ -1206,8 +1206,8 @@ const ponerEnCuentaCorrienteHistorica = async(venta,valorizado,saldo)=>{
     cuenta.cliente = buscarCliente.value;
     cuenta.tipo_comp = venta.tipo_comp;
     cuenta.nro_comp = venta.nro_comp;
-    cuenta.debe = valorizado ? parseFloat(venta.precioFinal) : 0.1;
-    cuenta.saldo = parseFloat(saldo) + cuenta.debe;
+    cuenta.debe = valorizado ? parseFloat(venta.precioFinal).toFixed(2) : 0.1;
+    cuenta.saldo = (parseFloat(saldo) + cuenta.debe).toFixed(2);
     cuenta.observaciones = venta.observaciones;
     cuenta.vendedor = vendedor;
     cuenta.maquina = maquina;

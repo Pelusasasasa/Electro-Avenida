@@ -74,7 +74,10 @@ buscar.addEventListener('click',async e=>{
 })
 
 const ventasTraidas = async (ventas)=>{
-    
+    if (ventas.length === 0) {
+        return
+    }
+    buscar.setAttribute('disabled','');
     //Ordenamos la ventas por fecha
     ventas.sort((a,b)=>{
         if (a.fecha > b.fecha) {
@@ -165,7 +168,8 @@ const ventasTraidas = async (ventas)=>{
             <td class="borde">${((totalGlobalGravado105Factura + totalGlobalGravado21Factura - totalGlobalGravado105Nota - totalGlobalGravado21Nota)+(totalGlobalIva21Factura - totalGlobalIva21Nota)+(totalGlobalIva105Factura - totalGlobalIva105Nota)).toFixed(2)}</td>
         </tr>
     `
-}
+    buscar.removeAttribute('disabled');
+};
 
 const listar = async (ventas,diaVentaAnterior)=>{
     let cliente;
@@ -268,7 +272,7 @@ const listar = async (ventas,diaVentaAnterior)=>{
                 totaliva105 = 0
         }
     };
-}
+};
 
 exportar.addEventListener('click',e=>{
     ipcRenderer.send('elegirPath');
@@ -294,7 +298,6 @@ exportar.addEventListener('click',e=>{
     })
     
 });
-
 
 //cuando hacemos enter en desde o hasta que se pase al siguiente, en el caso de hasta que pase a buscar
 desde.addEventListener('keypress',e=>{

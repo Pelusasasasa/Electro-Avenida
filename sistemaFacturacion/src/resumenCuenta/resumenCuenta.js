@@ -180,9 +180,9 @@ function listarVentas(ventas,situacion,saldoAnterior,saldoAnterior_P) {
 
         });
         if (cliente[saldo] === undefined) {
-            saldoImprimir.innerHTML = "0.00"
+            saldoImprimir.innerText = "0.00";
         }else{
-            saldoImprimir.innerHTML = (parseFloat(cliente[saldo])).toFixed(2);
+            saldoImprimir.innerText = (parseFloat(cliente[saldo])).toFixed(2);
         }
 }
 

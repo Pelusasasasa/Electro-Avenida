@@ -162,7 +162,7 @@ seleccionarTBody.addEventListener('click',(e) =>{
 
     seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccion && subSeleccion.classList.remove('subSeleccionado');
-
+    
     if (e.target.nodeName === "TD") {
         seleccionado = e.target.parentNode;
         subSeleccion = e.target;

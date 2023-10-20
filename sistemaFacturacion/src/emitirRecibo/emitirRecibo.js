@@ -469,7 +469,7 @@ const ponerEnCuentaCorrienteHistorica = async(recibo,vendedor,maquina)=>{
     cuenta.cliente = cliente.cliente;
     cuenta.tipo_comp = recibo.tipo_comp;
     cuenta.nro_comp = recibo.nro_comp;
-    cuenta.haber = parseFloat(recibo.precioFinal);
+    cuenta.haber = parseFloat(recibo.precioFinal).toFixed(2);
     cuenta.saldo = cuenta.tipo_comp === "Recibos" ? parseFloat((parseFloat(saldo.value) - cuenta.haber).toFixed(2))  : parseFloat((parseFloat(saldo_p.value) - cuenta.haber).toFixed(2));
     cuenta.vendedor = vendedor;
     cuenta.maquina = maquina

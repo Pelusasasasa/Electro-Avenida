@@ -142,11 +142,17 @@ seleccionarTBody.addEventListener('click',e=>{
     subSeleccionado = document.querySelector('.subSeleccionado');
 
     seleccionado && (seleccionado.classList.remove('seleccionado'));
-    seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target;
-    seleccionado.classList.add('seleccionado');
-
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
-    subSeleccionado = (e.target.nodeName === "TD" || e.target.nodeName === "TH") ? e.target : e.target.children[0];
+
+    if (e.target.nodeName === "TD" || e.target.nodeName === "TH") {
+        seleccionado = e.target.parentNode;
+        subSeleccionado = e.target;
+    }else if(e.target.nodeName === "TR"){
+        seleccionado = e.target;
+        subSeleccionado = e.target.children[0];
+    }
+
+    seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
 });
 
