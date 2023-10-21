@@ -41,7 +41,7 @@ window.addEventListener('load',async e=>{
 });
 
 select.addEventListener('change',async e=>{
-    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}/${select.value}`,configAxios)).data
+    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${hasta.value}/${select.value}`,configAxios)).data
     listar(ingresos);
 });
 
@@ -56,7 +56,7 @@ const listarRubros = async(cuentasConTipo)=>{
     let nextDay = new Date(hasta.value);
     nextDay.setDate(today.getDate() + 1);
 
-    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`,configAxios)).data;
+    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${nextDay}/${select.value}`,configAxios)).data;
     listar(ingresos.filter(ingreso => ingreso.tMov === tipo))
 }
 
@@ -147,10 +147,7 @@ select.addEventListener('keypress',e=>{
 
 desde.addEventListener('keypress',async e=>{
     const fecha = hasta.value.split('-',3);
-    let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
-    nextDay.setDate(nextDay.getDate() + 1);
-
-    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`,configAxios)).data
+    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${hasta.value}/${select.value}`,configAxios)).data
     listar(ingresos);
 });
 
@@ -159,7 +156,7 @@ hasta.addEventListener('change',async e=>{
         let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
         nextDay.setDate(nextDay.getDate() + 1);
 
-        const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`,configAxios)).data
+        const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${nextDay}/${select.value}`,configAxios)).data
         listar(ingresos);
 });
 
@@ -187,7 +184,6 @@ tbody.addEventListener('click',e=>{
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
     cuentas = (await axios.get(`${URL}cuentas`,configAxios)).data;
     tipo = args;
-    
     if (tipo === "I") {
         titulo.innerHTML = "Ingreso de Caja";
         cuentasConTipo = cuentas.filter(cuenta=>cuenta.tipo === tipo);
