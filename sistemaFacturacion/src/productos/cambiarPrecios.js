@@ -1,15 +1,21 @@
 const XLSX = require('xlsx');
 const axios = require('axios');
-const { configAxios } = require('../funciones');
+const { configAxios, redondear } = require('../funciones');
 require('dotenv').config();
 const URL = process.env.URL;
 
+const sweet = require('sweetalert2');
+
 const select = document.getElementById('marca');
+const descuento = document.getElementById('descuento');
 const archivo = document.getElementById('archivo');
 
 const tablaViejo = document.querySelector('.tablaViejo tbody');
 const tablaNuevo = document.querySelector('.tablaNuevo tbody');
 
+const confirmar = document.getElementById('confirmar');
+
+let productosAGuardar = [];
 
 window.addEventListener('load',async e=>{
     const marcas = (await axios.get(`${URL}productos`,configAxios)).data;
@@ -24,6 +30,15 @@ window.addEventListener('load',async e=>{
     rellenarStock(marcas);
 });
 
+select.addEventListener('change',async e=>{
+    if (select.value === "SAN JUSTO") {
+        await sweet.fire({
+            title: "La columna de codigo de fabrica tiene que llamarse CODIGO y la de costo LISTA 80 en el EXCEL",
+            returnFocus:false
+        });
+    }
+    descuento.focus();
+});
 
 const rellenarStock = async(lista)=>{
     for await(let elem of lista){
@@ -38,32 +53,27 @@ archivo.addEventListener('change',e=>{
     let selectedFile = e.target.files[0]
     let fileReader = new FileReader();
     fileReader.onload =async function(e){
+
         let data = e.target.result;
         let woorbook = XLSX.read(data,{
             type:"binary"
         });
-        let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["IMPORTACIÓN"]);
+
         let productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`)).data;
-        let lista = [];
-        let listaNueva = [];
-        for await(let dato of datos){
-            const productoBuscado = productos.find(elem=>elem.cod_fabrica === dato.Id);
-            const producto = productoBuscado && JSON.parse(JSON.stringify(productoBuscado));
-            producto && lista.push(productoBuscado);
-            producto && (producto.costo = dato["Precio Vigente"]);
-            const impuesto = producto ? parseFloat(producto.costo) + (parseFloat(producto.costo) * parseFloat(producto.impuestos) / 100) : 0;
-            producto && (producto.precio_venta = impuesto + (parseFloat(producto.utilidad) * impuesto / 100));
-            producto &&  listaNueva.push(producto);
+
+        if (select.value === "SAN JUSTO") {
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Export"]);
+            console.log(datos)
+            cambiarPreciosSanJusto(datos,productos);
         }
-        llenarListaVieja(lista);
-        llenarListaNueva(listaNueva)
+
+        llenarListaVieja(productos);
     }
     fileReader.readAsBinaryString(selectedFile);
 });
 
 const llenarListaVieja = async(lista)=>{
     for(let elem of lista){
-        console.log(elem)
         const tr = document.createElement('tr');
 
         const tdCodigo = document.createElement('td');
@@ -76,7 +86,7 @@ const llenarListaVieja = async(lista)=>{
         tdDescripcion.innerHTML = elem.descripcion;
         tdCostoViejo.innerHTML = elem.costo;
         tdCostoDolaresViejo.innerHTML = elem.costodolar.toFixed(2);
-        tdPrecioViejo.innerHTML = elem.precio_venta;
+        tdPrecioViejo.innerHTML = elem.precio_venta.toFixed(2);
 
         tr.appendChild(tdCodigo);
         tr.appendChild(tdDescripcion);
@@ -86,9 +96,10 @@ const llenarListaVieja = async(lista)=>{
 
         tablaViejo.appendChild(tr);
     }
-}
+};
 
 const llenarListaNueva = async(lista)=>{
+    productosAGuardar = lista;
     for(let elem of lista){
         const tr = document.createElement('tr');
 
@@ -100,7 +111,7 @@ const llenarListaNueva = async(lista)=>{
 
         tdCodigo.innerHTML = elem._id;
         tdDescripcion.innerHTML = elem.descripcion;
-        tdCostoViejo.innerHTML = elem.costo.toFixed(2);
+        tdCostoViejo.innerHTML = elem.costo;
         tdCostoDolaresViejo.innerHTML = elem.costodolar;
         tdPrecioViejo.innerHTML = elem.precio_venta.toFixed(2);
 
@@ -112,4 +123,37 @@ const llenarListaNueva = async(lista)=>{
 
         tablaNuevo.appendChild(tr);
     }
-}
+};
+
+async function cambiarPreciosSanJusto(nuevos,productos) {
+    for await (let elem of productos){
+        const tasaIva = elem.iva === "R" ? 15 : 26;
+        const producto = nuevos.find(n => n.CODIGO === elem.cod_fabrica);
+
+        if (producto) {
+            if (elem.costodolar !== 0) {
+            }else{
+                elem.costo = redondear(producto["LISTA 80"] - (producto["LISTA 80"] * parseFloat(descuento.value) / 100),2);
+                elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
+                
+                const costoIva = parseFloat(elem.costo) + parseFloat(elem.impuestos);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+
+                elem.precio_venta = costoIva + utilidad;
+            }
+        }
+    }
+
+    llenarListaNueva(productos);
+};
+
+confirmar.addEventListener('click',async e=>{
+    for await (let producto of productosAGuardar){
+        await axios.put(`${URL}productos/${producto._id}`,producto,configAxios);
+    };
+    await sweet.fire({
+        title:"Productos Modificados",
+        icon:"success"
+    });
+    window.close();
+});
