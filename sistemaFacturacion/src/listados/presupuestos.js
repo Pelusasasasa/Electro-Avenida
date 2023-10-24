@@ -54,22 +54,19 @@ hasta.addEventListener('keypress',async e=>{
     };
 });
 
-function listarVentas(lista,bodyelegido) {
+async function listarVentas(lista,bodyelegido) {
     bodyelegido.innerHTML = "";
-    for(let venta of lista){
+    for await(let venta of lista){
         const fecha = venta.fecha.slice(0,10).split('-',3)
         const hora = venta.fecha.slice(11,19).split(':',3)
-
         let hoy = fecha[2];
         let mes = fecha[1];
         let anio = fecha[0];
         let hours = hora[0];
         let minuts = hora[1];
         let seconds = hora[2];
-
-
-        for(let {cantidad,objeto} of venta.productos){
-
+        const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
+        for await (let mov of movimientos){
             const tr = document.createElement('tr');
 
             const tdFecha = document.createElement('td');
@@ -83,13 +80,13 @@ function listarVentas(lista,bodyelegido) {
             const tdVend = document.createElement('td');
             
             tdFecha.innerHTML = `${hoy}/${mes}/${anio} - ${hours}:${minuts}:${seconds}`;
-            tdNumero.innerHTML = venta.nro_comp;
-            tdCliente.innerHTML = venta.nombreCliente.slice(0,20);
-            tdCodigo.innerHTML = objeto._id;    
-            tdDescripcion.innerHTML = objeto.descripcion.slice(0,30);
-            tdEgreso.innerHTML = parseFloat(cantidad).toFixed(2);
-            tdPrecio.innerHTML = objeto.precio_venta;
-            tdTotal.innerHTML = (parseFloat(objeto.precio_venta) * cantidad).toFixed(2);
+            tdNumero.innerHTML = mov.nro_comp;
+            tdCliente.innerHTML = mov.cliente.slice(0,20);
+            tdCodigo.innerHTML = mov.codProd;    
+            tdDescripcion.innerHTML = mov.descripcion.slice(0,30);
+            tdEgreso.innerHTML = mov.egreso.toFixed(2);
+            tdPrecio.innerHTML = mov.precio_unitario;
+            tdTotal.innerHTML = (parseFloat(mov.precio_unitario) * mov.egreso).toFixed(2);
             tdVend.innerHTML = venta.vendedor.slice(0,3);
 
             tr.appendChild(tdNumero);

@@ -76,7 +76,7 @@ tbody.addEventListener('click',async e=>{
             ipcRenderer.send('imprimir-recibo',[recibo,cliente,recibo.comprobantes,"Recibos"]);
         }else{
             const venta = ventas.find(elem =>elem.nro_comp === seleccionado.id);
-            const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`,configAxios)).data;
+            const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`,configAxios)).data;
 
             const afip = {
                 QR: venta.qr ? JSON.parse(venta.qr) : "",

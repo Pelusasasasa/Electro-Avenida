@@ -132,7 +132,7 @@ ipcMain.on('abrir-ventana-clientesConSaldo',async(e,args)=>{
 ipcMain.on('imprimir-venta',async(e,args)=>{
     const [venta,cliente,condicion,cantidad,tipo,calculo,lista,show] = args;
     let options
-    if (tipo === "Ticket Factura") {
+    if (tipo === "Ticket Factura" || tipo === "Factura B" || tipo === "Factura A") {
         options = {
             silent: condicion,
             copies: cantidad,
