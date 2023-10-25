@@ -151,7 +151,7 @@ function listarVentas(ventas,situacion,saldoAnterior,saldoAnterior_P) {
         })
     }else{
         listaAux = listaAux.filter(e=>{
-            return (e.tipo_comp === aux || e.tipo_comp === "Recibos" || e.tipo_comp === "Nota Credito");
+            return (e.tipo_comp === aux || e.tipo_comp === "Recibos" || e.tipo_comp === "Nota Credito" || e.tipo_comp === "Ticket Factura");
         });
     };
     

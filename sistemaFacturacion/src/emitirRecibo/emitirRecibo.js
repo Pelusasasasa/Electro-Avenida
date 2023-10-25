@@ -192,7 +192,7 @@ const listarLista = (lista,situacion)=>{
     let auxRecibo = situacion === "negro" ? "Recibos_P" : "Recibos";
 
     if (situacion === "negro") {
-        aux = "Presusupuesto";
+        aux = "Presupuesto";
     }else{
         if (cond_iva.value === "Inscripto") {
             aux = "Factura A";
@@ -200,13 +200,11 @@ const listarLista = (lista,situacion)=>{
             aux = "Factura B";
         }
     };
-
     const listaRecibo = lista.filter(e=>e.tipo_comp === auxRecibo);
-    const listaVenta = lista.filter(e=>e.tipo_comp === aux );
+    const listaVenta = lista.filter(e=>(e.tipo_comp === aux || e.tipo_comp === "Ticket Factura") );
     const listaNota = situacion === "blanco" ? lista.filter(e=>e.tipo_comp === "Nota Credito") : [];
 
     const arreglo = [...listaRecibo,...listaVenta,...listaNota];//este arreglo contiene las compensadas dependiendo la situacion
-
     arreglo.sort((a,b)=>{//ordenamos la lista por fecha
         if (a.fecha>b.fecha) {
             return 1;
