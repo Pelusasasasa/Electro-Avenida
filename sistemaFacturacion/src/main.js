@@ -145,7 +145,7 @@ ipcMain.on('imprimir-venta',async(e,args)=>{
         };
     }
     
-    if(tipo === "Ticket Factura"){
+    if(tipo === "Ticket Factura" || tipo === "Factura A" || tipo === "Factura B"){
         abrirVentanaImprimir("impresion/ticket.html",1000,900,"noReinician",show)
     }else{
         abrirVentanaImprimir("impresion/presupuesto.html",1000,500,"noReinician",show);

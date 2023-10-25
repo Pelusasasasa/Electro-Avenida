@@ -191,7 +191,16 @@ const listarLista = (lista,situacion)=>{
     let aux;
     let auxRecibo = situacion === "negro" ? "Recibos_P" : "Recibos";
 
-    (situacion === "negro") ? (aux = "Presupuesto") : (aux = "Ticket Factura");
+    if (situacion === "negro") {
+        aux = "Presusupuesto";
+    }else{
+        if (cond_iva.value === "Inscripto") {
+            aux = "Factura A";
+        }else{
+            aux = "Factura B";
+        }
+    };
+
     const listaRecibo = lista.filter(e=>e.tipo_comp === auxRecibo);
     const listaVenta = lista.filter(e=>e.tipo_comp === aux );
     const listaNota = situacion === "blanco" ? lista.filter(e=>e.tipo_comp === "Nota Credito") : [];

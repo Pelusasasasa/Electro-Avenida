@@ -89,6 +89,10 @@ async function listarVentas(lista) {
             tipo = "T";
         }else if(venta.tipo_comp === "Nota Credito"){
             tipo = "N";
+        }else if(venta.tipo_comp === "Factura A"){
+            tipo = "FA";
+        }else if(venta.tipo_comp === "Factura B"){
+            tipo = "FB";
         }else{
             tipo = "R";
         };
@@ -158,7 +162,7 @@ async function listarVentas(lista) {
                 </tr>
             `
         }
-        if (venta.tipo_comp === "Ticket Factura") {
+        if (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Factura A" || venta.tipo_comp === "Factura B") {
             totalFactura += venta.precioFinal;
         }else if(venta.tipo_comp === "Nota Credito"){
             totalFactura -= venta.precioFinal;

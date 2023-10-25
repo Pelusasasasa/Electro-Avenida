@@ -95,6 +95,7 @@ const mostrarNegro = ()=>{
     volver.classList.add('mostrarNegro')
     
 }
+
 const ponerDatos = async(cliente)=>{
     nombre.innerHTML = cliente.cliente + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + cliente._id
     direccion.innerHTML = `${cliente.direccion}-${cliente.localidad}`;
@@ -103,13 +104,12 @@ const ponerDatos = async(cliente)=>{
 
     let cuentas = (await axios.get(`${URL}cuentaHisto/cliente/${cliente._id}`,configAxios)).data;
     let ventasAnteriores = cuentas.filter(e=>e.fecha < desde.value);
-    console.log(ventasAnteriores)
     //Aca vemos si ya debia algo del progama viejo
     ventasAnteriores = ventasAnteriores.reverse();
     const primerHistoP = ventasAnteriores.find(venta =>venta.tipo_comp === "Presupuesto" || venta.tipo_comp === "Recibos_P");
-    const primerHisto = ventasAnteriores.find(venta =>venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Recibos"  || venta.tipo_comp === "Nota Credito");
+    const primerHisto = ventasAnteriores.find(venta =>venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Recibos"  || venta.tipo_comp === "Nota Credito" || venta.tipo_comp === "Factura B" || venta.tipo_comp === "Factura A");
     saldoAnterior_P = primerHistoP ? primerHistoP.saldo : 0;
-    console.log(primerHistoP)
+    console.log(primerHisto)
     saldoAnterior = primerHisto ? primerHisto.saldo : 0;
     listaVentas = cuentas.filter(e=> {
         return (e.fecha >= desde.value)
@@ -136,7 +136,13 @@ function listarVentas(ventas,situacion,saldoAnterior,saldoAnterior_P) {
         return 0
     });
     
-    const aux = (situacion === "blanco") ? "Ticket Factura" : "Presupuesto";
+    let aux;
+
+    if (situacion === "negro") {
+        aux = "Presupuesto";
+    }else{
+        cliente.cond_iva === "Inscripto" ? aux = "Factura A" : aux = "Factura B";
+    }
     
     let listaAux = ventas;
     if (aux === "Presupuesto") {
@@ -165,6 +171,8 @@ function listarVentas(ventas,situacion,saldoAnterior,saldoAnterior_P) {
                 comprobante = cliente.cond_iva === "Inscripto" ? "Nota Credito A" : "Nota Credito B";
             }else if(venta.tipo_comp === "Recibos"){
                 comprobante = cliente.cond_iva === "Inscripto" ? "Recibos A" : "Recibos B"
+            }else{
+                comprobante = venta.tipo_comp;
             }
 
             tbody.innerHTML += `

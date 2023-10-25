@@ -73,7 +73,7 @@ ventasCTRL.entreFechasConCliente = async(req,res) => {
 
 ventasCTRL.traerTicket = async(req,res)=>{
     const {numero,tipo,condIva} = req.params;
-    const venta = (await Ventas.find({nro_comp:numero,tipo:tipo,condIva:condIva}))[0];
+    const venta = (await Ventas.findOne({nro_comp:numero,tipo_comp:tipo,condIva:condIva}));
     res.send(venta)
 }
 

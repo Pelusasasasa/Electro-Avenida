@@ -258,9 +258,9 @@ const verCodComp = (tipoComp,condicionIva) =>{
         } else {
             return 6
         }
-    }else if(tipo_comp === "Factura A"){
+    }else if(tipoComp === "Factura A"){
         return 1;
-    }else if(tipo_comp === "Factura B"){
+    }else if(tipoComp === "Factura B"){
         return 6;
     }else{
         return 0

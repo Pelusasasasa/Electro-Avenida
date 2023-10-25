@@ -75,7 +75,7 @@ document.addEventListener('keydown',async(event) =>{
   });
 });
 
-const labes = document.querySelectorAll('label')
+const labes = document.querySelectorAll('label');
 //Ocultado lo que tenemos en negro
 const ocultarNegro = ()=>{
     labes.forEach(label=>label.classList.remove('blanco'));
@@ -177,12 +177,22 @@ listar.addEventListener('keyup', async e=>{
 
 const listarLista = (lista,situacion,tipo)=>{
     let aux
-    (situacion === "negro") ? (aux = "Presupuesto") : (aux = "Ticket Factura");
+
+    if (situacion === "negro") {
+        aux = "Presupuesto"
+    }else{
+        if(clienteTraido.cond_iva === "Inscripto"){
+            aux = "Factura A";
+        }else{
+            aux = "Factura B";
+        };
+    };
+
     listaGlobal = lista.filter(e=>{
         if (aux === "Presupuesto") {
             return  (e.tipo_comp === aux ||  e.tipo_comp === "Recibos_P")   
         }else{
-            return (e.tipo_comp === aux) || e.tipo_comp === "Recibos" ||  e.tipo_comp === "Nota Credito"
+            return (e.tipo_comp === aux) || e.tipo_comp === "Recibos" ||  e.tipo_comp === "Nota Credito" || e.tipo_comp === "Ticket Factura";
         }
     })
 
@@ -247,7 +257,6 @@ const listarLista = (lista,situacion,tipo)=>{
 
 async function mostrarDetalles(id,tipo,vendedor) {
     detalle.innerHTML = '';
-
     //cambiamos los valores de los th del detalle para el recibo
     const tr = document.querySelector('.listarDetalleVenta thead tr');
     tr.children[0].innerText = "Fecha";
@@ -259,7 +268,6 @@ async function mostrarDetalles(id,tipo,vendedor) {
 
     if (tipo === "Recibos_P" || tipo === "Recibos") {
         const recibo = (await axios.get(`${URL}recibos/forNro_comp/${seleccionado.id}`,configAxios)).data;
-        console.log(recibo)
         if (recibo.comprobantes.length !== 0) {
             for(let {fecha,numero,pagado,saldo,comprobante} of recibo.comprobantes){
                 detalle.innerHTML += `
@@ -289,7 +297,6 @@ async function mostrarDetalles(id,tipo,vendedor) {
     let movimientos1 = productos.filter(movimiento => movimiento.codCliente === clienteTraido._id);
     let movimientos2 = productos.filter(movimiento => movimiento.codigo === clienteTraido._id);
     productos = [...movimientos1,...movimientos2]
-    console.log(movimientos1[0])
     productos.forEach((producto) =>{
         let {codProd,tipo_comp,descripcion,vendedor,ingreso,egreso,precio_unitario} = producto;
         detalle.innerHTML += `
@@ -464,7 +471,6 @@ facturarVarios.addEventListener('click',async e=>{
                         inputscheckeados.forEach(elem=>{
                             elem.checked && value.push(elem.id);
                         });
-                        console.log(value)
                         ipcRenderer.send('facturar_varios',[vendedor.nombre,value,vendedor.empresa,codigoCliente.value]);
                     }
                 });
@@ -559,7 +565,6 @@ document.addEventListener('keyup',e=>{
 volver.addEventListener('click',e=>{
     location.href = '../index.html';
 });
-
 
 document.addEventListener('keydown',e=>{
     if(e.key === "Escape"){

@@ -442,9 +442,9 @@ async function verElTipoDeVenta(tipo) {
 function verQueVentaEs(tipo,cod_comp) {
     if (tipo === "Presupuesto") {
         return "Ultimo Presupuesto"
-    }else if(tipo === "Ticket Factura" && cod_comp === 1){
+    }else if(tipo === "Factura A" || (tipo === "Ticket Factura" && cod_comp === 1)){
         return "Ultima Factura A"
-    }else if(tipo ===  "Ticket Factura" && cod_comp === 6){
+    }else if(tipo === "Factura B" || (tipo ===  "Ticket Factura" && cod_comp === 6)){
         return "Ultima Factura B"
     }else if(tipo === "Cuenta Corriente"){
         return "Ultimo Remito Cta Cte"
@@ -459,7 +459,7 @@ function verQueVentaEs(tipo,cod_comp) {
 async function traerUltimoNroComprobante(tipoCom,codigoComprobante,tipo_pago) {
         //tipoCom = Pesupuesto
         //ver que venta es retorna el atributo del bojeto guardado en la BD
-        if (tipoCom==="Ticket Factura") {
+        if (tipoCom === "Ticket Factura" || tipoCom === "Factura A" || tipoCom === "Factura B") {
             const numeroFactura = verQueVentaEs(tipoCom,codigoComprobante)
             let tipoVenta = ((await axios.get(`${URL}tipoVenta`,configAxios)).data)[numeroFactura];
             return tipoVenta
@@ -807,13 +807,13 @@ ticketFactura.addEventListener('click',async (e) =>{
         return;
     };
 
-    tipoVenta = "Ticket Factura";
+    tipoVenta = conIva.value === "Inscripto" ? "Factura A" : "Factura B";
     venta.tipo_pago = await verElTipoDeVenta(tiposVentas)//vemos si es contado,cuenta corriente o presupuesto en el input[radio]
     //Vemos si algun producto tiene lista negativa
     const stockNegativo = listaProductos.find(producto=>producto.cantidad < 0);
     //mostramos alertas
     if(stockNegativo){
-        sweet.fire({title:"Ticket Factura no puede ser productos en negativo"});
+        sweet.fire({title:`${tipoVenta} no puede ser productos en negativo`});
     }else if(parseFloat(descuento.value) > 10 && vendedor!=="ELBIO"){
         await sweet.fire({title:"Descuento No Autorizado"});
     }else if(dnicuit.value === ""){
@@ -902,7 +902,7 @@ ticketFactura.addEventListener('click',async (e) =>{
                     alerta.children[1].children[0].innerHTML = "Imprimiendo Venta";//cartel de que se esta imprimiendo la venta
 
                     //mandamos a imprimir el ticket
-                    ipcRenderer.send('imprimir-venta',[venta,afip,true,1,'Ticket Factura']);
+                    // ipcRenderer.send('imprimir-venta',[venta,afip,true,1,'Ticket Factura']);
                         
                     //Le mandamos al servidor que cree un pdf con los datos
                     await axios.post(`${URL}crearPdf`,[venta,cliente,afip],configAxios);
@@ -1201,13 +1201,14 @@ const ponerEnCuentaCorrienteCompensada = async(venta,valorizado)=>{
 
 //inicio historica
 const ponerEnCuentaCorrienteHistorica = async(venta,valorizado,saldo)=>{
+    console.log(venta.precioFinal)
     const cuenta = {}
     cuenta.codigo = venta.cliente;
     cuenta.cliente = buscarCliente.value;
     cuenta.tipo_comp = venta.tipo_comp;
     cuenta.nro_comp = venta.nro_comp;
-    cuenta.debe = valorizado ? parseFloat(venta.precioFinal).toFixed(2) : 0.1;
-    cuenta.saldo = (parseFloat(saldo) + cuenta.debe).toFixed(2);
+    cuenta.debe = valorizado ? redondear(parseFloat(venta.precioFinal),2) : 0.1;
+    cuenta.saldo = (parseFloat(saldo) + parseFloat(cuenta.debe)).toFixed(2);
     cuenta.observaciones = venta.observaciones;
     cuenta.vendedor = vendedor;
     cuenta.maquina = maquina;

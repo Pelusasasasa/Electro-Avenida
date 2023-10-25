@@ -80,7 +80,7 @@ document.addEventListener('keydown',e=>{
 async function porVenta(tickets,presupuesto,recibos) {
     //Sacamos los tickes que se hicieron en el dia y son contados
          let ticketsDelDia = tickets.filter(ticket =>{
-             if ((ticket.tipo_comp === "Ticket Factura" || ticket.tipo_comp === "Nota Credito") && ticket.tipo_pago==="CD") {
+             if ((ticket.tipo_comp === "Ticket Factura" || ticket.tipo_comp === "Factura A" || ticket.tipo_comp === "Factura B" || ticket.tipo_comp === "Nota Credito") && ticket.tipo_pago==="CD") {
                  return ticket;
              }
          });

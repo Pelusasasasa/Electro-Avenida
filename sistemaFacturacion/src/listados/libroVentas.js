@@ -251,7 +251,7 @@ const listar = async (ventas,diaVentaAnterior)=>{
                     <td class = "final">${total.toFixed(2)}</td>
                     </tr>
                 `
-                if (tipo_comp === "Ticket Factura") {
+                if (tipo_comp === "Ticket Factura" || tipo_comp === "Factura A" || tipo_comp === "Factura B") {
                     totalGlobalGravado105Factura += totalgravado105;
                     totalGlobalGravado21Factura += totalgravado21;
                     totalGlobalIva105Factura += totaliva105;
