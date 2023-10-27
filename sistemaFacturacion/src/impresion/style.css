@@ -212,6 +212,11 @@ svg{
 .presupuesto #atencion{
     font-weight: bold;
 }
+
+.presupuesto #atencion p{
+    margin: 0;
+}
+
 .presupuesto .precios{
     display: flex;
     border: .1rem solid black;

@@ -20,7 +20,6 @@ aceptar.addEventListener('click',async e=>{
     if (punto === "0001" || punto === "0002" || punto === "0003" ) {
         tipoVenta = "Presupuesto";
         venta = (await axios.get(`${URL}presupuesto/${comprobante}`,configAxios)).data;
-        console.log(venta.cliente)
         cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`,configAxios)).data;
     }else if(punto === "0004"){
         tipoVenta = "Recibos_P";

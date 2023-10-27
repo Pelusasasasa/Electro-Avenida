@@ -56,6 +56,18 @@ hasta.addEventListener('keypress',async e=>{
 
 async function listarVentas(lista,bodyelegido) {
     bodyelegido.innerHTML = "";
+
+    lista.sort((a,b) => {
+        if (a.fecha < b.fecha) {
+            return -1;
+        }
+        if (a.fecha > b.fecha) {
+            return 1;
+        }
+        return 0;
+
+    });
+
     for await(let venta of lista){
         const fecha = venta.fecha.slice(0,10).split('-',3)
         const hora = venta.fecha.slice(11,19).split(':',3)
