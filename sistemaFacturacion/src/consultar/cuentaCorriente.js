@@ -294,6 +294,7 @@ async function mostrarDetalles(id,tipo,vendedor) {
         tr.children[4].innerText = "Total";
         tr.children[5].innerText = "Vendedor";
     let productos = (await axios.get(`${URL}movProductos/${id}/${tipo}`,configAxios)).data;
+    console.log(id)
     let movimientos1 = productos.filter(movimiento => movimiento.codCliente === clienteTraido._id);
     let movimientos2 = productos.filter(movimiento => movimiento.codigo === clienteTraido._id);
     productos = [...movimientos1,...movimientos2]

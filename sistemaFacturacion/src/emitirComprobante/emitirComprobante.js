@@ -902,7 +902,7 @@ ticketFactura.addEventListener('click',async (e) =>{
                     alerta.children[1].children[0].innerHTML = "Imprimiendo Venta";//cartel de que se esta imprimiendo la venta
 
                     //mandamos a imprimir el ticket
-                    // ipcRenderer.send('imprimir-venta',[venta,afip,true,1,'Ticket Factura']);
+                    ipcRenderer.send('imprimir-venta',[venta,afip,true,1,'Ticket Factura']);
                         
                     //Le mandamos al servidor que cree un pdf con los datos
                     await axios.post(`${URL}crearPdf`,[venta,cliente,afip],configAxios);
@@ -927,7 +927,7 @@ ticketFactura.addEventListener('click',async (e) =>{
                         const movimientosViejos = (await axios.get(`${URL}movProductos/${ventaAnterior.nro_comp}/Presupuesto`,configAxios)).data;
                         for await (let mov of movimientosViejos){
                             mov.nro_comp = venta.nro_comp;
-                            mov.tipo_comp = "Ticket Factura";
+                            mov.tipo_comp = venta.tipo_comp;
                         }
                         await axios.put(`${URL}movProductos`,movimientosViejos,configAxios);
 

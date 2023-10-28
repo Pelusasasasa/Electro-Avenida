@@ -94,7 +94,6 @@ productosCTRL.traerMarcas = async(req,res)=>{
     res.send(marcas)
 }
 
-
 productosCTRL.productosPorMarca = async(req,res)=>{
     const {marca} = req.params;
     const productos = await Productos.find({marca:marca});
@@ -108,7 +107,7 @@ productosCTRL.subirImagen = async(req,res)=>{
     producto.imgURL = req.file.path;
     await Productos.findOneAndUpdate({_id:id},producto);
     res.send("Imagen subida")
-}
+};
 
 productosCTRL.mostrarImagen = async(req,res)=>{
     const {id} = req.params;
@@ -121,6 +120,10 @@ productosCTRL.mostrarImagen = async(req,res)=>{
             res.sendFile(direccion);
         }
     });
-}
+};
+
+productosCTRL.getStckCero = async(req,res)=>{
+    
+};
 
 module.exports = productosCTRL;

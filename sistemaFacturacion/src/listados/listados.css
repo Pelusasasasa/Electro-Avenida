@@ -8,17 +8,17 @@
     margin: 0;
 }
 
-.presupuestos h2,.stockNegativo h2,.LibroVentas h2{
+.presupuestos h2,.stockNegativo h2,.LibroVentas h2,.stockCero h2{
     margin: 0;
 }
 
-.porComprobante .listar,.presupuestos .listar,.stockNegativo .listar,.LibroVentas .listar,.buscarVentas .listar{
+.porComprobante .listar,.presupuestos .listar,.stockNegativo .listar,.LibroVentas .listar,.buscarVentas .listar,.stockCero .listar{
     background-color: white;
     overflow: scroll;
     height: 78vh;
 }
 
-.porComprobante thead tr th,.presupuestos thead tr th,.stockNegativo thead tr th,.LibroVentas thead tr th,.buscarVentas thead th{
+.porComprobante thead tr th,.presupuestos thead tr th,.stockNegativo thead tr th,.LibroVentas thead tr th,.buscarVentas thead th,.stockCero thead tr th{
     border: .1rem solid black;
 }
 .porComprobante .tdTotal,.buscarVentas .tdTotal{
@@ -40,7 +40,7 @@
     width: 5rem;
 }
 
-.stockNegativo .tbody td{
+.stockNegativo .tbody td,.stockCero .tbody td{
     border: .1rem solid black;
 }
 

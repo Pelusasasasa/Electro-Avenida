@@ -164,6 +164,13 @@ const templateMenu = [
                 }
             },
             {
+                label: "Stock Cero",
+                click(){
+                    abrirVentana("listados/stockCero.html",1200,1000);
+                }
+                
+            },
+            {
                 label: "Libro Ventas",
                 click(){
                     abrirVentana("listados/libroVentas.html",1100,1000)

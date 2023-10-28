@@ -41,6 +41,7 @@ ventasCTRL.modificarVentas = async(req,res) =>{
     console.log(`Venta ${req.body.nro_comp} Modificada`)
     res.send("Venta Modificada")
 }
+
 ventasCTRL.entreFechas = async(req,res) => {
     const {desde,hasta} = req.params;
     const ventas = await Ventas.find({

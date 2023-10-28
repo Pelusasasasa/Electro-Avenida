@@ -201,7 +201,7 @@ const listarLista = (lista,situacion)=>{
         }
     };
     const listaRecibo = lista.filter(e=>e.tipo_comp === auxRecibo);
-    const listaVenta = lista.filter(e=>(e.tipo_comp === aux || e.tipo_comp === "Ticket Factura") );
+    const listaVenta = lista.filter(e=>(e.tipo_comp === aux || (e.tipo_comp === "Ticket Factura" && situacion === "blanco")) );
     const listaNota = situacion === "blanco" ? lista.filter(e=>e.tipo_comp === "Nota Credito") : [];
 
     const arreglo = [...listaRecibo,...listaVenta,...listaNota];//este arreglo contiene las compensadas dependiendo la situacion

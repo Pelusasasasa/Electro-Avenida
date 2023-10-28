@@ -60,7 +60,7 @@ const { ipcRenderer } = require("electron");
                     <tr>
                         <td>${(elem.egreso).toFixed(2)}</td>
                         <td>${elem.codProd}</td>
-                        <td class="descripcion">${elem.descripcion}</td>
+                        <td class="descripcion">${elem.descripcion.slice(0,62)}</td>
                         <td>${parseFloat(elem.precio_unitario).toFixed(2)}</td>
                         <td>${(parseFloat(elem.precio_unitario)*elem.egreso).toFixed(2)}</td>
                     </tr>
