@@ -302,6 +302,12 @@ ipcRenderer.on('mando-el-producto',async (e,args) => {
 let id = 1 //id de la tabla de ventas
 
 function mostrarVentas(objeto,cantidad) {
+    seleccionado && seleccionado.classList.remove('seleccionado');
+    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+
+    seleccionado = "";
+    subSeleccionado = "";
+
     descuento.value = "0.00";
     descuentoN.value = "0.00";
     cobrado.value = "0.00";
