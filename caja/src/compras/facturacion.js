@@ -51,7 +51,7 @@ async function inicio(){
 async function busqueda(){
     const tickets = await getFacturas();
     const compras = await getCompras();
-    const facturas = tickets.filter(ticket => ticket.tipo_comp === 'Ticket Factura');
+    const facturas = tickets.filter(ticket => ticket.tipo_comp !== 'Nota Credito');
     const notas = tickets.filter(ticket => ticket.tipo_comp === 'Nota Credito');
 
     await listarFacturas(facturas);

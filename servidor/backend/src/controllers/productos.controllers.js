@@ -122,8 +122,18 @@ productosCTRL.mostrarImagen = async(req,res)=>{
     });
 };
 
-productosCTRL.getStckCero = async(req,res)=>{
-    
+productosCTRL.getStockCero = async(req,res)=>{
+    const productos = await Productos.find({stock:"0"});
+    res.send(productos)
 };
+
+
+productosCTRL.putStockCero = async(req,res)=>{
+    const id = req.body._id;
+    const producto = await Productos.findByIdAndUpdate({_id:id},req.body,{new:true});
+    res.send(producto);
+}
+
+
 
 module.exports = productosCTRL;
