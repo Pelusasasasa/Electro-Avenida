@@ -14,7 +14,7 @@ pdfCTRL.crearPdf = async(req,res)=>{
 
     const [venta,cliente,{QR,cae,vencimientoCae,texto,numero}] = req.body;
     let trs = "";
-    if (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito") {
+    if (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito" || venta.tipo_comp === "Factura A" || venta.tipo_comp === "Factura B") {
     venta.productos.forEach(({objeto,cantidad})=>{
         trs = trs + `<tr>
                             <td>${objeto._id}</td>
@@ -69,8 +69,10 @@ pdfCTRL.crearPdf = async(req,res)=>{
         textoFactura = "RECIBO";
     }else if(venta.tipo_comp === "Ticket Factura"){
         textoFactura = "FACTURA";
-    }else{
+    }else if(venta.tipo_comp === "Nota Credito"){
         textoFactura = "NOTA CREDITO"
+    }else{
+        textoFactura = venta.tipo_comp
     }
 
     html = html.replace('{{tipoCompropobante}}',tipoCompropobante);
@@ -97,8 +99,8 @@ pdfCTRL.crearPdf = async(req,res)=>{
     html = venta.tipo_comp === "Recibos" ? html.replace('{{medida}}',"") : html.replace('{{medida}}',"<td>U. Medida</td>");
     html = venta.tipo_comp === "Recibos" ? html.replace('{{precioU}}',"") : html.replace('{{precioU}}',"<td>Precio Unit.</td>");
     html = venta.tipo_comp === "Recibos" ? html.replace('{{subtotal}}',"") : html.replace('{{subtotal}}',"<td>Subtotal</td>");
-    html = (venta.condIva === "Inscripto" && (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{alicuota}}',`<td>Alicuota IVA</td>`) : html.replace('{{alicuota}}',"");
-    html = (venta.condIva === "Inscripto"  && (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{subtotalIva}}',`<td>Subtotal c/IVA</td>`) : html.replace('{{subtotalIva}}',"");
+    html = (venta.condIva === "Inscripto" && (venta.tipo_comp === "Factura A" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{alicuota}}',`<td>Alicuota IVA</td>`) : html.replace('{{alicuota}}',"");
+    html = (venta.condIva === "Inscripto"  && (venta.tipo_comp === "Factura A" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{subtotalIva}}',`<td>Subtotal c/IVA</td>`) : html.replace('{{subtotalIva}}',"");
     
     html = html.replace('{{trs}}',trs)
 
@@ -115,9 +117,9 @@ pdfCTRL.crearPdf = async(req,res)=>{
     
 
     //totales
-    html = (venta.condIva === "Inscripto" && (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{importeNeto}}',`<p class="IVA neto">Importe Neto Gravado: $<span>${venta.gravado21 + venta.gravado105}</span></p>`) : html.replace('{{importeNeto}}',"");
-    html = (venta.condIva === "Inscripto" && (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{iva21}}',`<p class="IVA iva21">IVA 21%: $<span>${venta.iva21.toFixed(2)}</span></p>`) : html.replace('{{iva21}}',"");
-    html = (venta.condIva === "Inscripto" && (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{iva105}}',`<p class="IVA iva105">IVA 10.5%: $<span>${venta.iva105.toFixed(2)}</span></p>`) : html.replace('{{iva105}}',"");
+    html = (venta.condIva === "Inscripto" && (venta.tipo_comp === "Factura A" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{importeNeto}}',`<p class="IVA neto">Importe Neto Gravado: $<span>${venta.gravado21 + venta.gravado105}</span></p>`) : html.replace('{{importeNeto}}',"");
+    html = (venta.condIva === "Inscripto" && (venta.tipo_comp === "Factura A" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{iva21}}',`<p class="IVA iva21">IVA 21%: $<span>${venta.iva21.toFixed(2)}</span></p>`) : html.replace('{{iva21}}',"");
+    html = (venta.condIva === "Inscripto" && (venta.tipo_comp === "Factura A" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{iva105}}',`<p class="IVA iva105">IVA 10.5%: $<span>${venta.iva105.toFixed(2)}</span></p>`) : html.replace('{{iva105}}',"");
     html = venta.condIva !== "Inscripto" || venta.tipo_comp === "Recibos" ? html.replace('{{subtotal}}',`<p class="SinIVA">Subtotal: $<span>${(parseFloat(venta.precioFinal) + parseFloat(venta.descuento))}</span></p>`) : html.replace('{{subtotal}}',"");
     html = html.replace('{{descuento}}', venta.tipo_comp === "Recibos" ? "0.00" : parseFloat(venta.descuento));
     html = html.replace('{{precioFinal}}',venta.precioFinal);
