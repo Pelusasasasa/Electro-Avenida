@@ -109,8 +109,12 @@ html {
 
 .ticket .cantidad p{
     width: 100%;
+    font-size: 1.2rem;
 }
 
+.ticket .descripcionProducto p{
+    font-size: 1.2rem;
+}
 .ticket .cantidad .iva{
     text-align: center;
 }

@@ -59,7 +59,7 @@ const venciCae = document.querySelector('.venciCae');
     };
     await infoComprobante(venta);
     await listarCliente(cliente);
-    movimientos ? await listaMovimientos(movimientos) : await listar(venta,afip,opciones);
+    movimientos ? await listaMovimientos(movimientos,venta) : await listar(venta,afip,opciones);
     await listarAfip(afip);
     await ipcRenderer.send('imprimir',JSON.stringify(opciones));
  });
@@ -165,6 +165,33 @@ async function listaMovimientos(movimientos) {
                         <p>${venta.condIva === "Inscripto" ? ((precio_unitario/ivaAux)*egreso).toFixed(2) : (precio_unitario * egreso).toFixed(2)}</p>
                     </div>
                 `
+
+                if (venta.condIva === "Inscripto" && venta.tipo_comp !== "Recibos") {
+                    if (venta.gravado21 !== 0) {
+                        discriminadorIva.innerHTML += `
+                            <div class="margin-1-t">
+                                <p>NETO SIN IVA</p>
+                                <p>${venta.gravado21}</p>
+                            </div>
+                            <div>
+                            <p>IVA 21.00/</p>
+                            <p>${venta.iva21}</p>
+                            </div>
+                        `
+                    }
+                    if (venta.gravado105 !== 0) {
+                        discriminadorIva.innerHTML += `
+                            <div class="margin-1-t">
+                                <p>NETO SIN IVA</p>
+                                <p>${venta.gravado105}</p>
+                            </div>
+                            <div>
+                                <p>IVA 10.50/</p>
+                                <p>${venta.iva105}</p>
+                            </div>
+                        `
+                    }
+                }
     })
 }
 
