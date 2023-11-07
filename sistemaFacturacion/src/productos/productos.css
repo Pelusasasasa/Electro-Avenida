@@ -217,6 +217,10 @@ h1{
     flex-direction: column;
 }
 
+.entradas #dolar{
+    width: 50%;
+}
+
 .tablas{
     display: flex;
     justify-content: space-around;

@@ -8,6 +8,7 @@ const sweet = require('sweetalert2');
 
 const select = document.getElementById('marca');
 const descuento = document.getElementById('descuento');
+const dolar = document.getElementById('dolar');
 const archivo = document.getElementById('archivo');
 
 const tablaViejo = document.querySelector('.tablaViejo tbody');
@@ -19,6 +20,8 @@ let productosAGuardar = [];
 
 window.addEventListener('load',async e=>{
     const marcas = (await axios.get(`${URL}productos`,configAxios)).data;
+    dolar.value = (await axios.get(`${URL}tipoVenta`,configAxios)).data.dolar;
+    
     marcas.sort((a,b)=>{
         if(a<b){
             return -1
@@ -42,10 +45,12 @@ select.addEventListener('change',async e=>{
 
 const rellenarStock = async(lista)=>{
     for await(let elem of lista){
-        const option = document.createElement('option');
-        option.value = elem;
-        option.text = elem;
-        select.appendChild(option)
+        if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC") {
+            const option = document.createElement('option');
+            option.value = elem;
+            option.text = elem;
+            select.appendChild(option);
+        }
     }
 };
 
@@ -63,8 +68,15 @@ archivo.addEventListener('change',e=>{
 
         if (select.value === "SAN JUSTO") {
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Export"]);
-            console.log(datos)
             cambiarPreciosSanJusto(datos,productos);
+        }else if(select.value === "BREMEN"){
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["BREMEN® Tools Argentina"]);
+            console.log(datos);
+            cambiarPrecioBremen(datos,productos);
+        }else if(select.value === "INTERELEC"){
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Hoja1"]);
+            cambiarPrecioInterelec(datos,productos);
+        
         }
 
         llenarListaVieja(productos);
@@ -146,6 +158,49 @@ async function cambiarPreciosSanJusto(nuevos,productos) {
 
     llenarListaNueva(productos);
 };
+
+async function cambiarPrecioBremen(datos,productos){
+    for await (let elem of productos){
+        const tasaIva = elem.iva === "R" ? 15 : 26;
+        const producto = datos.find(n => n["Código"] == elem.cod_fabrica);
+        
+        if (producto) {
+            if (elem.costodolar !== 0) {
+                
+            }else{
+                elem.costo = redondear(producto["Precio de Venta"],2);
+                elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
+
+                const costoIva = parseFloat(elem.costo) + parseFloat(elem.impuestos);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+
+                elem.precio_venta = costoIva + utilidad;
+            }
+            
+        }
+    }
+    llenarListaNueva(productos);
+};
+
+async function cambiarPrecioInterelec(datos,productos) {
+    for await (let elem of productos){
+        const tasaIva = elem.iva === "R" ? 15 : 26;
+        const producto = datos.find(dato => dato.Codigo == elem.cod_fabrica);
+        if (producto) {
+            if (elem.costodolar !== 0) {
+                elem.costodolar = parseFloat(producto.Precio.toFixed(2));
+                elem.impuestos = parseFloat(redondear(elem.costodolar * tasaIva / 100,2));
+
+                const costoIva = (elem.costodolar + elem.impuestos) * parseFloat(dolar.value);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+
+                elem.precio_venta = parseFloat((costoIva + utilidad).toFixed(2));
+
+            }
+        }
+    };
+    llenarListaNueva(productos);
+}
 
 confirmar.addEventListener('click',async e=>{
     for await (let producto of productosAGuardar){
