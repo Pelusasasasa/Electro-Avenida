@@ -183,7 +183,7 @@ ipcRenderer.on('recibir-informacion',modificarInputs);
 
 function modificarInputs(e,cheque) {
     const tr = document.getElementById(cheque._id);
-    
+    console.log(cheque)
     tr.children[0].innerText = cheque.f_recibido.split('-',3).reverse().join('/');
     tr.children[1].innerText = cheque.n_cheque;
     tr.children[2].innerText = cheque.banco;
@@ -194,5 +194,5 @@ function modificarInputs(e,cheque) {
     tr.children[7].innerText = cheque.entreg_a;
     tr.children[8].innerText = cheque.domicilio;
     tr.children[9].innerText = cheque.telefono;
-    tr.children[10].innerText = cheque.propio;
+    tr.children[10].innerText = cheque.tipo;
 }
