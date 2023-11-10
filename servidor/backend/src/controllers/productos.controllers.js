@@ -92,11 +92,28 @@ productosCTRL.traerMarcas = async(req,res)=>{
         }
     })
     res.send(marcas)
-}
+};
+
+productosCTRL.getProvedores = async(req,res)=>{
+    const productos = await Productos.find({},{_id:0 , provedor:1});
+    let provedores = [];
+    productos.filter((ele)=>{
+        if(!provedores.includes(ele.provedor)){
+            provedores.push(ele.provedor);
+        };
+    });
+    res.send(provedores);
+};
 
 productosCTRL.productosPorMarca = async(req,res)=>{
     const {marca} = req.params;
     const productos = await Productos.find({marca:marca});
+    res.send(productos)
+};
+
+productosCTRL.productosPorProvedor = async(req,res)=>{
+    const {provedor} = req.params;
+    const productos = await Productos.find({provedor});
     res.send(productos)
 };
 

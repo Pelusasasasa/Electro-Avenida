@@ -20,6 +20,7 @@ let productosAGuardar = [];
 
 window.addEventListener('load',async e=>{
     const marcas = (await axios.get(`${URL}productos`,configAxios)).data;
+    const provedores = (await axios.get(`${URL}productos/provedores`,configAxios)).data;
     dolar.value = (await axios.get(`${URL}tipoVenta`,configAxios)).data.dolar;
     
     marcas.sort((a,b)=>{
@@ -30,7 +31,7 @@ window.addEventListener('load',async e=>{
         }
         return 0
     })
-    rellenarStock(marcas);
+    rellenarStock(marcas,provedores);
 });
 
 select.addEventListener('change',async e=>{
@@ -43,15 +44,25 @@ select.addEventListener('change',async e=>{
     descuento.focus();
 });
 
-const rellenarStock = async(lista)=>{
+const rellenarStock = async(lista,lista2)=>{
     for await(let elem of lista){
         if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC") {
             const option = document.createElement('option');
             option.value = elem;
-            option.text = elem;
+            option.text = "M - " + elem;
             select.appendChild(option);
         }
-    }
+    };
+
+    for await(let elem of lista){
+        if (elem === "GOMEZ") {
+            const option = document.createElement('option');
+            option.value = elem;
+            option.classList.add('provedor');
+            option.text = "P - " + elem;;
+            select.appendChild(option);
+        }
+    };
 };
 
 archivo.addEventListener('change',e=>{
@@ -64,7 +75,13 @@ archivo.addEventListener('change',e=>{
             type:"binary"
         });
 
-        let productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`)).data;
+        let productos = [];
+        
+        if (select.options[select.selectedIndex].classList.contains('provedor')) {
+            productos =(await axios.get(`${URL}productos/provedores/${select.value}`)).data;    
+        }else{
+            productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`)).data;
+        };
 
         if (select.value === "SAN JUSTO") {
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Export"]);
@@ -76,7 +93,9 @@ archivo.addEventListener('change',e=>{
         }else if(select.value === "INTERELEC"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Hoja1"]);
             cambiarPrecioInterelec(datos,productos);
-        
+        }else if(select.value === "GOMEZ"){
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Hoja1"]);
+            cambiarPrecioGomez(datos,productos);
         }
 
         llenarListaVieja(productos);
@@ -199,6 +218,33 @@ async function cambiarPrecioInterelec(datos,productos) {
             }
         }
     };
+    llenarListaNueva(productos);
+};
+
+async function cambiarPrecioGomez(datos,productos){
+    for await (let elem of productos){
+        const tasaIva = elem.iva === "R" ? 15 : 26;
+        const producto = datos.find(dato => dato.Articulo == elem.cod_fabrica);
+        if(producto){
+            if (elem.costodolar !== 0) {
+                elem.costodolar = parseFloat((producto.Precio / parseFloat(dolar.value)).toFixed(2));
+                elem.impuestos = parseFloat(redondear(elem.costodolar * tasaIva / 100,2));
+
+                const costoIva = (elem.costodolar + elem.impuestos) * parseFloat(dolar.value);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+
+                elem.precio_venta = parseFloat((costoIva + utilidad).toFixed(2));
+            }else{
+                elem.costo = parseFloat(redondear(producto.Precio,2));
+                elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
+
+                const costoIva = (elem.costo + elem.impuestos);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+                elem.precio_venta = parseFloat((costoIva + utilidad).toFixed(2));
+            }
+        }
+    };
+
     llenarListaNueva(productos);
 }
 

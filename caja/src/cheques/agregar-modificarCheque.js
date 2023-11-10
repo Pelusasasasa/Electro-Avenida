@@ -62,6 +62,7 @@ agregar.addEventListener('click',async e=>{
         await sweet.fire({
             title:"Otro Cheque?",
             confirmButtonText:"Aceptar",
+            returnFocus:false,
             showCancelButton:true
         })
         .then(({isConfirmed})=>{

@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     );
 
 const upload = multer({storage});
-const {crearProducto,traerProductos,modificarProductos,getproducto,modificarProducto,borrarProducto,productosPorMarca,traerProductosPorRango,stockNegativo,traerMarcas,subirImagen,mostrarImagen, getStockCero, putStockCero} = require("../controllers/productos.controllers");
+const {crearProducto,traerProductos,modificarProductos,getproducto,modificarProducto,borrarProducto,productosPorMarca,traerProductosPorRango,stockNegativo,traerMarcas,subirImagen,mostrarImagen, getStockCero, putStockCero, getProvedores, productosPorProvedor} = require("../controllers/productos.controllers");
 
 router.route('/')
     .post(crearProducto)
@@ -26,6 +26,12 @@ router.route('/stockCero')
     .get(getStockCero)
     .put(putStockCero)
 
+router.route('/provedores')
+    .get(getProvedores)
+
+router.route('/provedores/:provedor')
+    .get(productosPorProvedor)
+
 router.route('/:id')
     .get(getproducto)
     .put(modificarProducto)
@@ -36,6 +42,8 @@ router.route('/:productosEntreRangos/:desde/:hasta')
 
 router.route('/marcas/:marca')
     .get(productosPorMarca)
+
+
 router.route('/:id/image')
     .put(upload.single('imagen'),subirImagen)
     .get(upload.single('imagen'),mostrarImagen)
