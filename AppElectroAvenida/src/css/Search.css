@@ -1,8 +1,0 @@
-input{
-    font-size: 25px;
-    width: 70%;
-}
-
-input:focus{
-    outline-color: lightblue;
-}
