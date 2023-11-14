@@ -1155,9 +1155,6 @@ ipcRenderer.on('informacion',async (e,args)=>{
 //descontamos el saldo del cliente
 const descontarSaldo = async(codigo,precio,numero="",venta="")=>{
     const cliente = (await axios.get(`${URL}clientes/id/${codigo}`,configAxios)).data;
-    const index = cliente.listaVentas.indexOf(numero);
-    cliente.listaVentas.splice(index);
-    cliente.listaVentas = venta;
     cliente.saldo_p = parseFloat(cliente.saldo_p) - precio;
     try {
         await axios.put(`${URL}clientes/${codigo}`,cliente,configAxios);

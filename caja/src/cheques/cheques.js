@@ -37,7 +37,7 @@ buscador.addEventListener('keyup',e=>{
             const chequesFiltrados = cheques.filter(cheque=> cheque.ent_por.startsWith(buscador.value.toUpperCase()));
             listarCheques(chequesFiltrados)
         }else{
-            const chequesFiltrados = cheques.filter(cheque => cheque.i_cheque.toString().startsWith(buscador.value));
+            const chequesFiltrados = cheques.filter(cheque => cheque.i_cheque?.toString().startsWith(buscador.value));
             listarCheques(chequesFiltrados);
         }
     }else{

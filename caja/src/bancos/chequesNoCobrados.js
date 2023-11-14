@@ -23,8 +23,9 @@ listarCheques = (lista)=>{
     })
     let total = 0;
     lista.forEach(cheque => {
+        console.log(cheque)
         const fechaRecibido = cheque.f_recibido.slice(0,10).split('-',3);
-        const fechaCheque = cheque.f_cheque.slice(0,10).split('-',3);
+        const fechaCheque = cheque.f_cheque?.slice(0,10).split('-',3) ?? "00/00/00";
         const tr = document.createElement('tr');
 
         const tdEmision = document.createElement('td');

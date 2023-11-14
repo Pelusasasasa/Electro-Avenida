@@ -37,7 +37,7 @@ window.addEventListener('load',async e=>{
 select.addEventListener('change',async e=>{
     if (select.value === "SAN JUSTO") {
         await sweet.fire({
-            title: "La columna de codigo de fabrica tiene que llamarse CODIGO y la de costo LISTA 80 en el EXCEL",
+            title: "La columna de codigo de fabrica tiene que llamarse CODIGO y la de costo PRECIO en el EXCEL",
             returnFocus:false
         });
     }
@@ -112,18 +112,21 @@ const llenarListaVieja = async(lista)=>{
         const tdCostoViejo = document.createElement('td');
         const tdCostoDolaresViejo = document.createElement('td');
         const tdPrecioViejo = document.createElement('td');
+        const tdCodFabrica = document.createElement('td');
 
         tdCodigo.innerHTML = elem._id;
         tdDescripcion.innerHTML = elem.descripcion;
         tdCostoViejo.innerHTML = elem.costo;
         tdCostoDolaresViejo.innerHTML = elem.costodolar.toFixed(2);
         tdPrecioViejo.innerHTML = elem.precio_venta.toFixed(2);
+        tdCodFabrica.innerText = elem.cod_fabrica;
 
         tr.appendChild(tdCodigo);
         tr.appendChild(tdDescripcion);
         tr.appendChild(tdCostoViejo);
         tr.appendChild(tdCostoDolaresViejo);
         tr.appendChild(tdPrecioViejo);
+        tr.appendChild(tdCodFabrica);
 
         tablaViejo.appendChild(tr);
     }
@@ -159,14 +162,12 @@ const llenarListaNueva = async(lista)=>{
 async function cambiarPreciosSanJusto(nuevos,productos) {
     for await (let elem of productos){
         const tasaIva = elem.iva === "R" ? 15 : 26;
-        const producto = nuevos.find(n => n.CODIGO === elem.cod_fabrica);
-
+        const producto = nuevos.find(n => n.CODIGO == elem.cod_fabrica);
         if (producto) {
             if (elem.costodolar !== 0) {
             }else{
-                elem.costo = redondear(producto["LISTA 80"] - (producto["LISTA 80"] * parseFloat(descuento.value) / 100),2);
+                elem.costo = redondear(producto.PRECIO - (producto.PRECIO * parseFloat(descuento.value) / 100),2);
                 elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
-                
                 const costoIva = parseFloat(elem.costo) + parseFloat(elem.impuestos);
                 const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
 
