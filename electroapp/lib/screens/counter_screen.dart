@@ -20,7 +20,6 @@ class _CounterScreenState extends State<CounterScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xFFFFEE00),
         title: const Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
