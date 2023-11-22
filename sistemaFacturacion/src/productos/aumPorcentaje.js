@@ -42,7 +42,7 @@ modificar.addEventListener('click',async e=>{
             producto.impuestos = (producto.iva === "N") ? (parseFloat(producto.costo) * 26 / 100) : (parseFloat(producto.costo) * 15 / 100);
             producto.precio_venta = ((parseFloat(producto.costo) + parseFloat(producto.impuestos))*parseFloat(producto.utilidad)/100) +(parseFloat(producto.costo) + parseFloat(producto.impuestos))
             producto.impuestos = (producto.impuestos).toFixed(2)
-            producto.precio_venta = (producto.precio_venta).toFixed(2)
+            producto.precio_venta = (producto.precio_venta).toFixed(2);
         }
         producto.vendedor = vendedor.nombre;
         producto.maquina = verNombrePc();

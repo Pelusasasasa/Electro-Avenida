@@ -108,7 +108,7 @@ async function cambiarPrecios(dolar) {
 
         return 0
     });
-    const a = productos.filter(producto => producto.costodolar !== 0);
+    const a = productos.filter(producto => (producto.costodolar !== 0 && producto.costodolar));
 
     for await(let producto of a) {
         alerta.classList.remove('none');
