@@ -871,8 +871,12 @@ ticketFactura.addEventListener('click',async (e) =>{
                 try {
                     for(let producto of venta.productos){
                         if (parseFloat(descuentoN.value) !== 0 && descuentoN.value !== "" ) {
-                            producto.objeto.precio_venta = (parseFloat(producto.objeto.precio_venta)) - parseFloat(producto.objeto.precio_venta)*parseFloat(descuento.value)/100
-                            producto.objeto.precio_venta = producto.objeto.precio_venta.toFixed(2)
+                            if (producto.objeto.oferta) {
+                                producto.objeto.precioOferta = (parseFloat(producto.objeto.precioOferta)) - parseFloat(producto.objeto.precioOferta)*parseFloat(descuento.value)/100;
+                            }else{
+                                producto.objeto.precio_venta = (parseFloat(producto.objeto.precio_venta)) - parseFloat(producto.objeto.precio_venta)*parseFloat(descuento.value)/100;
+                            };
+                            producto.objeto.precio_venta = producto.objeto.precio_venta.toFixed(2);
                         }
                     };
                     const [iva21,iva105,gravado21,gravado105,cant_iva] = gravadoMasIva(venta.productos);
@@ -983,6 +987,7 @@ ticketFactura.addEventListener('click',async (e) =>{
     let gravado105 = 0; 
 
     ventas.forEach(({objeto,cantidad}) =>{
+        
         const precio = objeto.oferta ? objeto.precioOferta : parseFloat(objeto.precio_venta);
 
         if (objeto.iva === "N") {
