@@ -11,7 +11,11 @@ const BuscadorAppBar({ Key? key }) : super(key: key);
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            const Text('Buscador...'),
+            const Expanded(
+              child:  TextField(
+                decoration: InputDecoration(border: OutlineInputBorder(),labelText:'Codigo'),
+              ),
+            ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
