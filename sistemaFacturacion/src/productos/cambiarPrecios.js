@@ -253,7 +253,6 @@ async function cambiarPrecioGomez(datos,productos){
 };
 
 async function cambiarPrecioLanus(datos,productos){
-    console.log(productos.length)
     for await (let elem of productos){
         const tasaIva = elem.iva === "R" ? 15 : 26;
         const producto = datos.find(dato => dato.CODIGO?.trim() == elem.cod_fabrica.trim());
@@ -266,10 +265,15 @@ async function cambiarPrecioLanus(datos,productos){
 
                 const costoIva = (elem.costodolar + elem.impuestos) * parseFloat(dolar.value);
                 const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
-
                 elem.precio_venta = parseFloat((costoIva + utilidad).toFixed(2));
             }else{
+                elem.costo = parseFloat((producto.PRECIO.trim()));
+                elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
 
+                const costoIva = (elem.costo + elem.impuestos);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+
+                elem.precio_venta = parseFloat((costoIva + utilidad).toFixed(2));
             };
         }
     };

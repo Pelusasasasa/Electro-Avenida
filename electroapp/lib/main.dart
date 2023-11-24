@@ -1,6 +1,6 @@
-
-import 'package:electroapp/screens/counter_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:electroapp/src/pages/buscador_page.dart';
+
 
 void main(){
   runApp( const MyApp());
@@ -11,12 +11,9 @@ class MyApp extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.yellow,
-      ),
-      home: const CounterScreen()
+      home: BuscadorPage()
     );
   }
 
