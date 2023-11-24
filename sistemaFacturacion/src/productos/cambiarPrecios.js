@@ -55,7 +55,7 @@ const rellenarStock = async(lista,lista2)=>{
     };
 
     for await(let elem of lista){
-        if (elem === "GOMEZ") {
+        if (elem === "GOMEZ" || elem === "LANUS") {
             const option = document.createElement('option');
             option.value = elem;
             option.classList.add('provedor');
@@ -78,9 +78,9 @@ archivo.addEventListener('change',e=>{
         let productos = [];
         
         if (select.options[select.selectedIndex].classList.contains('provedor')) {
-            productos =(await axios.get(`${URL}productos/provedores/${select.value}`)).data;    
+            productos =(await axios.get(`${URL}productos/provedores/${select.value}`,configAxios)).data;    
         }else{
-            productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`)).data;
+            productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`),configAxios).data;
         };
 
         if (select.value === "SAN JUSTO") {
@@ -96,6 +96,9 @@ archivo.addEventListener('change',e=>{
         }else if(select.value === "GOMEZ"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Hoja1"]);
             cambiarPrecioGomez(datos,productos);
+        }else if(select.value === "LANUS"){
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Hoja1"]);
+            cambiarPrecioLanus(datos,productos);
         }
 
         llenarListaVieja(productos);
@@ -247,7 +250,31 @@ async function cambiarPrecioGomez(datos,productos){
     };
 
     llenarListaNueva(productos);
-}
+};
+
+async function cambiarPrecioLanus(datos,productos){
+    console.log(productos.length)
+    for await (let elem of productos){
+        const tasaIva = elem.iva === "R" ? 15 : 26;
+        const producto = datos.find(dato => dato.CODIGO?.trim() == elem.cod_fabrica.trim());
+
+        if(producto){
+            producto.PRECIO = (producto.PRECIO.split(',',2)[0]).replace(/\./g, '');
+            if(elem.costodolar !== 0){
+                elem.costodolar = parseFloat((producto.PRECIO.trim() / parseFloat(dolar.value)).toFixed(2));
+                elem.impuestos = parseFloat(redondear(elem.costodolar * tasaIva / 100,2));
+
+                const costoIva = (elem.costodolar + elem.impuestos) * parseFloat(dolar.value);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+
+                elem.precio_venta = parseFloat((costoIva + utilidad).toFixed(2));
+            }else{
+
+            };
+        }
+    };
+    llenarListaNueva(productos);
+};
 
 confirmar.addEventListener('click',async e=>{
     for await (let producto of productosAGuardar){
