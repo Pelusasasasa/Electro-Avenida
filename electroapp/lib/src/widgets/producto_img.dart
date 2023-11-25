@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ProductoImg extends StatelessWidget {
-const ProductoImg({ Key? key }) : super(key: key);
+const ProductoImg({
+  Key? key,
+  required this.codigo,
+  required this.marca
+  }) : super(key: key);
 
+  final String codigo;
+  final String marca;
+  
   @override
   Widget build(BuildContext context){
     return Padding(
@@ -14,10 +21,10 @@ const ProductoImg({ Key? key }) : super(key: key);
           color: Colors.yellow[50],
           borderRadius: BorderRadius.circular(50)
         ),
-        child: const  Column(
+        child: Column(
           children: [
-            _ImagenProducto(),
-            _MarcaProducto()
+            _ImagenProducto(codigo:codigo),
+            _MarcaProducto(marca:marca)
           ],
         ),
       ),
@@ -26,19 +33,29 @@ const ProductoImg({ Key? key }) : super(key: key);
 }
 
 class _ImagenProducto extends StatelessWidget {
-const _ImagenProducto({ Key? key }) : super(key: key);
+  final String codigo;
+  const _ImagenProducto({
+    Key? key,
+    required this.codigo
+    }) : super(key: key);
 
   @override
   Widget build(BuildContext context){
-    return const Padding(
-      padding: EdgeInsets.all(50),
-      child: Image(image:AssetImage('assets/imgs/azul.png')),
+    return Padding(
+      padding: const EdgeInsets.all(50),
+      child: Image.network('http://192.168.0.101:4000/api/productos/$codigo/image'),
     );
   }
 }
 
 class _MarcaProducto extends StatelessWidget {
-const _MarcaProducto({ Key? key }) : super(key: key);
+
+  final String marca;
+
+const _MarcaProducto({
+  Key? key,
+  required this.marca
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context){
@@ -53,7 +70,7 @@ const _MarcaProducto({ Key? key }) : super(key: key);
                   ),
                 ),
                 padding: const EdgeInsets.all(10),
-                child: const  Text('Marca',
+                child: Text(marca,
                 style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.normal,

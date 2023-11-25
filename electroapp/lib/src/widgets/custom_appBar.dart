@@ -1,19 +1,31 @@
 import 'package:flutter/material.dart';
 
+
 class BuscadorAppBar extends StatelessWidget {
-const BuscadorAppBar({ Key? key }) : super(key: key);
+  final Function getProducto;
+  
+const BuscadorAppBar({ 
+  Key? key,
+  required this.getProducto
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context){
+
+    var texto = "";
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 30),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            const Expanded(
+            Expanded(
               child:  TextField(
-                decoration: InputDecoration(border: OutlineInputBorder(),labelText:'Codigo'),
+                decoration: const InputDecoration(border: OutlineInputBorder(),labelText:'Codigo'),
+                onChanged: (value){
+                  texto = value;
+                },
               ),
             ),
             ElevatedButton(
@@ -25,7 +37,7 @@ const BuscadorAppBar({ Key? key }) : super(key: key);
                 )
               ),
               onPressed: (){
-                print('Pulsando');
+                getProducto(texto);
               }, 
               child: const Text('Buscar',style: TextStyle(
                 fontSize: 20,

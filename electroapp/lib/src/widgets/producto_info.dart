@@ -4,7 +4,7 @@ class ProductoInfo extends StatelessWidget {
 
   final String desc;
   final double precio;
-  final double stock;
+  final String stock;
 
 const ProductoInfo({
   Key? key,
@@ -12,28 +12,29 @@ const ProductoInfo({
   required this.precio,
   required this.stock,
   }) : super(key: key);
+  
 
   @override
   Widget build(BuildContext context){
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 30),
-      child: const Column(
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Title',style: TextStyle(
-            fontSize: 40,
+          Text(desc,style: const TextStyle(
+            fontSize: 35,
             fontWeight: FontWeight.bold
           )),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text('Precio',style: TextStyle(
+              Text('Precio: $precio',style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold
                 )),
                 
-              Text('Stock',style: TextStyle(
+              Text('Stock: $stock',style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold
                 ))
