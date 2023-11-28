@@ -24,7 +24,7 @@ class _BuscadorAppBarState extends State<BuscadorAppBar> {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 30),
+        padding: const EdgeInsets.symmetric(vertical: 30,horizontal: 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -41,6 +41,7 @@ class _BuscadorAppBarState extends State<BuscadorAppBar> {
                 },
               ),
             ),
+            SizedBox(width: 90),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,

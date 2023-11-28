@@ -13,15 +13,16 @@ const ProductoImg({
   @override
   Widget build(BuildContext context){
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
+      padding: const EdgeInsets.symmetric(),
       child: Container(
         width: double.infinity,
-        height: 500,
+        height: 400,
         decoration: BoxDecoration(
           color: Colors.yellow[50],
           borderRadius: BorderRadius.circular(50)
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             _ImagenProducto(codigo:codigo),
             _MarcaProducto(marca:marca)
@@ -41,9 +42,12 @@ class _ImagenProducto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context){
-    return Padding(
-      padding: const EdgeInsets.all(10),
-      child: Image.network('http://192.168.0.101:4000/api/productos/$codigo/image'),
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: Image.network(
+        'http://192.168.0.101:4000/api/productos/$codigo/image',
+        fit:BoxFit.contain
+      ),
     );
   }
 }

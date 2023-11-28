@@ -19,7 +19,7 @@ const ProductoInfo({
   Widget build(BuildContext context){
     var finalDesc;
 
-    if (desc.length > 20) {
+    if (desc.length > 30) {
       finalDesc = desc.substring(0,30);
     }else{
       finalDesc = desc;

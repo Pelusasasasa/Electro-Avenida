@@ -45,8 +45,11 @@ class _BuscadorPageState extends State<BuscadorPage> {
           Expanded(
             child: SingleChildScrollView(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ProductoImg(codigo:product.id,marca:product.marca),
+                  SizedBox(height: 80),
                   ProductoInfo(desc:product.desc,precio:product.precio,stock:product.stock)
                 ]
               ),
