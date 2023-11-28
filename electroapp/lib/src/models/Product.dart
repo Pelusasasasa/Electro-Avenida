@@ -6,7 +6,7 @@ class Product {
   String stock = "0.00";
 
   Product(id,desc,marca,precio,stock){
-    print(precio);
+    print(id);
     this.desc = desc;
     this.id = id;
     this.marca = marca;

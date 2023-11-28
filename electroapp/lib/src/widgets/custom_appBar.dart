@@ -32,16 +32,33 @@ class _BuscadorAppBarState extends State<BuscadorAppBar> {
               child:  TextField(
                 controller: _textController,
                 decoration: const InputDecoration(border: OutlineInputBorder(),labelText:'Codigo'),
-                inputFormatters: [
-                  // FilteringTextInputFormatter.allow(RegExp(r'[0-9-]'))
-                ],
-                keyboardType: TextInputType.multiline,
+                
+                keyboardType: TextInputType.number,
                 onChanged: (value){
-                  texto = value;
+                  if (value.length == 4 && value.substring(3,4) != "-") {
+                    texto = '${value.substring(0,3)}-${value.substring(3,4)}';
+                    _textController.value = _textController.value.copyWith(
+                      text:'${value.substring(0,3)}-${value.substring(3,4)}',
+                      selection: TextSelection.fromPosition(
+                      TextPosition(offset: texto.length )
+                      )
+                    );
+                  }else if(value.length == 8 && value.substring(7,8) != "-"){
+                    texto = '${value.substring(0,7)}-${value.substring(7,8)}';
+                    _textController.value = _textController.value.copyWith(
+                      text:'${value.substring(0,7)}-${value.substring(7,8)}',
+                      selection: TextSelection.fromPosition(
+                      TextPosition(offset: texto.length )
+                      )
+                    );
+                  }else{
+                    texto = value;
+                  }
+                  
                 },
               ),
             ),
-            SizedBox(width: 90),
+            const SizedBox(width: 90),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,

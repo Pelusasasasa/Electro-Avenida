@@ -21,6 +21,8 @@ class _BuscadorPageState extends State<BuscadorPage> {
     var res = await http.get(url);
     String body = utf8.decode(res.bodyBytes);
     final jsonData = jsonDecode(body);
+    print(texto);
+    print(jsonData);
 
     product = Product(
       jsonData['_id'],
@@ -49,7 +51,7 @@ class _BuscadorPageState extends State<BuscadorPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   ProductoImg(codigo:product.id,marca:product.marca),
-                  SizedBox(height: 80),
+                  const SizedBox(height: 80),
                   ProductoInfo(desc:product.desc,precio:product.precio,stock:product.stock)
                 ]
               ),
