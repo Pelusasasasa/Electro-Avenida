@@ -16,7 +16,7 @@ const ProductoImg({
       padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
       child: Container(
         width: double.infinity,
-        height: 400,
+        height: 500,
         decoration: BoxDecoration(
           color: Colors.yellow[50],
           borderRadius: BorderRadius.circular(50)

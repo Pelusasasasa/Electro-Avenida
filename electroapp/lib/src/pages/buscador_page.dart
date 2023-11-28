@@ -14,7 +14,7 @@ const BuscadorPage({ Key? key }) : super(key: key);
 }
 
 class _BuscadorPageState extends State<BuscadorPage> {
-    var product = Product("", "", "", 0.00, "");
+    var product = Product("035-020", "Descripcion", "", 0.00, "");
 
   void getProducto(texto) async{
     var url = Uri.http('192.168.0.101:4000','/api/productos/$texto');

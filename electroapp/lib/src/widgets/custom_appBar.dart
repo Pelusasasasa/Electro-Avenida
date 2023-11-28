@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 
-class BuscadorAppBar extends StatelessWidget {
+class BuscadorAppBar extends StatefulWidget {
   final Function getProducto;
   
 const BuscadorAppBar({ 
@@ -9,6 +10,12 @@ const BuscadorAppBar({
   required this.getProducto,
   }) : super(key: key);
 
+  @override
+  State<BuscadorAppBar> createState() => _BuscadorAppBarState();
+}
+
+class _BuscadorAppBarState extends State<BuscadorAppBar> {
+  TextEditingController _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context){
@@ -23,12 +30,13 @@ const BuscadorAppBar({
           children: [
             Expanded(
               child:  TextField(
+                controller: _textController,
                 decoration: const InputDecoration(border: OutlineInputBorder(),labelText:'Codigo'),
-                keyboardType: TextInputType.number,
+                inputFormatters: [
+                  // FilteringTextInputFormatter.allow(RegExp(r'[0-9-]'))
+                ],
+                keyboardType: TextInputType.multiline,
                 onChanged: (value){
-                  if (value.length == 4 && !value.contains('-')) {
-                    print(value);
-                  }
                   texto = value;
                 },
               ),
@@ -46,7 +54,7 @@ const BuscadorAppBar({
                   if (!currentFocus.hasPrimaryFocus) {
                       currentFocus.unfocus();
                   }
-                getProducto(texto);
+                widget.getProducto(texto);
               }, 
               child: const Text('Buscar',style: TextStyle(
                 fontSize: 20,
@@ -59,4 +67,3 @@ const BuscadorAppBar({
     );
   }
 }
-

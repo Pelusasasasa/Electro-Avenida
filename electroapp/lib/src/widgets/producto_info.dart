@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class ProductoInfo extends StatelessWidget {
 
   final String desc;
-  final double precio;
+  final num precio;
   final String stock;
+
 
 const ProductoInfo({
   Key? key,
@@ -16,14 +17,22 @@ const ProductoInfo({
 
   @override
   Widget build(BuildContext context){
+    var finalDesc;
+
+    if (desc.length > 20) {
+      finalDesc = desc.substring(0,30);
+    }else{
+      finalDesc = desc;
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-            child: Text(desc,style: const TextStyle(
-              fontSize: 25,
+            child: Text(finalDesc,style: const TextStyle(
+              fontSize: 22,
               fontWeight: FontWeight.bold
             )),
           ),
@@ -32,12 +41,14 @@ const ProductoInfo({
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text('Precio:  \$$precio',style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
+                  color: Colors.grey,
                   fontWeight: FontWeight.bold
                 )),
                 
               Text('Stock: $stock',style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 18,
+                  color: Colors.grey,
                   fontWeight: FontWeight.bold
                 ))
             ],
