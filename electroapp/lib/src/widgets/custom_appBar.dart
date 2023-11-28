@@ -6,8 +6,9 @@ class BuscadorAppBar extends StatelessWidget {
   
 const BuscadorAppBar({ 
   Key? key,
-  required this.getProducto
+  required this.getProducto,
   }) : super(key: key);
+
 
   @override
   Widget build(BuildContext context){
@@ -23,7 +24,11 @@ const BuscadorAppBar({
             Expanded(
               child:  TextField(
                 decoration: const InputDecoration(border: OutlineInputBorder(),labelText:'Codigo'),
+                keyboardType: TextInputType.number,
                 onChanged: (value){
+                  if (value.length == 4 && !value.contains('-')) {
+                    print(value);
+                  }
                   texto = value;
                 },
               ),
@@ -37,6 +42,10 @@ const BuscadorAppBar({
                 )
               ),
               onPressed: (){
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                  if (!currentFocus.hasPrimaryFocus) {
+                      currentFocus.unfocus();
+                  }
                 getProducto(texto);
               }, 
               child: const Text('Buscar',style: TextStyle(

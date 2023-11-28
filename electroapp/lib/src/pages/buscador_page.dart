@@ -4,7 +4,17 @@ import 'dart:convert';
 import 'package:electroapp/src/models/product.dart';
 import 'package:http/http.dart' as http;
 
-  var product = Product("035-020", "", "MARCA", 0.00, "");
+
+
+class BuscadorPage extends StatefulWidget {
+const BuscadorPage({ Key? key }) : super(key: key);
+
+  @override
+  State<BuscadorPage> createState() => _BuscadorPageState();
+}
+
+class _BuscadorPageState extends State<BuscadorPage> {
+    var product = Product("", "", "", 0.00, "");
 
   void getProducto(texto) async{
     var url = Uri.http('192.168.0.101:4000','/api/productos/$texto');
@@ -20,11 +30,10 @@ import 'package:http/http.dart' as http;
       jsonData['stock']
     );
 
+    setState(() {
+      
+    });
   }
-
-
-class BuscadorPage extends StatelessWidget {
-const BuscadorPage({ Key? key }) : super(key: key);
 
   @override
   Widget build(BuildContext context){
@@ -32,7 +41,7 @@ const BuscadorPage({ Key? key }) : super(key: key);
     return Scaffold(
       body:Column(
         children: [
-          const BuscadorAppBar(getProducto:getProducto),
+          BuscadorAppBar(getProducto:getProducto),
           Expanded(
             child: SingleChildScrollView(
               child: Column(

@@ -13,10 +13,10 @@ const ProductoImg({
   @override
   Widget build(BuildContext context){
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
       child: Container(
         width: double.infinity,
-        height: 500,
+        height: 400,
         decoration: BoxDecoration(
           color: Colors.yellow[50],
           borderRadius: BorderRadius.circular(50)
@@ -42,7 +42,7 @@ class _ImagenProducto extends StatelessWidget {
   @override
   Widget build(BuildContext context){
     return Padding(
-      padding: const EdgeInsets.all(50),
+      padding: const EdgeInsets.all(10),
       child: Image.network('http://192.168.0.101:4000/api/productos/$codigo/image'),
     );
   }

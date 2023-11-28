@@ -21,15 +21,17 @@ const ProductoInfo({
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(desc,style: const TextStyle(
-            fontSize: 35,
-            fontWeight: FontWeight.bold
-          )),
+          Center(
+            child: Text(desc,style: const TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.bold
+            )),
+          ),
           const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text('Precio: $precio',style: const TextStyle(
+              Text('Precio:  \$$precio',style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold
                 )),

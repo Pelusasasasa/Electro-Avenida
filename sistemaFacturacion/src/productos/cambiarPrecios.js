@@ -40,13 +40,18 @@ select.addEventListener('change',async e=>{
             title: "La columna de codigo de fabrica tiene que llamarse CODIGO y la de costo PRECIO en el EXCEL",
             returnFocus:false
         });
+    }else if(select.value === "MB"){
+        await sweet.fire({
+            title:"Borrar la prime fila dejando como primera la fila de codigo y descripcion y tambien poner el nombre de la hoja como Lista",
+            returnFocus:false
+        })
     }
     descuento.focus();
 });
 
 const rellenarStock = async(lista,lista2)=>{
     for await(let elem of lista){
-        if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC") {
+        if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC" || elem === "MB") {
             const option = document.createElement('option');
             option.value = elem;
             option.text = "M - " + elem;
@@ -81,6 +86,7 @@ archivo.addEventListener('change',e=>{
             productos =(await axios.get(`${URL}productos/provedores/${select.value}`,configAxios)).data;    
         }else{
             productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`),configAxios).data;
+            console.log(productos)
         };
 
         if (select.value === "SAN JUSTO") {
@@ -93,6 +99,10 @@ archivo.addEventListener('change',e=>{
         }else if(select.value === "INTERELEC"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Hoja1"]);
             cambiarPrecioInterelec(datos,productos);
+        }else if(select.value === "MB"){
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
+            console.log(productos)
+            cambiarPrecioMB(datos,productos);
         }else if(select.value === "GOMEZ"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Hoja1"]);
             cambiarPrecioGomez(datos,productos);
@@ -223,6 +233,17 @@ async function cambiarPrecioInterelec(datos,productos) {
         }
     };
     llenarListaNueva(productos);
+};
+
+async function cambiarPrecioMB(datos,productos){
+    console.log(productos)
+    for await (let elem of productos){
+        const tasaIva = elem.iva === "R" ? 15 : 26;
+        const producto = datos.find(dato = dato.Codigo == elem.cod_fabrica);
+        if (producto) {
+            console.log(producto)
+        }
+    }
 };
 
 async function cambiarPrecioGomez(datos,productos){
