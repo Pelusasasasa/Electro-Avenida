@@ -114,7 +114,7 @@ async function cambiarPrecios(dolar) {
         alerta.classList.remove('none');
         const costoMasIva = parseFloat(redondear((parseFloat(producto.impuestos)+parseFloat(producto.costodolar)),2))
         const costoTotal = parseFloat(redondear(dolar * costoMasIva,2));
-        producto.precio_venta = (costoTotal+((parseFloat(producto.utilidad)*costoTotal/100))).toFixed(2);
+        producto.precio_venta = Math.round(costoTotal+((parseFloat(producto.utilidad)*costoTotal/100))).toFixed(2);
         producto.maquina = verNombrePc();
         producto.vendedor = "ELBIO";
         await axios.put(`${URL}productos/${producto._id}`,producto,configAxios);

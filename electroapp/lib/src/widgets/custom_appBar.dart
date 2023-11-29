@@ -38,6 +38,8 @@ class _BuscadorAppBarState extends State<BuscadorAppBar> {
                     ? IconButton(onPressed: (){
                       setState(() {
                         _textController.clear();
+                        FocusScopeNode currentFocus = FocusScope.of(context);
+                        currentFocus.requestFocus();
                       });
                     }, icon: const Icon(Icons.clear)) : null
                   ),
@@ -67,7 +69,9 @@ class _BuscadorAppBarState extends State<BuscadorAppBar> {
                 },
               ),
             ),
+
             const SizedBox(width: 40),
+
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,

@@ -21,7 +21,7 @@ class _BuscadorPageState extends State<BuscadorPage> {
     var res = await http.get(url);
     String body = utf8.decode(res.bodyBytes);
     final jsonData = jsonDecode(body);
-    print(jsonData);
+    
     product = Product(
       jsonData['_id'],
       jsonData['descripcion'],

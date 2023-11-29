@@ -43,6 +43,12 @@ modificar.addEventListener('click',async e=>{
             producto.precio_venta = ((parseFloat(producto.costo) + parseFloat(producto.impuestos))*parseFloat(producto.utilidad)/100) +(parseFloat(producto.costo) + parseFloat(producto.impuestos))
             producto.impuestos = (producto.impuestos).toFixed(2)
             producto.precio_venta = (producto.precio_venta).toFixed(2);
+        }else{
+            producto.costodolar = (parseFloat(producto.costodolar) + parseFloat(producto.costodolar)*porcentaje/100).toFixed(2);
+            producto.impuestos = parseFloat(((producto.iva === "N") ? (parseFloat(producto.costodolar) * 26 / 100) : (parseFloat(producto.costodolar) * 15 / 100)).toFixed(2));
+            const costoIva = Math.round((parseFloat(producto.costodolar) + parseFloat(producto.impuestos)) * dolar);
+            const utilidad = Math.round(costoIva * producto.utilidad / 100);
+            producto.precio_venta = Math.round(utilidad + costoIva).toFixed(2);
         }
         producto.vendedor = vendedor.nombre;
         producto.maquina = verNombrePc();
