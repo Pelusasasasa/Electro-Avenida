@@ -7,7 +7,6 @@ const URL = process.env.URL;
 const sweet = require('sweetalert2');
 
 const select = document.getElementById('marca');
-const descuento = document.getElementById('descuento');
 const dolar = document.getElementById('dolar');
 const archivo = document.getElementById('archivo');
 
@@ -46,7 +45,7 @@ select.addEventListener('change',async e=>{
             returnFocus:false
         })
     }
-    descuento.focus();
+    dolar.focus();
 });
 
 const rellenarStock = async(lista,lista2)=>{
@@ -60,7 +59,7 @@ const rellenarStock = async(lista,lista2)=>{
     };
 
     for await(let elem of lista){
-        if (elem === "GOMEZ" || elem === "LANUS") {
+        if (elem === "GOMEZ" || elem === "LANUS" || elem === "PAGLIAROLI") {
             const option = document.createElement('option');
             option.value = elem;
             option.classList.add('provedor');
@@ -85,10 +84,8 @@ archivo.addEventListener('change',e=>{
         if (select.options[select.selectedIndex].classList.contains('provedor')) {
             productos =(await axios.get(`${URL}productos/provedores/${select.value}`,configAxios)).data;    
         }else{
-            productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`),configAxios).data;
-            console.log(productos)
+            productos = (await axios.get(`${URL}productos/marcas/${select.value}`,configAxios)).data;
         };
-
         if (select.value === "SAN JUSTO") {
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Export"]);
             cambiarPreciosSanJusto(datos,productos);
@@ -109,6 +106,9 @@ archivo.addEventListener('change',e=>{
         }else if(select.value === "LANUS"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Hoja1"]);
             cambiarPrecioLanus(datos,productos);
+        }else if(select.value === "PAGLIAROLI"){
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
+            cambiarPrecioPagliaroli(datos,productos);
         }
 
         llenarListaVieja(productos);
@@ -172,6 +172,33 @@ const llenarListaNueva = async(lista)=>{
     }
 };
 
+async function cambiarPrecioPagliaroli(datos,productos){
+    for await(let elem of productos){
+        let tasaIva = elem.iva === "R" ? 15 : 26;
+        let producto = datos.find(n => n.Código == elem.cod_fabrica);
+        if (producto) {
+            if (elem.costodolar !== 0) {
+                elem.costodolar = parseFloat(redondear(producto.Precio / parseFloat(dolar.value),2));
+                elem.impuestos = parseFloat(redondear(elem.costodolar * tasaIva / 100,2));
+                const costoIva = (elem.costodolar + elem.impuestos) * parseFloat(dolar.value);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+                elem.precio_venta = parseFloat((Math.round(costoIva + utilidad)).toFixed(2));
+                
+            }else{
+                elem.costo = parseFloat(producto.Precio.toFixed(2));
+                elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
+                const costoIva  = elem.costo + elem.impuestos;
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+                elem.precio_venta = parseFloat((Math.round(costoIva + utilidad)).toFixed(2));
+            }
+            if (elem._id === "051-006-2") {
+                console.log(elem)
+            }
+        }
+    }
+    llenarListaNueva(productos);
+}
+
 async function cambiarPreciosSanJusto(nuevos,productos) {
     for await (let elem of productos){
         const tasaIva = elem.iva === "R" ? 15 : 26;
@@ -179,12 +206,12 @@ async function cambiarPreciosSanJusto(nuevos,productos) {
         if (producto) {
             if (elem.costodolar !== 0) {
             }else{
-                elem.costo = redondear(producto.PRECIO - (producto.PRECIO * parseFloat(descuento.value) / 100),2);
+                elem.costo = redondear(producto.PRECIO,2);
                 elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
                 const costoIva = parseFloat(elem.costo) + parseFloat(elem.impuestos);
                 const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
 
-                elem.precio_venta = costoIva + utilidad;
+                elem.precio_venta = parseFloat((Math.round(costoIva + utilidad)).toFixed(2));
             }
         }
     }
@@ -300,6 +327,8 @@ async function cambiarPrecioLanus(datos,productos){
     };
     llenarListaNueva(productos);
 };
+
+
 
 confirmar.addEventListener('click',async e=>{
     for await (let producto of productosAGuardar){
