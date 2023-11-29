@@ -14,16 +14,14 @@ const BuscadorPage({ Key? key }) : super(key: key);
 }
 
 class _BuscadorPageState extends State<BuscadorPage> {
-    var product = Product("035-020", "Descripcion", "", 0.00, "");
+    var product = Product("1", "DESCRIPCION", "MARCA", 0.00, "STOCK");
 
   void getProducto(texto) async{
     var url = Uri.http('192.168.0.101:4000','/api/productos/$texto');
     var res = await http.get(url);
     String body = utf8.decode(res.bodyBytes);
     final jsonData = jsonDecode(body);
-    print(texto);
     print(jsonData);
-
     product = Product(
       jsonData['_id'],
       jsonData['descripcion'],

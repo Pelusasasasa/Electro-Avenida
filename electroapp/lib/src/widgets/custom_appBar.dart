@@ -31,7 +31,16 @@ class _BuscadorAppBarState extends State<BuscadorAppBar> {
             Expanded(
               child:  TextField(
                 controller: _textController,
-                decoration: const InputDecoration(border: OutlineInputBorder(),labelText:'Codigo'),
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText:'Codigo',
+                  suffixIcon: _textController.text.isNotEmpty
+                    ? IconButton(onPressed: (){
+                      setState(() {
+                        _textController.clear();
+                      });
+                    }, icon: const Icon(Icons.clear)) : null
+                  ),
                 
                 keyboardType: TextInputType.number,
                 onChanged: (value){
@@ -58,7 +67,7 @@ class _BuscadorAppBarState extends State<BuscadorAppBar> {
                 },
               ),
             ),
-            const SizedBox(width: 90),
+            const SizedBox(width: 40),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.yellow,
