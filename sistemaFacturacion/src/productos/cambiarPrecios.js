@@ -41,7 +41,7 @@ select.addEventListener('change',async e=>{
         });
     }else if(select.value === "MB"){
         await sweet.fire({
-            title:"Borrar la prime fila dejando como primera la fila de codigo y descripcion y tambien poner el nombre de la hoja como Lista",
+            title:"Borrar la prime fila dejando como primera la fila de Codigo y Precio(precio final en pesos) y tambien poner el nombre de la hoja como Lista",
             returnFocus:false
         })
     }
@@ -130,7 +130,7 @@ const llenarListaVieja = async(lista)=>{
         tdCodigo.innerHTML = elem._id;
         tdDescripcion.innerHTML = elem.descripcion;
         tdCostoViejo.innerHTML = elem.costo;
-        tdCostoDolaresViejo.innerHTML = elem.costodolar.toFixed(2);
+        tdCostoDolaresViejo.innerHTML = elem.costodolar?.toFixed(2);
         tdPrecioViejo.innerHTML = elem.precio_venta.toFixed(2);
         tdCodFabrica.innerText = elem.cod_fabrica;
 
@@ -263,14 +263,26 @@ async function cambiarPrecioInterelec(datos,productos) {
 };
 
 async function cambiarPrecioMB(datos,productos){
-    console.log(productos)
     for await (let elem of productos){
         const tasaIva = elem.iva === "R" ? 15 : 26;
-        const producto = datos.find(dato = dato.Codigo == elem.cod_fabrica);
+        const producto = datos.find(dato => dato.Codigo == elem.cod_fabrica);
         if (producto) {
-            console.log(producto)
+            if (elem.costodolar !== 0) {
+                elem.costodolar = parseFloat((producto.Precio / parseFloat(dolar.value)).toFixed(2));
+                elem.impuestos = parseFloat(redondear(elem.costodolar * tasaIva / 100,2));
+                const costoIva = parseFloat(((elem.costodolar + elem.impuestos) * parseFloat(dolar.value)).toFixed(2));
+                const utilidad = parseFloat((costoIva * parseFloat(elem.utilidad) / 100).toFixed(2));
+                elem.precio_venta = Math.round(costoIva + utilidad);
+            }else{
+                elem.costo = parseFloat(producto.Precio.toFixed(2));
+                elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
+                const costoIva = parseFloat(elem.costo) + parseFloat(elem.impuestos);
+                const utilidad = parseFloat((costoIva * parseFloat(elem.utilidad) / 100).toFixed(2));
+                elem.precio_venta = Math.round(costoIva + utilidad);
+            }
         }
     }
+    llenarListaNueva(productos);
 };
 
 async function cambiarPrecioGomez(datos,productos){

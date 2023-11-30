@@ -5,6 +5,8 @@ class ProductoInfo extends StatelessWidget {
   final String desc;
   final num precio;
   final String stock;
+  final bool oferta;
+  final num precioOferta;
 
 
 const ProductoInfo({
@@ -12,6 +14,8 @@ const ProductoInfo({
   required this.desc,
   required this.precio,
   required this.stock,
+  required this.oferta,
+  required this.precioOferta,
   }) : super(key: key);
   
 
@@ -40,12 +44,32 @@ const ProductoInfo({
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Text('Precio:  \$$precio',style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold
-                )),
-                
+              oferta ?  
+              //Se se cumple la condicion
+              Column(
+                children: [
+                  Text('Oferta; \$$precioOferta',style: const TextStyle(
+                    color:Colors.red,
+                    fontSize: 23
+                  )),
+                  Text('Precio:  \$$precio',style: TextStyle(
+                      fontSize: 18,
+                      decoration: oferta ? TextDecoration.lineThrough : null,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold
+                    )),
+                ],
+              )
+              : 
+              //Si no se cumple la condicion
+              Text('Precio:  \$$precio',style: TextStyle(
+                      fontSize: 18,
+                      decoration: oferta ? TextDecoration.lineThrough : null,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.bold
+              )),
+              
+              //Se ejecuta siempre
               Text('Stock: $stock',style: const TextStyle(
                   fontSize: 18,
                   color: Colors.grey,
