@@ -263,7 +263,6 @@ async function cambiarPrecioInterelec(datos,productos) {
 };
 
 async function cambiarPrecioMB(datos,productos){
-    console.log(productos)
     for await (let elem of productos){
         const tasaIva = elem.iva === "R" ? 15 : 26;
         const producto = datos.find(dato = dato.Codigo == elem.cod_fabrica);
@@ -285,14 +284,14 @@ async function cambiarPrecioGomez(datos,productos){
                 const costoIva = (elem.costodolar + elem.impuestos) * parseFloat(dolar.value);
                 const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
 
-                elem.precio_venta = parseFloat((costoIva + utilidad).toFixed(2));
+                elem.precio_venta = Math.round(costoIva + utilidad);
             }else{
                 elem.costo = parseFloat(redondear(producto.Precio,2));
                 elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
 
                 const costoIva = (elem.costo + elem.impuestos);
                 const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
-                elem.precio_venta = parseFloat((costoIva + utilidad).toFixed(2));
+                elem.precio_venta = Math.round(costoIva + utilidad);
             }
         }
     };

@@ -27,9 +27,8 @@ window.addEventListener('load',async e=>{
     listarRubros(rubros);
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
-    let nextDay = new Date(hasta.value);
-    nextDay.setDate(date.getDate() + 1);
-    const movimientos = (await axios.get(`${URL}movProductos/${desde.value}/${nextDay}/${select.value}`)).data;
+    
+    const movimientos = (await axios.get(`${URL}movProductos/${desde.value}/${hasta.value}/${select.value}`)).data;
     const movimientosSinPP = movimientos.filter(movimiento => movimiento.tipo_pago !== "PP")
     listarMovimientos(movimientosSinPP);
 });

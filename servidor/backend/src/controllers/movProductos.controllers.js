@@ -58,11 +58,10 @@ movProductosCTRL.modificarMovimiento = async(req,res)=>{
 
 movProductosCTRL.getsForRubro = async(req,res)=>{
     const {rubro,desde,hasta} = req.params;
-    const diaSiguiente = new Date(hasta.slice(0,15));
     const movimientos = await movProducto.find({$and:[
         {rubro:rubro},
         {fecha:{$gte:desde}},
-        {fecha:{$lte:diaSiguiente}}
+        {fecha:{$lte:hasta}}
     ]});
     res.send(movimientos)
 }
