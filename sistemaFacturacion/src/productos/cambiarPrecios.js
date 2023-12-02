@@ -297,14 +297,14 @@ async function cambiarPrecioGomez(datos,productos){
                 const costoIva = (elem.costodolar + elem.impuestos) * parseFloat(dolar.value);
                 const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
 
-                elem.precio_venta = parseFloat((costoIva + utilidad).toFixed(2));
+                elem.precio_venta = Math.round(costoIva + utilidad);
             }else{
                 elem.costo = parseFloat(redondear(producto.Precio,2));
                 elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
 
                 const costoIva = (elem.costo + elem.impuestos);
                 const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
-                elem.precio_venta = parseFloat((costoIva + utilidad).toFixed(2));
+                elem.precio_venta = Math.round(costoIva + utilidad);
             }
         }
     };

@@ -371,7 +371,9 @@ const ponerNotificaciones = async(texto,titulo='!Info')=>{
 
     setInterval(() => {
         notificacion.classList.add('cerrando');
-    }, 5000);
+    }, 3000);
+
+    notificacion.classList.remove('cerrando');
 };
 
 const ultimasFacturas = async(puntoVenta,tipoComp)=>{
