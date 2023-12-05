@@ -35,9 +35,10 @@ window.addEventListener('load',async e=>{
     listarDatos(datos.filter(dato=>(dato.tipo_comp !== "Presupuesto" && dato.tipo_comp !== "Descuento")));
 });
 
-desde.addEventListener('change',async e=>{
-    datos = (await axios.get(`${URL}dat_comp/fechaImp/${desde.value}/${hasta.value}`,configAxios)).data;
-    listarDatos(datos.filter(dato=>(dato.tipo_comp !== "Presupuesto" && dato.tipo_comp !== "Descuento")));
+desde.addEventListener('keypress',async e=>{
+    if (e.keyCode === 13) {
+        hasta.focus();
+    }
 });
 
 hasta.addEventListener('change',async e=>{
