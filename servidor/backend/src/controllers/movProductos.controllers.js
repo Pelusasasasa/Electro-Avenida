@@ -60,8 +60,8 @@ movProductosCTRL.getsForRubro = async(req,res)=>{
     const {rubro,desde,hasta} = req.params;
     const movimientos = await movProducto.find({$and:[
         {rubro:rubro},
-        {fecha:{$gte:desde}},
-        {fecha:{$lte:hasta}}
+        {fecha:{$gte:new Date(desde + "T00:00:00.000Z")}},
+        {fecha:{$lte:new Date(hasta + "T23:59:59.000Z")}}
     ]});
     res.send(movimientos)
 }

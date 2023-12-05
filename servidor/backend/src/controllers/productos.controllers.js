@@ -144,12 +144,11 @@ productosCTRL.getStockCero = async(req,res)=>{
     res.send(productos)
 };
 
-
 productosCTRL.putStockCero = async(req,res)=>{
     const id = req.body._id;
     const producto = await Productos.findByIdAndUpdate({_id:id},req.body,{new:true});
     res.send(producto);
-}
+};
 
 
 

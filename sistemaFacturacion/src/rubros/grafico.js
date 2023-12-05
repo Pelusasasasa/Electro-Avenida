@@ -1,4 +1,5 @@
 const axios = require("axios");
+
 const { cerrarVentana } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
@@ -56,54 +57,7 @@ const listarRubros = (lista)=>{
 };
 
 const listarMovimientos = (lista)=>{
-    tbody.innerHTML = ""
-    let suma = 0;
-    for(let movimiento of lista){
-        const tr = document.createElement('tr');
-
-        const tdFecha = document.createElement('td');
-        const tdCodigoCliente = document.createElement('td');
-        const tdCliente = document.createElement('td');
-        const tdCodigoProducto = document.createElement('td');
-        const tdProducto = document.createElement('td');
-        const tdEgreso = document.createElement('td');
-        const tdIngreso = document.createElement('td');
-        const tdPrecio = document.createElement('td');
-        const tdTotal = document.createElement('td');
-        
-        const fecha = movimiento.fecha.slice(0,10).split('-',3);
-        tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
-        tdCodigoCliente.innerHTML = movimiento.codCliente;
-        tdCliente.innerHTML = movimiento.cliente.slice(0,15);
-        tdCodigoProducto.innerHTML = movimiento.codProd;
-        tdProducto.innerHTML = movimiento.descripcion.slice(0,20);
-        tdEgreso.innerHTML = movimiento.egreso.toFixed(2);
-        tdIngreso.innerHTML = movimiento.ingreso.toFixed(2);
-        tdPrecio.innerHTML = movimiento.precio_unitario.toFixed(2);
-        tdTotal.innerHTML = movimiento.total.toFixed(2);
-
-        tdEgreso.classList.add('text-right');
-        tdIngreso.classList.add('text-right');
-        tdPrecio.classList.add('text-right');
-        tdTotal.classList.add('text-right');
-
-        // tr.appendChild();
-        tr.appendChild(tdFecha);
-        tr.appendChild(tdCodigoCliente);
-        tr.appendChild(tdCliente);
-        tr.appendChild(tdCodigoProducto)
-        tr.appendChild(tdProducto);
-        tr.appendChild(tdEgreso);
-        tr.appendChild(tdIngreso);
-        tr.appendChild(tdPrecio);
-        tr.appendChild(tdTotal);
-        
-        tbody.appendChild(tr);
-
-
-        suma += movimiento.total;
-    }
-    total.value = suma.toFixed(2);
+    tbody.innerHTML = "";
 };
 
 hasta.addEventListener('keypress',async e=>{
@@ -112,7 +66,43 @@ hasta.addEventListener('keypress',async e=>{
         let hoy = (parseInt(hasta.value.split('-',3)[2]));
         nextDay.setDate(hoy + 1);
         const movimientos = (await axios.get(`${URL}movProductos/${desde.value}/${nextDay}/${select.value}`)).data;
-        listarMovimientos(movimientos);
+        const movimientosSinPP = movimientos.filter(movimiento => movimiento.tipo_pago !== "PP")
+        listarMovimientos(movimientosSinPP);
     }
-
 });
+
+
+function probarD3(){
+    const mesesDelAno = [
+        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+      ];
+
+    {
+        // Declare the chart dimensions and margins.
+        const width = 1100;
+        const height = 400;
+              
+        //Creamos el contenedro de svg
+        const svg = d3.create("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+
+        //Decalramos el eje x
+        const x = d3.scaleUtc()
+            .domain([new Date("2023-01-01"), new Date("2023-12-31")])
+            .range([marginLeft, width - marginRight]);
+    
+
+        //Agremaos el ele x
+        svg.append("g")
+            .attr("transform", `translate(0,${height - marginBottom})`)
+            .call(d3.axisBottom(x));
+        // Return the SVG element.
+        return svg.node();
+      }
+    
+}
+const body = document.querySelector('.datos');
+body.appendChild(probarD3());

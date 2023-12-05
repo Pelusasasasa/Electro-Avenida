@@ -69,7 +69,7 @@ exportar.addEventListener('click',async e=>{
 });
 
 const listarDatos = (lista)=>{
-
+    console.log(lista)
     lista.sort((a,b)=>{
         if (a.fecha_comp>b.fecha_comp) {
             return 1
@@ -158,58 +158,60 @@ const listarDatos = (lista)=>{
 
         tbody.appendChild(tr);
     }
+    if (lista.length > 0) {
+        const tr = document.createElement('tr');
 
-    const tr = document.createElement('tr');
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+        const td3 = document.createElement('td');
+        const td4 = document.createElement('td');
+        const td5 = document.createElement('td');
+        const tdGravado = document.createElement('td');
+        const td6 = document.createElement('td');
+        const td7 = document.createElement('td');
+        const tdIva = document.createElement('td');
+        const tdPDGR = document.createElement('td');
+        const tdRDGR = document.createElement('td');
+        const tdPIVA = document.createElement('td');
+        const tdRIVA = document.createElement('td');
+        const tdTotal = document.createElement('td');
 
-    const td1 = document.createElement('td');
-    const td2 = document.createElement('td');
-    const td3 = document.createElement('td');
-    const td4 = document.createElement('td');
-    const td5 = document.createElement('td');
-    const tdGravado = document.createElement('td');
-    const td6 = document.createElement('td');
-    const td7 = document.createElement('td');
-    const tdIva = document.createElement('td');
-    const tdPDGR = document.createElement('td');
-    const tdRDGR = document.createElement('td');
-    const tdPIVA = document.createElement('td');
-    const tdRIVA = document.createElement('td');
-    const tdTotal = document.createElement('td');
+        tr.classList.add('bold')
 
-    tr.classList.add('bold')
+        tdGravado.innerHTML = gravado.toFixed(2);
+        tdIva.innerHTML = iva.toFixed(2);
+        tdPDGR.innerHTML = pdgr.toFixed(2);
+        tdRDGR.innerHTML = rdgr.toFixed(2);
+        tdPIVA.innerHTML = piva.toFixed(2);
+        tdRIVA.innerHTML = riva.toFixed(2);
+        tdTotal.innerHTML = total.toFixed(2);
 
-    tdGravado.innerHTML = gravado.toFixed(2);
-    tdIva.innerHTML = iva.toFixed(2);
-    tdPDGR.innerHTML = pdgr.toFixed(2);
-    tdRDGR.innerHTML = rdgr.toFixed(2);
-    tdPIVA.innerHTML = piva.toFixed(2);
-    tdRIVA.innerHTML = riva.toFixed(2);
-    tdTotal.innerHTML = total.toFixed(2);
+        tdGravado.classList.add('text-right');
+        tdIva.classList.add('text-right');
+        tdPDGR.classList.add('text-right');
+        tdRDGR.classList.add('text-right');
+        tdPIVA.classList.add('text-right');
+        tdRIVA.classList.add('text-right');
+        tdTotal.classList.add('text-right');
 
-    tdGravado.classList.add('text-right');
-    tdIva.classList.add('text-right');
-    tdPDGR.classList.add('text-right');
-    tdRDGR.classList.add('text-right');
-    tdPIVA.classList.add('text-right');
-    tdRIVA.classList.add('text-right');
-    tdTotal.classList.add('text-right');
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tr.appendChild(td3);
+        tr.appendChild(td4);
+        tr.appendChild(td5);
+        tr.appendChild(tdGravado);
+        tr.appendChild(td6);
+        tr.appendChild(td7);
+        tr.appendChild(tdIva);
+        tr.appendChild(tdPDGR);
+        tr.appendChild(tdRDGR);
+        tr.appendChild(tdPIVA);
+        tr.appendChild(tdRIVA);
+        tr.appendChild(tdTotal);
 
-    tr.appendChild(td1);
-    tr.appendChild(td2);
-    tr.appendChild(td3);
-    tr.appendChild(td4);
-    tr.appendChild(td5);
-    tr.appendChild(tdGravado);
-    tr.appendChild(td6);
-    tr.appendChild(td7);
-    tr.appendChild(tdIva);
-    tr.appendChild(tdPDGR);
-    tr.appendChild(tdRDGR);
-    tr.appendChild(tdPIVA);
-    tr.appendChild(tdRIVA);
-    tr.appendChild(tdTotal);
-
-    tbody.appendChild(tr);
+        tbody.appendChild(tr);
+    }
+    
 
     percepBrutosCompras.innerHTML = pdgr.toFixed(2);
     percepIvaCompras.innerHTML = piva.toFixed(2);
