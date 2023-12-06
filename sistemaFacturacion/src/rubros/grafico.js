@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const { cerrarVentana } = require("../funciones");
+const { cerrarVentana, configAxios } = require("../funciones");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -9,7 +9,6 @@ const hasta = document.querySelector('#hasta');
 const select = document.querySelector('#rubros');
 const total = document.querySelector('#total');
 
-const tbody = document.querySelector('tbody');
 
 let date = new Date();
 let day = date.getDate();
@@ -24,12 +23,12 @@ month = month < 10 ? `0${month}` : month;
 window.addEventListener('load',async e=>{
     cerrarVentana();
 
-    const rubros = (await axios.get(`${URL}rubros`)).data;
+    const rubros = (await axios.get(`${URL}rubros`,configAxios)).data;
     listarRubros(rubros);
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
     
-    const movimientos = (await axios.get(`${URL}movProductos/${desde.value}/${hasta.value}/${select.value}`)).data;
+    const movimientos = (await axios.get(`${URL}movProductos/${desde.value}/${hasta.value}/${select.value}`,configAxios)).data;
     const movimientosSinPP = movimientos.filter(movimiento => movimiento.tipo_pago !== "PP")
     listarMovimientos(movimientosSinPP);
 });
@@ -57,7 +56,7 @@ const listarRubros = (lista)=>{
 };
 
 const listarMovimientos = (lista)=>{
-    tbody.innerHTML = "";
+    console.log(lista)
 };
 
 hasta.addEventListener('keypress',async e=>{
@@ -78,27 +77,40 @@ function probarD3(){
         "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
       ];
 
-    {
+      {
         // Declare the chart dimensions and margins.
-        const width = 1100;
+        const width = 640;
         const height = 400;
-              
-        //Creamos el contenedro de svg
+        const marginTop = 20;
+        const marginRight = 20;
+        const marginBottom = 30;
+        const marginLeft = 40;
+      
+        // Declare the x (horizontal position) scale.
+        const x = d3.scaleUtc()
+            .domain([new Date("2023-01-01"), new Date("2024-01-01")])
+            .range([marginLeft, width - marginRight]);
+      
+        // Declare the y (vertical position) scale.
+        const y = d3.scaleLinear()
+            .domain([0, 100])
+            .range([height - marginBottom, marginTop]);
+      
+        // Create the SVG container.
         const svg = d3.create("svg")
             .attr("width", width)
             .attr("height", height);
-
-
-        //Decalramos el eje x
-        const x = d3.scaleUtc()
-            .domain([new Date("2023-01-01"), new Date("2023-12-31")])
-            .range([marginLeft, width - marginRight]);
-    
-
-        //Agremaos el ele x
+      
+        // Add the x-axis.
         svg.append("g")
             .attr("transform", `translate(0,${height - marginBottom})`)
             .call(d3.axisBottom(x));
+      
+        // Add the y-axis.
+        svg.append("g")
+            .attr("transform", `translate(${marginLeft},0)`)
+            .call(d3.axisLeft(y));
+      
         // Return the SVG element.
         return svg.node();
       }
