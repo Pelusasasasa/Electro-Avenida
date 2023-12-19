@@ -12,7 +12,6 @@ const numeroFactura = document.querySelector('.numeroFactura');
 const fecha = document.querySelector('.dia');
 const hora = document.querySelector('.hora');
 
-
 const nombre = document.querySelector('.nombre');
 const cuit = document.querySelector('.cuit');
 const condIva = document.querySelector('.condIva');
@@ -22,6 +21,7 @@ const numeroAsociado = document.querySelector('.numeroAsociado');
 const listaProductos = document.querySelector('.listaProductos');
 const discriminadorIva = document.querySelector('.discriminadorIva');
 
+const infoPrincipal = document.querySelector('.infoPrincipal');
 
 //En caso de recibo
 const cantidadPrecio = document.querySelector('.cantidadPrecio');
@@ -53,9 +53,9 @@ const venciCae = document.querySelector('.venciCae');
         cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`,configAxios)).data;
         cliente._id = venta.cliente;
         cliente.cliente = venta.nombreCliente;
-        cliente.direcioon = venta.direccion;
-        cliente.cuit = venta.dnicuit;
-        cliente.cond_iva = venta.condIva;
+        cliente.direccion = venta.direccion ? venta.direccion : cliente.direccion;
+        cliente.cuit = venta.dnicuit ? venta.dnicuit : cliente.cuit;
+        cliente.cond_iva = venta.condIva ? venta.condIva : cliente.cond_iva;
     };
     await infoComprobante(venta);
     await listarCliente(cliente);
@@ -65,6 +65,8 @@ const venciCae = document.querySelector('.venciCae');
  });
 
 async function infoComprobante(venta) {
+    const now = new Date(venta.fecha);
+    venta.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     //fecha y hora
     let date = venta.fecha.slice(0,10).split('-',3).reverse().join('/')
     let time = venta.fecha.slice(11,19).split(':',3).join(':');
@@ -82,6 +84,15 @@ async function infoComprobante(venta) {
     descuento.innerHTML = venta.descuento ? parseFloat(venta.descuento).toFixed(2) : "0.00";
     total.innerHTML = parseFloat(venta.precioFinal).toFixed(2);
     tipoVenta.innerHTML = (venta.tipo_pago !== "CC" || venta.cliente === "M122" || venta.cliente === "A029") ? `Contado: ${parseFloat(venta.precioFinal).toFixed(2)}` : "Cuenta Corriente";
+
+    if (venta.tipo_comp === "Presupuesto") {
+        infoPrincipal.innerHTML = "";
+        infoPrincipal.innerHTML = `
+            <p>AV.9 DE JULIO-3380 (3228)</p>CHAJARI E.R.</p>
+            <p>TICKET NO VALIDO COMO FACTURA</p>
+            <p>---------------------------------------</p>
+        `
+    };
 }
 
 async function listar(venta,afip,opciones){
@@ -151,6 +162,7 @@ async function listar(venta,afip,opciones){
 };
 
 async function listaMovimientos(movimientos) {
+    
     movimientos.map(({tipo_comp,iva,egreso,ingreso,descripcion,precio_unitario})=>{
         const ivaAux = iva === "N" ? 1.21 : 1.105;
         listaProductos.innerHTML += `
@@ -193,13 +205,13 @@ async function listaMovimientos(movimientos) {
                     }
                 }
     })
-}
+};
 
 async function listarCliente(cliente) {
        nombre.innerText = cliente.cliente;
        cuit.innerText = cliente.cuit.length === 11 ? `CUIT: ${cliente.cuit}` : `DNI: ${cliente.cuit}`;
-       condIva.innerHTML = venta.condIva.toUpperCase();
-       direccion.innerHTML = venta.direccion + " - " + (venta.localidad ? venta.localidad : "CHAJARI");
+       condIva.innerHTML = cliente.cond_iva.toUpperCase();
+       direccion.innerHTML = cliente.direccion + " - " + (venta.localidad ? venta.localidad : "CHAJARI");
 };
 
 async function listarAfip(afip) {
@@ -226,6 +238,6 @@ const verTipoFactura = (codigo)=>{
     }else if(codigo === 9){
         return "Recibos"
     }else{
-        return "Recibos"
+        return "Comprobante"
     }
 };
