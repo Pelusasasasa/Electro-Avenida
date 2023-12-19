@@ -162,6 +162,7 @@ async function listar(venta,afip,opciones){
 };
 
 async function listaMovimientos(movimientos) {
+    
     movimientos.map(({tipo_comp,iva,egreso,ingreso,descripcion,precio_unitario})=>{
         const ivaAux = iva === "N" ? 1.21 : 1.105;
         listaProductos.innerHTML += `

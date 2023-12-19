@@ -68,7 +68,7 @@ const rellenarStock = async(lista,lista2)=>{
     };
 
     for await(let elem of lista2){
-        if (elem === "GOMEZ" || elem === "LANUS" || elem === "PAGLIAROLI" || elem === "HAEDO" || elem === "FGP") {
+        if (elem === "GOMEZ" || elem === "LANUS" || elem === "PAGLIAROLI" || elem === "HAEDO" || elem === "FGP" || elem === "CENTILUX") {
             const option = document.createElement('option');
             option.value = elem;
             option.classList.add('provedor');
@@ -123,6 +123,9 @@ archivo.addEventListener('change',e=>{
         }else if(select.value === "FGP"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
             cambiarPrecioFGP(datos,productos);
+        }else if(select.value === "CENTILUX"){
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
+            cambiarPrecioCentilux(datos,productos);
         }
 
         
@@ -172,7 +175,6 @@ const llenarListaNueva = async(lista)=>{
     productosAGuardar = lista;
     const trs = document.querySelector('.tablaViejo tbody');
     for(let elem of lista){
-        console.log(document.getElementById('195-021'))
         const tr = document.getElementById(`${elem._id}`);
         if (tr) {
             const tdCostoNuevo = document.createElement('td');
@@ -407,6 +409,32 @@ async function cambiarPrecioFGP(datos,productos) {
     llenarListaNueva(productos);
 };
 
+async function cambiarPrecioCentilux(datos,productos){
+    console.log(datos)
+    for(let elem of productos){
+        const producto = datos.find(n => n.Código == elem.cod_fabrica);
+        const tasaIva = elem.iva === "R" ? 15 : 26;
+
+        if (producto) {
+            if (producto.Código == "905") {
+                console.log(producto)
+            }
+    
+            if (elem.costodolar !== 0) {
+                
+            }else{
+                elem.costo = parseFloat(producto.Precio.toFixed(2));
+                elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
+
+                const costoIva = (elem.costo + elem.impuestos);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+
+                elem.precio_venta = Math.round(costoIva + utilidad);
+            }
+        }
+    }
+    llenarListaNueva(productos)
+};
 
 
 confirmar.addEventListener('click',async e=>{
