@@ -610,7 +610,7 @@ presupuesto.addEventListener('click',async (e)=>{
     }else if (listaProductos.length === 0) {
         await sweet.fire({title:"Cargar Productos"});
         return;
-    }else if(parseFloat(descuento.value) < -10 || parseFloat(descuento.value) > 10 && codigoC.value !== "L082" && vendedor !== "ELBIO"){
+    }else if(parseFloat(descuento.value) < -10 || parseFloat(descuento.value) > 10 && (vendedor !== "ELBIO" || vendedor !== "AGUSTIN")){
         await sweet.fire({title:"Descuento no autorizado"});
         return;
     }else if(document.getElementById('cuentaCorriente').checked && listaProductos.find(producto => producto.objeto._id === "999-999")){
@@ -701,6 +701,8 @@ presupuesto.addEventListener('click',async (e)=>{
                 };
                 if (venta.tipo_pago === "CC") {
                     await ipcRenderer.send('imprimir-venta',[venta,cliente,true,2,venta.tipo_comp,valorizadoImpresion,arregloMovimiento])
+                }else if(venta.tipo_pago === "CD"){
+                    await ipcRenderer.send('imprimir-venta',[venta,,true,1,"Ticket Factura",valorizadoImpresion,arregloMovimiento])
                 }else{
                     await ipcRenderer.send('imprimir-venta',[venta,cliente,false,1,venta.tipo_comp,valorizadoImpresion,arregloMovimiento])
                 }
@@ -820,7 +822,7 @@ ticketFactura.addEventListener('click',async (e) =>{
     //mostramos alertas
     if(stockNegativo){
         sweet.fire({title:`${tipoVenta} no puede ser productos en negativo`});
-    }else if(parseFloat(descuento.value) > 10 && vendedor!=="ELBIO"){
+    }else if(parseFloat(descuento.value) > 10 && (vendedor !== "ELBIO" && vendedor !== "AGUSTIN")){
         await sweet.fire({title:"Descuento No Autorizado"});
     }else if(dnicuit.value === ""){
         await sweet.fire({title: "Falta valor del DNI o CUIT"});
@@ -864,8 +866,8 @@ ticketFactura.addEventListener('click',async (e) =>{
             venta.maquina = maquina;
 
 
-            if (venta.precioFinal >= 30767 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
-                sweet.fire({title:"Factura mayor a 30767, poner datos cliente"});
+            if (venta.precioFinal >= 46360 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
+                sweet.fire({title:"Factura mayor a 46360, poner datos cliente"});
                 alerta.classList.add('none');
             }else{
                 try {
@@ -1084,8 +1086,8 @@ const tamanioCancelados = async() =>{
 async function ponerInputsClientes(cliente) {
     cliente._id && (codigoC.value = cliente._id);
     buscarCliente.value = cliente.cliente;
-    saldo.value = cliente.saldo.toFixed(2);
-    saldo_p.value = cliente.saldo_p.toFixed(2);
+    saldo.value = cliente?.saldo.toFixed(2);
+    saldo_p.value = cliente?.saldo_p.toFixed(2);
     localidad.value = cliente.localidad;
     direccion.value = cliente.direccion;
     provincia.value = cliente.provincia;
@@ -1135,17 +1137,17 @@ ipcRenderer.once('venta',async (e,args)=>{
 });
 
 ipcRenderer.on('informacion',async (e,args)=>{
-    const [vendedor,numeros,empresa,codigoCliente] = args;
+    const [usuario,numeros,empresa,codigoCliente] = args;
     inputEmpresa.value = empresa;
-    textoUsuario.innerHTML = vendedor;
+    textoUsuario.innerHTML = usuario;
     variasFacturas = true;
+    vendedor = usuario
     listaNumeros = numeros
 
     
     let cliente = (await axios.get(`${URL}clientes/id/${codigoCliente}`,configAxios)).data;
     ponerInputsClientes(cliente);
     let ventas = [];
-    console.log(numeros)
     for await (let numero of numeros){
         ventas.push((await axios.get(`${URL}presupuesto/${numero}`,configAxios)).data);
     };
