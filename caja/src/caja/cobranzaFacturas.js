@@ -11,6 +11,7 @@ const tbody = document.querySelector('tbody');
 const efectivo = document.getElementById('efectivo');
 const cheque = document.getElementById('cheque');
 const tarjeta = document.getElementById('tarjeta');
+const transferencia = document.getElementById('transferencia');
 
 const total = document.getElementById('total');
 const cobrado = document.getElementById('cobrado');
@@ -25,7 +26,13 @@ let movimientos;
 
 setInterval(async () => {
     let movimientosAux = (await axios.get(`${URL}movCajas/forPased`,configAxios)).data;
-    if (movimientos.length !== movimientosAux.length) {
+
+    if (movimientos.length > movimientosAux.length) {
+      listar(movimientosAux);
+      movimientos = movimientosAux;
+    };
+
+    if (movimientos.length !== movimientosAux.length && movimientos.length < movimientosAux.length) {
         listarUltimoMovimiento(movimientosAux[movimientosAux.length - 1]);
         movimientos.push(movimientosAux[movimientosAux.length - 1]);
     }
@@ -165,6 +172,38 @@ cheque.addEventListener('click',e=>{
             imp:parseFloat(seleccionado.children[5].innerText)
         }
     });
+});
+
+transferencia.addEventListener('click',async e=>{
+    const egreso = {}
+    egreso.tMov = 'E';
+    egreso.fecha = new Date();
+    egreso.nro_comp = seleccionado.children[4].innerText;
+    egreso.desc = "DEPOSITO BANCO DE ENTRE RIOS";
+    egreso.idCuenta = "DEP";
+    egreso.pasado = true;
+    const {value} = await sweet.fire({
+        title:"Importe",
+        input:"text",
+        inputValue:seleccionado.children[5].innerText,
+        confirmButtonText:"Aceptar"
+    });
+    egreso.imp = value;
+    egreso.cuenta = "DEPOSITO BANCO DE ENTRE RIOS";
+    egreso.vendedor = seleccionado.children[6].innerText;
+    egreso.codigo = seleccionado.children[1].innerText;
+    egreso.cliente = seleccionado.children[2].innerText;
+
+    try {
+        await axios.post(`${URL}movCajas`,egreso,configAxios);
+    } catch (error) {
+        console.log(error);
+        await sweet.fire({
+            title:"No se pudo cargar el descuento en caja"
+    });    
+    };
+
+    aceptar.click();
 });
 
 cobrado.addEventListener('keypress',e=>{
