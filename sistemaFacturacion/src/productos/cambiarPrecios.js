@@ -35,7 +35,7 @@ window.addEventListener('load',async e=>{
 select.addEventListener('change',async e=>{
     if (select.value === "SAN JUSTO") {
         await sweet.fire({
-            title: "La columna de codigo de fabrica tiene que llamarse CODIGO y la de costo PRECIO en el EXCEL",
+            title: "La columna de codigo de fabrica tiene que llamarse CODIGO y la de costo Precio en el EXCEL y el libro se tiene que llamar Lista",
             returnFocus:false
         });
     }else if(select.value === "BREMEN"){
@@ -59,7 +59,7 @@ select.addEventListener('change',async e=>{
 
 const rellenarStock = async(lista,lista2)=>{
     for await(let elem of lista){
-        if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC" || elem === "MB") {
+        if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC" || elem === "MB" || elem === "SPOTSLINE") {
             const option = document.createElement('option');
             option.value = elem;
             option.text = "M - " + elem;
@@ -110,9 +110,10 @@ archivo.addEventListener('change',e=>{
             cambiarPrecioMB(datos,productos);
         }else if(select.value === "GOMEZ"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Hoja1"]);
+            console.log(datos)
             cambiarPrecioGomez(datos,productos);
         }else if(select.value === "LANUS"){
-            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Hoja1"]);
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
             cambiarPrecioLanus(datos,productos);
         }else if(select.value === "PAGLIAROLI"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
@@ -126,6 +127,9 @@ archivo.addEventListener('change',e=>{
         }else if(select.value === "CENTILUX"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
             cambiarPrecioCentilux(datos,productos);
+        }else if(select.value === "SPOTSLINE"){
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
+            cambiarPrecioSpotSline(datos,productos);
         }
 
         
@@ -181,17 +185,20 @@ const llenarListaNueva = async(lista)=>{
             const tdCostoDolaresNuevo = document.createElement('td');
             const tdPrecioNuevo = document.createElement('td');
             const tdPorcentaje = document.createElement('td');
+            const tdCodigoFabrica = document.createElement('td');
 
             tdCostoNuevo.innerText = elem.costo;
             tdCostoDolaresNuevo.innerText = elem.costodolar;
             tdPrecioNuevo.innerText = elem.precio_venta.toFixed(2);
 
             tdPorcentaje.innerText = parseFloat(tr.children[4].innerText)  !== 0 ? ((elem.precio_venta - parseFloat(tr.children[4].innerText)) / parseFloat(tr.children[4].innerText) * 100).toFixed(2) + "%" : "0.00%";
+            tdCodigoFabrica.innerText = elem.cod_fabrica;
 
             tr.appendChild(tdCostoNuevo);
             tr.appendChild(tdCostoDolaresNuevo);
             tr.appendChild(tdPrecioNuevo);
             tr.appendChild(tdPorcentaje);
+            tr.appendChild(tdCodigoFabrica);
         }
 
     }
@@ -254,6 +261,7 @@ async function cambiarPreciosSanJusto(nuevos,productos) {
         const tasaIva = elem.iva === "R" ? 15 : 26;
         const producto = nuevos.find(n => n.CODIGO == elem.cod_fabrica);
         if (producto) {
+            console.log(producto)
             if (elem.costodolar !== 0) {
             }else{
                 elem.costo = redondear(producto.Precio  ,2);
@@ -318,17 +326,21 @@ async function cambiarPrecioMB(datos,productos){
         const tasaIva = elem.iva === "R" ? 15 : 26;
         const producto = datos.find(dato => dato.Codigo == elem.cod_fabrica);
         if (producto) {
-            if (elem.costodolar !== 0) {
-                elem.costodolar = parseFloat((producto.Precio / parseFloat(dolar.value)).toFixed(2));
+            if(elem.costodolar !== 0){
+                elem.costodolar = parseFloat(producto.Precio.toFixed(2));
                 elem.impuestos = parseFloat(redondear(elem.costodolar * tasaIva / 100,2));
-                const costoIva = parseFloat(((elem.costodolar + elem.impuestos) * parseFloat(dolar.value)).toFixed(2));
-                const utilidad = parseFloat((costoIva * parseFloat(elem.utilidad) / 100).toFixed(2));
+
+                const costoIva = (elem.costodolar + elem.impuestos) * parseFloat(dolar.value);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+
                 elem.precio_venta = Math.round(costoIva + utilidad);
             }else{
                 elem.costo = parseFloat(producto.Precio.toFixed(2));
                 elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
-                const costoIva = parseFloat(elem.costo) + parseFloat(elem.impuestos);
-                const utilidad = parseFloat((costoIva * parseFloat(elem.utilidad) / 100).toFixed(2));
+
+                const costoIva = (elem.costo + elem.impuestos);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+
                 elem.precio_venta = Math.round(costoIva + utilidad);
             }
         }
@@ -369,16 +381,20 @@ async function cambiarPrecioLanus(datos,productos){
         const producto = datos.find(dato => dato.CODIGO?.trim() == elem.cod_fabrica.trim());
 
         if(producto){
-            producto.PRECIO = (producto.PRECIO.split(',',2)[0]).replace(/\./g, '');
+            if (producto.CODIGO === " 722010") {
+                console.log(producto)
+            }
+            // producto.Precio = (producto.Precio.split(',',2)[0]).replace(/\./g, '');
             if(elem.costodolar !== 0){
-                elem.costodolar = parseFloat((producto.PRECIO.trim() / parseFloat(dolar.value)).toFixed(2));
+                elem.costodolar = parseFloat((producto.Precio / parseFloat(dolar.value)).toFixed(2));
+                console.log(elem.costodolar)
                 elem.impuestos = parseFloat(redondear(elem.costodolar * tasaIva / 100,2));
 
                 const costoIva = (elem.costodolar + elem.impuestos) * parseFloat(dolar.value);
                 const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
                 elem.precio_venta = parseFloat((costoIva + utilidad).toFixed(2));
             }else{
-                elem.costo = parseFloat((producto.PRECIO.trim()));
+                elem.costo = parseFloat((producto.Precio));
                 elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
 
                 const costoIva = (elem.costo + elem.impuestos);
@@ -448,6 +464,27 @@ async function cambiarPrecioCentilux(datos,productos){
     }
     llenarListaNueva(productos)
 };
+
+async function cambiarPrecioSpotSline(datos,productos) {
+    for(let elem of productos){
+        const producto = datos.find(n => n.Codigo == elem.cod_fabrica);
+        const tasaIva = elem.iva === "R" ? 15 : 26;
+        if (producto) {
+            if (elem.costodolar !== 0) {
+                
+            }else{
+                elem.costo = parseFloat(producto.Precio.toFixed(2));
+                elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
+                
+                const costoIva = (elem.costo + elem.impuestos);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+
+                elem.precio_venta = Math.round(costoIva + utilidad);
+            };
+        }
+    };
+    llenarListaNueva(productos);
+}
 
 
 confirmar.addEventListener('click',async e=>{
