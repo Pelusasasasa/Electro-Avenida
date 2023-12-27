@@ -956,7 +956,7 @@ ticketFactura.addEventListener('click',async (e) =>{
                             const movimientosViejos = (await axios.get(`${URL}movProductos/${numero}/Presupuesto`,configAxios)).data;
                             for await (let mov of movimientosViejos){
                                 mov.nro_comp = venta.nro_comp;
-                                mov.tipo_comp = "Ticket Factura";
+                                mov.tipo_comp = venta.tipo_comp;
                             }
                             await axios.put(`${URL}movProductos`,movimientosViejos,configAxios);
                             await borrrarCuentaCompensada(numero)

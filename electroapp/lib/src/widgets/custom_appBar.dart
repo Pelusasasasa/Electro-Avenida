@@ -21,6 +21,7 @@ class _BuscadorAppBarState extends State<BuscadorAppBar> {
   Widget build(BuildContext context){
 
     var texto = "";
+    String selectedValue = 'Opcion 1';
 
     return SafeArea(
       child: Padding(
@@ -28,6 +29,7 @@ class _BuscadorAppBarState extends State<BuscadorAppBar> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            
             Expanded(
               child:  TextField(
                 controller: _textController,
@@ -87,12 +89,11 @@ class _BuscadorAppBarState extends State<BuscadorAppBar> {
                   }
                 widget.getProducto(texto);
               }, 
-              child: const Text('Buscar',style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color:Colors.black
-              ),))
-            
+              child: (
+                const Icon(Icons.search)
+              )
+              )
+
           ]),
       ),
     );
