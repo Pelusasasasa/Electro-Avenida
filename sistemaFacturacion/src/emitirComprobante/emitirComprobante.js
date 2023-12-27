@@ -178,6 +178,7 @@ precioAgregar.addEventListener('keypress',e=>{
             title:"Cantidad",
             input:"text",
             showCancelButton:true,
+            returnFocus:false,
             confirmButtonText:"Aceptar"
         }).then(async ({isConfirmed,value})=>{
             if (isConfirmed && value !== "") {
@@ -251,7 +252,8 @@ codigo.addEventListener('keypress',async (e) => {
                         title:"Cantidad",
                         input:"text",
                         showCancelButton:true,
-                        confirmButtonText:"Aceptar"
+                        confirmButtonText:"Aceptar",
+                        returnFocus:false,
                     }).then(async ({isConfirmed,value})=>{
                         if (isConfirmed && value !== "" && value !== ".") {
                             if (value === undefined || value === "" || parseFloat(value) === 0) {
@@ -261,9 +263,19 @@ codigo.addEventListener('keypress',async (e) => {
                                 if (!Number.isInteger(parseFloat(value)) && producto.unidad === "U") {
                                     await sweet.fire({title:"La cantidad de este producto no puede ser en decimal"});
                                 }else{
-                                    producto.stock < 0 && await sweet.fire({title:"Stock En Negativo"});
-                                    parseFloat(producto.precio_venta) === 0 && await sweet.fire({title:"Precio del producto en 0"});
-                                    parseFloat(producto.stock) === 0 && await sweet.fire({title:"Producto con Stock en 0"})
+                                    producto.stock < 0 && await sweet.fire({
+                                        title:"Stock En Negativo",
+                                        returnFocus:false,
+                                        
+                                    });
+                                    parseFloat(producto.precio_venta) === 0 && await sweet.fire({
+                                        title:"Precio del producto en 0",
+                                        returnFocus:false,
+                                    });
+                                    parseFloat(producto.stock) === 0 && await sweet.fire({
+                                        title:"Producto con Stock en 0",
+                                        returnFocus:false,
+                                    })
                                     await mostrarVentas(producto,parseFloat(value));
                                     e.target.value="";
                                     codigo.focus();
