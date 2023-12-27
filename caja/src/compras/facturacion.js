@@ -141,6 +141,16 @@ async function listarFacturas(facturas){
 };
 
 async function listarNotas(facturas){
+    facturas.sort((a,b) => {
+        
+        if (a.fecha > b.fecha) {
+            return 1;
+        }else if(a.fecha < b.fecha){
+            return -1;
+        }
+        return 0;
+    })
+
     tbodyNotaCreditos.innerHTML = "";
 
     let totalIva21 = 0;
@@ -207,6 +217,17 @@ async function listarNotas(facturas){
 };
 
 async function listarCompras(compras){
+
+    compras.sort((a,b) => {
+        
+        if (a.fecha > b.fecha) {
+            return 1;
+        }else if(a.fecha < b.fecha){
+            return -1;
+        }
+        return 0;
+    })
+
     tbodyCompras.innerHTML = "";
     
     
