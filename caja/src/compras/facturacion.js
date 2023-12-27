@@ -62,6 +62,17 @@ async function busqueda(){
 };
 
 async function listarFacturas(facturas){
+
+    facturas.sort((a,b) => {
+        
+        if (a.fecha > b.fecha) {
+            return 1;
+        }else if(a.fecha < b.fecha){
+            return -1;
+        }
+        return 0;
+    })
+
     tbodyFacturas.innerHTML = "";
 
     let auxTotal = 0;
@@ -197,6 +208,7 @@ async function listarNotas(facturas){
 
 async function listarCompras(compras){
     tbodyCompras.innerHTML = "";
+    
     
     let auxIva = 0;
     let pDgrC = 0;
