@@ -830,10 +830,9 @@ ticketFactura.addEventListener('click',async (e) =>{
     tipoVenta = conIva.value === "Inscripto" ? "Factura A" : "Factura B";
     venta.tipo_pago = await verElTipoDeVenta(tiposVentas)//vemos si es contado,cuenta corriente o presupuesto en el input[radio]
     //Vemos si algun producto tiene lista negativa
-    const stockNegativo = listaProductos.find(producto=>producto.cantidad < 0);
     //mostramos alertas
-    if(stockNegativo){
-        sweet.fire({title:`${tipoVenta} no puede ser productos en negativo`});
+    if(parseFloat(total.value) < 0){
+        sweet.fire({title:`${tipoVenta} no puede ser total en negativo`});
     }else if(parseFloat(descuento.value) > 10 && (vendedor !== "ELBIO" && vendedor !== "AGUSTIN")){
         await sweet.fire({title:"Descuento No Autorizado"});
     }else if(dnicuit.value === ""){
