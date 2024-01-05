@@ -51,6 +51,7 @@ window.addEventListener('load',async e=>{
         selectVendedor.value = vendedorForSelect;
     }
     tarjeta && listarTarjeta(tarjeta);
+    selectTarjeta.value = "";
 });
 
 fecha.addEventListener('keypress',e=>{
