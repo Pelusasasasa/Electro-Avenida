@@ -415,7 +415,7 @@ descuento.addEventListener('blur',()=>{
 
 //aplicamos el descuento de cobrado
 cobrado.addEventListener('blur',()=>{
-    cobrado.value !== "" && inputCobrado(cobrado.value)
+    (cobrado.value !== "" && parseFloat(cobrado.value) !== 0) && inputCobrado(cobrado.value);   
 });
 
 cobrado.addEventListener('keypress',e=>{
@@ -434,7 +434,7 @@ function verDescuento() {
 
 //si se sobra menos que se muestre cuanto es la diferencia
 function inputCobrado(numero) {
-    Total=totalPrecioProductos
+    Total = totalPrecioProductos;
     descuentoN.value =  redondear(Total-numero,2)
     descuento.value = redondear(descuentoN.value*100/Total,2)
     total.value = parseFloat(numero).toFixed(2);
@@ -616,7 +616,10 @@ presupuesto.addEventListener('click',async (e)=>{
     e.preventDefault();
 
     if (codigoC.value === "") {
-        await sweet.fire({title:"Poner codigo de cliente"});
+        await sweet.fire({
+            title:"Poner codigo de cliente",
+            returnFocus:false
+        });
         codigoC.focus();
         return;
     }else if (listaProductos.length === 0) {
@@ -872,13 +875,13 @@ ticketFactura.addEventListener('click',async (e) =>{
 
             //Informacion Adicional
             venta.observaciones = observaciones.value;
-            venta.empresa = inputEmpresa.value;
+            venta.empresa = inputEmpresa.value; 
             venta.vendedor = vendedor;
             venta.maquina = maquina;
 
 
-            if (venta.precioFinal >= 46360 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
-                sweet.fire({title:"Factura mayor a 46360, poner datos cliente"});
+            if (venta.precioFinal >= 95812 && (buscarCliente.value === "A CONSUMIDOR FINAL" || dnicuit.value === "00000000")) {
+                sweet.fire({title:"Factura mayor a 95812, poner datos cliente"});
                 alerta.classList.add('none');
             }else{
                 try {

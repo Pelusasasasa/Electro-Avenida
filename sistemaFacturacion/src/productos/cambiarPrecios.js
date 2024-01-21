@@ -59,7 +59,7 @@ select.addEventListener('change',async e=>{
 
 const rellenarStock = async(lista,lista2)=>{
     for await(let elem of lista){
-        if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC" || elem === "MB" || elem === "SPOTSLINE") {
+        if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC" || elem === "MB" || elem === "SPOTSLINE" || elem === "ELECE") {
             const option = document.createElement('option');
             option.value = elem;
             option.text = "M - " + elem;
@@ -130,8 +130,11 @@ archivo.addEventListener('change',e=>{
         }else if(select.value === "SPOTSLINE"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
             cambiarPrecioSpotSline(datos,productos);
-        }
-
+        }else if(select.value === "ELECE"){
+            console.log(productos)
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
+            cambiarPrecioElece(datos,productos);
+        };
         
     }
     fileReader.readAsBinaryString(selectedFile);
@@ -484,7 +487,30 @@ async function cambiarPrecioSpotSline(datos,productos) {
         }
     };
     llenarListaNueva(productos);
-}
+};
+
+async function cambiarPrecioElece(datos,productos){
+    for(let elem of productos){
+        let producto = datos.find(n => n.Codigo == elem.cod_fabrica);
+        if (producto) {
+            const tasaIva = elem.iva === "R" ? 15 : 26;
+            if (elem.costodolar !== 0) {
+
+            }else{
+
+                elem.costo = parseFloat(producto.Precio.toFixed(2));
+                elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100,2));
+
+                const costoIva = (elem.costo + elem.impuestos);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+
+                elem.precio_venta = Math.round(costoIva + utilidad);
+
+            }
+        }
+    };
+    llenarListaNueva(productos);
+};
 
 
 confirmar.addEventListener('click',async e=>{

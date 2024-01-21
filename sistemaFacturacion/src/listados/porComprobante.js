@@ -126,7 +126,7 @@ async function listarVentas(lista) {
                 tdCliente.innerHTML = venta.nombreCliente.slice(0,18);
                 tdId.innerHTML = mov.codProd;
                 tdDescripcion.innerHTML = mov.descripcion.slice(0,22);
-                tdVendedor.innerHTML = venta.vendedor.substr(-20,3);
+                tdVendedor.innerHTML = venta.vendedor?.substr(-20,3);
                 tdCantidad.innerHTML = venta.tipo_comp === "Nota Credito" ? (mov.ingreso * -1).toFixed(2) : mov.egreso.toFixed(2);
                 tdPrecio.innerHTML = mov.precio_unitario.toFixed(2);
                 
