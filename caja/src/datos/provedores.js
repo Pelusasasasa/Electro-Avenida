@@ -16,7 +16,7 @@ const tbody = document.querySelector('tbody');
 const agregar = document.querySelector('.agregar');
 const salir = document.querySelector('.salir');
 
-let botones = true;
+let botones = false;
 let provedores
 
 window.addEventListener('load',async e=>{
@@ -32,7 +32,7 @@ window.addEventListener('load',async e=>{
 });
 
 nombre.addEventListener('keyup',async e=>{
-    const listaAux = provedores.filter(provedor=>provedor.provedor.startsWith(nombre.value.toUpperCase()));
+    const listaAux = provedores ? provedores.filter(provedor=>provedor.provedor.startsWith(nombre.value.toUpperCase())) : [];
     await listar(listaAux)
 });
 
@@ -114,7 +114,7 @@ const listar = (lista)=>{
     }
 
     seleccionado = tbody.firstElementChild;
-    subSeleccionado = seleccionado.children[0];
+    subSeleccionado = seleccionado?.children[0];
 
     seleccionado && seleccionado.classList.add('seleccionado');
     subSeleccionado && subSeleccionado.classList.add('subSeleccionado')
@@ -170,20 +170,26 @@ tbody.addEventListener('click',async e=>{
 
 });
 
-body.addEventListener('keyup',e=>{
+body.addEventListener('keyup',e=>{  
+    
     if (e.keyCode === 13 && seleccionado && !botones) {
         ipcRenderer.send('enviar-info-ventana-principal',seleccionado.id);
         window.close();
+
     }else if (e.keyCode === 40 && seleccionado.nextElementSibling) {
+
         const tds = document.querySelectorAll('.seleccionado td');
         let i = 0;
         let index
+
+
         for(let td of tds){
             if (td.classList.contains('subSeleccionado')) {
                 index = i
             }
             i++
-        }
+        };
+
 
         seleccionado && seleccionado.classList.remove('seleccionado');
         seleccionado = seleccionado.nextElementSibling;
@@ -192,6 +198,8 @@ body.addEventListener('keyup',e=>{
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
         subSeleccionado = seleccionado.children[index];
         subSeleccionado.classList.add('subSeleccionado');
+        
+        nombre.blur();
         
     }else if(e.keyCode === 38 && seleccionado.previousElementSibling){
         const tds = document.querySelectorAll('.seleccionado td');
