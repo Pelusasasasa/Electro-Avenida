@@ -1,4 +1,4 @@
-const { clipboard } = require("electron");
+const { clipboard, ipcRenderer } = require("electron");
 
 require('dotenv').config();
 const URL = process.env.URL
@@ -128,6 +128,18 @@ const configAxios = {
         "ngrok-skip-browser-warning": "69420",
         "Authorization": `Basic ${clave}`
     }
-}
+};
 
-module.exports = {alerta,cerrarVentana,copiar,redondear,generarMovimientoCaja,configAxios}
+
+const clickderecho = (e,texto) => {
+    const cordenadas = {
+        x: e.clientX,
+        y: e.clientY,
+        ventana:texto
+    };
+
+    ipcRenderer.send('mostrar-menu-secundario',cordenadas);
+
+};
+
+module.exports = {alerta,cerrarVentana,copiar,redondear,generarMovimientoCaja,configAxios,clickderecho}

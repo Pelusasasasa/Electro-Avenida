@@ -179,7 +179,7 @@ transferencia.addEventListener('click',async e=>{
     egreso.tMov = 'E';
     egreso.fecha = new Date();
     egreso.nro_comp = seleccionado.children[4].innerText;
-    egreso.desc = "DEPOSITO BANCO DE ENTRE RIOS";
+    egreso.desc = seleccionado.children[3].innerText;
     egreso.idCuenta = "DEP";
     egreso.pasado = true;
     const {value} = await sweet.fire({
@@ -189,7 +189,7 @@ transferencia.addEventListener('click',async e=>{
         confirmButtonText:"Aceptar"
     });
     egreso.imp = value;
-    egreso.cuenta = "DEPOSITO BANCO DE ENTRE RIOS";
+    egreso.cuenta = "DEPOSITO BANCO ENTRE RIOS";
     egreso.vendedor = seleccionado.children[6].innerText;
     egreso.codigo = seleccionado.children[1].innerText;
     egreso.cliente = seleccionado.children[2].innerText;

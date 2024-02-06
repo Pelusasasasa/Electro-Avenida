@@ -226,9 +226,9 @@ const listarLista = (lista,situacion,tipo)=>{
             tdFecha.innerText = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
             tdTipo.innerText = venta.tipo_comp;
             tdNumero.innerText = venta.nro_comp;
-            tdImporte.innerText = tipo === "compensada" ? venta.importe : venta.debe;
-            tdPagado.innerText = tipo === "compensada" ? venta.pagado.toFixed(2) : venta.haber;
-            tdSaldo.innerText = tipo === "compensada" ? venta.saldo : venta.saldo;
+            tdImporte.innerText = tipo === "compensada" ? venta.importe.toFixed(2) : venta.debe.toFixed(2);
+            tdPagado.innerText = tipo === "compensada" ? venta.pagado.toFixed(2) : venta.haber.toFixed(2);
+            tdSaldo.innerText = tipo === "compensada" ? venta.saldo.toFixed(2) : venta.saldo.toFixed(2);
 
             inputObservaciones.value = venta.observaciones;
 
@@ -400,9 +400,9 @@ actualizar.addEventListener('click',async e=>{
                             }
                         }
 
-                        seleccionado.children[3].innerHTML = cuentaCompensadaModificada.importe;
-                        seleccionado.children[4].innerHTML = cuentaCompensadaModificada.pagado;
-                        seleccionado.children[5].innerHTML = cuentaCompensadaModificada.saldo;
+                        seleccionado.children[3].innerHTML = cuentaCompensadaModificada.importe.toFixed(2);
+                        seleccionado.children[4].innerHTML = cuentaCompensadaModificada.pagado.toFixed(2);
+                        seleccionado.children[5].innerHTML = cuentaCompensadaModificada.saldo.toFixed(2);
                         saldo.value = cliente.saldo;
                         saldo_p.value = cliente.saldo_p
                     }

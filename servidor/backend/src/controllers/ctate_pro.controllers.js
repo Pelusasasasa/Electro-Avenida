@@ -42,6 +42,17 @@ ctateCTRL.putForId = async(req,res)=>{
     await CtatePro.findOneAndUpdate({_id:id},req.body);
     console.log(`Se modifico la historica de ${req.body.provedor}`);
     res.end();
+};
+
+ctateCTRL.deleteForId = async(req, res)=>{
+    const { id } = req.params;
+
+    const cuentaDelete = await CtatePro.findOneAndDelete({_id:id});
+
+    console.log(`Cuenta de ${cuentaDelete.provedor} eliminado con la hora y fecha ${(new Date()).toLocaleString()}`);
+
+    res.send(cuentaDelete);
 }
+
 
 module.exports = ctateCTRL

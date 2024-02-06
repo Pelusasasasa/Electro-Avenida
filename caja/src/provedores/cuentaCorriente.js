@@ -1,9 +1,10 @@
 const axios = require('axios');
-const { cerrarVentana, configAxios } = require('../assets/js/globales');
+const { cerrarVentana, configAxios, clickderecho } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
+const { ipcRenderer } = require('electron');
 
 let provedores;
 let cuentas;
@@ -24,8 +25,12 @@ let mesAnterior = parseFloat(dateSeparado[1]-1);
 mesAnterior = mesAnterior === 0 ? 12 : mesAnterior;
 mesAnterior = mesAnterior < 10 ? `0${mesAnterior}` : mesAnterior;
 let anioAnterior = mesAnterior === 12 ? parseFloat(dateSeparado[0]) - 1 : dateSeparado[0];
+
 desde.value = `${anioAnterior}-${mesAnterior}-01`;
 hasta.value = date;
+
+let seleccionado = '';
+let subSeleccionado = '';
 
 window.addEventListener('load',async e=>{
     cerrarVentana();
@@ -45,6 +50,20 @@ window.addEventListener('load',async e=>{
     saldo.value = provedor.saldo.toFixed(2);
     codigo.value = provedor.codigo.padStart(4,"0");
 });
+
+ipcRenderer.on('eliminarCuentaCorriente',async () => {
+    const {isConfirmed} = await sweet.fire({
+        title: "Eliminar Cuenta Corriente?",
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar'
+    });
+
+    if (isConfirmed) {
+        await axios.delete(`${URL}ctactePro/id/${seleccionado.id}`);
+        tbody.removeChild(seleccionado);
+        seleccionado = "";
+    }
+})
 
 const listarProvedores = (lista)=>{
     lista.forEach(provedor => {
@@ -67,6 +86,8 @@ const listarCuentas = (lista) => {
     tbody.innerHTML = "";
     lista.forEach(cuenta => {
         const tr = document.createElement('tr');
+        tr.id = cuenta._id;
+
         const fecha = cuenta.fecha.slice(0,10).split('-',3);
         const tdFecha = document.createElement('td');
         const tdConcepto = document.createElement('td');
@@ -104,6 +125,25 @@ const listarCuentas = (lista) => {
 
 tbody.addEventListener('click',async e=>{
     if (e.target) {
+
+        seleccionado && seleccionado.classList.remove('seleccionado');
+        subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+
+        if (e.target.nodeName === 'TR') {
+            seleccionado = e.target;
+            seleccionado.classList.add('seleccionado');
+        };
+
+        if (e.target.nodeName === 'TD') {
+            seleccionado = e.target.parentNode;
+            seleccionado.classList.add('seleccionado');
+
+            subSeleccionado = e.target;
+            subSeleccionado.classList.add('subSeleccionado');
+        };
+
+
+
         if (e.target.classList.contains("botonFalso")) {
             await sweet.fire({
                 title:"Observaciones",
@@ -143,4 +183,9 @@ desde.addEventListener('keypress',async e=>{
         listarCuentas(cuentas)
         hasta.focus();
     }
-})
+});
+
+tbody.addEventListener('contextmenu',(e) => {
+    clickderecho(e, 'cuentaCorrienteProvedores')
+});
+

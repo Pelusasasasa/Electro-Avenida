@@ -1,11 +1,13 @@
 const { app, BrowserWindow, ipcMain, Menu,dialog } = require('electron');
 const path = require('path');
+const mostrarMenu = require('./assets/menuSecundario');
 
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
-let ventanaPrincipal
-let nuevaVentana
+global.ventanaPrincipal = null;
+global.nuevaVentana = null;
+
 require('dotenv').config();
 // Lo usamos para cuando alla un cambio en la aplicacion se reinicie
 
@@ -119,6 +121,12 @@ ipcMain.on('enviar-info-ventana-principal',(e,args)=>{
   ventanaPrincipal.webContents.send('recibir-informacion',args);
 });
 
+ipcMain.on('mostrar-menu-secundario',(e,{ventana,x,y}) => {
+
+  e.preventDefault();
+  mostrarMenu(ventana,x,y);
+
+});
 
 
 const templateMenu = [

@@ -115,8 +115,8 @@ const ponerProductos = productos =>{
         // PLAFON CUBETO 1 LUZ G9 WENGUE
         tdPrecio.innerHTML = producto.oferta 
         ? ` <p class=oferta>
-                <span>${producto.precioOferta}</span>
-                <span>${producto.precio_venta}</span>
+                <span>${producto.precioOferta.toFixed(2)}</span>
+                <span>${producto.precio_venta.toFixed(2)}</span>
             </p>` 
         : parseFloat(producto.precio_venta).toFixed(2);
         tdMarca.innerHTML = producto.marca;
