@@ -39,7 +39,8 @@ const CuentaComp = new Schema({
     },
     observaciones:{
         type:String,
-        default:""
+        default:"",
+        set: (valor) => valor.toUpperCase()
     }
 });
 

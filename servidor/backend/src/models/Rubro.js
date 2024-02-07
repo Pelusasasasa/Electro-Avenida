@@ -8,6 +8,10 @@ const Rubro = new Schema({
     nombre:{
         type:String,
         require:true
+    },
+    subRubros:{
+        type:Array,
+        default:[]
     }
 });
 

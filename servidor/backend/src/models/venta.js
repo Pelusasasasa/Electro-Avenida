@@ -46,7 +46,8 @@ const Venta = new Schema({
     condIva: String, //Blanco
     observaciones: {
         type: String,
-        default: ""
+        default: "",
+        set: ( valor ) => valor.toUpperCase()
     },
     descuento: Number,
     precioFinal: {
