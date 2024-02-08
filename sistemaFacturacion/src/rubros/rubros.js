@@ -43,23 +43,71 @@ const listar = async(lista)=>{
 };
 
 const agregarASubRubro = async() => {
+
+    const trs = document.querySelectorAll('.tbodySubRubro tr');
+
     const tr = document.createElement('tr');
+    tr.id = nombreSubRubro.value.toUpperCase().trim();
 
     const tdCodigo = document.createElement('td');
     const tdNombre = document.createElement('td');
+    const tdAcciones = document.createElement('td');
 
-    tdCodigo.innerText = 1;
-    tdNombre.innerText = nombreSubRubro.value.toUpperCase();
+    const button = document.createElement('button');
+    button.textContent = 'Eliminar';
+
+    button.addEventListener('click', eliminarSubrubro);
+
+    tdCodigo.innerText = trs.length + 1;
+    tdNombre.innerText = nombreSubRubro.value.toUpperCase().trim();
+    tdAcciones.appendChild(button);
 
     tr.appendChild(tdCodigo);
     tr.appendChild(tdNombre);
+    tr.appendChild(tdAcciones);
 
     tbodySubRubro.appendChild(tr);
-
-    nombreSubRubro.value = "";
-    agregarSubRubro.classList.add('none')
 };
 
+const eliminarSubrubro = async(e) => {
+
+    tbodySubRubro.removeChild(e.target.parentNode.parentNode);
+
+    const rubroModificar = rubros.find(rubro => rubro._id === seleccionado.id);;
+    rubroModificar.subRubros = rubroModificar.subRubros.filter(subRubro => subRubro !== e.target.parentNode.parentNode.id);
+    await axios.put(`${URL}rubros/${rubroModificar._id}`,rubroModificar,configAxios);
+
+};
+
+const listarSubRubros = (id) => {
+    const subRubros = rubros.find(rubro => rubro._id === id).subRubros;
+    let index = 0;
+    tbodySubRubro.innerHTML = "";
+    for(let  subRubro of subRubros){
+        index++;
+        const tr = document.createElement('tr');
+        tr.id = subRubro;
+
+        const tdCodigo = document.createElement('td');
+        const tdNombre = document.createElement('td');
+        const tdAcciones = document.createElement('td');
+
+        const buttonEliminar = document.createElement('button');
+        buttonEliminar.textContent = 'Eliminar';
+
+        buttonEliminar.addEventListener('click', eliminarSubrubro);
+
+        tdCodigo.innerText = index;
+        tdNombre.innerText = subRubro;
+        tdAcciones.appendChild(buttonEliminar);
+
+        tr.appendChild(tdCodigo);
+        tr.appendChild(tdNombre);
+        tr.appendChild(tdAcciones);
+
+        tbodySubRubro.appendChild(tr);
+    }
+};
 
 guardar.addEventListener('click',async e=>{
     const rubro = {};
@@ -86,7 +134,17 @@ window.addEventListener('load',async e=>{
 });
 
 agregar.addEventListener('click',async e=>{
-    agregarASubRubro();
+    const rubroModificado = rubros.find( rubro => rubro._id === seleccionado.id);
+
+    if (!rubroModificado.subRubros.find(elem => elem === nombreSubRubro.value.toUpperCase().trim())) {
+        agregarASubRubro();
+        rubroModificado.subRubros.push(nombreSubRubro.value.toUpperCase());
+        await axios.put(`${URL}rubros/${rubroModificado._id}`,rubroModificado,configAxios);
+    }
+
+
+    nombreSubRubro.value = "";
+    agregarSubRubro.classList.add('none')
 });
 
 tbody.addEventListener('click',e=>{
@@ -98,12 +156,13 @@ tbody.addEventListener('click',e=>{
     subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
     subSeleccionado.classList.add('subSeleccionado');
 
-    seleccionado && agregarSubRubro.classList.remove('none')
+    seleccionado && agregarSubRubro.classList.remove('none');
+
+    listarSubRubros(seleccionado.id);
 });
 
 tbody.addEventListener('dblclick',e=>{
     const rubro = rubros.find(rubro =>rubro._id === e.target.parentNode.id);
-    console.log(rubro)
     sweet.fire({
         title:"Eliminar",
         confirmButtonText: "Eliminar",

@@ -45,7 +45,7 @@ const templateMenu = [
                     {
                         label: "Agregar rubros",
                         click(){
-                            abrirVentana("rubros/rubros.html",600,650)
+                            abrirVentana("rubros/rubros.html",1200,1200)
                         }
                     },
                     {
