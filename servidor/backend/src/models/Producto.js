@@ -11,7 +11,8 @@ const Producto = new Schema({
     },
     descripcion: {
         type: String,
-        required: true
+        required: true,
+        set: ( valor ) => valor.toUpperCase().trim()
     },
     provedor: {
         type: String,
@@ -19,7 +20,8 @@ const Producto = new Schema({
     },
     marca: {
         type: String,
-        default: ""
+        default: "",
+        set: ( valor ) => valor.toUpperCase().trim()
     },
     stock: {
         type: String,
@@ -43,7 +45,8 @@ const Producto = new Schema({
     },
     observacion: {
         type: String,
-        default: ""
+        default: "",
+        set: ( valor ) => valor.toUpperCase().trim()
     },
     oferta:{
         type:Boolean,
@@ -67,6 +70,10 @@ const Producto = new Schema({
     },
     rubro:{
         type:Number,
+        default:0
+    },
+    subRubro:{
+        type:String,
         default:0
     },
     imgURL: String

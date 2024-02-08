@@ -57,17 +57,23 @@ const listarRubros = async(lista)=>{
 };
 
 const listarSubRubros = async(rubro)=>{
-    console.log(rubro)
-    const subRubros = (await axios.get(`${URL}rubros/${rubro}`,configAxios)).data;
-    console.log(subRubros)
+    const subRubrosLista = (await axios.get(`${URL}rubros/${rubro}`,configAxios)).data.subRubros;
+    for(let rubro of subRubrosLista){
+        const option = document.createElement('option');
+        option.value = `${rubro}`;
+        option.text = rubro;
+
+        subRubros.appendChild(option)
+    }
 }
 
 ipcRenderer.on('id-producto',async(e,args)=>{
     let rubros = (await axios.get(`${URL}rubros`,configAxios)).data;
     producto = (await axios.get(`${URL}productos/${args}`,configAxios)).data;
     await listarRubros(rubros);
-    await asignarCampos(producto);
     await listarSubRubros(producto.rubro);
+    await asignarCampos(producto);
+    
 });
 
 ipcRenderer.on('acceso',(e,args)=>{
@@ -91,6 +97,7 @@ function asignarCampos(producto) {
     stock.value = producto.stock
     tasaIva.value = producto.iva;
     select.value = producto.rubro ? producto.rubro : select.value = "0";
+    subRubros.value = producto.subRubro ? producto.subRubro : subRubros.value = "0";
     (parseFloat(producto.costo) !== 0) ? (costoPesos.value = parseFloat(producto.costo).toFixed(2)) : (costoPesos.value = "0.00");
     (parseFloat(producto.costodolar) !== 0) ? (costoDolares.value = parseFloat(producto.costodolar).toFixed(3)) : (costoDolares.value = "0.00");
 
@@ -134,6 +141,7 @@ modificar.addEventListener('click',e=>{
     unidad.removeAttribute('disabled');
     rubros.removeAttribute('disabled');
     oferta.removeAttribute('disabled');
+    subRubros.removeAttribute('disabled');
     if (oferta.checked) {
         precioOferta.removeAttribute('disabled');
     }
@@ -158,6 +166,7 @@ guardar.addEventListener('click',async e=>{
     producto.unidad = unidad.value;
     producto.impuestos = ivaImp.value;
     producto.rubro = select.value;
+    producto.subRubro = subRubros.value;
     producto.vendedor = vendedor;
     producto.maquina = verNombrePc();
     
