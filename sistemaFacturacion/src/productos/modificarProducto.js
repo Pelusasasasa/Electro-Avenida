@@ -25,6 +25,7 @@ const utilidad = document.querySelector('#utilidad');
 const precioVenta = document.querySelector('#precioVenta');
 const unidad = document.querySelector('#unidad');
 const select = document.querySelector('#rubros');
+const subRubros = document.querySelector('#subRubros');
 
 //Botones
 const modificar = document.querySelector('.modificar');
@@ -55,11 +56,18 @@ const listarRubros = async(lista)=>{
     }
 };
 
+const listarSubRubros = async(rubro)=>{
+    console.log(rubro)
+    const subRubros = (await axios.get(`${URL}rubros/${rubro}`,configAxios)).data;
+    console.log(subRubros)
+}
+
 ipcRenderer.on('id-producto',async(e,args)=>{
     let rubros = (await axios.get(`${URL}rubros`,configAxios)).data;
     producto = (await axios.get(`${URL}productos/${args}`,configAxios)).data;
     await listarRubros(rubros);
-    await asignarCampos(producto)
+    await asignarCampos(producto);
+    await listarSubRubros(producto.rubro);
 });
 
 ipcRenderer.on('acceso',(e,args)=>{
