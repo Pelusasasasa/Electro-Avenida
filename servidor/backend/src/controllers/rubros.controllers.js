@@ -15,7 +15,6 @@ rubrosCTRL.getsAll = async(req,res)=>{
 
 rubrosCTRL.getForCodigo = async(req,res)=>{
     const {id} = req.params;
-    console.log(id)
     const rubro = await Rubro.findOne({codigo:id});
     res.send(rubro)
 }

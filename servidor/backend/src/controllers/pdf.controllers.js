@@ -132,6 +132,8 @@ pdfCTRL.crearPdf = async(req,res)=>{
                 console.log(err);
             }else{
                 console.log(res)
+                console.log("")
+                console.log("")
             }
             html = fs.readFileSync(__dirname + '/pdf.html','utf8');
         })
