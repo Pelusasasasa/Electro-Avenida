@@ -7,16 +7,59 @@ const { copiar, configAxios } = require("../funciones");
 
 const codigo = document.querySelector('#codigo');
 const nombre = document.querySelector('#nombre');
+const nombreSubRubro = document.querySelector('#nombreSubRubro');
+
+const agregarSubRubro = document.querySelector('.agregarSubRubro');
 
 const tbody = document.querySelector('tbody');
+const tbodySubRubro = document.querySelector('.tbodySubRubro');
 
 const guardar = document.querySelector('.guardar');
+const agregar = document.querySelector('#agregar');
+const limpiar = document.querySelector('#limpiar');
 const modificar = document.querySelector('.modificar');
 const salir = document.querySelector('.salir');
 
 let rubros = [];
 let seleccionado;
 let subSeleccionado;
+
+const listar = async(lista)=>{
+    for await(let elem of lista){
+        const tr = document.createElement('tr');
+        tr.id = elem._id;
+
+        const tdCodigo = document.createElement('td');
+        const tdNombre = document.createElement('td');
+
+        tdCodigo.innerHTML = elem.codigo.toString().padStart(4,'0');
+        tdNombre.innerHTML = elem.nombre;
+
+        tr.appendChild(tdCodigo);
+        tr.appendChild(tdNombre);
+        
+        tbody.appendChild(tr);
+    }
+};
+
+const agregarASubRubro = async() => {
+    const tr = document.createElement('tr');
+
+    const tdCodigo = document.createElement('td');
+    const tdNombre = document.createElement('td');
+
+    tdCodigo.innerText = 1;
+    tdNombre.innerText = nombreSubRubro.value.toUpperCase();
+
+    tr.appendChild(tdCodigo);
+    tr.appendChild(tdNombre);
+
+    tbodySubRubro.appendChild(tr);
+
+    nombreSubRubro.value = "";
+    agregarSubRubro.classList.add('none')
+};
+
 
 guardar.addEventListener('click',async e=>{
     const rubro = {};
@@ -42,23 +85,9 @@ window.addEventListener('load',async e=>{
     codigo.value = (id.toString().padStart(4,'0'));
 });
 
-const listar = async(lista)=>{
-    for await(let elem of lista){
-        const tr = document.createElement('tr');
-        tr.id = elem._id;
-
-        const tdCodigo = document.createElement('td');
-        const tdNombre = document.createElement('td');
-
-        tdCodigo.innerHTML = elem.codigo.toString().padStart(4,'0');
-        tdNombre.innerHTML = elem.nombre;
-
-        tr.appendChild(tdCodigo);
-        tr.appendChild(tdNombre);
-        
-        tbody.appendChild(tr);
-    }
-}
+agregar.addEventListener('click',async e=>{
+    agregarASubRubro();
+});
 
 tbody.addEventListener('click',e=>{
     seleccionado && seleccionado.classList.remove('seleccionado');
@@ -68,6 +97,8 @@ tbody.addEventListener('click',e=>{
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
     subSeleccionado = e.target.nodeName === "TD" ? e.target : e.target.children[0];
     subSeleccionado.classList.add('subSeleccionado');
+
+    seleccionado && agregarSubRubro.classList.remove('none')
 });
 
 tbody.addEventListener('dblclick',e=>{
@@ -98,6 +129,10 @@ tbody.addEventListener('dblclick',e=>{
             })
         }
     })
+});
+
+limpiar.addEventListener('click', () => {
+    nombreSubRubro.value = '';
 });
 
 codigo.addEventListener('keypress',e=>{

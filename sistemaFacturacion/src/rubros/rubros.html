@@ -9,23 +9,37 @@
     <link rel="stylesheet" href="./rubros.css">
 </head>
 <body class="rubros">
-    <section class="agregar">
-        <main>
-            <label for="codigo">Codigo</label>
-            <input type="text" autofocus name="codigo" id="codigo">
-        </main>
-        <main>
-            <label for="nombre">Nombre</label>
-            <input type="text" name="nombre" id="nombre">
-        </main>
-
-        <main class="botones">
-            <button class="guardar">Guardar</button>
-            <button class="modificar none">Modificar</button>
-            <button class="salir">Salir</button>
-        </main>
+    <section>
+        <div class="agregar">
+            <main>
+                <label for="codigo">Codigo</label>
+                <input type="text" autofocus name="codigo" id="codigo">
+            </main>
+            <main>
+                <label for="nombre">Nombre</label>
+                <input type="text" name="nombre" id="nombre">
+            </main>
+    
+            <main class="botones">
+                <button class="guardar">Guardar</button>
+                <button class="modificar none">Modificar</button>
+                <button class="salir">Salir</button>
+            </main>
+        </div>
+        <div class="agregarSubRubro none">
+            <h4>Agregar Sub Rubro</h4>
+            <main>
+                <label for="nombreSubRubro">Nombre</label>
+                <input type="text" name="nombreSubRubro" id="nombreSubRubro">
+            </main>
+            <main class="botones">
+                <button id="agregar">Agregar</button>
+                <button id="limpiar">Limpiar</button>
+            </main>
+        </div>
     </section>
     <section class="tabla">
+        <h2 class="text-center">Rubros</h2>
         <table>
            <thead>
                 <tr>
@@ -35,6 +49,18 @@
            </thead>
            <tbody></tbody>
         </table>
+    </section>
+    <section class="subRubros">
+        <h2 class="text-center">Sub Rubros</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Codigo</th>
+                        <th>SubRubro</th>
+                    </tr>
+                </thead>
+                <tbody class="tbodySubRubro"></tbody>
+            </table>
     </section>
 </body>
     <script src="./rubros.js"></script>
