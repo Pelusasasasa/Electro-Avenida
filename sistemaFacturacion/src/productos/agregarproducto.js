@@ -25,11 +25,12 @@ const utilidad = document.querySelector('#utilidad');
 const precioVenta = document.querySelector('#precioVenta');
 const imagen = document.querySelector('#imagen');
 const unidad = document.querySelector('#unidad');
+const select = document.querySelector('#rubros');
+const subRubros = document.querySelector('#subRubros');
 
 //Botones
 const salir = document.querySelector('.salir');
 const agregar = document.querySelector('.agregar');
-const select = document.querySelector('#rubros');
 
 
 let valorTasaIva = 26
@@ -38,6 +39,19 @@ let costoT = 0 //costo total
 let precioV = 0 //Precio Venta
 let dolar = 0
 let vendedor;
+
+const listarSubRubros = (lista) => {
+    subRubros.innerHTML = "";
+    for(let elem of lista) {
+        
+        const option = document.createElement('option');
+
+        option.value = elem;
+        option.text = elem;
+
+        subRubros.appendChild(option)
+    }
+};
 
 //No enviar el formulario al apretar enter
 document.addEventListener('DOMContentLoaded', () => {
@@ -82,7 +96,16 @@ codigo.addEventListener('blur',async e=>{
                 codigo.focus(); 
             }
     }
-})
+});
+
+
+select.addEventListener('change',async (e) => {
+    const rubro = (await axios.get(`${URL}rubros/${e.target.value}`,configAxios)).data;
+    
+    listarSubRubros(rubro.subRubros);
+});
+
+
 
 tasaIva.addEventListener('blur  ', (e) =>{
     letraIva = devolverIva(e.target.value)
@@ -139,6 +162,7 @@ agregar.addEventListener('click' ,async  (e) =>{
         precio_venta: precioVenta.value,
         unidad: unidad.value,
         rubro:select.value,
+        subRubro: subRubros.value,
         vendedor:vendedor,
         maquina:verNombrePc(),
         oferta:oferta.checked,
@@ -226,7 +250,7 @@ provedor.addEventListener('keypress',e=>{
     }
 });
 
-rubros.addEventListener('keypress',e=>{
+select.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
         e.preventDefault();
         marca.focus();

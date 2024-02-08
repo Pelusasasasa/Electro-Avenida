@@ -119,6 +119,11 @@ function asignarCampos(producto) {
     valorTasaIva = tasaIvas(producto.iva);
 };
 
+select.addEventListener('change',async e => {
+    subRubros.innerHTML = ""
+    listarSubRubros(e.target.value)
+});
+
 tasaIva.addEventListener('click', (e) =>{
     valorTasaIva = tasaIvas(e.target.value);
 });
