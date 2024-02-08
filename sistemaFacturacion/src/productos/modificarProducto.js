@@ -120,7 +120,7 @@ function asignarCampos(producto) {
 };
 
 select.addEventListener('change',async e => {
-    subRubros.innerHTML = ""
+    subRubros.innerHTML = ' <option value="0">---Seleccionar---</option> ';
     listarSubRubros(e.target.value)
 });
 

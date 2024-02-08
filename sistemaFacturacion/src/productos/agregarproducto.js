@@ -41,7 +41,6 @@ let dolar = 0
 let vendedor;
 
 const listarSubRubros = (lista) => {
-    subRubros.innerHTML = "";
     for(let elem of lista) {
         
         const option = document.createElement('option');
@@ -101,7 +100,7 @@ codigo.addEventListener('blur',async e=>{
 
 select.addEventListener('change',async (e) => {
     const rubro = (await axios.get(`${URL}rubros/${e.target.value}`,configAxios)).data;
-    
+    subRubros.innerHTML = '<option value="">---Seleccionar---</option>';
     listarSubRubros(rubro.subRubros);
 });
 
