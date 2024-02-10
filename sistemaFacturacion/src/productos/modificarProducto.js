@@ -71,7 +71,7 @@ ipcRenderer.on('id-producto',async(e,args)=>{
     let rubros = (await axios.get(`${URL}rubros`,configAxios)).data;
     producto = (await axios.get(`${URL}productos/${args}`,configAxios)).data;
     await listarRubros(rubros);
-    await listarSubRubros(producto.rubro);
+    producto.rubro && await listarSubRubros(producto.rubro);
     await asignarCampos(producto);
     
 });

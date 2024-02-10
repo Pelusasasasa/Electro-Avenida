@@ -149,7 +149,7 @@ async function facturarPrestamos() {
     elem.checked && arrayAFacturar.push(elem.id);
   });
   location.href = `../emitirComprobante/emitirComprobante.html?facturarPrestamo=${true}&arregloPrestamo=${JSON.stringify(arrayAFacturar)}&observaciones=${seleccionado.children[4].innerText}`;
-  ipcRenderer.send('facturar-prestamos',JSON.stringify(arrayAFacturar));
+//   ipcRenderer.send('facturar-prestamos',JSON.stringify(arrayAFacturar));
 };
 
 tbody.addEventListener('contextmenu',clickDerecho);

@@ -703,7 +703,13 @@ presupuesto.addEventListener('click',async (e)=>{
                 await axios.put(`${URL}productos`,arregloProductosDescontarStock,configAxios);
             };
 
-            !facturarPrestamo && await axios.post(`${URL}movProductos`,arregloMovimiento,configAxios);
+            if(facturarPrestamo && venta.tipo_pago === 'PP'){
+                await axios.post(`${URL}movProductos`,arregloMovimiento,configAxios);
+            }else if(!facturarPrestamo){
+                await axios.post(`${URL}movProductos`,arregloMovimiento,configAxios);
+            };
+
+            
 
             if(impresion.checked) {
                 let cliente = {
@@ -731,11 +737,11 @@ presupuesto.addEventListener('click',async (e)=>{
                 });
 
                 //Lo que hacemos es modificar los movimientos que estan como prestamos a el tipo de venta
-                await axios.put(`${URL}movProductos`,movimientos,configAxios);
+                venta.tipo_pago !== 'PP' && await axios.put(`${URL}movProductos`,movimientos,configAxios);
 
                 //Anulamos el prestamo anterior
                 let lista = JSON.parse(getParameterByName('arregloPrestamo'));
-                await axios.put(`${URL}prestamos/anularVarios/${venta.nro_comp}`,lista);
+                venta.tipo_pago !== 'PP' && await axios.put(`${URL}prestamos/anularVarios/${venta.nro_comp}`,lista);
             }
 
             arregloMovimiento = [];
@@ -763,6 +769,7 @@ prestamo.addEventListener('click',async e=>{
     prestamo.condIva = conIva.value;
     prestamo.tipo_comp = "Prestamo";
     prestamo.tipo_pago = "PR";
+    prestamo.precioFinal = "0.00";
     prestamo.vendedor = vendedor;
     prestamo.observaciones = observaciones.value.toUpperCase();
     let numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
@@ -770,7 +777,7 @@ prestamo.addEventListener('click',async e=>{
     prestamo.nro_comp = "0007-" + ultimoNumeroPrestamo.toString().padStart(8,'0');
     numeros["Ultimo Prestamo"] = prestamo.nro_comp;
     //Actualizamos el ultimo prestamo
-    await axios.put(`${URL}tipoventa`,numeros,configAxios);
+    // await axios.put(`${URL}tipoventa`,numeros,configAxios);
 
     //Moviento de producto
     for(let {cantidad,objeto} of listaProductos){
@@ -783,7 +790,19 @@ prestamo.addEventListener('click',async e=>{
     //Descontar Stock
     await axios.put(`${URL}productos`,arregloProductosDescontarStock,configAxios);
     //Fin Descontar Stock
+
+    //Guardamos el prestamo
     await axios.post(`${URL}prestamos`,prestamo,configAxios);
+
+    //Listamos un cliente para la impreison del prestamo
+    cliente.cliente = nombre.value;
+    cliente._id = codigoC.value;
+    cliente.direccion = direccion.value;
+    cliente.localidad = localidad.value;
+    cliente.cuit = dnicuit.value;
+    
+    //imprimimos el prestamo
+    await ipcRenderer.send('imprimir-venta', [prestamo, cliente, false, 1, "Comprobante", "valorizado", arregloMovimiento]);
     location.href = '../index.html';
 });
 
