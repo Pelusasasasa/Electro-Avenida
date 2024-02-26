@@ -1,31 +1,18 @@
 
 const axios = require("axios");
-const { configAxios } = require("../funciones");
+const { configAxios, clickderecho } = require("../funciones");
+const { ipcRenderer } = require("electron");
 require("dotenv").config;
+
 const URL = process.env.URL;
 
-
-const hoy = new Date()
-let dia = hoy.getDate()
-if (dia<10) {
-    dia = `0${dia}`
-}
-let mes = hoy.getMonth() + 1
-
-mes = mes === 0 ? mes+1 : mes ;
-
-if (mes<10) {
-    mes = `0${mes}`
-}
-const desde =  document.querySelector('#desde')
-const hasta =  document.querySelector('#hasta')
-const fechaDeHoy = (`${hoy.getFullYear()}-${mes}-${dia}`)
-
-desde.value = fechaDeHoy;
-hasta.value = fechaDeHoy;
+desde.value = new Date().toISOString().slice(0,10);
+hasta.value = new Date().toISOString().slice(0,10);
 
 const tbody =  document.querySelector('.tbody');
 const imprimir = document.querySelector('.imprimir');
+
+let seleccionado = '';
 
 window.addEventListener('load', async e=>{
     const desdeFecha = new Date(desde.value);
@@ -54,6 +41,27 @@ hasta.addEventListener('keypress',async e=>{
     };
 });
 
+imprimir.addEventListener('click',e=>{
+    //printPage()
+    const buscador = document.querySelector('.buscador')
+    buscador.classList.add('disable')
+    buscador.classList.remove('buscador')
+    window.print()
+    buscador.classList.add('buscador')
+    buscador.classList.remove('disable')
+});
+
+document.addEventListener('keydown',e=>{
+    if(e.key === "Escape"){
+        window.close()
+    }
+});
+
+tbody.addEventListener('contextmenu', e => {
+    clickderecho(e,'Listado Presupuesto');
+    seleccionado = e.target.parentNode;
+});
+
 async function listarVentas(lista,bodyelegido) {
     bodyelegido.innerHTML = "";
 
@@ -80,6 +88,7 @@ async function listarVentas(lista,bodyelegido) {
         const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
         for await (let mov of movimientos){
             const tr = document.createElement('tr');
+            tr.id = mov.nro_comp;
 
             const tdFecha = document.createElement('td');
             const tdNumero = document.createElement('td');
@@ -135,20 +144,18 @@ async function listarVentas(lista,bodyelegido) {
 
         bodyelegido.appendChild(tr)
     };
-}
+};
 
-imprimir.addEventListener('click',e=>{
-    //printPage()
-    const buscador = document.querySelector('.buscador')
-    buscador.classList.add('disable')
-    buscador.classList.remove('buscador')
-    window.print()
-    buscador.classList.add('buscador')
-    buscador.classList.remove('disable')
-});
+ipcRenderer.on('editarPresupuesto',async (e,args) => {
+    const sweet = require('sweetalert2');
+    const {isConfirmed} = await sweet.fire({
+        title: "Editar Presupuesto?",
+        confirmButtonText: "Aceptar",
+        showCancelButton: true,
+    });
 
-document.addEventListener('keydown',e=>{
-    if(e.key === "Escape"){
-        window.close()
+    if (isConfirmed) {
+        await ipcRenderer.send('editarPresupuesto', seleccionado.id);
     }
 });
+

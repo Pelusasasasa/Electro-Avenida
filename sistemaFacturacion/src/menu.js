@@ -142,7 +142,7 @@ const templateMenu = [
             {
                 label: "Presupuesto",
                 click(){
-                    abrirVentana("listados/presupuestos.html",1200,1000)
+                    abrirVentana("listados/presupuestos.html",1200,1000,false)
                 }
             },
             {
