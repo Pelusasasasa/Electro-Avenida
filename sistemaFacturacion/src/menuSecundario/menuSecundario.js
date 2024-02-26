@@ -45,6 +45,13 @@ const actualizarCuenta = new MenuItem({
     }
 });
 
+const editarPresupuesto = new MenuItem({
+    label: "Editar Presupuesto",
+    async click(){
+        nuevaVentana.webContents.send('editarPresupuesto');
+    }
+});
+
 //Fin de Menu Secundario
 
 
@@ -71,16 +78,19 @@ function mostrarMenu(ventana,x,y){
         if (!menuSecundario.items.find(menu => menu.label === "Cancelar Cuenta")) {
             menuSecundario.append(cancelarCuenta);
         }
-        
-    }
+    };
 
     if(ventana === "Emitir Recibo"){
         if (!menuSecundario.items.find(menu => menu.label === "Actualizar Cuenta")) {
             menuSecundario.append(actualizarCuenta);
         } 
-            
-        
-    }
+    };
+
+    if (ventana === "Listado Presupuesto") {
+        if (!menuSecundario.items.find(menu => menu.label === "Editar Presupuesto")) {
+            menuSecundario.append(editarPresupuesto);
+        } 
+    };
     
     menuSecundario.popup({window:ventanaPrincipal,x,y:y+5})
 }

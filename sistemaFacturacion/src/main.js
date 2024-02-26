@@ -282,7 +282,22 @@ ipcMain.on('abrir-ventana', (e, args) => {
 
 ipcMain.on('abrir-ventana-tarjeta', (e, args) => {
     abrirVentana(args.path,args.width,args.height,args.reinicio,args.informacion)
-})
+});
+
+ipcMain.on('editarPresupuesto', (e,numero) => {
+    nuevaVentana.close();
+
+    ventanaPrincipal.loadURL(url.format({
+        pathname: path.join(__dirname, './emitirComprobante/emitirComprobante.html'),
+        protocol: 'file',
+        slashes: true
+    }));
+
+    ventanaPrincipal.once('ready-to-show', () => {
+        ventanaPrincipal.webContents.send('editarPresupuesto', numero);
+    });
+    
+});
 
 const abrirVentanaImprimir = async(texto,width,height,reinicio,show=false)=>{
     ventanaImprimir = new BrowserWindow({
@@ -327,7 +342,7 @@ async function descargas(nombreFuncion,ventasTraidas,path) {
     }else if(nombreFuncion === "PorComprobante"){
         comprobantes(ventasTraidas,path);
     }
-}
+};
 
 //Menu de navegacion
 const mainMenu = Menu.buildFromTemplate(templateMenu)

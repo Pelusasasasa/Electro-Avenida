@@ -18,6 +18,7 @@ let vendedor = getParameterByName('vendedor');
 let empresa = getParameterByName('empresa');
 let botones = getParameterByName('botones') === "false" ? false : true;
 
+
 const usuario = document.querySelector(".usuario");
 const textoUsuario = document.createElement("P");
 textoUsuario.innerHTML = vendedor
@@ -1170,6 +1171,23 @@ ipcRenderer.on('informacion',async (e,args)=>{
         venta.productos.forEach(producto=>{
             mostrarVentas(producto.objeto,producto.cantidad)
         });
+    };
+});
+
+ipcRenderer.on('editarPresupuesto', async(e,numero) => {
+    
+    await sweet.fire({
+        title:"Se edita el presupuesto pero se crea uno nuevo, el anterior sigue estando"
+    });
+
+    const presupuesto = (await axios.get(`${URL}presupuesto/${numero}`)).data;
+    const cliente = (await axios.get(`${URL}clientes/id/${presupuesto.cliente}`, configAxios)).data;
+    const movimientos = (await axios.get(`${URL}movProductos/${numero}/${presupuesto.tipo_comp}`)).data;
+
+    ponerInputsClientes(cliente);
+    for(let mov of movimientos){
+        const producto = (await axios.get(`${URL}productos/${mov.codProd}`, configAxios)).data;
+        await mostrarVentas(producto, mov.egreso);
     };
 });
 
