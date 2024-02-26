@@ -52,6 +52,12 @@ window.addEventListener('load',async e=>{
 });
 
 ipcRenderer.on('eliminarCuentaCorriente',async () => {
+    if (!seleccionado) {
+        await sweet.fire({
+            title: "Seleccionar una cuenta",
+        })
+        return;
+    }
     const {isConfirmed} = await sweet.fire({
         title: "Eliminar Cuenta Corriente?",
         showCancelButton: true,
