@@ -38,6 +38,25 @@ buscador.addEventListener('keyup',e=>{
 const listarVales = (lista)=>{
     total = 0;
     tbody.innerHTML = "";
+
+    lista.sort((a,b)=>{
+        if (a.fecha > b.fecha) {
+            return 1;
+        }else if(a.fecha < b.fecha){
+            return -1;
+        };
+        return 0;
+    });
+
+    lista.sort((a,b)=>{
+        if (a.rsoc > b.rsoc) {
+            return 1;
+        }else if(a.rsoc < b.rsoc){
+            return -1;
+        };
+        return 0;
+    });
+
     for(let elem of lista){
         total += elem.imp;
 

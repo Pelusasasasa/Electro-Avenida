@@ -375,7 +375,7 @@ aceptar.addEventListener('click',async e=>{
                 await generarMovimientoCaja(elem.f_recibido,"I",elem.n_cheque,elem.banco,"BE",elem.i_cheque,elem.entreg_a);
              }
         };
-        await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURA PROVEDORES","FP",total.value,provedor.provedor);
+        await generarMovimientoCaja(comprobante.fecha,"E",numeroVenta.value,"FACTURAS PROVEDORES","FP",total.value,provedor.provedor);
 
 
     const trs = document.querySelectorAll('#tbodyComprobante tr');
