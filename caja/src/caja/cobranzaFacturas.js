@@ -153,9 +153,10 @@ tarjeta.addEventListener('click',e=>{
         height:600,
         cerrarVentana:true,
         informacionAgregar:{
-            cliente:seleccionado.children[2].innerHTML,
-            vendedor:seleccionado.children[6].innerHTML,
-            imp:parseFloat(seleccionado.children[5].innerHTML)
+            cliente:seleccionado.children[2].innerText,
+            vendedor:seleccionado.children[6].innerText,
+            imp:parseFloat(seleccionado.children[5].innerText),
+            tipo:seleccionado.children[3].innerText
         }
     });
 });
