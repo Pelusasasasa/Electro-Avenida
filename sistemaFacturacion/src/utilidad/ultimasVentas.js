@@ -90,6 +90,9 @@ tbody.addEventListener('click',async e=>{
 })
 
 const listar = async(listaVentas,listaRecibos)=>{
+
+    tbody.innerHTML = "";
+
     const lista = [...listaVentas,...listaRecibos]
     //filtramos las ventas solo para ver ticket o notas de credito
 

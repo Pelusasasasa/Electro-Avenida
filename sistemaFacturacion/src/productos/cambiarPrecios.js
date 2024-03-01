@@ -59,7 +59,7 @@ select.addEventListener('change',async e=>{
 
 const rellenarStock = async(lista,lista2)=>{
     for await(let elem of lista){
-        if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC" || elem === "MB" || elem === "SPOTSLINE" || elem === "ELECE" || elem === "FERROLUX") {
+        if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC" || elem === "MB" || elem === "SPOTSLINE" || elem === "ELECE" || elem === "JELUZ" || elem === "FERROLUX") {
             const option = document.createElement('option');
             option.value = elem;
             option.text = "M - " + elem;
@@ -137,6 +137,10 @@ archivo.addEventListener('change',e=>{
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
             console.log(datos)
             cambiarPrecioFerrolux(datos,productos);
+        }else if(select.value === "JELUZ"){
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
+            console.log(datos)
+            cambiarPrecioJeluz(datos,productos);
         };
         
     }
@@ -208,6 +212,30 @@ const llenarListaNueva = async(lista)=>{
         }
 
     }
+};
+
+async function cambiarPrecioJeluz(datos,productos) {
+    console.log(datos[0])
+    for await(let elem of productos){
+        let tasaIva = elem.iva === "R" ? 15 : 26;
+        let producto = datos.find(n => n.Codigo == elem.cod_fabrica);
+        if (producto) {
+            if(elem.costodolar !== 0){
+                elem.costodolar = parseFloat(redondear(producto.Precio / parseFloat(dolar.value), 2));
+                elem.impuestos = parseFloat(redondear(elem.costodolar * tasaIva / 100, 2));
+                const costoIva = (elem.costodolar + elem.impuestos) * parseFloat(dolar.value);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+                elem.precio_venta = parseFloat((Math.round(costoIva + utilidad)).toFixed(2));
+            }else{
+                elem.costo = parseFloat(producto.Precio.toFixed(2));
+                elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100, 2));
+                const costoIva  = elem.costo + elem.impuestos;
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+                elem.precio_venta = parseFloat((Math.round(costoIva + utilidad)).toFixed(2));
+            }
+        }
+    }
+    llenarListaNueva(productos);
 };
 
 async function cambiarPrecioPagliaroli(datos,productos){

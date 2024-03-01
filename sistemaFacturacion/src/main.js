@@ -1,4 +1,4 @@
-
+const fs = require('fs');
 require('update-electron-app')();
 require('dotenv').config();
 const axios = require("axios")
@@ -186,10 +186,16 @@ ipcMain.on('imprimir',(e,args)=>{
             ventanaPrincipal.focus()
             ventanaImprimir.close();
             ventanaImprimir=null;
+            fs.writeFile(path.join(__dirname, '../prueba.txt'),JSON.stringify(opciones),(error)=>{
+                if(error) throw error;
+            });
         }else{
             ventanaPrincipal.focus();
             ventanaImprimir && ventanaImprimir.close();
             ventanaImprimir=null;
+            fs.writeFile(path.join(__dirname, '../prueba.txt'),JSON.stringify(errorType),(error)=>{
+                if(error) throw error;
+            });
         }
     })
 })
