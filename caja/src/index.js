@@ -1,6 +1,9 @@
+const {updateElectronApp} = require('update-electron-app');
+updateElectronApp()
 const { app, BrowserWindow, ipcMain, Menu,dialog } = require('electron');
 const path = require('path');
 const mostrarMenu = require('./assets/menuSecundario');
+
 
 if (require('electron-squirrel-startup')) {
   app.quit();
