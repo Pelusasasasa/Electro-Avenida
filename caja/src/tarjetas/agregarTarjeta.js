@@ -11,6 +11,7 @@ const selectVendedor = document.querySelector('#vendedor');
 const cliente = document.querySelector('#cliente');
 const fecha = document.querySelector('#fecha');
 const importe = document.querySelector('#importe');
+const tipoComprobante = document.querySelector('#tipoComprobante');
 
 const aceptar = document.querySelector('.aceptar');
 const modificar = document.querySelector('.modificar');
@@ -75,6 +76,12 @@ selectTarjeta.addEventListener('keypress',e=>{
 
 importe.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
+        tipoComprobante.focus();
+    }
+});
+
+tipoComprobante.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
         selectVendedor.focus();
     }
 });
@@ -103,10 +110,10 @@ ipcRenderer.on('recibir-informacion',async(e,args)=>{
 });
 
 ipcRenderer.on('informacionAgregar',(e,args)=>{
-    console.log(args)
-    const {imp,vendedor,cliente: clienteTraido} = args;
+    const {imp,vendedor,cliente: clienteTraido,tipo} = args;
     cliente.value = clienteTraido;
     importe.value = imp.toFixed(2);
+    tipoComprobante.value = tipo;
     vendedorForSelect = vendedor;
 });
 
@@ -116,6 +123,7 @@ const listarTarjeta = (tarjeta)=>{
     selectTarjeta.value = tarjeta.tarjeta;
     cliente.value = tarjeta.cliente;
     importe.value = redondear(tarjeta.imp,2);
+    tipoComprobante.value = tarjeta.tipo_comp;
     selectVendedor.value = tarjeta.vendedor;
 }
 
@@ -132,7 +140,8 @@ aceptar.addEventListener('click',async e=>{
     tarjeta.imp = importe.value = "" ? 0 : importe.value;
     tarjeta.cliente = cliente.value.toUpperCase();
     tarjeta.vendedor = selectVendedor.value;
-    tarjeta.tipo = "Tarjeta"
+    tarjeta.tipo = "Tarjeta";
+    tarjeta.tipo_comp = tipoComprobante.value;
 
     if (selectTarjeta.value  === "") {
      await sweet.fire({

@@ -155,6 +155,7 @@ const listar = async(tarjetas)=>{
         const tdTarjeta = document.createElement('td');
         const tdCliente = document.createElement('td');
         const tdImporte = document.createElement('td');
+        const tdTipo = document.createElement('td');
         const tdVendedor = document.createElement('td');
         const tdAcciones = document.createElement('td');
         const tdEliminarVarios = document.createElement('td');
@@ -165,6 +166,7 @@ const listar = async(tarjetas)=>{
         tdTarjeta.innerHTML = tarjeta.tarjeta;
         tdCliente.innerHTML = tarjeta.cliente
         tdImporte.innerHTML = tarjeta.imp ? (tarjeta.imp).toFixed(2) : "";
+        tdTipo.innerText = tarjeta.tipo_comp ? tarjeta.tipo_comp : "";
         tdVendedor.innerHTML = tarjeta.vendedor;
         tdAcciones.innerHTML = `
             <div id=edit class=tool>
@@ -187,6 +189,7 @@ const listar = async(tarjetas)=>{
         tr.appendChild(tdTarjeta);
         tr.appendChild(tdCliente);
         tr.appendChild(tdImporte);
+        tr.appendChild(tdTipo);
         tr.appendChild(tdVendedor);
         tr.appendChild(tdAcciones);
         tr.appendChild(tdEliminarVarios);
