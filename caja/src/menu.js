@@ -14,8 +14,6 @@ const cheques = document.querySelector('.cheques');
 const tarjetas = document.querySelector('.tarjetas');
 const cajaGeneral = document.querySelector('.cajaGeneral');
 
-alert('hola')
-
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 112) {
         location.href = 'compras/ingresoFacturas.html';

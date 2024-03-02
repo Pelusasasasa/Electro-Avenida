@@ -1,5 +1,6 @@
 const {updateElectronApp} = require('update-electron-app');
-updateElectronApp()
+updateElectronApp();
+
 const { app, BrowserWindow, ipcMain, Menu,dialog } = require('electron');
 const path = require('path');
 const mostrarMenu = require('./assets/menuSecundario');
