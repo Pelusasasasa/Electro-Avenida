@@ -119,7 +119,7 @@ archivo.addEventListener('change',e=>{
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
             cambiarPrecioPagliaroli(datos,productos);
         }else if(select.value === "HAEDO"){
-            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Hoja1"]);
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
             cambiarPrecioHaedo(datos,productos);
         }else if(select.value === "FGP"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
@@ -282,12 +282,18 @@ async function cambiarPrecioFerrolux(datos,productos){
 };
 
 async function cambiarPrecioHaedo(datos,productos){
+    console.log(datos)
+    console.log(productos)
     for await(let elem of productos){
-        const producto = datos.find(dato => dato.Artículo == "01"+elem.cod_fabrica);
+        const producto = datos.find(dato => dato.Artículo == elem.cod_fabrica);
         const tasaIva = elem.iva === "R" ? 15 : 26;
         if (producto) {
             if (elem.costodolar !== 0) {
-                elem.costodolar = parseFloat(redondear(producto.Precio / parseFloat(dolar.value),2));
+                if (producto.Mon === "$") {
+                    elem.costodolar = parseFloat(redondear(producto.Precio / parseFloat(dolar.value),2));
+                }else{
+                    elem.costodolar = parseFloat(redondear(producto.Precio,2));
+                }
                 elem.impuestos = parseFloat(redondear(elem.costodolar * tasaIva / 100,2));
 
                 const costoIva = parseFloat(redondear((elem.costodolar + elem.impuestos) * parseFloat(dolar.value),2));
