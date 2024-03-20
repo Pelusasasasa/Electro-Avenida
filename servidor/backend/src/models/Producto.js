@@ -76,7 +76,11 @@ const Producto = new Schema({
         type:String,
         default:0
     },
-    imgURL: String
+    imgURL: String,
+    destacado:{
+        type:Boolean,
+        default:false
+    }
 })
 
 
