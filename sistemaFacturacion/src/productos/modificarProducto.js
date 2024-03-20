@@ -26,6 +26,7 @@ const precioVenta = document.querySelector('#precioVenta');
 const unidad = document.querySelector('#unidad');
 const select = document.querySelector('#rubros');
 const subRubros = document.querySelector('#subRubros');
+const destacado = document.querySelector('#destacado');
 
 //Botones
 const modificar = document.querySelector('.modificar');
@@ -98,6 +99,7 @@ function asignarCampos(producto) {
     tasaIva.value = producto.iva;
     select.value = producto.rubro ? producto.rubro : select.value = "0";
     subRubros.value = producto.subRubro ? producto.subRubro : subRubros.value = "0";
+    destacado.checked = producto.destacado;
     (parseFloat(producto.costo) !== 0) ? (costoPesos.value = parseFloat(producto.costo).toFixed(2)) : (costoPesos.value = "0.00");
     (parseFloat(producto.costodolar) !== 0) ? (costoDolares.value = parseFloat(producto.costodolar).toFixed(3)) : (costoDolares.value = "0.00");
 
@@ -147,6 +149,7 @@ modificar.addEventListener('click',e=>{
     rubros.removeAttribute('disabled');
     oferta.removeAttribute('disabled');
     subRubros.removeAttribute('disabled');
+    destacado.removeAttribute('disabled');
     if (oferta.checked) {
         precioOferta.removeAttribute('disabled');
     }
@@ -172,6 +175,7 @@ guardar.addEventListener('click',async e=>{
     producto.impuestos = ivaImp.value;
     producto.rubro = select.value;
     producto.subRubro = subRubros.value;
+    producto.destacado = destacado.checked;
     producto.vendedor = vendedor;
     producto.maquina = verNombrePc();
     

@@ -179,6 +179,24 @@
     font-size: 1.6rem;
 }
 
+
+.modificarProducto .datos{
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    gap:  2rem;
+}
+
+.modificarProducto .datos main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.modificarProducto .datos main #destacado{
+    transform: scale(1.7);
+}
+
 .agregarProducto .observaciones,.modificarProducto .observaciones{
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
