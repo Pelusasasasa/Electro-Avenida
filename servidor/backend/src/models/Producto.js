@@ -80,6 +80,10 @@ const Producto = new Schema({
     destacado:{
         type:Boolean,
         default:false
+    },
+    datos:{
+        type:Array,
+        default:[]
     }
 })
 

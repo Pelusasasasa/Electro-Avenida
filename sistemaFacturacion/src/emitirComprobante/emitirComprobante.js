@@ -778,7 +778,7 @@ prestamo.addEventListener('click',async e=>{
     prestamo.nro_comp = "0007-" + ultimoNumeroPrestamo.toString().padStart(8,'0');
     numeros["Ultimo Prestamo"] = prestamo.nro_comp;
     //Actualizamos el ultimo prestamo
-    // await axios.put(`${URL}tipoventa`,numeros,configAxios);
+    await axios.put(`${URL}tipoventa`,numeros,configAxios);
 
     //Moviento de producto
     for(let {cantidad,objeto} of listaProductos){
