@@ -289,3 +289,13 @@ table tr th{
     cursor: pointer;
     position: absolute;
 }
+
+.extencion{
+    display: flex;
+    justify-content: center;
+}
+
+#masDatos{
+    padding: 1rem;
+    font-size: 1.3rem;
+}

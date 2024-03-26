@@ -4,6 +4,9 @@ const URL = process.env.URL;
 const axios = require("axios");
 const { redondear, configAxios, verNombrePc } = require("../funciones");
 let data = new FormData();
+const sweet = require('sweetalert2');
+
+let info = [];
 
 
 const codigo = document.querySelector('#codigo');
@@ -27,6 +30,7 @@ const unidad = document.querySelector('#unidad');
 const select = document.querySelector('#rubros');
 const subRubros = document.querySelector('#subRubros');
 const destacado = document.querySelector('#destacado');
+const masDatos = document.querySelector('#masDatos');
 
 //Botones
 const modificar = document.querySelector('.modificar');
@@ -59,12 +63,14 @@ const listarRubros = async(lista)=>{
 
 const listarSubRubros = async(rubro)=>{
     const subRubrosLista = (await axios.get(`${URL}rubros/${rubro}`,configAxios)).data.subRubros;
-    for(let rubro of subRubrosLista){
-        const option = document.createElement('option');
-        option.value = `${rubro}`;
-        option.text = rubro;
-
-        subRubros.appendChild(option)
+    if (subRubrosLista) {
+        for(let rubro of subRubrosLista){
+            const option = document.createElement('option');
+            option.value = `${rubro}`;
+            option.text = rubro;
+    
+            subRubros.appendChild(option)
+        }
     }
 }
 
@@ -177,6 +183,7 @@ guardar.addEventListener('click',async e=>{
     producto.subRubro = subRubros.value;
     producto.destacado = destacado.checked;
     producto.vendedor = vendedor;
+    producto.datos = info;
     producto.maquina = verNombrePc();
     
     await axios.put(`${URL}productos/${producto._id}`,producto,configAxios);
@@ -407,3 +414,12 @@ oferta.addEventListener('change',e =>{
         precioOferta.setAttribute('disabled','');
     }
 });
+
+masDatos.addEventListener('click',async e => {
+    const {value} = await sweet.fire({
+        title:"Datos",
+        input: 'textarea'
+    });
+
+    info = value.split('\n');
+})

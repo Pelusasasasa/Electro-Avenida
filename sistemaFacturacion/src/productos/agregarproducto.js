@@ -7,6 +7,8 @@ require('dotenv').config();
 const URL = process.env.URL;
 let data = new FormData();
 
+let info = [];
+
 const codigo = document.querySelector('#codigo');
 const codFabrica = document.querySelector('#cod-fabrica');
 const descripcion = document.querySelector('#descripcion');
@@ -27,6 +29,7 @@ const imagen = document.querySelector('#imagen');
 const unidad = document.querySelector('#unidad');
 const select = document.querySelector('#rubros');
 const subRubros = document.querySelector('#subRubros');
+const masDatos = document.querySelector('#masDatos');
 
 //Botones
 const salir = document.querySelector('.salir');
@@ -165,7 +168,8 @@ agregar.addEventListener('click' ,async  (e) =>{
         vendedor:vendedor,
         maquina:verNombrePc(),
         oferta:oferta.checked,
-        precioOferta:precioOferta.value
+        precioOferta:precioOferta.value,
+        datos:info
     };
 
     //Enviamos el producto al servidor
@@ -384,3 +388,12 @@ precioOferta.addEventListener('focus',e=>{
 salir.addEventListener('click',e=>{
     window.close()
 });
+
+masDatos.addEventListener('click',async e => {
+    const {value} = await sweet.fire({
+        title:"Datos",
+        input: 'textarea'
+    });
+
+    info = value.split('\n');
+})
