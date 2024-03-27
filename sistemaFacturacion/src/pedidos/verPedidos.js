@@ -45,6 +45,8 @@ window.addEventListener('load',async e=>{
         const tdCliente = document.createElement('td');
         const tdTelefeno = document.createElement('td');
         const tdVendedor = document.createElement('td');
+        const tdMarca = document.createElement('td');
+        const tdProvedor = document.createElement('td');
         const tdStock = document.createElement('td');
         const tdEstado = document.createElement('td');
         const tdObservacion = document.createElement('td');
@@ -65,6 +67,8 @@ window.addEventListener('load',async e=>{
         tdCliente.innerHTML = pedido.cliente;
         tdTelefeno.innerHTML = pedido.telefono;
         tdVendedor.innerHTML = pedido.vendedor;
+        tdMarca.innerText = pedido.marca ? pedido.marca : "";
+        tdProvedor.innerText = pedido.provedor ? pedido.provedor : "";
         tdStock.innerHTML = redondear(stock,2);
         inputEstado.value = pedido.estadoPedido;
         tdObservacion.innerHTML = pedido.observacion;
@@ -78,6 +82,8 @@ window.addEventListener('load',async e=>{
         tr.appendChild(tdCliente);
         tr.appendChild(tdTelefeno);
         tr.appendChild(tdVendedor);
+        tr.appendChild(tdMarca);
+        tr.appendChild(tdProvedor);
         tr.appendChild(tdStock);
         tr.appendChild(tdEstado);
         tr.appendChild(tdObservacion);

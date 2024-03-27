@@ -100,6 +100,8 @@ function mostrarVentas(objeto,cantidad) {
         <td>${objeto.descripcion}  ${marca}  ${codfabrica}</td>
         <td>${nombre.value.toUpperCase()}</td>
         <td>${numero.value}</td>
+        <td>${objeto.marca}</td>
+        <td>${objeto.provedor}</td>
         <td class=text-end>${objeto.stock}</td>
         <td><input type:"text" class=observaciones id=${objeto._id}></td>
         <td id=eliminar>Eliminar</td>
@@ -124,8 +126,10 @@ grabar.addEventListener('click', async e =>{
         Pedido.producto = td.children[2].innerHTML; 
         Pedido.cliente = td.children[3].innerHTML.toUpperCase();
         Pedido.telefono = td.children[4].innerHTML;
-        Pedido.stock = td.children[5].innerHTML;
-        Pedido.observacion = td.children[6].children[0].value.toUpperCase();
+        Pedido.marca = td.children[5].innerHTML;
+        Pedido.provedor = td.children[6].innerHTML;
+        Pedido.stock = td.children[7].innerHTML;
+        Pedido.observacion = td.children[8].children[0].value.toUpperCase();
         Pedido.vendedor = vendedor;
         Pedido.maquina = verNombrePc();
         try {
