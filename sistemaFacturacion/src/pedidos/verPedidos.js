@@ -13,6 +13,7 @@ const URL = process.env.URL;
 const {copiar, recorrerFlechas, redondear, botonesSalir, configAxios, verNombrePc} = require('../funciones');
 const { ipcRenderer } = require('electron');
 
+const thead = document.querySelector("thead");
 const tbody = document.querySelector("tbody");
 const eliminarPedido = document.querySelector('.eliminarPedido');
 const eliminarVarios = document.getElementById('eliminarVarios');
@@ -24,80 +25,15 @@ let subSeleccionado
 let inputSeleccionado;
 let acceso = getParameterByName('acceso');
 let vendedor = getParameterByName('vendedor');
+let pedidos = [];
 
 //Mandamos a llamar a pedidos
 window.addEventListener('load',async e=>{
     copiar();
 
-    let pedidos = (await axios.get(`${URL}pedidos`,configAxios)).data;
+    pedidos = (await axios.get(`${URL}pedidos`,configAxios)).data;
 
-    for(let [index,pedido] of pedidos.entries()){
-        let fecha = new Date(pedido.fecha)
-        const stock = (pedido.stock !== undefined) ? pedido.stock : 0; 
-        
-        const tr = document.createElement('tr');
-        tr.id = pedido._id;
-
-        const tdFecha = document.createElement('td');
-        const tdCodigo = document.createElement('td');
-        const tdProducto = document.createElement('td');
-        const tdCantidad = document.createElement('td');
-        const tdCliente = document.createElement('td');
-        const tdTelefeno = document.createElement('td');
-        const tdVendedor = document.createElement('td');
-        const tdMarca = document.createElement('td');
-        const tdProvedor = document.createElement('td');
-        const tdStock = document.createElement('td');
-        const tdEstado = document.createElement('td');
-        const tdObservacion = document.createElement('td');
-        const inputEstado = document.createElement('input');
-
-        //clases
-        tdCantidad.classList.add('cantidad');
-        inputEstado.id = `estadoPedido${index}`
-        inputEstado.setAttribute('disabled',"");
-        tdStock.classList.add('stock');
-        tdEstado.classList.add('estado');
-
-        //valores
-        tdFecha.innerHTML = `${fecha.getUTCDate()}/${fecha.getUTCMonth()+1}/${fecha.getUTCFullYear()}`;
-        tdCodigo.innerHTML = pedido.codigo;
-        tdProducto.innerHTML = pedido.producto;
-        tdCantidad.innerHTML = redondear(pedido.cantidad,2);
-        tdCliente.innerHTML = pedido.cliente;
-        tdTelefeno.innerHTML = pedido.telefono;
-        tdVendedor.innerHTML = pedido.vendedor;
-        tdMarca.innerText = pedido.marca ? pedido.marca : "";
-        tdProvedor.innerText = pedido.provedor ? pedido.provedor : "";
-        tdStock.innerHTML = redondear(stock,2);
-        inputEstado.value = pedido.estadoPedido;
-        tdObservacion.innerHTML = pedido.observacion;
-
-        tdEstado.appendChild(inputEstado);
-
-        tr.appendChild(tdFecha);
-        tr.appendChild(tdCodigo);
-        tr.appendChild(tdProducto);
-        tr.appendChild(tdCantidad);
-        tr.appendChild(tdCliente);
-        tr.appendChild(tdTelefeno);
-        tr.appendChild(tdVendedor);
-        tr.appendChild(tdMarca);
-        tr.appendChild(tdProvedor);
-        tr.appendChild(tdStock);
-        tr.appendChild(tdEstado);
-        tr.appendChild(tdObservacion);
-        
-
-        tbody.appendChild(tr);
-    }
-    seleccionado = tbody.firstElementChild;
-    seleccionado.classList.add('seleccionado');
-
-    subSeleccionado = seleccionado.children[0];
-    subSeleccionado.classList.add('subSeleccionado');
-
-    arreglo = await pedidos
+    listarPedidos(pedidos);
 });
 
 document.addEventListener('contextmenu',clickderecho);
@@ -256,3 +192,106 @@ function clickderecho(e) {
     subSeleccionado.classList.add('subSeleccionado')
 
 };
+
+const OrdenarPedidos = (e) => {
+    if (e.target.innerText.toUpperCase() === "MARCA") {
+        pedidos.sort((a,b) => {
+            if (a.marca > b.marca) {
+                return 1;
+            }else if(a.marca < b.marca){
+                return -1;
+            };
+            return 0
+        });
+        console.table(pedidos)
+        tbody.innerHTML = "";
+        listarPedidos(pedidos);
+    };
+    if (e.target.innerText.toUpperCase() === "PROVEDOR") {
+        pedidos.sort((a,b) => {
+            if (a.provedor > b.provedor) {
+                return 1;
+            }else if(a.provedor < b.provedor){
+                return -1;
+            };
+            return 0
+        });
+        tbody.innerHTML = "";
+        listarPedidos(pedidos);
+    };
+}
+
+thead.addEventListener('click',OrdenarPedidos);
+
+
+
+
+function listarPedidos(pedidos){
+    for(let [index,pedido] of pedidos.entries()){
+        let fecha = new Date(pedido.fecha)
+        const stock = (pedido.stock !== undefined) ? pedido.stock : 0; 
+        
+        const tr = document.createElement('tr');
+        tr.id = pedido._id;
+
+        const tdFecha = document.createElement('td');
+        const tdCodigo = document.createElement('td');
+        const tdProducto = document.createElement('td');
+        const tdCantidad = document.createElement('td');
+        const tdCliente = document.createElement('td');
+        const tdTelefeno = document.createElement('td');
+        const tdVendedor = document.createElement('td');
+        const tdMarca = document.createElement('td');
+        const tdProvedor = document.createElement('td');
+        const tdStock = document.createElement('td');
+        const tdEstado = document.createElement('td');
+        const tdObservacion = document.createElement('td');
+        const inputEstado = document.createElement('input');
+
+        //clases
+        tdCantidad.classList.add('cantidad');
+        inputEstado.id = `estadoPedido${index}`
+        inputEstado.setAttribute('disabled',"");
+        tdStock.classList.add('stock');
+        tdEstado.classList.add('estado');
+
+        //valores
+        tdFecha.innerHTML = `${fecha.getUTCDate()}/${fecha.getUTCMonth()+1}/${fecha.getUTCFullYear()}`;
+        tdCodigo.innerHTML = pedido.codigo;
+        tdProducto.innerHTML = pedido.producto;
+        tdCantidad.innerHTML = redondear(pedido.cantidad,2);
+        tdCliente.innerHTML = pedido.cliente;
+        tdTelefeno.innerHTML = pedido.telefono;
+        tdVendedor.innerHTML = pedido.vendedor;
+        tdMarca.innerText = pedido.marca ? pedido.marca : "";
+        tdProvedor.innerText = pedido.provedor ? pedido.provedor : "";
+        tdStock.innerHTML = redondear(stock,2);
+        inputEstado.value = pedido.estadoPedido;
+        tdObservacion.innerHTML = pedido.observacion;
+
+        tdEstado.appendChild(inputEstado);
+
+        tr.appendChild(tdFecha);
+        tr.appendChild(tdCodigo);
+        tr.appendChild(tdProducto);
+        tr.appendChild(tdCantidad);
+        tr.appendChild(tdCliente);
+        tr.appendChild(tdTelefeno);
+        tr.appendChild(tdVendedor);
+        tr.appendChild(tdMarca);
+        tr.appendChild(tdProvedor);
+        tr.appendChild(tdStock);
+        tr.appendChild(tdEstado);
+        tr.appendChild(tdObservacion);
+        
+
+        tbody.appendChild(tr);
+    }
+    seleccionado = tbody.firstElementChild;
+    seleccionado.classList.add('seleccionado');
+
+    subSeleccionado = seleccionado.children[0];
+    subSeleccionado.classList.add('subSeleccionado');
+
+    arreglo = pedidos;
+}
