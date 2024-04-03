@@ -60,8 +60,9 @@ const venciCae = document.querySelector('.venciCae');
     await infoComprobante(venta);
     await listarCliente(cliente);
     movimientos ? await listaMovimientos(movimientos,venta) : await listar(venta,afip,opciones);
+    await listaIva(venta,afip,opciones);
     await listarAfip(afip);
-    await ipcRenderer.send('imprimir',JSON.stringify(opciones));
+    // await ipcRenderer.send('imprimir',JSON.stringify(opciones));
  });
 
 async function infoComprobante(venta) {
@@ -133,6 +134,46 @@ async function listar(venta,afip,opciones){
         }
     }
 
+
+};
+
+async function listaMovimientos(movimientos) {
+    
+    movimientos.map(({tipo_comp,iva,egreso,ingreso,descripcion,precio_unitario})=>{
+        const ivaAux = iva === "N" ? 1.21 : 1.105;
+        listaProductos.innerHTML += `
+                    <div class="cantidad">
+                        <p>${tipo_comp === "Nota Credito" ? ingreso/ivaAux.toFixed(2) : egreso.toFixed(2)}
+                        /${venta.condIva === "Inscripto" ? (precio_unitario/ivaAux).toFixed(2)  : precio_unitario.toFixed(2)}</p>
+                        <p class=iva>${iva === "N" ? "(21.00)" : "(10.50)"}</p>
+                        <p></p>
+                    </div>
+                    <div class="descripcionProducto">
+                        <p>${descripcion.slice(0,27)}</p>
+                        <p>${venta.condIva === "Inscripto" ? ((precio_unitario/ivaAux)*egreso).toFixed(2) : (precio_unitario * egreso).toFixed(2)}</p>
+                    </div>
+                `
+    })
+};
+
+async function listarCliente(cliente) {
+       nombre.innerText = cliente.cliente;
+       cuit.innerText = cliente.cuit.length === 11 ? `CUIT: ${cliente.cuit}` : `DNI: ${cliente.cuit}`;
+       condIva.innerHTML = cliente.cond_iva.toUpperCase();
+       direccion.innerHTML = cliente.direccion + " - " + (venta.localidad ? venta.localidad : "CHAJARI");
+};
+
+async function listarAfip(afip) {
+    if (afip && venta.tipo_comp !== "Recibos") {
+        qr.children[0].src = afip.QR;
+        cae.innerHTML = afip.cae;
+        venciCae.innerHTML = afip.vencimientoCae;
+    }else{
+        divAfip.classList.add('none');
+    }
+};
+
+async function listaIva(venta,afip,opciones){
     if (venta.condIva === "Inscripto" && venta.tipo_comp !== "Recibos") {
         if (venta.gravado21 !== 0) {
             discriminadorIva.innerHTML += `
@@ -158,69 +199,6 @@ async function listar(venta,afip,opciones){
                 </div>
             `
         }
-    }
-};
-
-async function listaMovimientos(movimientos) {
-    
-    movimientos.map(({tipo_comp,iva,egreso,ingreso,descripcion,precio_unitario})=>{
-        const ivaAux = iva === "N" ? 1.21 : 1.105;
-        listaProductos.innerHTML += `
-                    <div class="cantidad">
-                        <p>${tipo_comp === "Nota Credito" ? ingreso/ivaAux.toFixed(2) : egreso.toFixed(2)}
-                        /${venta.condIva === "Inscripto" ? (precio_unitario/ivaAux).toFixed(2)  : precio_unitario.toFixed(2)}</p>
-                        <p class=iva>${iva === "N" ? "(21.00)" : "(10.50)"}</p>
-                        <p></p>
-                    </div>
-                    <div class="descripcionProducto">
-                        <p>${descripcion.slice(0,27)}</p>
-                        <p>${venta.condIva === "Inscripto" ? ((precio_unitario/ivaAux)*egreso).toFixed(2) : (precio_unitario * egreso).toFixed(2)}</p>
-                    </div>
-                `
-
-                if (venta.condIva === "Inscripto" && venta.tipo_comp !== "Recibos") {
-                    if (venta.gravado21 !== 0) {
-                        discriminadorIva.innerHTML += `
-                            <div class="margin-1-t">
-                                <p>NETO SIN IVA</p>
-                                <p>${venta.gravado21}</p>
-                            </div>
-                            <div>
-                            <p>IVA 21.00/</p>
-                            <p>${venta.iva21}</p>
-                            </div>
-                        `
-                    }
-                    if (venta.gravado105 !== 0) {
-                        discriminadorIva.innerHTML += `
-                            <div class="margin-1-t">
-                                <p>NETO SIN IVA</p>
-                                <p>${venta.gravado105}</p>
-                            </div>
-                            <div>
-                                <p>IVA 10.50/</p>
-                                <p>${venta.iva105}</p>
-                            </div>
-                        `
-                    }
-                }
-    })
-};
-
-async function listarCliente(cliente) {
-       nombre.innerText = cliente.cliente;
-       cuit.innerText = cliente.cuit.length === 11 ? `CUIT: ${cliente.cuit}` : `DNI: ${cliente.cuit}`;
-       condIva.innerHTML = cliente.cond_iva.toUpperCase();
-       direccion.innerHTML = cliente.direccion + " - " + (venta.localidad ? venta.localidad : "CHAJARI");
-};
-
-async function listarAfip(afip) {
-    if (afip && venta.tipo_comp !== "Recibos") {
-        qr.children[0].src = afip.QR;
-        cae.innerHTML = afip.cae;
-        venciCae.innerHTML = afip.vencimientoCae;
-    }else{
-        divAfip.classList.add('none');
     }
 }
 
