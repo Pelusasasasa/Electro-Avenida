@@ -106,6 +106,7 @@ function asignarCampos(producto) {
     select.value = producto.rubro ? producto.rubro : select.value = "0";
     subRubros.value = producto.subRubro ? producto.subRubro : subRubros.value = "0";
     destacado.checked = producto.destacado;
+    info = producto.datos.join("\n");
     (parseFloat(producto.costo) !== 0) ? (costoPesos.value = parseFloat(producto.costo).toFixed(2)) : (costoPesos.value = "0.00");
     (parseFloat(producto.costodolar) !== 0) ? (costoDolares.value = parseFloat(producto.costodolar).toFixed(3)) : (costoDolares.value = "0.00");
 
@@ -418,7 +419,8 @@ oferta.addEventListener('change',e =>{
 masDatos.addEventListener('click',async e => {
     const {value} = await sweet.fire({
         title:"Datos",
-        input: 'textarea'
+        input: 'textarea',
+        inputValue:info
     });
 
     info = value.split('\n');

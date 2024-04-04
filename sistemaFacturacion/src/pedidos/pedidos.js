@@ -121,14 +121,14 @@ grabar.addEventListener('click', async e =>{
     trs.forEach(async td=>{
         const Pedido = {};
         Pedido.fecha = new Date();
-        Pedido.codigo = td.children[0].innerHTML;
-        Pedido.cantidad = td.children[1].innerHTML; 
-        Pedido.producto = td.children[2].innerHTML; 
-        Pedido.cliente = td.children[3].innerHTML.toUpperCase();
-        Pedido.telefono = td.children[4].innerHTML;
-        Pedido.marca = td.children[5].innerHTML;
-        Pedido.provedor = td.children[6].innerHTML;
-        Pedido.stock = td.children[7].innerHTML;
+        Pedido.codigo = td.children[0].innerText;
+        Pedido.cantidad = td.children[1].innerText; 
+        Pedido.producto = td.children[2].innerText; 
+        Pedido.cliente = td.children[3].innerText.toUpperCase();
+        Pedido.telefono = td.children[4].innerText;
+        Pedido.marca = td.children[5].innerText;
+        Pedido.provedor = td.children[6].innerText;
+        Pedido.stock = td.children[7].innerText;
         Pedido.observacion = td.children[8].children[0].value.toUpperCase();
         Pedido.vendedor = vendedor;
         Pedido.maquina = verNombrePc();
@@ -141,7 +141,7 @@ grabar.addEventListener('click', async e =>{
             console.log(error)
         }
     })
-    window.location.href = '../index.html'
+    // window.location.href = '../index.html';
 });
 
 //al precionar enter le damos el foco a numero

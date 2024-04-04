@@ -62,7 +62,7 @@ const venciCae = document.querySelector('.venciCae');
     movimientos ? await listaMovimientos(movimientos,venta) : await listar(venta,afip,opciones);
     await listaIva(venta,afip,opciones);
     await listarAfip(afip);
-    // await ipcRenderer.send('imprimir',JSON.stringify(opciones));
+    await ipcRenderer.send('imprimir',JSON.stringify(opciones));
  });
 
 async function infoComprobante(venta) {
