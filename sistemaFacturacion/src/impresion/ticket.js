@@ -102,15 +102,17 @@ async function listar(venta,afip,opciones){
         if(venta.productos){    
             for await(let {objeto,cantidad} of venta.productos){
                 const iva = objeto.iva === "N" ? 1.21 : 1.105;
+                const precio = objeto.oferta ? objeto.precioOferta : objeto.precio_venta;
+
                 listaProductos.innerHTML += `
                     <div class="cantidad">
-                        <p>${cantidad}/${venta.condIva === "Inscripto" ? (objeto.precio_venta/iva).toFixed(2)  : objeto.precio_venta}</p>
+                        <p>${cantidad}/${venta.condIva === "Inscripto" ? (precio/iva).toFixed(2)  : precio}</p>
                         <p class=iva>${objeto.iva === "N" ? "(21.00)" : "(10.50)"}</p>
                         <p></p>
                     </div>
                     <div class="descripcionProducto">
                         <p>${objeto.descripcion.slice(0,27)}</p>
-                        <p>${venta.condIva === "Inscripto" ? ((objeto.precio_venta/iva)*cantidad).toFixed(2) : (objeto.precio_venta * cantidad).toFixed(2)}</p>
+                        <p>${venta.condIva === "Inscripto" ? ((precio/iva)*cantidad).toFixed(2) : (precio * cantidad).toFixed(2)}</p>
                     </div>
                 `
         
