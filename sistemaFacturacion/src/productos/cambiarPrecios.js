@@ -38,6 +38,11 @@ select.addEventListener('change',async e=>{
             title: "La columna de codigo de fabrica tiene que llamarse CODIGO y la de costo Precio en el EXCEL y el libro se tiene que llamar Lista",
             returnFocus:false
         });
+    }if(select.value === "CANDIL"){
+        await sweet.fire({
+            title: "La hoja se debe llamar Lista, y la columca con el costo se tiene que llamar Precio (las tira ed el precio esta por 5 metros en el excel)",
+            returnFocus:false
+        });
     }else if(select.value === "BREMEN"){
         await sweet.fire({
             title: "La columna de codigo de fabrica tiene que llamarse Código y la de costo PRECIO en el EXCEL Y tambien pasar la fila de idenficaciones como el primer renglon",
@@ -59,7 +64,7 @@ select.addEventListener('change',async e=>{
 
 const rellenarStock = async(lista,lista2)=>{
     for await(let elem of lista){
-        if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC" || elem === "MB" || elem === "SPOTSLINE" || elem === "ELECE" || elem === "JELUZ" || elem === "FERROLUX") {
+        if (elem === "SAN JUSTO" || elem === "BREMEN" || elem === "INTERELEC" || elem === "CANDIL" || elem === "MB" || elem === "SPOTSLINE" || elem === "ELECE" || elem === "JELUZ" || elem === "FERROLUX") {
             const option = document.createElement('option');
             option.value = elem;
             option.text = "M - " + elem;
@@ -99,6 +104,9 @@ archivo.addEventListener('change',e=>{
         if (select.value === "SAN JUSTO") {
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
             cambiarPreciosSanJusto(datos,productos);
+        }else if(select.value === "CANDIL"){
+            let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
+            cambiarPrecioCandil(datos, productos);
         }else if(select.value === "BREMEN"){
             let datos = XLSX.utils.sheet_to_json(woorbook.Sheets["Lista"]);
             cambiarPrecioBremen(datos,productos);
@@ -262,6 +270,30 @@ async function cambiarPrecioPagliaroli(datos,productos){
     llenarListaNueva(productos);
 };
 
+async function cambiarPrecioCandil(datos,productos) {
+    for await(let elem of productos){
+        let tasaIva = elem.iva === "R" ? 15 : 26;
+        let producto = datos.find(n => n.Id == elem.cod_fabrica);
+        if (producto) {
+            if (elem.costodolar !== 0) {
+                elem.costodolar = parseFloat(redondear(producto.Precio / parseFloat(dolar.value), 2));
+                elem.impuestos = parseFloat(redondear(elem.costodolar * tasaIva / 100, 2));
+
+                const costoIva = parseFloat(redondear(elem.costodolar + elem.impuestos) * parseFloat(dolar.value),2);
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+                elem.precio_venta = parseFloat((Math.round(costoIva + utilidad)).toFixed(2));
+            }else{
+                elem.costo = parseFloat(producto.Precio.toFixed(2));
+                elem.impuestos = parseFloat(redondear(elem.costo * tasaIva / 100, 2));
+                const costoIva  = elem.costo + elem.impuestos;
+                const utilidad = costoIva * parseFloat(elem.utilidad) / 100;
+                elem.precio_venta = parseFloat((Math.round(costoIva + utilidad)).toFixed(2));
+            }
+        }
+    };
+    llenarListaNueva(productos);
+};
+
 async function cambiarPrecioFerrolux(datos,productos){
     for await(let elem of productos){
         let tasaIva = elem.iva === "R" ? 15 : 26;
@@ -282,8 +314,6 @@ async function cambiarPrecioFerrolux(datos,productos){
 };
 
 async function cambiarPrecioHaedo(datos,productos){
-    console.log(datos)
-    console.log(productos)
     for await(let elem of productos){
         const producto = datos.find(dato => dato.Artículo == elem.cod_fabrica);
         const tasaIva = elem.iva === "R" ? 15 : 26;
@@ -298,7 +328,6 @@ async function cambiarPrecioHaedo(datos,productos){
 
                 const costoIva = parseFloat(redondear((elem.costodolar + elem.impuestos) * parseFloat(dolar.value),2));
                 const utilidad = parseFloat(redondear((costoIva * elem.utilidad / 100),2));
-                console.log(costoIva,utilidad)
                 elem.precio_venta = Math.round(costoIva + utilidad);
             }else{
                 elem.costo = parseFloat(producto.Precio.toFixed(2));
