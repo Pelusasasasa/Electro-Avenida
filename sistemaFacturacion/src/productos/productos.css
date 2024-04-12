@@ -300,11 +300,11 @@ table tr th{
     font-size: 1.3rem;
 }
 
-.agregarProducto #web{
+.agregarProducto #web,.modificarProducto #web{
     display: flex;
     justify-content: space-around;
 }
 
-.agregarProducto #web input[type="checkbox"]{
+.agregarProducto #web input[type="checkbox"],.modificarProducto #web input[type="checkbox"]{
     transform: scale(1.5);
 }

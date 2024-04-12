@@ -38,11 +38,6 @@
         </main>
 
         <main>
-          <label for="imagen">Imagen</label>
-          <input type="file" name="imagen" id="imagen">
-        </main>
-
-        <main>
           <label for="stock">Stock</label>
           <input disabled type="text" name="stock" id="stock" placeholder="stock"/>
         </main>
@@ -53,32 +48,25 @@
           <label for="provedor">Provedor</label>
           <input disabled type="text" name="provedor" id="provedor" placeholder="provedor" />
         </main>
+        
+        <main>
+          <label for="rubros">Rubros</label>
+          <select disabled name="rubros" id="rubros">
+            <option value="0">---Seleccionar---</option>
+          </select>
+        </main>
+        
+        <main>
+          <label for="subRubros">Sub Rubros</label>
+          <select disabled name="subRubros" id="subRubros">
+            <option value="0">---Seleccionar---</option>
+          </select>
+        </main>
 
         <main>
           <label class="" for="marca">Marca</label>
           <input disabled type="text" name="marca" id="marca" placeholder="marca" />
         </main>
-      </section>
-
-      <section class="datos">
-          <main>
-            <label for="rubros">Rubros</label>
-            <select disabled name="rubros" id="rubros">
-              <option value="0">---Seleccionar---</option>
-            </select>
-          </main>
-
-          <main>
-            <label for="subRubros">Sub Rubros</label>
-            <select disabled name="subRubros" id="subRubros">
-              <option value="0">---Seleccionar---</option>
-            </select>
-          </main>
-
-          <main>
-            <label for="destacado">Destacado</label>
-            <input type="checkbox" name="destacado" id="destacado" disabled>
-          </main>
       </section>
 
       <section class="costos">
@@ -137,7 +125,29 @@
           <input disabled type="number" name="precioVenta" id="precioVenta" placeholder="precioVenta" />
         </main>
       </section>
+
+      <section>
+        <fieldset id="web">
+          <legend>Pagina Web</legend>
+      
+          <main class="formulario__campo">
+            <label for="imagen">Imagen</label>
+            <input type="file" name="imagen" id="imagen">
+          </main>
+      
+          <main class="formulario__campo">
+            <label for="mostrarWeb">Mostrar en Pagina</label>
+            <input type="checkbox" name="mostrarWeb" id="mostrarWeb">
+          </main>
+      
+          <main class="formulario__campo">
+            <label for="destacado">Destacado en Pagina</label>
+            <input type="checkbox" name="destacado" id="destacado">
+          </main>
+        </fieldset>
+      </section>
     </form>
+    
 
     <section class="botones">
       <button class="modificar">modificar</button>

@@ -12,24 +12,32 @@ let info = [];
 const codigo = document.querySelector('#codigo');
 const codFabrica = document.querySelector('#cod-fabrica');
 const descripcion = document.querySelector('#descripcion');
-const provedor = document.querySelector('#provedor');
-const imagen = document.querySelector('#imagen');
-const marca = document.querySelector('#marca');
+
+const unidad = document.querySelector('#unidad');
 const stock = document.querySelector('#stock');
+
+const provedor = document.querySelector('#provedor');
+const select = document.querySelector('#rubros');
+const subRubros = document.querySelector('#subRubros');
+const marca = document.querySelector('#marca');
+
 const tasaIva = document.querySelector('#tasaIva');
 const costoPesos = document.querySelector('#costoPesos');
 const costoDolares = document.querySelector('#costoDolares');
 const ivaImp = document.querySelector('#ivaImp')
 const costoTotal = document.querySelector('#costoTotal');
+
 const observaciones = document.querySelector('#observaciones');
 const oferta = document.querySelector('#oferta');
 const precioOferta = document.querySelector('#precioOferta');
+
 const utilidad = document.querySelector('#utilidad');
 const precioVenta = document.querySelector('#precioVenta');
-const unidad = document.querySelector('#unidad');
-const select = document.querySelector('#rubros');
-const subRubros = document.querySelector('#subRubros');
+
+const imagen = document.querySelector('#imagen');
 const destacado = document.querySelector('#destacado');
+const mostrarWeb = document.querySelector('#mostrarWeb');
+
 const masDatos = document.querySelector('#masDatos');
 
 //Botones
@@ -99,13 +107,17 @@ function asignarCampos(producto) {
     codigo.value = producto._id;
     codFabrica.value = producto.cod_fabrica;
     descripcion.value = producto.descripcion;
+
     provedor.value = producto.provedor;
-    marca.value = producto.marca;
-    stock.value = producto.stock
-    tasaIva.value = producto.iva;
     select.value = producto.rubro ? producto.rubro : select.value = "0";
     subRubros.value = producto.subRubro ? producto.subRubro : subRubros.value = "0";
-    destacado.checked = producto.destacado;
+    marca.value = producto.marca;
+
+    unidad.value = producto.unidad;
+    stock.value = producto.stock
+
+    tasaIva.value = producto.iva;
+
     info = producto.datos.join("\n");
     (parseFloat(producto.costo) !== 0) ? (costoPesos.value = parseFloat(producto.costo).toFixed(2)) : (costoPesos.value = "0.00");
     (parseFloat(producto.costodolar) !== 0) ? (costoDolares.value = parseFloat(producto.costodolar).toFixed(3)) : (costoDolares.value = "0.00");
@@ -119,12 +131,17 @@ function asignarCampos(producto) {
         costo = parseFloat(costoPesos.value);
         costoTotal.value = ((costo+parseFloat(producto.impuestos))).toFixed(3);
     }
+
     observaciones.value = producto.observacion;
     oferta.checked = producto.oferta;
     precioOferta.value = producto.precioOferta;
+
     utilidad.value=(parseFloat(producto.utilidad)).toFixed(2);
     precioVenta.value = producto.precio_venta;
-    unidad.value = producto.unidad;
+
+    destacado.checked = producto.destacado;
+    mostrarWeb.checked = producto.web;
+
     valorTasaIva = tasaIvas(producto.iva);
 };
 
@@ -167,27 +184,37 @@ guardar.addEventListener('click',async e=>{
     producto._id = codigo.value
     producto.cod_fabrica = codFabrica.value
     producto.descripcion = descripcion.value.toUpperCase();
-    producto.provedor = provedor.value
-    producto.marca = marca.value
-    producto.stock = stock.value
-    producto.iva = tasaIva.value
-    producto.costo = costoPesos.value
-    producto.costodolar = parseFloat(costoDolares.value)
+
+    producto.stock = stock.value;
+    producto.unidad = unidad.value;
+    
+    producto.provedor = provedor.value;
+    producto.rubro = select.value;
+    producto.subRubro = subRubros.value;
+    producto.marca = marca.value;
+
+    
+    producto.iva = tasaIva.value;
+    producto.costo = costoPesos.value;
+    producto.costodolar = parseFloat(costoDolares.value);
+    producto.impuestos = ivaImp.value;
+
     producto.observacion = observaciones.value;
     producto.oferta = oferta.checked;
     producto.precioOferta = parseFloat(precioOferta.value);
+
     producto.utilidad = utilidad.value;
     producto.precio_venta = precioVenta.value;
-    producto.unidad = unidad.value;
-    producto.impuestos = ivaImp.value;
-    producto.rubro = select.value;
-    producto.subRubro = subRubros.value;
+
     producto.destacado = destacado.checked;
+    producto.web = mostrarWeb.checked;
+
     producto.vendedor = vendedor;
     producto.datos = info;
     producto.maquina = verNombrePc();
     
     await axios.put(`${URL}productos/${producto._id}`,producto,configAxios);
+
     if (imagen.files[0]) {
         data.append('imagen',imagen.files[0]);
         await axios.put(`${URL}productos/${producto._id}/image`,data,{
@@ -197,6 +224,7 @@ guardar.addEventListener('click',async e=>{
             }
         });
     }
+    
     ipcRenderer.send('productoModificado',producto);
 
     window.close();

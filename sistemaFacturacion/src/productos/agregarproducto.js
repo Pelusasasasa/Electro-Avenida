@@ -182,7 +182,7 @@ agregar.addEventListener('click' ,async  (e) =>{
         utilidad: utilidad.value,
         precio_venta: precioVenta.value,
 
-        mostrarWeb: mostrarWeb.checked,
+        web: mostrarWeb.checked,
         destacado: destacado.checked,
         
     
