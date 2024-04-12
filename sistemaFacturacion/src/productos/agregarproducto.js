@@ -12,23 +12,32 @@ let info = [];
 const codigo = document.querySelector('#codigo');
 const codFabrica = document.querySelector('#cod-fabrica');
 const descripcion = document.querySelector('#descripcion');
-const provedor = document.querySelector('#provedor');
-const marca = document.querySelector('#marca');
+
+const unidad = document.querySelector('#unidad');
 const stock = document.querySelector('#stock');
+
+const provedor = document.querySelector('#provedor');
+const select = document.querySelector('#rubros');
+const subRubros = document.querySelector('#subRubros');
+const marca = document.querySelector('#marca');
+
 const tasaIva = document.querySelector('#tasaIva');
 const costoPesos = document.querySelector('#costoPesos');
 const costoDolares = document.querySelector('#costoDolares');
 const ivaImp = document.querySelector('#ivaImp');
 const costoTotal = document.querySelector('#costoTotal');
-const observaciones = document.querySelector('#observaciones'); 
+
+const observaciones = document.querySelector('#observaciones');
 const oferta = document.querySelector('#oferta'); 
 const precioOferta = document.querySelector('#precioOferta'); 
+
 const utilidad = document.querySelector('#utilidad');
 const precioVenta = document.querySelector('#precioVenta');
+
 const imagen = document.querySelector('#imagen');
-const unidad = document.querySelector('#unidad');
-const select = document.querySelector('#rubros');
-const subRubros = document.querySelector('#subRubros');
+const mostrarWeb = document.querySelector('#mostrarWeb');
+const destacado = document.querySelector('#destacado');
+
 const masDatos = document.querySelector('#masDatos');
 
 //Botones
@@ -152,24 +161,35 @@ agregar.addEventListener('click' ,async  (e) =>{
         _id: codigo.value,
         cod_fabrica: codFabrica.value,
         descripcion: descripcion.value.toUpperCase(),
-        provedor: provedor.value,
-        marca: marca.value.toUpperCase(),
+        
+        unidad: unidad.value,
         stock: stock.value,
+
+        provedor: provedor.value,
+        rubro:select.value,
+        subRubro: subRubros.value,
+        marca: marca.value.toUpperCase(),
+
         iva: letraIva,
-        observacion: observaciones.value.toUpperCase(),
         costo: costoPesos.value,
         costodolar: parseFloat(costoDolares.value),
         impuestos: ivaImp.value,
-        utilidad: utilidad.value,
-        precio_venta: precioVenta.value,
-        unidad: unidad.value,
-        rubro:select.value,
-        subRubro: subRubros.value,
-        vendedor:vendedor,
-        maquina:verNombrePc(),
+
+        observacion: observaciones.value.toUpperCase(),
         oferta:oferta.checked,
         precioOferta:precioOferta.value,
-        datos:info
+
+        utilidad: utilidad.value,
+        precio_venta: precioVenta.value,
+
+        mostrarWeb: mostrarWeb.checked,
+        destacado: destacado.checked,
+        
+    
+        datos:info,
+
+        vendedor:vendedor,
+        maquina:verNombrePc(),
     };
 
     //Enviamos el producto al servidor

@@ -243,7 +243,7 @@ ipcMain.on('productoModificado',(e,args)=>{
 
 //abrir ventana agregar producto
 ipcMain.on('abrir-ventana-agregar-producto',async(e,args)=>{
-    abrirVentana('productos/agregarProducto.html',1300,600,'noReinician',args)
+    abrirVentana('productos/agregarProducto.html',1300,700,'noReinician',args)
 })
 
 

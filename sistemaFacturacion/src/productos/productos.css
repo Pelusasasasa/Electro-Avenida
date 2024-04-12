@@ -299,3 +299,12 @@ table tr th{
     padding: 1rem;
     font-size: 1.3rem;
 }
+
+.agregarProducto #web{
+    display: flex;
+    justify-content: space-around;
+}
+
+.agregarProducto #web input[type="checkbox"]{
+    transform: scale(1.5);
+}

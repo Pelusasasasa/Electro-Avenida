@@ -38,11 +38,6 @@
             </main>
 
             <main class="formulario__campo">
-              <label for="imagen">Imagen</label>
-              <input type="file" name="imagen" id="imagen">
-            </main>
-
-            <main class="formulario__campo">
               <label class="" for="stock">Stock</label>
               <input type="text" name="stock" id="stock" placeholder="stock" value="0" disabled/>
             </main>
@@ -131,6 +126,27 @@
             <input type="number" name="precioVenta" id="precioVenta" placeholder="precioVenta" value="0.00"/>
           </main>
         </section>
+      
+      <section>
+          <fieldset id="web">
+            <legend>Pagina Web</legend>
+
+            <main class="formulario__campo">
+              <label for="imagen">Imagen</label>
+              <input type="file" name="imagen" id="imagen">
+            </main>
+
+            <main class="formulario__campo">
+              <label for="mostrarWeb">Mostrar en Pagina</label>
+              <input type="checkbox" name="mostrarWeb" id="mostrarWeb">
+            </main>
+
+            <main class="formulario__campo">
+              <label for="destacado">Destacado en Pagina</label>
+              <input type="checkbox" name="destacado" id="destacado">
+            </main>
+          </fieldset>
+      </section>
 
       <section class="botones">
         <button class="agregar boton-producto">Agregar</button>
