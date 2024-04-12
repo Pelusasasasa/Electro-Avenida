@@ -9,28 +9,6 @@ const Producto = new Schema({
         type: String,
         default: ""
     },
-    descripcion: {
-        type: String,
-        required: true,
-        set: ( valor ) => valor.toUpperCase().trim()
-    },
-    provedor: {
-        type: String,
-        default: ""
-    },
-    marca: {
-        type: String,
-        default: "",
-        set: ( valor ) => valor.toUpperCase().trim()
-    },
-    stock: {
-        type: String,
-        default: "0"
-    },
-    iva: {
-        type: String,
-        dafault: "N"
-    },
     costo: {
         type: String,
         default: "0"
@@ -39,9 +17,32 @@ const Producto = new Schema({
         type: Number,
         default: 0
     },
+    datos:{
+        type:Array,
+        default:[]
+    },
+    descripcion: {
+        type: String,
+        required: true,
+        set: ( valor ) => valor.toUpperCase().trim()
+    },
+    destacado:{
+        type:Boolean,
+        default:false
+    },
+    imgURL: String,
     impuestos: {
         type: String,
         default: "0"
+    },
+    iva: {
+        type: String,
+        dafault: "N"
+    },
+    marca: {
+        type: String,
+        default: "",
+        set: ( valor ) => valor.toUpperCase().trim()
     },
     observacion: {
         type: String,
@@ -52,21 +53,17 @@ const Producto = new Schema({
         type:Boolean,
         default:false
     },
+    provedor: {
+        type: String,
+        default: ""
+    },
     precioOferta:{
         type:Number,
         defatul:0
     },
-    utilidad: {
-        type: String,
-        default: "0"
-    },
     precio_venta: {
         type: Number,
         default: 0 
-    },
-    unidad: {
-        type: String,
-        default: "U"
     },
     rubro:{
         type:Number,
@@ -76,17 +73,22 @@ const Producto = new Schema({
         type:String,
         default:0
     },
-    imgURL: String,
-    destacado:{
-        type:Boolean,
-        default:false
+    stock: {
+        type: String,
+        default: "0"
     },
-    datos:{
-        type:Array,
-        default:[]
+    unidad: {
+        type: String,
+        default: "U"
+    },
+    utilidad: {
+        type: String,
+        default: "0"
+    },
+    web: {
+        type: Boolean,
+        default: true
     }
-})
-
-
+});
 
 module.exports = model('Producto', Producto);
