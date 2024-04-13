@@ -158,25 +158,33 @@ tasaIva.addEventListener('click', (e) =>{
 modificar.addEventListener('click',e=>{
     modificar.classList.add('none');
     guardar.classList.remove('none');
+
     codFabrica.removeAttribute("disabled");
     descripcion.removeAttribute("disabled"); 
+    unidad.removeAttribute('disabled');
+
     provedor.removeAttribute("disabled");
+    rubros.removeAttribute('disabled');
+    subRubros.removeAttribute('disabled');
     marca.removeAttribute("disabled"); 
+
     tasaIva.removeAttribute("disabled"); 
     costoPesos.removeAttribute("disabled"); 
     costoDolares.removeAttribute("disabled"); 
     costoTotal.removeAttribute("disabled"); 
+
     observaciones.removeAttribute("disabled");
-    utilidad.removeAttribute("disabled"); 
-    precioVenta.removeAttribute("disabled"); 
-    unidad.removeAttribute('disabled');
-    rubros.removeAttribute('disabled');
     oferta.removeAttribute('disabled');
-    subRubros.removeAttribute('disabled');
-    destacado.removeAttribute('disabled');
     if (oferta.checked) {
         precioOferta.removeAttribute('disabled');
     }
+
+    utilidad.removeAttribute("disabled"); 
+    precioVenta.removeAttribute("disabled"); 
+
+    mostrarWeb.removeAttribute('disabled');
+    destacado.removeAttribute('disabled');
+
 })
 
 guardar.addEventListener('click',async e=>{
