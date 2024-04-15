@@ -1,10 +1,12 @@
 const { ipcRenderer } = require("electron");
+
 require('dotenv').config();
 const URL = process.env.URL;
 const axios = require("axios");
+
 const { redondear, configAxios, verNombrePc } = require("../funciones");
-let data = new FormData();
 const sweet = require('sweetalert2');
+const path = require('path');
 
 let info = [];
 
@@ -224,13 +226,29 @@ guardar.addEventListener('click',async e=>{
     await axios.put(`${URL}productos/${producto._id}`,producto,configAxios);
 
     if (imagen.files[0]) {
-        data.append('imagen',imagen.files[0]);
-        await axios.put(`${URL}productos/${producto._id}/image`,data,{
-            headers:{
-                'Content-Type': `multipart/form-data`,
-                "ngrok-skip-browser-warning": "69420",
-            }
+
+        //Gaurdamos la imgane en la carpeta
+        const fs = require('fs');
+        const streamLectura = fs.createReadStream(imagen.files[0].path);
+        const streamEscritura = fs.createWriteStream('\\\\SERVIDOR//imagenes//' + producto._id + ".jpg");
+
+        streamLectura.pipe(streamEscritura);
+
+        //guardar en cloudinary
+        const {v2:cloudinary} = require('cloudinary');
+        //configuracion
+        cloudinary.config({
+            cloud_name:"dyo36foif",
+            api_key:"146911571979255",
+            api_secret: "_hFmQnWkIfztgcsqCcW5M_lMupc",
         });
+
+        
+        await cloudinary.uploader.upload(imagen.files[0].path,{
+            folder:"EA",
+            public_id:producto._id,
+            resource_type: 'image'
+        }).then(console.log)
     }
     
     ipcRenderer.send('productoModificado',producto);
