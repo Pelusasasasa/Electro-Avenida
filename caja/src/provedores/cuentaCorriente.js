@@ -127,6 +127,12 @@ const listarCuentas = (lista) => {
         tbody.appendChild(tr)
     });
 
+};
+
+const mostrarComprobante = async(e) => {
+    const numero = e.target.parentNode.children[6].innerText;
+    const comprobante = (await axios.get(`${URL}compPagos/forNumber/${numero}`)).data;
+    console.log(comprobante)
 }
 
 tbody.addEventListener('click',async e=>{
@@ -172,6 +178,8 @@ tbody.addEventListener('click',async e=>{
         }
     }
 });
+
+tbody.addEventListener('dblclick', mostrarComprobante);
 
 select.addEventListener('change',async e=>{
     e.preventDefault();
