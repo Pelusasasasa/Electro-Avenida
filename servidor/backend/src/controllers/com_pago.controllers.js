@@ -2,7 +2,7 @@ const compPagoCTRL = {};
 
 const ComPago = require('../models/Com_pago');
 
-compPagoCTRL.getForCodProv = async (req, req) => {
+compPagoCTRL.getForCodProv = async (req, res) => {
     const {codigo} = req.params;
     const comprobantes = await ComPago.find({codProv: codigo});
     res.send(comprobantes)

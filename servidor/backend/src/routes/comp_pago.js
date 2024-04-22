@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const router = Router();
 
-const {post, getForCodProv} = require('../controllers/com_pago.controllers');
+const {post, getForCodProv, getForNumber} = require('../controllers/com_pago.controllers');
 
 
 router.route('/')
