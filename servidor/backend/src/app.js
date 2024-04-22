@@ -12,13 +12,23 @@ app.use(cors());
 app.use(express.json())
  
 //routes
+
+//Cancelados
+app.use('/api/cancelados',require('./routes/cancelados'));
+//Cheques
+app.use('/api/cheques',require('./routes/cheques'));
+//Clientes
+app.use('/api/clientes',require('./routes/clientes'));
+//comprobante de pago
+app.use('/api/compPagos',require('./routes/comp_pago'));
+
 app.use('/api/usuarios',require('./routes/usuarios'))
-app.use('/api/clientes',require('./routes/clientes'))
+
 app.use('/api/pedidos',require('./routes/pedidos'))
 app.use('/api/productos',require('./routes/productos'))
 app.use('/api/tipoVenta',require('./routes/tipoVenta'))
 app.use('/api/movProductos',require('./routes/movProductos'))
-app.use('/api/cancelados',require('./routes/cancelados'))
+
 app.use('/api/ventas',require('./routes/ventas'))
 //Presupuesto
 app.use('/api/presupuesto',require('./routes/presupuesto'))
@@ -28,8 +38,6 @@ app.use('/api/cuentaComp',require('./routes/cueCorrComp'));
 app.use('/api/cuentaHisto',require('./routes/cueCorrHist'));
 //Imprimir un pdf
 app.use('/api/crearPdf',require('./routes/pdf'));
-//cheques
-app.use('/api/cheques',require('./routes/cheques'));
 //tarjetas
 app.use('/api/tarjetas',require('./routes/tarjetas'));
 //tipo Tarjetas
@@ -40,8 +48,7 @@ app.use('/api/vales',require('./routes/vale'));
 app.use('/api/cuentas',require('./routes/cuenta'));
 //movCaja
 app.use('/api/movCajas',require('./routes/movCaja'));
-//comprobante de pago
-app.use('/api/compPagos',require('./routes/comp_pago'));
+
 //Ultimos
 app.use('/api/ultimos',require('./routes/ultimos'));
 //Provedor

@@ -417,12 +417,13 @@ const cargarChequesPropios = async(lista)=>{
 const ponerEnComprobantePagos = async() =>{
     const trComprobantes = document.querySelectorAll('#tbodyComprobante tr');
     const trValores = document.querySelectorAll('#tbodyCheque tr');
+    const provedor = (await axios.get(`${URL}provedor/codigo/${provedores.value}`, configAxios)).data;
 
     for (let i = 0; i < trComprobantes.length; i++) {
         const comp_pago = {};
 
         comp_pago.codProv = codigo.value;
-        comp_pago.rSocial = provedores.innerText;
+        comp_pago.rSocial = provedor.provedor;
         if (trValores[i]) {
             comp_pago.n_cheque = trValores[i].children[0].innerHTML;
             comp_pago.banco = trValores[i].children[1].innerHTML;
