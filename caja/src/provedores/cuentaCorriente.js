@@ -1,3 +1,10 @@
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+    results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+};
+
 const axios = require('axios');
 const { cerrarVentana, configAxios, clickderecho } = require('../assets/js/globales');
 require('dotenv').config();
@@ -15,6 +22,8 @@ const hasta = document.getElementById('hasta');
 
 const codigo = document.getElementById('codigo');
 const saldo = document.getElementById('saldo');
+
+const pago  = document.getElementById('pago');
 const salir = document.getElementById('salir');
 
 const tbody = document.querySelector('tbody');
@@ -34,6 +43,7 @@ let subSeleccionado = '';
 
 window.addEventListener('load',async e=>{
     cerrarVentana();
+
     provedores = (await axios.get(`${URL}provedor`,configAxios)).data;
     provedores.sort((a,b)=>{
         if (a.provedor < b.provedor) {
@@ -44,8 +54,14 @@ window.addEventListener('load',async e=>{
         return 0
     });
     await listarProvedores(provedores);
+
+    if (getParameterByName('codProv')) {
+        select.value = getParameterByName('codProv');
+    };
+
     cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`,configAxios)).data;
     listarCuentas(cuentas);
+
     const provedor = provedores.find(provedor=>provedor.codigo === select.value);
     saldo.value = provedor.saldo.toFixed(2);
     codigo.value = provedor.codigo.padStart(4,"0");
@@ -130,9 +146,15 @@ const listarCuentas = (lista) => {
 };
 
 const mostrarComprobante = async(e) => {
-    const numero = e.target.parentNode.children[6].innerText;
-    const comprobante = (await axios.get(`${URL}compPagos/forNumber/${numero}`)).data;
-    console.log(comprobante)
+    if (seleccionado) {
+        const numero = seleccionado.children[6].innerText;
+        const codProv = codigo.value;
+        location.href = `./mostrarPago.html?numero=${numero}&codProv=${codProv}`;
+    }else{
+        await sweet.fire({
+            title: "Seleccionar una cuenta",
+        });
+    }
 }
 
 tbody.addEventListener('click',async e=>{
@@ -179,7 +201,7 @@ tbody.addEventListener('click',async e=>{
     }
 });
 
-tbody.addEventListener('dblclick', mostrarComprobante);
+pago.addEventListener('click', mostrarComprobante);
 
 select.addEventListener('change',async e=>{
     e.preventDefault();

@@ -10,8 +10,8 @@ compPagoCTRL.getForCodProv = async (req, res) => {
 
 compPagoCTRL.getForNumber = async (req, res) => {
     const {number} = req.params;
-    const comprobante = await ComPago.findOne({number: number});
-    res.send(comprobante);
+    const comprobantes = await ComPago.find({n_opago: number});
+    res.send(comprobantes);
 };
 
 compPagoCTRL.post = async(req,res)=>{
