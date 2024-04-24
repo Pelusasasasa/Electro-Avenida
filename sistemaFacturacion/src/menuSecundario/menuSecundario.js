@@ -38,6 +38,13 @@ const compensarCuenta = new MenuItem({
     }
 });
 
+const exportarXLSX = new MenuItem({
+    label:"Exportar XLSX",
+    async click(){
+        ventanaPrincipal.webContents.send('exportarXLSX');
+    }
+});
+
 const actualizarCuenta = new MenuItem({
     label: "Actualizar Cuenta",
     async click(){
@@ -74,10 +81,15 @@ function mostrarMenu(ventana,x,y){
     if (ventana === "Cuenta Corriente") {
         if (!menuSecundario.items.find(menu => menu.label === "Compensar Cuenta")) {
             menuSecundario.append(compensarCuenta);
-        }
+        };
+
         if (!menuSecundario.items.find(menu => menu.label === "Cancelar Cuenta")) {
             menuSecundario.append(cancelarCuenta);
-        }
+        };
+
+        if (!menuSecundario.items.find(menu => menu.label === "Exportar XLSX")) {
+            menuSecundario.append(exportarXLSX);
+        };
     };
 
     if(ventana === "Emitir Recibo"){

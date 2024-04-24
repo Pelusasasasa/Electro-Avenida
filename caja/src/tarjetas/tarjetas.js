@@ -268,7 +268,8 @@ ipcRenderer.on('recibir-informacion',(e,args)=>{
     const tdTarjeta = document.createElement('td');
     const tdCliente = document.createElement('td');
     const tdImporte = document.createElement('td');
-    const tdVendedor = document.createElement('td');
+    const tdTipo = document.createElement('td');
+    const tdVendedor = document.createElement('td');    
     const tdAcciones = document.createElement('td');
     const tdEliminarVarios = document.createElement('td');
 
@@ -277,6 +278,7 @@ ipcRenderer.on('recibir-informacion',(e,args)=>{
     tdTarjeta.innerText = args.tarjeta;
     tdCliente.innerText = args.cliente;
     tdImporte.innerText = parseFloat(args.imp).toFixed(2);
+    tdTipo.innerText = args.tipo_comp.toUpperCase();
     tdVendedor.innerText = args.vendedor;
     tdAcciones.innerHTML = `
             <div id=edit class=tool>
@@ -301,6 +303,7 @@ ipcRenderer.on('recibir-informacion',(e,args)=>{
     tr.appendChild(tdCliente);
     tr.appendChild(tdImporte);
     tr.appendChild(tdImporte);
+    tr.appendChild(tdTipo)
     tr.appendChild(tdVendedor);
     tr.appendChild(tdAcciones);
     tr.appendChild(tdEliminarVarios);

@@ -572,3 +572,40 @@ document.addEventListener('keydown',e=>{
         location.href === '../index.html';
     }
 });
+
+
+ipcRenderer.on('exportarXLSX',async e => {
+    const XLSX = require('xlsx');
+
+    let path = await ipcRenderer.invoke('elegirPath');
+    let wb = XLSX.utils.book_new();
+
+    let extencion = 'xlsx';
+
+    const movimientos = (await axios.get(`${URL}movProductos/${seleccionado.id}/${seleccionado.children[1].innerText}`)).data;
+    let resultante = [];
+    
+    movimientos.forEach( mov => {
+        const obj = {};
+        obj.fecha = mov.fecha.slice(0,10).split('-',3).reverse().join('/');
+        obj.codigo = mov.codProd;
+        obj.descripcion = mov.descripcion;
+        obj.cantidad = mov.egreso.toFixed(2);
+        obj.precio = mov.precio_unitario.toFixed(2);
+        obj.total = mov.total.toFixed(2);
+        obj.vendedor = mov.vendedor;
+
+        resultante.push(obj);
+    });
+
+    wb.props = {
+        Title: 'Movimientos',
+        subject: 'Movimientos',
+        Author: 'Electro Avenida'
+    };
+
+    let newWs = XLSX.utils.json_to_sheet(resultante);
+
+    XLSX.utils.book_append_sheet(wb, newWs, "Movimientos");
+    XLSX.writeFile(wb, path + "." + extencion);
+});
