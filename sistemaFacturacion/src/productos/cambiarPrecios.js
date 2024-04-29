@@ -315,7 +315,7 @@ async function cambiarPrecioFerrolux(datos,productos){
 
 async function cambiarPrecioHaedo(datos,productos){
     for await(let elem of productos){
-        const producto = datos.find(dato => dato.Artículo == elem.cod_fabrica);
+        const producto = datos.find(dato => dato.Artículo.slice(2) == elem.cod_fabrica);
         const tasaIva = elem.iva === "R" ? 15 : 26;
         if (producto) {
             if (elem.costodolar !== 0) {

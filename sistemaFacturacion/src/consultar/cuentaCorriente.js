@@ -294,7 +294,6 @@ async function mostrarDetalles(id,tipo,vendedor) {
         tr.children[4].innerText = "Total";
         tr.children[5].innerText = "Vendedor";
     let productos = (await axios.get(`${URL}movProductos/${id}/${tipo}`,configAxios)).data;
-    console.log(id)
     let movimientos1 = productos.filter(movimiento => movimiento.codCliente === clienteTraido._id);
     let movimientos2 = productos.filter(movimiento => movimiento.codigo === clienteTraido._id);
     productos = [...movimientos1,...movimientos2]
@@ -584,6 +583,13 @@ ipcRenderer.on('exportarXLSX',async e => {
 
     const movimientos = (await axios.get(`${URL}movProductos/${seleccionado.id}/${seleccionado.children[1].innerText}`)).data;
     let resultante = [];
+    resultante.push({
+        fecha: 'Remito N°',
+        codigo: seleccionado.children[2].innerText,
+        descripcion: "Total Del Remito",
+        cantidad: seleccionado.children[3].innerText
+    });
+    
     
     movimientos.forEach( mov => {
         const obj = {};
@@ -607,5 +613,6 @@ ipcRenderer.on('exportarXLSX',async e => {
     let newWs = XLSX.utils.json_to_sheet(resultante);
 
     XLSX.utils.book_append_sheet(wb, newWs, "Movimientos");
+
     XLSX.writeFile(wb, path + "." + extencion);
 });

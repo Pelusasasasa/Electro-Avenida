@@ -244,20 +244,3 @@ salir.addEventListener('click',async e=>{
 ipcRenderer.on('actualización_disponible',()=>{
     console.log("a")
 })
-
-
-const probando = async () => {
-
-    const lista = require('../prueba.json');
-    for(let elem of lista){
-        const producto = (await axios.get(`${URL}productos/${elem.codigo}`)).data;
-        producto.web = elem.web === "1" ? true : false;
-
-        await axios.put(`${URL}productos/${elem.codigo}`, producto, configAxios);
-    }
-    console.log('listo')
-
-};
-
-
-// probando();

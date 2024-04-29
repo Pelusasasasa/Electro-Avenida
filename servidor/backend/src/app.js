@@ -32,10 +32,11 @@ app.use('/api/movProductos',require('./routes/movProductos'))
 app.use('/api/ventas',require('./routes/ventas'))
 //Presupuesto
 app.use('/api/presupuesto',require('./routes/presupuesto'))
-//CuentaComp
+
+
 app.use('/api/cuentaComp',require('./routes/cueCorrComp'));
-//Cuenta Historica
 app.use('/api/cuentaHisto',require('./routes/cueCorrHist'));
+
 //Imprimir un pdf
 app.use('/api/crearPdf',require('./routes/pdf'));
 //tarjetas
