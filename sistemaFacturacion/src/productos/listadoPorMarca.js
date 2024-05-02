@@ -35,18 +35,21 @@ select.addEventListener('keyup',async e=>{
 
 select.addEventListener('click',async e=>{
     tbody.innerHTML = "";
-    listar();
+    if (e.target.value !== "") {
+        listar();
+    }
 });
 
 const listar = async ()=>{
     const productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`,configAxios)).data;
-    for await(let {descripcion,_id,stock,precio_venta,observacion} of productos){
+    for await(let {descripcion,cod_fabrica,_id,stock,precio_venta,observacion} of productos){
         tbody.innerHTML += `
             <tr>
                 <td>${_id}</td>
                 <td>${descripcion}</td>
                 <td class=text-end>${parseFloat(stock).toFixed(2)}</td>
                 <td class=text-end>$${precio_venta}</td>
+                <td>${cod_fabrica}</td>
                 <td>${observacion.slice(0,13)}</td>
 
             </tr>
