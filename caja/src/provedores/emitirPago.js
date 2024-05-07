@@ -341,6 +341,7 @@ aceptar.addEventListener('click',async e=>{
     await cambiarNumeroComprobantePago(document.querySelectorAll('#tbodyComprobante tr'));
     
     await ponerEnComprobantePagos();
+
     if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
          const comprobante = {};
 
@@ -417,13 +418,15 @@ const cargarChequesPropios = async(lista)=>{
 const ponerEnComprobantePagos = async() =>{
     const trComprobantes = document.querySelectorAll('#tbodyComprobante tr');
     const trValores = document.querySelectorAll('#tbodyCheque tr');
-    const provedor = (await axios.get(`${URL}provedor/codigo/${provedores.value}`, configAxios)).data;
+    const tamanio = trValores.length > trComprobantes.length ? trValores.length : trComprobantes.length;
 
-    for (let i = 0; i < trComprobantes.length; i++) {
+    const provedor = (await axios.get(`${URL}provedor/codigo/${provedores.value}`, configAxios)).data;
+    for (let i = 0; i < tamanio; i++) {
         const comp_pago = {};
 
         comp_pago.codProv = codigo.value;
         comp_pago.rSocial = provedor.provedor;
+
         if (trValores[i]) {
             comp_pago.n_cheque = trValores[i].children[0].innerHTML;
             comp_pago.banco = trValores[i].children[1].innerHTML;
@@ -431,9 +434,16 @@ const ponerEnComprobantePagos = async() =>{
         }else{
             comp_pago.imp_cheque = 0.00
         }
-        comp_pago.nrm_comp = trComprobantes[i].children[0].innerHTML;
-        comp_pago.tipo_comp = trComprobantes[i].children[1].innerHTML;
-        comp_pago.imp_Fact = trComprobantes[i].children[3].innerHTML;
+
+        if (trComprobantes[i]) {
+            comp_pago.nro_comp = trComprobantes[i].children[0].innerHTML;
+            comp_pago.tipo_comp = trComprobantes[i].children[1].innerHTML;
+            comp_pago.imp_Fact = trComprobantes[i].children[3].innerHTML;
+        }else{
+            comp_pago.nro_comp = "0000-00000000";
+            comp_pago.tipo_comp = " ";
+        }
+
         comp_pago.n_opago = numeroVenta.value;
         try {
             await axios.post(`${URL}compPagos`,comp_pago,configAxios);
