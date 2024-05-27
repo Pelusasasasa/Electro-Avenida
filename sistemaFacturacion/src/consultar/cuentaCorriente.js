@@ -176,7 +176,7 @@ listar.addEventListener('keyup', async e=>{
 });
 
 const listarLista = (lista,situacion,tipo)=>{
-    let aux
+    let aux;
 
     if (situacion === "negro") {
         aux = "Presupuesto"

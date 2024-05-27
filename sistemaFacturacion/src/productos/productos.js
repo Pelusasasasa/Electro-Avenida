@@ -112,10 +112,9 @@ const ponerProductos = productos =>{
 
         tdId.innerHTML = producto._id;
         tdDscripcion.innerHTML = producto.descripcion;
-        // PLAFON CUBETO 1 LUZ G9 WENGUE
         tdPrecio.innerHTML = producto.oferta 
         ? ` <p class=oferta>
-                <span>${producto.precioOferta.toFixed(2)}</span>
+                <span>${producto.precioOferta?.toFixed(2)}</span>
                 <span>${producto.precio_venta.toFixed(2)}</span>
             </p>` 
         : parseFloat(producto.precio_venta).toFixed(2);
