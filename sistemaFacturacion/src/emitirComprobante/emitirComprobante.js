@@ -1384,13 +1384,14 @@ buscarAfip.addEventListener('click',  async (e)=>{
         }else{
                 if (dnicuit.value) {
                    if (dnicuit.value.length>8) {
-                    
+
                         const persona = await buscarPersonaPorCuit(dnicuit.value);
                         codigoC.value = '9999';
                         nombre.value = persona.nombre;
                         localidad.value = persona.localidad;
                         direccion.value = persona.direccion;
                         provincia.value = persona.provincia;
+                        conIva.value = 'Inscripto';
 
                    }else{
 
