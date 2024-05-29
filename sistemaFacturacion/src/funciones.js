@@ -16,7 +16,7 @@ const prueba = btoa(`electroAvenida:Elbio935`);
 function redondear(numero,decimales){
     const signo = numero >= 0 ? 1 : -1;
     return(Math.round((numero * Math.pow(10,decimales)) + (signo * 0.0001)) / Math.pow(10,decimales)).toFixed(decimales);
-}
+};
 
 const copiar = () =>{
     document.addEventListener('keydown',e=>{
@@ -29,7 +29,7 @@ const copiar = () =>{
             },{once:true});
         }
     });
-}
+};
 
 const recorrerFlechas = async (e) => {
     // document.addEventListener('keyup',async e=>{
@@ -212,7 +212,7 @@ function abrirVentana(texto,width,height,reinicio = false,informacion = "",vende
       nuevaVentana = null;
   })
 
-}
+};
 
 const inputOptions = new Promise((resolve) => {
     setTimeout(() => {
@@ -230,7 +230,7 @@ const cerrarVentana = async()=>{
             window.close();
         }
     });
-}
+};
 
 const botonesSalir = async()=>{
     const salir = document.querySelector('.salir');
@@ -273,12 +273,12 @@ async function generarQR(texto) {
     const url = `https://www.afip.gob.ar/fe/qr/?p=${texto}`;
     const QR = await qrCode.toDataURL(url);
     return QR;
-}
+};
 
 const verEstadoServidorAfip = async()=>{
     const serverStatus = await afip.ElectronicBilling.getServerStatus();
     console.log(serverStatus);
-}
+};
 
 //funcion que hace la factura para subir a la afip directamente
 const subirAAfip = async(venta)=>{
@@ -354,6 +354,63 @@ const subirAAfip = async(venta)=>{
             numero:ultimoElectronica + 1
         }
 };
+
+//funcion que hace que traiga una persona de la afip
+const buscarPersonaPorCuit = async(valor) => {
+    const {nombre, apellido, domicilio} = await afip.RegisterScopeThirteen.getTaxpayerDetails(valor);
+    console.log(domicilio)
+    const persona = {
+        nombre: nombre + ' ' + apellido,
+        direccion: domicilio[0].direccion,
+        localidad: domicilio[0].localidad,
+        provincia: domicilio[0].descripcionProvincia
+    }; 
+
+    return persona; 
+};
+
+//funcion que hace que traiga una persona de la afip
+const buscarPersonaPorDNI = async(valor) => {
+        const digito = calcularDigitoVerificador('27' + valor);
+        let persona = await afip.RegisterScopeThirteen.getTaxpayerDetails('27' + valor + digito);
+
+    if (!persona) {
+        const digito = calcularDigitoVerificador('20' + valor);
+        persona = await afip.RegisterScopeThirteen.getTaxpayerDetails('20' + valor + digito); 
+    };
+
+    const { nombre,apellido,domicilio } = persona;
+    
+    const retorno = {
+        nombre: nombre + ' ' + apellido,
+        direccion: domicilio[0].direccion,
+        localidad: domicilio[0].localidad,
+        provincia: domicilio[0].descripcionProvincia
+    }; 
+
+    return retorno; 
+};
+
+function calcularDigitoVerificador(cuit) {
+    const pesos = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
+    const cuitArray = cuit.split('').map(Number);
+    
+    let suma = 0;
+    for (let i = 0; i < pesos.length; i++) {
+        suma += cuitArray[i] * pesos[i];
+    }
+
+    const resto = suma % 11;
+    let digitoVerificador = 11 - resto;
+
+    if (digitoVerificador === 10) {
+        digitoVerificador = 9;
+    } else if (digitoVerificador === 11) {
+        digitoVerificador = 0;
+    }
+
+    return digitoVerificador;
+}
 
 const ponerNotificaciones = async(texto,titulo='!Info')=>{
     const notificacion = document.querySelector('.notificacion');
@@ -569,9 +626,12 @@ module.exports = {
     verNombrePc,
     clickderecho,
     ponerNotificaciones,
+    
 
     //Emitircomprobante
     verProductoConCero,
+    buscarPersonaPorCuit,
+    buscarPersonaPorDNI,
 
     //Recibo
     validarRecibo

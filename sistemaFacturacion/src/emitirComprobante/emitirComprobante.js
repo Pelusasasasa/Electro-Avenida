@@ -6,7 +6,7 @@ function getParameterByName(name) {
 }
 
 const sweet = require('sweetalert2');
-const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago, configAxios, verNombrePc, ponerNotificaciones, verProductoConCero} = require('../funciones');
+const {inputOptions,copiar, recorrerFlechas, redondear, subirAAfip, verCodComp, generarMovimientoCaja, verTipoPago, configAxios, verNombrePc, ponerNotificaciones, verProductoConCero, buscarPersonaPorCuit, buscarPersonaPorDNI} = require('../funciones');
 const { ipcRenderer } = require("electron");
 
 const axios = require("axios");
@@ -1384,61 +1384,29 @@ buscarAfip.addEventListener('click',  async (e)=>{
         }else{
                 if (dnicuit.value) {
                    if (dnicuit.value.length>8) {
-                        buscarPersonaPorCuit(dnicuit.value)
+                    
+                        const persona = await buscarPersonaPorCuit(dnicuit.value);
+                        codigoC.value = '9999';
+                        nombre.value = persona.nombre;
+                        localidad.value = persona.localidad;
+                        direccion.value = persona.direccion;
+                        provincia.value = persona.provincia;
+
                    }else{
-                    const Http = new XMLHttpRequest();
-                    const url=`https://afip.tangofactura.com/Index/GetCuitsPorDocumento/?NumeroDocumento=${dnicuit.value}`;
-                    Http.open("GET", url);
-                    Http.send()
-                    Http.onreadystatechange = (e) => {
-                        buscarPersonaPorCuit(JSON.parse(Http.responseText).data[0])
-                        }
-                   }
+
+                    const persona = (await buscarPersonaPorDNI(dnicuit.value))
+                    codigoC.value = '9999';
+                    nombre.value = persona.nombre;
+                    localidad.value = persona.localidad;
+                    direccion.value = persona.direccion;
+                    provincia.value = persona.provincia;
+                   
+                }
                 }
             }
     cuentaC.classList.add('none');
     observaciones.focus();
 });
-
-//Funcion para buscar una persona directamente por el cuit
-async function buscarPersonaPorCuit(cuit) {
-        const Https = new XMLHttpRequest();
-        const url=`https://afip.tangofactura.com/REST/GetContribuyente?cuit=${cuit}`;
-        await Https.open("GET", url);
-        await Https.send()
-        Https.onreadystatechange =async  (e) => {
-            if (Https.responseText !== "") {
-                const persona = JSON.parse(Https.responseText)
-                if (persona.errorGetData === false) {
-                    const {nombre,domicilioFiscal,EsRI,EsMonotributo,EsExento,EsConsumidorFinal} = persona.Contribuyente;
-                    const cliente = {};
-                    cliente.cliente=nombre;
-                    cliente.localidad = domicilioFiscal.localidad;
-                    cliente.direccion = domicilioFiscal.direccion;
-                    cliente.provincia = domicilioFiscal.nombreProvincia;
-                    buscarCliente.value = nombre;
-                    localidad.value=domicilioFiscal.localidad;
-                    direccion.value = domicilioFiscal.direccion;
-                    provincia.value = domicilioFiscal.nombreProvincia;
-                    if (EsRI) {
-                        cliente.cond_iva="Inscripto";
-                    }else if (EsExento) {
-                        cliente.cond_iva="Exento";
-                    } else if (EsMonotributo) {
-                        cliente.cond_iva="Monotributista";
-                    } else if(EsConsumidorFinal) {
-                        cliente.cond_iva="Consumidor Final";
-                    }
-                    cliente.cuit = dnicuit.value;
-                    cliente._id = "9999";
-                    await ponerInputsClientes(cliente);
-                }else{
-                    sweet.fire({title:"Persona no encontrada"});
-                }
-            }
-        }
-         
-};
 
 async function ponerPrecioFinanciacionTarjeta(e,descripcion,precio){
     if (e.key === "Enter") {
