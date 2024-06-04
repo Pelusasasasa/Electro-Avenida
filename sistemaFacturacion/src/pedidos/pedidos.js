@@ -70,7 +70,9 @@ cantidad.addEventListener('keypress',e=>{
         const producto = {
             _id: "999-999",
             descripcion:descripcion.value,
-            stock:0
+            stock:0,
+            marca: '',
+            provedor: ''
         }
         const valorDeCantidad = cantidad.value === "" ? 0 : cantidad.value;
         mostrarVentas(producto,valorDeCantidad)
@@ -141,7 +143,7 @@ grabar.addEventListener('click', async e =>{
             console.log(error)
         }
     })
-    // window.location.href = '../index.html';
+    window.location.href = '../index.html';
 });
 
 //al precionar enter le damos el foco a numero
