@@ -119,12 +119,14 @@ aceptar.addEventListener('click',async e=>{
             })
             
         };
+
     };
 
     movimiento.pasado = true;
     const now = new Date();
     const p = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     movimiento.fecha = p;
+
     try {
         await axios.put(`${URL}movCajas/id/${movimiento._id}`,movimiento,configAxios);
         movimientos = movimientos.filter(mov => mov._id !== seleccionado.id);
@@ -138,16 +140,21 @@ aceptar.addEventListener('click',async e=>{
         });
         console.log(error)
     };
+
+    seleccionado = '';
 });
 
 efectivo.addEventListener('click',e=>{
-    total.value = seleccionado.children[5].innerHTML;
-    cobrado.value = total.value;
-    cobrado.focus();
+    if (seleccionado) {
+        total.value = seleccionado.children[5].innerHTML;
+        cobrado.value = total.value;
+        cobrado.focus();
+    }
 });
 
 tarjeta.addEventListener('click',e=>{
-    ipcRenderer.send('abrir-ventana',{
+    if (seleccionado) {
+        ipcRenderer.send('abrir-ventana',{
         path:"tarjetas/agregarTarjeta.html",
         width:500,
         height:600,
@@ -159,24 +166,32 @@ tarjeta.addEventListener('click',e=>{
             tipo:seleccionado.children[3].innerText
         }
     });
+
+        seleccionado = '';
+    };
 });
 
 cheque.addEventListener('click',e=>{
-    ipcRenderer.send('abrir-ventana',{
-        path:"cheques/agregar-modificarCheques.html",
-        width:500,
-        height:600,
-        cerrarVentana:true,
-        informacionAgregar:{
-            cliente:seleccionado.children[2].innerText,
-            vendedor:seleccionado.children[6].innerText,
-            imp:parseFloat(seleccionado.children[5].innerText)
-        }
-    });
+    if (seleccionado) {
+        ipcRenderer.send('abrir-ventana',{
+            path:"cheques/agregar-modificarCheques.html",
+            width:500,
+            height:600,
+            cerrarVentana:true,
+            informacionAgregar:{
+                cliente:seleccionado.children[2].innerText,
+                vendedor:seleccionado.children[6].innerText,
+                imp:parseFloat(seleccionado.children[5].innerText)
+            }
+        });
+
+        seleccionado = '';
+    };
 });
 
 transferencia.addEventListener('click',async e=>{
-    const egreso = {}
+    if (seleccionado) {
+        const egreso = {}
     egreso.tMov = 'E';
     egreso.fecha = new Date();
     egreso.nro_comp = seleccionado.children[4].innerText;
@@ -205,6 +220,7 @@ transferencia.addEventListener('click',async e=>{
     };
 
     aceptar.click();
+    };
 });
 
 cobrado.addEventListener('keypress',e=>{
