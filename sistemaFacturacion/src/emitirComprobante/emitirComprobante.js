@@ -850,7 +850,12 @@ ticketFactura.addEventListener('click',async (e) =>{
         return;
     };
 
-    tipoVenta = conIva.value === "Inscripto" ? "Factura A" : "Factura B";
+    if(conIva.value === 'Inscripto' || conIva.value === 'Monotributista'){
+        tipoVenta = "Factura A";
+    }else{
+        tipoVenta = "Factura B";
+    };
+
     venta.tipo_pago = await verElTipoDeVenta(tiposVentas)//vemos si es contado,cuenta corriente o presupuesto en el input[radio]
     //Vemos si algun producto tiene lista negativa
     //mostramos alertas

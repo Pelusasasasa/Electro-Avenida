@@ -62,7 +62,7 @@ const venciCae = document.querySelector('.venciCae');
     movimientos ? await listaMovimientos(movimientos,venta) : await listar(venta,afip,opciones);
     await listaIva(venta,afip,opciones);
     await listarAfip(afip);
-    await ipcRenderer.send('imprimir',JSON.stringify(opciones));
+    // await ipcRenderer.send('imprimir',JSON.stringify(opciones));
  });
 
 async function infoComprobante(venta) {
@@ -97,22 +97,20 @@ async function infoComprobante(venta) {
 }
 
 async function listar(venta,afip,opciones){
-    
     if (venta.tipo_comp !== "Recibos") {
         if(venta.productos){    
             for await(let {objeto,cantidad} of venta.productos){
                 const iva = objeto.iva === "N" ? 1.21 : 1.105;
                 const precio = objeto.oferta ? objeto.precioOferta : objeto.precio_venta;
-
                 listaProductos.innerHTML += `
                     <div class="cantidad">
-                        <p>${cantidad}/${venta.condIva === "Inscripto" ? (precio/iva).toFixed(2)  : precio}</p>
+                        <p>${cantidad}/${(venta.condIva === "Inscripto" || venta.condIva === "Monotributista") ? (precio/iva).toFixed(2)  : precio}</p>
                         <p class=iva>${objeto.iva === "N" ? "(21.00)" : "(10.50)"}</p>
                         <p></p>
                     </div>
                     <div class="descripcionProducto">
                         <p>${objeto.descripcion.slice(0,27)}</p>
-                        <p>${venta.condIva === "Inscripto" ? ((precio/iva)*cantidad).toFixed(2) : (precio * cantidad).toFixed(2)}</p>
+                        <p>${(venta.condIva === "Inscripto" || venta.condIva === "Monotributista") ? ((precio/iva)*cantidad).toFixed(2) : (precio * cantidad).toFixed(2)}</p>
                     </div>
                 `
         
@@ -142,17 +140,18 @@ async function listar(venta,afip,opciones){
 async function listaMovimientos(movimientos) {
     
     movimientos.map(({tipo_comp,iva,egreso,ingreso,descripcion,precio_unitario})=>{
+        console.log(venta.condIva === "Monotributista")
         const ivaAux = iva === "N" ? 1.21 : 1.105;
         listaProductos.innerHTML += `
                     <div class="cantidad">
                         <p>${tipo_comp === "Nota Credito" ? ingreso/ivaAux.toFixed(2) : egreso.toFixed(2)}
-                        /${venta.condIva === "Inscripto" ? (precio_unitario/ivaAux).toFixed(2)  : precio_unitario.toFixed(2)}</p>
+                        /${(venta.condIva === "Inscripto" || venta.condIva === "Monotributista") ? (precio_unitario/ivaAux).toFixed(2)  : precio_unitario.toFixed(2)}</p>
                         <p class=iva>${iva === "N" ? "(21.00)" : "(10.50)"}</p>
                         <p></p>
                     </div>
                     <div class="descripcionProducto">
                         <p>${descripcion.slice(0,27)}</p>
-                        <p>${venta.condIva === "Inscripto" ? ((precio_unitario/ivaAux)*egreso).toFixed(2) : (precio_unitario * egreso).toFixed(2)}</p>
+                        <p>${(venta.condIva === "Inscripto" || venta.condIva === "Monotributista") ? ((precio_unitario/ivaAux)*egreso).toFixed(2) : (precio_unitario * egreso).toFixed(2)}</p>
                     </div>
                 `
     })
@@ -176,7 +175,7 @@ async function listarAfip(afip) {
 };
 
 async function listaIva(venta,afip,opciones){
-    if (venta.condIva === "Inscripto" && venta.tipo_comp !== "Recibos") {
+    if ((venta.condIva === "Inscripto" || venta.condIva === "Monotributista") && venta.tipo_comp !== "Recibos") {
         if (venta.gravado21 !== 0) {
             discriminadorIva.innerHTML += `
                 <div class="margin-1-t">
