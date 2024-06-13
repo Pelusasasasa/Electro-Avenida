@@ -1,21 +1,21 @@
 const XLSX = require('xlsx');//llamamos a la libreria xlsx
 
 const pedidos = (Pedidos,path) =>{
-let wb = XLSX.utils.book_new();
-let extencion = "xlsx";
-extencion = path.split('.')[1] ? path.split('.')[1] : extencion;
-path = path.split('.')[0];
+    let wb = XLSX.utils.book_new();
+    let extencion = "xlsx";
+    extencion = path.split('.')[1] ? path.split('.')[1] : extencion;
+    path = path.split('.')[0];
 
-wb.props = {
-    Title: "Pedidos",
-    subject: "Test",
-    Author: "Electro Aaenida"
-}
+    wb.props = {
+        Title: "Pedidos",
+        subject: "Test",
+        Author: "Electro Aaenida"
+    }
 
-let newWS = XLSX.utils.json_to_sheet(Pedidos)
+    let newWS = XLSX.utils.json_to_sheet(Pedidos)
 
-XLSX.utils.book_append_sheet(wb, newWS,'Pedidos');
-XLSX.writeFile(wb,path + "." + extencion );
+    XLSX.utils.book_append_sheet(wb, newWS,'Pedidos');
+    XLSX.writeFile(wb,path + "." + extencion );
 };
 
 const ventas = (Ventas,path)=>{

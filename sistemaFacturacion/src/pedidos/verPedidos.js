@@ -281,8 +281,8 @@ function listarPedidos(pedidos){
         tr.appendChild(tdMarca);
         tr.appendChild(tdProvedor);
         tr.appendChild(tdStock);
-        tr.appendChild(tdEstado);
         tr.appendChild(tdObservacion);
+        tr.appendChild(tdEstado);
         
 
         tbody.appendChild(tr);

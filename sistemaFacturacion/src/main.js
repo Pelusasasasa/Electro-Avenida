@@ -340,7 +340,6 @@ const abrirVentanaImprimir = async(texto,width,height,reinicio,show=false)=>{
 //Aca hacemos que se descargue un excel Ya sea con los pedidos o con las ventas
 
 async function descargas(nombreFuncion,ventasTraidas,path) {
-    console.log(nombreFuncion)
     if(nombreFuncion === "Pedidos"){
         pedidos((await axios.get(`${URL}pedidos`,configAxios)).data,path)
     }else if(nombreFuncion === "Ventas"){

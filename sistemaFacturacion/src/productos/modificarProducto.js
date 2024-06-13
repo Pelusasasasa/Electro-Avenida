@@ -10,9 +10,10 @@ const path = require('path');
 
 let info = [];
 
-
 const codigo = document.querySelector('#codigo');
 const codFabrica = document.querySelector('#cod-fabrica');
+const dolarInput = document.querySelector('#dolar');
+
 const descripcion = document.querySelector('#descripcion');
 
 const unidad = document.querySelector('#unidad');
@@ -58,6 +59,7 @@ let vendedor;
 window.addEventListener('load',async e=>{
     let numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
     dolar = numeros.dolar;
+    dolarInput.value = dolar;
 });
 
 //listamos los rubros para que tenemos en la base de datos
