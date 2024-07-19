@@ -626,7 +626,7 @@ presupuesto.addEventListener('click',async (e)=>{
     }else if (listaProductos.length === 0) {
         await sweet.fire({title:"Cargar Productos"});
         return;
-    }else if(parseFloat(descuento.value) < -10 || parseFloat(descuento.value) > 10 && (vendedor !== "ELBIO" || vendedor !== "AGUSTIN")){
+    }else if(parseFloat(descuento.value) < -10 || parseFloat(descuento.value) > 10 && ( codigoC.value !== "L082" && vendedor !== "ELBIO" && vendedor !== "AGUSTIN")){
         await sweet.fire({title:"Descuento no autorizado"});
         return;
     }else if(document.getElementById('cuentaCorriente').checked && listaProductos.find(producto => producto.objeto._id === "999-999")){
