@@ -193,6 +193,25 @@ modificar.addEventListener('click',e=>{
 
 guardar.addEventListener('click',async e=>{
     let producto = {};
+
+    if(costoPesos.value === ""){
+        await sweet.fire({
+            title:"Poner un valor en costo",
+            returnFocus: false
+        });
+        costoPesos.focus();
+        return;
+    };
+
+    if(costoDolares.value === ""){
+        await sweet.fire({
+            title:"Poner un valor en costo dolar",
+            returnFocus: false
+        });
+        costoDolares.focus();
+        return;
+    };
+
     producto._id = codigo.value
     producto.cod_fabrica = codFabrica.value
     producto.descripcion = descripcion.value.toUpperCase();

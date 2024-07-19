@@ -132,6 +132,12 @@
     white-space: nowrap;
 }
 
+
+th svg{
+    margin-top: auto;
+    width: 20px;
+}
+
 .productos tr .oferta{
     display: flex;
     margin: 0;

@@ -37,7 +37,127 @@ const notificacion = document.querySelector('.notificacion');
 let texto = "";
 let seleccionado = "";
 let subSeleccion;
+let productos = [];
+
+const thead = document.querySelector('thead');
 const body = document.querySelector('body');
+
+const ordenar = async (e) => { 
+
+    if (e.target.parentNode.id === "codigo") {
+
+        if (document.getElementById('flechaArribaCodigo').classList.contains('none')) {
+            document.getElementById('flechaArribaCodigo').classList.remove('none');
+            document.getElementById('flechaAbajoCodigo').classList.add('none');
+
+            productos.sort((a,b) => {
+                if (a._id > b._id) {
+                    return -1;
+                }else if(a._id < b._id){
+                    return 1
+                };
+                return 0
+            });
+        }else if(document.getElementById('flechaAbajoCodigo').classList.contains('none')){
+            document.getElementById('flechaArribaCodigo').classList.add('none');
+            document.getElementById('flechaAbajoCodigo').classList.remove('none');
+            
+            productos.sort((a,b) => {
+                if (a._id > b._id) {
+                    return 1;
+                }else if(a._id < b._id){
+                    return -1
+                };
+                return 0
+            });
+        }
+
+        
+
+    };
+
+    if (e.target.parentNode.id === "descripcion") {
+
+        if (document.getElementById('flechaArribaMarca').classList.contains('none')) {
+            document.getElementById('flechaArribaDescripcion').classList.remove('none');
+            document.getElementById('flechaAbajoDescripcion').classList.add('none');
+
+            productos.sort((a,b) => {
+                if (a.descripcion > b.descripcion) {
+                    return -1;
+                }else if(a.descripcion < b.descripcion){
+                    return 1
+                };
+                return 0
+            });
+        }else if(document.getElementById('flechaAbajoDescripcion').classList.contains('none')){
+            document.getElementById('flechaArribaDescripcion').classList.add('none');
+            document.getElementById('flechaAbajoDescripcion').classList.remove('none');
+            
+            productos.sort((a,b) => {
+                if (a.descripcion > b.descripcion) {
+                    return 1;
+                }else if(a.descripcion < b.descripcion){
+                    return -1
+                };
+                return 0
+            });
+        }
+
+    };
+
+    if (e.target.innerText === "Precio") {
+        productos.sort((a,b) => {
+            if (a.precio_venta > b.precio_venta) {
+                return 1;
+            }else if(a.precio_venta < b.precio_venta){
+                return -1
+            };
+            return 0
+        })
+    };
+
+    if (e.target.parentNode.id === "marca") {
+       if (document.getElementById('flechaArribaMarca').classList.contains('none')) {
+            document.getElementById('flechaArribaMarca').classList.remove('none');
+            document.getElementById('flechaAbajoMarca').classList.add('none');
+
+            productos.sort((a,b) => {
+                if (a.marca > b.marca) {
+                    return -1;
+                }else if(a.marca < b.marca){
+                    return 1
+                };
+                return 0
+            });
+        }else if(document.getElementById('flechaAbajoMarca').classList.contains('none')){
+            document.getElementById('flechaArribaMarca').classList.add('none');
+            document.getElementById('flechaAbajoMarca').classList.remove('none');
+            
+            productos.sort((a,b) => {
+                if (a.marca > b.marca) {
+                    return 1;
+                }else if(a.marca < b.marca){
+                    return -1
+                };
+                return 0
+            });
+        }
+    };
+
+    if (e.target.innerText === "Stock") {
+        productos.sort((a,b) => {
+            if (parseFloat(a.stock) > parseFloat(b.stock)) {
+                return 1;
+            }else if(parseFloat(a.stock) < parseFloat(b.stock)){
+                return -1
+            };
+            return 0
+        })
+    };
+
+    ponerProductos(productos)
+}
 
 if (acceso === "2" || acceso === "1") {
     eliminar.classList.add('none')
@@ -92,6 +212,7 @@ window.addEventListener('click',e=>{
         table.classList.remove('tablaFocus')
     }
 });
+
 
 const ponerProductos = productos =>{
     resultado.innerHTML = '';
@@ -155,6 +276,8 @@ buscarProducto.addEventListener('keydown',e=>{
 });
 
 imagen.addEventListener('click',mostrarImagenGrande);
+
+thead.addEventListener('click',ordenar);
 
 //Hacemos que se seleccione un producto
 seleccionarTBody.addEventListener('click',(e) =>{
@@ -222,7 +345,6 @@ async function filtrar(){
     //obtenemos lo que se escribe en el input
     texto = buscarProducto.value.toLowerCase();
     texto = texto.replace('/','%2F');
-    let productos;
     if (texto.indexOf('/') !== -1) {
         const posicionBarra = texto.indexOf('/');
         let nuevoTexto = texto.replace('/',"ALT47");    
