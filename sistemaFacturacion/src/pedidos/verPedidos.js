@@ -119,10 +119,6 @@ document.addEventListener('keydown',async e=>{
     })
 });
 
-salir.addEventListener('click',e=>{
-    location.href = '../index.html';
-});
-
 //Eliminar un pedido
 eliminarPedido.addEventListener("click", async e =>{
     seleccionado = document.querySelector('.seleccionado');
@@ -194,37 +190,96 @@ function clickderecho(e) {
 };
 
 const OrdenarPedidos = (e) => {
-    if (e.target.innerText.toUpperCase() === "MARCA") {
-        pedidos.sort((a,b) => {
-            if (a.marca > b.marca) {
-                return 1;
-            }else if(a.marca < b.marca){
-                return -1;
-            };
-            return 0
-        });
-        console.table(pedidos)
-        tbody.innerHTML = "";
-        listarPedidos(pedidos);
+    if (e.target.parentNode.id === "cliente") {
+        if (document.getElementById('flechaArribaCliente').classList.contains('none')) {
+                document.getElementById('flechaAbajoCliente').classList.add('none')
+                document.getElementById('flechaArribaCliente').classList.remove('none')
+
+                pedidos.sort((a,b) => {
+                    if (a.cliente > b.cliente) {
+                        return 1;
+                    }else if(a.cliente < b.cliente){
+                        return -1;
+                    };
+                        return 0;
+                });
+
+        }else if(document.getElementById('flechaAbajoCliente').classList.contains('none')){
+                document.getElementById('flechaAbajoCliente').classList.remove('none')
+                document.getElementById('flechaArribaCliente').classList.add('none')
+
+                pedidos.sort((a,b) => {
+                    if (a.cliente > b.cliente) {
+                        return -1;
+                    }else if(a.cliente < b.cliente){
+                        return 1;
+                    };
+                    return 0;
+                });
+        };
     };
-    if (e.target.innerText.toUpperCase() === "PROVEDOR") {
-        pedidos.sort((a,b) => {
-            if (a.provedor > b.provedor) {
-                return 1;
-            }else if(a.provedor < b.provedor){
-                return -1;
-            };
-            return 0
-        });
-        tbody.innerHTML = "";
-        listarPedidos(pedidos);
+
+    if (e.target.parentNode.id === "provedor") {
+        if (document.getElementById('flechaArribaProvedor').classList.contains('none')) {
+                document.getElementById('flechaAbajoProvedor').classList.add('none')
+                document.getElementById('flechaArribaProvedor').classList.remove('none')
+
+                pedidos.sort((a,b) => {
+                    if (a.provedor > b.provedor) {
+                        return 1;
+                    }else if(a.provedor < b.provedor){
+                        return -1;
+                    };
+                        return 0;
+                });
+
+        }else if(document.getElementById('flechaAbajoProvedor').classList.contains('none')){
+                document.getElementById('flechaAbajoProvedor').classList.remove('none')
+                document.getElementById('flechaArribaProvedor').classList.add('none')
+
+                pedidos.sort((a,b) => {
+                    if (a.provedor > b.provedor) {
+                        return -1;
+                    }else if(a.provedor < b.provedor){
+                        return 1;
+                    };
+                    return 0;
+                });
+        };
     };
-}
 
-thead.addEventListener('click',OrdenarPedidos);
+    if (e.target.parentNode.id === "marca") {
+        if (document.getElementById('flechaArribaMarca').classList.contains('none')) {
+                document.getElementById('flechaAbajoMarca').classList.add('none')
+                document.getElementById('flechaArribaMarca').classList.remove('none')
 
+                pedidos.sort((a,b) => {
+                    if (a.marca > b.marca) {
+                        return 1;
+                    }else if(a.marca < b.marca){
+                        return -1;
+                    };
+                        return 0;
+                });
 
+        }else if(document.getElementById('flechaAbajoMarca').classList.contains('none')){
+                document.getElementById('flechaAbajoMarca').classList.remove('none')
+                document.getElementById('flechaArribaMarca').classList.add('none')
 
+                pedidos.sort((a,b) => {
+                    if (a.marca > b.marca) {
+                        return -1;
+                    }else if(a.marca < b.marca){
+                        return 1;
+                    };
+                    return 0;
+                });
+        };
+    };
+
+    tbody.innerHTML = "";
+    listarPedidos(pedidos);
+};
 
 function listarPedidos(pedidos){
     for(let [index,pedido] of pedidos.entries()){
@@ -294,4 +349,10 @@ function listarPedidos(pedidos){
     subSeleccionado.classList.add('subSeleccionado');
 
     arreglo = pedidos;
-}
+};
+
+thead.addEventListener('click',OrdenarPedidos);
+
+salir.addEventListener('click',e=>{
+    location.href = '../index.html';
+});

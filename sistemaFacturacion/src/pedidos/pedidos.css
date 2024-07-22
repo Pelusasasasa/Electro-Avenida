@@ -21,6 +21,11 @@ h1{
     width: 100%;
 }
 
+th svg {
+    margin-top: auto;
+    width: 20px;
+}
+
 .table{
     background-color: white;
     height: 75vh;
@@ -34,6 +39,10 @@ h1{
 table thead tr th,table tbody tr td{
     border: .1rem solid black;
     font-size: 1.4rem;
+}
+
+table thead tr th{
+    font-size: 2.0rem;
 }
 
 .observaciones{
