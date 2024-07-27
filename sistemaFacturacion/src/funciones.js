@@ -357,10 +357,10 @@ const subirAAfip = async(venta)=>{
 
 //funcion que hace que traiga una persona de la afip
 const buscarPersonaPorCuit = async(valor) => {
-    const {nombre, apellido, domicilio} = await afip.RegisterScopeThirteen.getTaxpayerDetails(valor);
-    console.log(domicilio)
+    const {nombre, razonSocial, apellido, domicilio} = await afip.RegisterScopeThirteen.getTaxpayerDetails(valor);
+    
     const persona = {
-        nombre: nombre + ' ' + apellido,
+        nombre: razonSocial ? razonSocial : nombre + ' ' + apellido,
         direccion: domicilio[0].direccion,
         localidad: domicilio[0].localidad,
         provincia: domicilio[0].descripcionProvincia
