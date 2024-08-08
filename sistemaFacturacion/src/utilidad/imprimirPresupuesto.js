@@ -35,6 +35,15 @@ aceptar.addEventListener('click',async e=>{
         cliente = (await axios.get(`${URL}clientes/id/${venta.idCliente}`,configAxios)).data;
     };
     
+    if( cliente._id === '9999'){
+        cliente.cliente = venta.nombrecliente;
+        cliente.localidad = venta.localidad;
+        cliente.direccion = venta.direccion;
+        cliente.telefono = venta.telefono;
+        cliente.cuit = venta.dnicuit;
+    };
+    console.log(cliente)
+    
     const movimientos  = (venta.tipo_comp === "Recibos_P" || venta.tipo_comp === "recibos") 
     ? venta.comprobantes
     : (await axios.get(`${URL}movProductos/${comprobante}/${tipoVenta}`)).data;

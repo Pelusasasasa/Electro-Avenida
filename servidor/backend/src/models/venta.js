@@ -10,21 +10,32 @@ const Venta = new Schema({
         type: Date,
         default: Date.now
     },
+    cliente: {
+        type: String,
+        default:"9999"
+    },
     nombreCliente: {
         type: String,
-        default: "A Consumidor Final"
+        default: "A Consumidor Final",
+        set: (value) => value.toUpperCase() 
     },
+    
+    direccion:{
+        type: String,
+        default: "",
+        set: (value) => value.toUpperCase()
+    },
+    localidad: {
+        type: String,
+        default: "",
+        set: (value) => value.toUpperCase()
+    },
+
     gravado:{
         type:Number,
     },
     ivanormal:{
         type:Number,
-    },
-    direccion:String,
-    localidad:String,
-    cliente: {
-        type: String,
-        default:"9999"
     },
     cod_comp: {
         type: Number,
@@ -40,6 +51,7 @@ const Venta = new Schema({
     comprob: {
         type: String,
     },
+    
     tipo_pago: String,
     cod_doc: Number, //Blanco
     dnicuit: String, //Blanco
@@ -49,13 +61,13 @@ const Venta = new Schema({
         default: "",
         set: ( valor ) => valor.toUpperCase()
     },
+    
     descuento: Number,
     precioFinal: {
         type: Number,
         required: true
     },
-    vendedor: String,
-    empresa: String,
+
     numeroAsociado: String,
     gravado21: Number,
     gravado105: Number,
@@ -64,7 +76,10 @@ const Venta = new Schema({
     cant_iva:Number,
     qr:String,
     cae:String,
-    vencimientoCae:String
+    vencimientoCae:String,
+
+    vendedor: String,
+    empresa: String,
 })
 
 module.exports = model('Venta',Venta)

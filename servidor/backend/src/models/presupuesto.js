@@ -6,13 +6,32 @@ const Presupuesto = new Schema({
         type: Date,
         default: Date.now
     },
-    nombreCliente:{
-        type: String,
-        default: "A Consumidor Final"
-    },
     cliente:{
         type: String,
         default: "9999"
+    },
+    nombreCliente:{
+        type: String,
+        default: "A Consumidor Final",
+        set: (value) => value.toUpperCase()
+    },
+    direccion:{
+        type:String,
+        default: '',
+        set: (value) => value.toUpperCase()
+    },
+    localidad:{
+        type: String,
+        default: '',
+        set: (value) => value.toUpperCase()
+    },
+    telefono:{
+        type: String,
+        default: '',
+    },
+    dnicuit:{
+        type: String,
+        default: '',
     },
     tipo_comp: {
         type: String,
