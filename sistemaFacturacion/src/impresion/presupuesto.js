@@ -7,7 +7,7 @@ const { ipcRenderer } = require("electron");
         const idCliente = document.querySelector('.idCliente');
         const cuit = document.querySelector('.cuit');
         const direccion = document.querySelector('.direccion');
-        const localidad = document.querySelector('.localidad');
+        const telefono = document.querySelector('.telefono');
         const numeroComp = document.querySelector('.numero');
         const cond_iva = document.querySelector('.cond_iva');
         const subtotal = document.querySelector('.subtotal');
@@ -35,7 +35,6 @@ const { ipcRenderer } = require("electron");
             const [hora,minuto,segundo] = date.slice(11,19).split(':',3);
 
             numero.innerHTML=venta.nro_comp;
-            venta.observaciones !== "" ? clientes.innerHTML += ` (${venta.observaciones})` : "";
 
             fecha.innerHTML = `${dia}/${mes}/${anio} ${hora}:${minuto}:${segundo}`;
             vendedor.innerHTML = venta.vendedor;
@@ -90,8 +89,8 @@ const { ipcRenderer } = require("electron");
         clientes.innerHTML = cliente.cliente + `(${venta.observaciones.toUpperCase()})`;
         idCliente.innerHTML = cliente._id ? cliente._id : cliente.id;
         cuit.innerHTML = cliente.cuit;
-        direccion.innerHTML = cliente.direccion;
-        localidad.innerHTML = cliente.localidad;
+        direccion.innerText = cliente.direccion + '-' + cliente.localidad;
+        telefono.innerText = cliente.telefono ? cliente.telefono : '';
         if (cliente.cond_iva) {
             cond_iva.innerHTML = cliente.cond_iva
         }else{

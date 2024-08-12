@@ -36,13 +36,12 @@ aceptar.addEventListener('click',async e=>{
     };
     
     if( cliente._id === '9999'){
-        cliente.cliente = venta.nombrecliente;
+        cliente.cliente = venta.nombreCliente;
         cliente.localidad = venta.localidad;
         cliente.direccion = venta.direccion;
         cliente.telefono = venta.telefono;
         cliente.cuit = venta.dnicuit;
     };
-    console.log(cliente)
     
     const movimientos  = (venta.tipo_comp === "Recibos_P" || venta.tipo_comp === "recibos") 
     ? venta.comprobantes
@@ -62,7 +61,6 @@ puntoVenta.addEventListener('keypress',e=>{
         numero.focus();
     }
 });
-
 
 numero.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
