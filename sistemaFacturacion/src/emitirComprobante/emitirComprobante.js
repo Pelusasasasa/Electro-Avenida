@@ -370,7 +370,7 @@ function mostrarVentas(objeto, cantidad) {
     : objeto.precio_venta * cantidad;
   total.value = redondear(Preciofinal, 2);
   resultado.innerHTML += `
-        <tr id=${id} class=${objeto.stock <= 0 ? "tdRojo" : ''} >
+        <tr id=${id} class=${(objeto.stock <= 0 || objeto.precio_venta <= 0) ? "tdRojo" : ''} >
         <td class="tdEnd">${cantidad.toFixed(2)}</td>
         <td>${objeto._id}</td>
         <td>${objeto.descripcion} ${objeto.marca}</td>
