@@ -152,8 +152,6 @@ async function facturarPrestamos() {
 //   ipcRenderer.send('facturar-prestamos',JSON.stringify(arrayAFacturar));
 };
 
-tbody.addEventListener('contextmenu',clickDerecho);
-
 function clickDerecho(e) {
     seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
@@ -173,9 +171,6 @@ function clickDerecho(e) {
     };
     ipcRenderer.send('mostrar-menu',cordenadas);
 };
-
-ipcRenderer.on('reImprimir',imprimirPrestamo);
-ipcRenderer.on('cambiarObservacion',cambiarObservacion);
 
 async function imprimirPrestamo() {
     const venta = (await axios.get(`${URL}prestamos/forNumber/${seleccionado.id}`,configAxios)).data;
@@ -199,6 +194,10 @@ async function cambiarObservacion(){
     }
 };
 
+ipcRenderer.on('reImprimir',imprimirPrestamo);
+ipcRenderer.on('cambiarObservacion',cambiarObservacion);
+
+tbody.addEventListener('contextmenu',clickDerecho);
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {
         if (!detallesProducto.classList.contains('none')) {

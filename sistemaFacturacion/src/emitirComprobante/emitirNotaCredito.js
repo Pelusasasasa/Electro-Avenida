@@ -527,7 +527,9 @@ factura.addEventListener('click',async e=>{
     try {
         const venta = {};
         venta.tipo_pago = await verTipoPago();
-        if (facturaOriginal.value === "") {
+        if (codigoC.value === "") {
+            await sweet.fire({ title: "Poner codigo de cliente ", returnFocus: false});
+        }else if (facturaOriginal.value === "") {
             await sweet.fire({title:"No se escribio el numero de la factura Original",returnFocus:false})
             facturaOriginal.focus();
         }else if(listaProductos.length === 0){

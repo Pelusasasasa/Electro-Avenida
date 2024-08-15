@@ -193,4 +193,21 @@ button:hover{
     border: .1rem solid white;
 }
 
+.tdRojo{
+    animation: rojo .8s infinite;
+}
+
+@keyframes rojo{
+    0%{
+        background-color: white;
+    }
+    50%{
+        background-color: white ;
+    }
+    100%{
+        background-color: red;
+    }
+}
+
 /* Fin Emitir Comprobante */
+

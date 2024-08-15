@@ -348,8 +348,7 @@ ipcRenderer.on("mando-el-producto", async (e, args) => {
       ponerFinanciacionBancoEntreRios(e, descripcion, porcentaje)
     );
   } else {
-    const producto = (await axios.get(`${URL}productos/${id}`, configAxios))
-      .data;
+    const producto = (await axios.get(`${URL}productos/${id}`, configAxios)).data;
     mostrarVentas(producto, parseFloat(cantidad));
   }
 });
@@ -371,7 +370,7 @@ function mostrarVentas(objeto, cantidad) {
     : objeto.precio_venta * cantidad;
   total.value = redondear(Preciofinal, 2);
   resultado.innerHTML += `
-        <tr id=${id}>
+        <tr id=${id} class=${objeto.stock <= 0 ? "tdRojo" : ''} >
         <td class="tdEnd">${cantidad.toFixed(2)}</td>
         <td>${objeto._id}</td>
         <td>${objeto.descripcion} ${objeto.marca}</td>
