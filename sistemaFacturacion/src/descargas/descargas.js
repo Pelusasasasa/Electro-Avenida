@@ -37,7 +37,7 @@ const ventas = (Ventas,path)=>{
         }
         return 0
     });
-
+    console.log(Ventas[0])
     //borraos las propiedades que no son necesarias
     Ventas.forEach(venta => {
         delete venta._id
@@ -62,6 +62,7 @@ const ventas = (Ventas,path)=>{
         delete venta.vencimientoCae;
         delete venta.localidad;
         delete venta.precioSinDescuento;
+        delete venta.telefono;  
         delete venta.comprobantes;
 
 
@@ -88,7 +89,6 @@ const ventas = (Ventas,path)=>{
         let secons = horas[2];
         mes = mes === 13 ? 1 : mes;
 
-        venta.precioSinDescuento = venta.descuento ? parseFloat(venta.precioFinal) + parseFloat(venta.descuento) : venta.precioFinal;
         venta.fecha = `${dia}/${mes}/${anio} - ${hora}:${minuts}:${secons}`;
     });
     

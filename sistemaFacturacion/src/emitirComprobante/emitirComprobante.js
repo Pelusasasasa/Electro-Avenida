@@ -8,7 +8,22 @@ function getParameterByName(name) {
 }
 
 const sweet = require("sweetalert2");
-const {inputOptions, copiar, recorrerFlechas,  redondear,  subirAAfip,  verCodComp,  generarMovimientoCaja,  verTipoPago,  configAxios,  verNombrePc,  ponerNotificaciones,  verProductoConCero,  buscarPersonaPorCuit,  buscarPersonaPorDNI,} = require("../funciones");
+const {
+  inputOptions,
+  copiar,
+  recorrerFlechas,
+  redondear,
+  subirAAfip,
+  verCodComp,
+  generarMovimientoCaja,
+  verTipoPago,
+  configAxios,
+  verNombrePc,
+  ponerNotificaciones,
+  verProductoConCero,
+  buscarPersonaPorCuit,
+  buscarPersonaPorDNI,
+} = require("../funciones");
 const { ipcRenderer } = require("electron");
 
 const axios = require("axios");
@@ -348,7 +363,8 @@ ipcRenderer.on("mando-el-producto", async (e, args) => {
       ponerFinanciacionBancoEntreRios(e, descripcion, porcentaje)
     );
   } else {
-    const producto = (await axios.get(`${URL}productos/${id}`, configAxios)).data;
+    const producto = (await axios.get(`${URL}productos/${id}`, configAxios))
+      .data;
     mostrarVentas(producto, parseFloat(cantidad));
   }
 });
@@ -370,7 +386,9 @@ function mostrarVentas(objeto, cantidad) {
     : objeto.precio_venta * cantidad;
   total.value = redondear(Preciofinal, 2);
   resultado.innerHTML += `
-        <tr id=${id} class=${(objeto.stock <= 0 || objeto.precio_venta <= 0) ? "tdRojo" : ''} >
+        <tr id=${id} class=${
+    objeto.stock <= 0 || objeto.precio_venta <= 0 ? "tdRojo" : ""
+  } >
         <td class="tdEnd">${cantidad.toFixed(2)}</td>
         <td>${objeto._id}</td>
         <td>${objeto.descripcion} ${objeto.marca}</td>
@@ -1022,7 +1040,15 @@ prestamo.addEventListener("click", async (e) => {
   cliente.cuit = dnicuit.value;
 
   //imprimimos el prestamo
-  await ipcRenderer.send("imprimir-venta", [    prestamo,    cliente,    false,    1,    "Comprobante",    "valorizado",    arregloMovimiento,  ]);
+  await ipcRenderer.send("imprimir-venta", [
+    prestamo,
+    cliente,
+    false,
+    1,
+    "Comprobante",
+    "valorizado",
+    arregloMovimiento,
+  ]);
   location.href = "../index.html";
 });
 
