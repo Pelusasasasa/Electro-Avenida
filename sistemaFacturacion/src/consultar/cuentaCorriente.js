@@ -114,7 +114,7 @@ const mostrarNegro = () => {
   buscador.classList.add("mostrarNegro");
   botones.classList.add("mostrarNegro");
   saldo.classList.add("none");
-  botonFacturar.classList.remove("none");
+  botonFacturar.classList.remove('none')
   facturarVarios.classList.remove("none");
   saldo_p.classList.remove("none");
   body.classList.add("mostrarNegro");
@@ -173,6 +173,14 @@ listar.addEventListener("click", (e) => {
       listar.nro_comp === seleccionado.id &&
         mostrarDetalles(listar.nro_comp, listar.tipo_comp);
     });
+    
+    if (seleccionado.children[3].innerText != '0.10'){
+      botonFacturar.disabled = false;
+      facturarVarios.disabled = false;
+    }else{
+      botonFacturar.disabled = true;
+      facturarVarios.disabled = true;
+    }
   }
 });
 

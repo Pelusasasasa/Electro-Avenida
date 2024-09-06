@@ -94,8 +94,8 @@ tbody.addEventListener('click',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
-    const movimiento = movimientos.find(mov=>mov._id === seleccionado.id);
-
+    const movimiento = movimientos.find(mov=> mov._id === seleccionado.id);
+    //Lo que hacemos es cargar un descuento a Movimiento de Caja
     if (parseFloat(descuento.value) !== 0 && descuento.value) {
         const mov = {};
         mov.tMov = "E";
@@ -166,8 +166,6 @@ tarjeta.addEventListener('click',e=>{
             tipo:seleccionado.children[3].innerText
         }
     });
-
-        seleccionado = '';
     };
 });
 

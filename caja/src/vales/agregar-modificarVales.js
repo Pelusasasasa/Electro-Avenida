@@ -45,6 +45,9 @@ nro_comp.addEventListener('keyup',e=>{
 });
 
 agregar.addEventListener('click',async e=>{
+
+    if (!imp.value) return await sweet.fire('Poner un importe al vale');
+
     const vale = {};
     vale.nro_comp = nro_comp.value;
     vale.rsoc = rSocial.value.toUpperCase();

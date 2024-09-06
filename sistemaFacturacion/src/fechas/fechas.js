@@ -64,7 +64,6 @@ aceptar.addEventListener("click", async (e) => {
 
 //cuando apretamos enter le pasamos el foco a hasta
 desde.addEventListener("keypress", (e) => {
-  e.preventDefault();
   if (e.key === "Enter") {
     hasta.focus();
   }
@@ -72,7 +71,6 @@ desde.addEventListener("keypress", (e) => {
 
 //cuando apretamos enter le pasamos el foco a aceptar
 hasta.addEventListener("keypress", (e) => {
-  e.preventDefault();
   if (e.key === "Enter") {
     aceptar.focus();
   }
