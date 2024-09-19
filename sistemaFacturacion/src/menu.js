@@ -211,6 +211,12 @@ const templateMenu = [
         },
       },
       {
+        label: "Ultimo Movimientos de Productos",
+        click(){
+          abrirVentana("utilidad/ultimosMovimientos.html",1200,1000);
+        }
+      },
+      {
         label: "Ultimas Ventas",
         click() {
           abrirVentana("utilidad/ultimasVentas.html", 1200, 1000);

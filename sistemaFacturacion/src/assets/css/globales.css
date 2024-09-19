@@ -254,3 +254,51 @@ select{
     transform: rotate(360deg);
   }
 }
+
+
+.flex{
+  display: flex;
+}
+
+.flex-col{
+  flex-direction: column;
+}
+
+.justify-around{
+  justify-content: space-around;
+}
+
+
+/* Texto */
+
+.text-2xl{
+  font-size: 2rem;
+}
+
+.text-center{
+  text-align: center;
+}
+
+
+/* border */
+
+.border-collapse{
+  border-collapse: collapse;
+}
+
+.border{
+  border: .1rem solid;
+}
+
+.border-black{
+  border-color: black;
+}
+
+.bg-white{
+  background-color: white;
+}
+
+/*height*/
+.h-80{
+  height: 80vh;
+}
