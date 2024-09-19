@@ -183,7 +183,6 @@ cheque.addEventListener('click',e=>{
             }
         });
 
-        seleccionado = '';
     };
 });
 
