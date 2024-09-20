@@ -6,7 +6,9 @@ const desde = document.getElementById('desde');
 const hasta = document.getElementById('hasta');
 
 const getMovs = async() => {
-
+    console.log(desde.value)
+    const movs = (await axios.get(`${URL}movProductos/${desde.value}/${hasta.value}`)).data;
+    console.log(movs)
 };
 
 window.addEventListener('load',async e=>{
@@ -14,7 +16,7 @@ window.addEventListener('load',async e=>{
     hasta.value = new Date().toISOString().slice(0, 10);
     desde.focus();
 
-    await axios.get(`${URL}`);
+    getMovs()
 });
 
 desde.addEventListener('keypress',e=>{

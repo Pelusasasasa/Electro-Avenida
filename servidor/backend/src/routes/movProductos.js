@@ -26,7 +26,7 @@ router.route('/:numero/:tipo')
 router.route('/movimientosPorCliente/:numero/:tipo/:cliente')
     .get(traerMoviemientoPorNumeroTipoYCliente)
 
-router.route('/:desde/:hasta')
+router.route('/forDate/:desde/:hasta')
     .get(getsForDate)
 
 router.route('/:desde/:hasta/:rubro')

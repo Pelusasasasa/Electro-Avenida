@@ -68,8 +68,7 @@ movProductosCTRL.getsForRubro = async(req,res)=>{
 
 movProductosCTRL.getsForDate = async(req, res) => {
     const {desde, hasta} = req.params;
-
-    const movs = movProducto.find({
+    const movs = await movProducto.find({
         $and:[
             {fecha:{$gte:new Date(desde + "T00:00:00.000Z")}},
             {fecha:{$lte:new Date(hasta + "T23:59:59.000Z")}}
