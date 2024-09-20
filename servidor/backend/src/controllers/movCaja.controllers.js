@@ -36,7 +36,7 @@ movCajaCTRL.getBetweenDates = async(req,res)=>{
         console.log("Error en la linea 35")
     }
     res.send(movimientos)
-}
+};
 
 movCajaCTRL.put = async(req,res)=>{
     const arreglo = req.body;
@@ -50,7 +50,7 @@ movCajaCTRL.put = async(req,res)=>{
         console.log(`Movimiento de caja ${elem._id} Modificado`);
     };
     res.send('Movimientos de cajas modificados');
-}
+};
 
 movCajaCTRL.getForDateAndCuenta = async(req,res)=>{
     const {desde,hasta,idCuenta} = req.params;
