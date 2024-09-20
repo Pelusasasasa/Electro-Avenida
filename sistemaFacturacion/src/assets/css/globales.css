@@ -302,3 +302,9 @@ select{
 .h-80{
   height: 80vh;
 }
+
+/* overflow-scroll */
+
+.overflow-scroll{
+  overflow: scroll;
+}
