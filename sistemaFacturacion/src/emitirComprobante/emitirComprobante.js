@@ -24,6 +24,7 @@ const {
   buscarPersonaPorCuit,
   buscarPersonaPorDNI,
 } = require("../funciones");
+
 const { ipcRenderer } = require("electron");
 
 const axios = require("axios");
@@ -1538,9 +1539,13 @@ async function ponerInputsClientes(cliente) {
   if (cliente.condicion === "M") {
     await sweet.fire({ title: `${cliente.observacion}`, returnFocus: false });
   }
-  cliente.cond_fact !== "1"
-    ? cuentaC.classList.add("none")
-    : cuentaC.classList.remove("none");
+  console.log(cliente.cond_fact !== '1')
+  console.log(cuentaC)
+
+  cliente.cond_fact !== "1" ? cuentaC.classList.add("none") : cuentaC.classList.remove("none");
+  cuentaC.classList.remove('none')
+  console.log(cuentaC)
+
   if (codigoC.value === "9999") {
     buscarCliente.removeAttribute("disabled");
     telefono.removeAttribute("disabled");
