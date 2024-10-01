@@ -206,7 +206,7 @@ const listarLista = (lista, situacion, tipo) => {
   if (situacion === "negro") {
     aux = "Presupuesto";
   } else {
-    if (clienteTraido.cond_iva === "Inscripto") {
+    if (clienteTraido.cond_iva === "Inscripto" || clienteTraido.cond_iva === "Monotributista") {
       aux = "Factura A";
     } else {
       aux = "Factura B";
