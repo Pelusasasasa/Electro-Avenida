@@ -1540,11 +1540,8 @@ async function ponerInputsClientes(cliente) {
     await sweet.fire({ title: `${cliente.observacion}`, returnFocus: false });
   }
   console.log(cliente.cond_fact !== '1')
-  console.log(cuentaC)
 
   cliente.cond_fact !== "1" ? cuentaC.classList.add("none") : cuentaC.classList.remove("none");
-  cuentaC.classList.remove('none')
-  console.log(cuentaC)
 
   if (codigoC.value === "9999") {
     buscarCliente.removeAttribute("disabled");
