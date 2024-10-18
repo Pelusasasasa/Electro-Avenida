@@ -1,22 +1,19 @@
 const { ipcRenderer } = require("electron");
 const puppetter = require("puppeteer");
+const sweet = require("sweetalert2");
 
-ipcRenderer.send("abrir-menu");
 const axios = require("axios");
 require("dotenv").config;
 const URL = process.env.URL;
+
+ipcRenderer.send("abrir-menu");
 
 let vendedores = [];
 let vendedor;
 let acceso;
 let empresa;
-const sweet = require("sweetalert2");
-const {
-  verEstadoServidorAfip,
-  configAxios,
-  verificarUsuarios,
-  ponerNotificaciones,
-} = require("./funciones");
+
+const { verEstadoServidorAfip, configAxios,  verificarUsuarios,  ponerNotificaciones,} = require("./funciones");
 
 const notificaciones = require("node-notifier");
 
@@ -64,6 +61,13 @@ const clientes = document.querySelector(".clientes");
 const flecha = document.querySelector(".flecha");
 const salir = document.querySelector(".salir");
 
+const apretarTecla = async(e) => {
+  if (e.keyCode === 120){
+    const a = validacionUsuario('mercadoLibre/mercadoLibre.html');
+    console.log(a)
+  }
+}
+
 listaPedidos.addEventListener("click", (e) => {
   const handlePedidos = document.querySelector(".handlePedidos");
   handlePedidos.classList.toggle("none");
@@ -78,6 +82,8 @@ productos.addEventListener("click", (e) => {
 clientes.addEventListener("click", (e) => {
   validacionUsuario("clientes/clientes.html");
 });
+
+document.addEventListener('keyup', apretarTecla);
 
 emitirComprobante.addEventListener("click", (e) => {
   validacionUsuario("emitirComprobante/emitirComprobante.html");
@@ -118,6 +124,20 @@ body.addEventListener("keydown", (e) => {
   } else if (e.key === "F3") {
     validacionUsuario("clientes/clientes.html");
   }
+});
+
+salir.addEventListener("click", async (e) => {
+  sweet
+    .fire({
+      title: "Desea Salir ?",
+      showCancelButton: true,
+      confirmButtonText: "Aceptar",
+    })
+    .then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        window.close();
+      }
+    });
 });
 
 async function validacionUsuario(texto, botones = true) {
@@ -242,19 +262,6 @@ ipcRenderer.on("ver-prestamos-anulados", (e) => {
   location.href = "prestamos/anulados.html";
 });
 
-salir.addEventListener("click", async (e) => {
-  sweet
-    .fire({
-      title: "Desea Salir ?",
-      showCancelButton: true,
-      confirmButtonText: "Aceptar",
-    })
-    .then(({ isConfirmed }) => {
-      if (isConfirmed) {
-        window.close();
-      }
-    });
-});
 
 ipcRenderer.on("actualización_disponible", () => {
   console.log("a");

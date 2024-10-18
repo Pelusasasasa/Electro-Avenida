@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <title>Mercado Libre</title>
+</head>
+<body>
+    <header class="botones">
+        <button id="generarCodigo">Generar Codigo</button>
+        <button id="agregarProducto">Agregar Producto</button>
+        <button id="modificarProducto">Modificar Producto</button>
+        <button id="actualizarVarios">Actualizar Varios Producto</button>
+    </header>
+
+    <section id="seccionAgregar" class="none">
+        <div>
+            <label for="title">Titulo</label>
+            <input type="text" name="title" id="title">
+        </div>
+        <div>
+            <label for=""></label>
+            <input type="text" name="" id="">
+        </div>
+    </section>
+
+    <section id="seccionModificar" class="none">
+        <main class="flex justify-around mb-2">
+            <div class="flex flex-col mb-2">
+                <label for="sku">SKU</label>
+                <input type="text" autofocus name="sku" id="sku">
+            </div>
+            
+            <div class="flex flex-col mb-2">
+                <label for="codigo">Codigo</label>
+                <input type="text" name="codigo" id="codigo">
+            </div>
+        </main>
+
+        <div  class="flex flex-col mb-2">
+            <label for="nombre">Nombre</label>
+            <input type="text" name="nombre" id="nombre">
+        </div>
+
+        <main class="flex justify-around">
+
+            <div class="flex flex-col mb-2">
+                <label for="costoIva">Costo + Iva</label>
+                <input type="number" name="costoIva" id="costoIva" disabled>
+            </div>
+            
+            <div class="flex flex-col mb-2">
+                <label for="precioSujerido">Precio sujerido</label>
+                <input type="number" name="precioSujerido" id="precioSujerido" disabled>
+            </div>
+
+            <div>
+                <label for="stockSujerido">Stock Sujerido</label>
+                <input type="number" name="stockSujerido" disabled id="stockSujerido">
+            </div>
+        </main>
+
+        <main class="flex justify-around">
+            <div class="flex flex-col">
+                <label for="precio">Precio</label>
+                <input type="number" name="precio" id="precio" class="text-end">
+            </div>
+            <div class="flex flex-col">
+                <label for="stock">Stock</label>
+                <input type="numbre" name="stock" id="stock" class="text-end">
+            </div>
+        </main>
+
+
+        <main class="botones">
+            <button id="agregarML" disabled>Agregar Producto</button>
+            <button id="guardarCambios" disabled>Guardar Cambios</button>
+        </main>
+    </section>
+
+    <section id="seccionVarios" class="h-80 bg-white overflow-scroll">
+        <table class="border-collapse">
+            <thead>
+                <tr>
+                    <th class="border">SKU</th>
+                    <th class="border">Codigo ML</th>
+                    <th class="border">Descripcion</th>
+                    <th class="border">Costo+Iva</th>
+                    <th class="border">Precio Sujerido</th>
+                    <th class="border">Stock Sujerido</th>
+                    <th class="border">Precio</th>
+                    <th class="border">Stock</th>
+                </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+        </table>
+    </section>
+
+</body>
+<script src="./mercadoLibre.js"></script>
+</html>
