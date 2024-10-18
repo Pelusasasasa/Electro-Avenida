@@ -67,6 +67,10 @@ function mostrarMenu(ventana,x,y){
         if (!menuSecundario.items.find(menu => menu.label === "Seleccionar para Eliminar")) {
             menuSecundario.append(seleccionarParaEliminar);   
         }
+
+        if (!menuSecundario.items.find(menu => menu.label === "Cambiar Observacion")) {
+            menuSecundario.append(cambiarObservaciones);
+        }
     };
 
     if (ventana === "VerPrestamos") {

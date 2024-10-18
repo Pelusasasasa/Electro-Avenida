@@ -316,7 +316,7 @@ tbody.addEventListener("click", (e) => {
   }
 
   inputSeleccionado && inputSeleccionado.toggleAttribute("disabled");
-  inputSeleccionado = seleccionado.children[8].children[0];
+  inputSeleccionado = seleccionado.children[11].children[0];
   inputSeleccionado.toggleAttribute("disabled");
 
   if (e.target.nodeName === "INPUT") {
@@ -431,6 +431,25 @@ ipcRenderer.on("seleccionarParaEliminar", (e) => {
   seleccionado.classList.add("eliminar");
 });
 
+//Abrimos una modal con input para poder cambiar la observacion de los pedidos
+ipcRenderer.on('cambiarObservacion', async() => {
+  const { isConfirmed, value } = await sweet.fire({
+    title: `Cambiar Observacion del pedido`,
+    showCancelButton: true,
+    confirmButtonText: "Aceptar",
+    input: 'text',
+    inputValue: seleccionado.children[10].innerText
+  });
+
+  if (isConfirmed){
+    const pedido = (await axios.get(`${URL}pedidos/${seleccionado.id}`)).data;
+
+    pedido.observacion = value.toUpperCase().trim();
+    seleccionado.children[10].innerText = value.toUpperCase().trim();
+
+    await axios.put(`${URL}pedidos/${seleccionado.id}`, pedido);
+  }
+});
 
 
 
