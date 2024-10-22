@@ -40,6 +40,23 @@ const buscarMilItems = async() => {
     }
 };
 
+const filtrarPorTitle = async(id, authorizacion, text) => {
+    try {
+        const res = (await axios.get(`${aux}users/${id}/items/search?q=${text}`,
+            {
+                 headers: {
+                    'Authorization': `Bearer ${authorizacion}`
+                }
+            }
+            
+        )).data;
+
+        return res;
+    }catch (error) {
+        console.log(error)
+    }
+}
+
 const buscarIDDeProductoPorSKU = async(id, authorizacion, sku) => {
     try{
         const res = (await axios.get(`${aux}users/${id}/items/search?seller_sku=${sku}`,{
@@ -106,11 +123,12 @@ const modificarPrecioYStockPorIdDeProducto = async(authorizacion, codigo, precio
 };
 
 module.exports = {
-    obtenerInformacionUsuario,
-    devolveDireccion,
-    buscarMilItems,
     buscarIDDeProductoPorSKU,
     buscarinfoProductoPorId,
+    buscarMilItems,
+    devolveDireccion,
+    filtrarPorTitle,
     modificarPrecioPorIdDeProducto,
-    modificarPrecioYStockPorIdDeProducto
+    modificarPrecioYStockPorIdDeProducto,
+    obtenerInformacionUsuario,
 };

@@ -268,11 +268,23 @@ select{
   justify-content: space-around;
 }
 
+.justify-center{
+  justify-content: center;
+}
+
+.items-center{
+  align-items: center;
+}
+
 
 /* Texto */
 
 .text-2xl{
   font-size: 2rem;
+}
+
+.text-bold{
+  font-weight: bold;
 }
 
 .text-center{
@@ -311,6 +323,9 @@ select{
 
 /* margin */
 
+.m-0{
+  margin: 0;
+}
 
 .mb-1{
   margin-bottom: 1rem;
@@ -322,6 +337,10 @@ select{
 
 /* widht */
 
-w-full{
+.w-full{
   width: 100%;
+}
+
+.w-40{
+  width: 40rem;
 }

@@ -10,7 +10,7 @@ const valorPrimerCostoFijo = 900;
 const valorSegundoCostoFijo = 1800;
 
 
-const { devolveDireccion, obtenerInformacionUsuario, buscarIDDeProductoPorSKU,buscarMilItems, buscarinfoProductoPorId, modificarPrecioPorIdDeProducto, modificarPrecioYStockPorIdDeProducto } = require('./helpers');
+const { devolveDireccion, obtenerInformacionUsuario, buscarIDDeProductoPorSKU,buscarMilItems, buscarinfoProductoPorId, modificarPrecioPorIdDeProducto, modificarPrecioYStockPorIdDeProducto, filtrarPorTitle } = require('./helpers');
 const aux = 'https://api.mercadolibre.com/';
 const URL = process.env.URL;
 const client_id = '8351426981367452';
@@ -18,43 +18,18 @@ const client_secret = 'n03VlrPoBnTyRmGDtDusOQwuu7qaNpHv';
 const redirect_uri = 'https://www.electro-avenida.com.ar/';
 const code = 'TG-670e5faf324be700011ea691-231090073'
 const refresh_token = "TG-670e60957e88f500012c13e8-231090073"
-const autherizacion = "APP_USR-8351426981367452-101609-9d645b5a9f465fb331065019cae633ca-231090073"
+const autherizacion = "APP_USR-8351426981367452-102208-d2294c0e77e717727b74a2e183811139-231090073"
 const id = 231090073;
 
-
-//Modificar Producto
-const seccionModificar = document.getElementById('seccionModificar');
-
-const sku = document.getElementById('sku');
-const codigo = document.getElementById('codigo');
-const costoIva = document.getElementById('costoIva');
-const precioSujerido = document.getElementById('precioSujerido');
-const stockSujerido = document.getElementById('stockSujerido');
-
-const nombre = document.getElementById('nombre');
-
-const precio = document.getElementById('precio');
-const stock = document.getElementById('stock');
-
-//Modificar Varios
-const tbody = document.getElementById('tbody');
-
-const agregarProducto = document.getElementById('agregarProducto');
-const modificarProducto = document.getElementById('modificarProducto');
-const actualizarVarios = document.getElementById('actualizarVarios');
-
-const generarCodigo = document.getElementById('generarCodigo');
-const guardarCambios = document.getElementById('guardarCambios');
-
-let busquedaId = [];
 let productos = [];
-let producto;
+
+const buscador = document.getElementById('buscador');
+
+const tbody = document.getElementById('tbody');
 
 const calcularPrecioSujerido = (product, dolar) => {
     let conIva = product.costodolar !== 0 ? parseFloat(product.impuestos) + product.costodolar : product.costo + parseFloat(product.impuestos);
     let total = parseFloat((conIva * dolar).toFixed(2));
-
-    costoIva.value = total;
 
     let precioML = 0;
 
@@ -84,157 +59,110 @@ const calcularPrecioSujerido = (product, dolar) => {
     return precioML.toFixed(2);
 };
 
-const habilitarModificacion = () => {
-  seccionModificar.classList.toggle('none')
-};
-
-//llenamos los inputs con llos valores del producto
-const listarProducto = () => {
-  nombre.value = producto.title;
-  codigo.value = producto.id;
-  precio.value = producto.price;
-  stock.value = producto.available_quantity;
-};
-
-//Vamos a guardar los cambios en mercado libre
-const guardarCambiosML = async() => {
- await modificarPrecioYStockPorIdDeProducto(autherizacion, codigo.value, precio.value, stock.value);
+const cargarPagina = async() => {
+  const ids = await buscarMilItems(id, autherizacion);
   
-  location.reload();
+  for await(let id of ids.results){
+    const pro = await buscarinfoProductoPorId(autherizacion, id);
+    productos.push(pro);
+  };
+
+  listarProductos(productos);
+};
+
+const handleSearch = async(text) => {
+  productos = [];
+  const ids = await filtrarPorTitle(id, autherizacion, text);
+  
+  for await(let id of ids.results){
+    const pro = await buscarinfoProductoPorId(autherizacion, id);
+    productos.push(pro);
+  };
+
+  listarProductos(productos);
 };
 
 const listarProductos = async(lista) => {
-  for await(let producto of lista){
-    let tr = document.createElement('tr');
+  tbody.innerHTML = '';
+
+  lista.sort( (a,b) => {
+    if (a.title < b.title){
+      return -1;
+    };
+
+    if (a.title > b.title){
+      return 1;
+    };
+
+    return 0;
+  })
+
+  for await(let elem of lista){
     
+    const tr = document.createElement('tr');
+    tr.id = elem.id;
+
+
     const tdSKU = document.createElement('td');
-    const tdId = document.createElement('td');
-    const tdTitle = document.createElement('td');
+    const tdCodigo = document.createElement('td');
+    const tdDescripcion = document.createElement('td');
     const tdCostoIva = document.createElement('td');
-    const tdPrecioSujerido = document.createElement('td');
-    const tdStockSujerido = document.createElement('td');
-    
+    const tdPrecioML = document.createElement('td');
+    const tdStock = document.createElement('td');
+    const tdPrecio = document.createElement('td');
+    const tdStockML = document.createElement('td');
 
-    tdSKU.classList.add('border');
-    tdId.classList.add('border');
-    tdTitle.classList.add('border');
-    tdCostoIva.classList.add('border');
-    tdPrecioSujerido.classList.add('border');
+        const _id = elem.attributes.find(attr => attr.id === 'SELLER_SKU')?.value_name
+    if (_id){
 
-    let aux = producto.attributes.find(elem => elem.id === 'SELLER_SKU');
-    let elem;
+      const dolar = (await axios.get(`${URL}tipoVenta`)).data.dolar;
+      const pro = (await axios.get(`${URL}productos/${_id}`)).data;
 
-    if (aux){
-      elem = (await axios.get(`${URL}productos/${aux.value_name}`)).data;
-      const dolar = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
-
-      tdCostoIva.innerText = traerCostoIva(elem).toFixed(2);
-      tdPrecioSujerido.innerText = calcularPrecioSujerido(elem, dolar);
+      const costoIva = pro.costodolar === 0 ? pro.costo + (pro.costo * pro.impuestos / 100) : pro.costodolar + (pro.costodolar * pro.impuestos / 100) * dolar;
+      const precioML = calcularPrecioSujerido(pro, dolar);
+      tdPrecioML.innerText = precioML;
+      tdCostoIva.innerText = costoIva.toFixed(2);
+      tdStock.innerText = pro.stock;
 
     };
-  
-    tdSKU.innerText = aux ? aux.value_name : '';
-    tdId.innerText = producto.id;
-    tdTitle.innerText = producto.title;
-    
+
+    tdSKU.innerText = elem.attributes.find(attr => attr.id === 'SELLER_SKU')?.value_name;
+    tdCodigo.innerText = elem.id;
+    tdDescripcion.innerText = elem.title.slice(0,35).toUpperCase();
+    tdPrecio.innerText = elem.price.toFixed(2);
+    tdStockML.innerText = elem.available_quantity.toFixed(2);
+
+    tdSKU.classList.add('border');
+    tdCodigo.classList.add('border');
+    tdDescripcion.classList.add('border');
+    tdCostoIva.classList.add('border');
+    tdPrecioML.classList.add('border');
+    tdStock.classList.add('border');
+    tdPrecio.classList.add('border');
+    tdStockML.classList.add('border');
+
+    tdCostoIva.classList.add('text-end');
+    tdPrecioML.classList.add('text-end');
+    tdStock.classList.add('text-end');
+    tdPrecio.classList.add('text-end');
+    tdStockML.classList.add('text-end');
+
+    tdPrecio.classList.add('text-bold');
+    tdStockML.classList.add('text-bold');
 
     tr.appendChild(tdSKU);
-    tr.appendChild(tdId);
-    tr.appendChild(tdTitle);
+    tr.appendChild(tdCodigo);
+    tr.appendChild(tdDescripcion);
     tr.appendChild(tdCostoIva);
-    tr.appendChild(precioSujerido);
-    
+    tr.appendChild(tdPrecioML);
+    tr.appendChild(tdStock);
+    tr.appendChild(tdPrecio);
+    tr.appendChild(tdStockML);
+
     tbody.appendChild(tr);
+
   }
 };
-
-//actualizar varios porductos en mercado libre 
-const actualizarVariosProductosML = async() => {
-  busquedaId = (await buscarMilItems()).results;
-  for await(let id of busquedaId){
-      let pro = await buscarinfoProductoPorId(autherizacion, id);
-
-      productos.push(pro)
-      
-  };
-  listarProductos(productos)
-
-  
-};
-
-const traerCostoIva = (elem) => {
-  if (elem.costodolar !== 0){
-    return elem.costodolar + parseFloat(elem.impuestos);
-  }else{
-    return elem.costo + parseFloat(elem.impuestos);
-  }
-};
-
-//Usamos para traer el producto de mercado lbre por el codigo interno que tenemos en el sistema
-sku.addEventListener('keypress', async(e) => {
-  if (e.keyCode === 13) {
-    //Traemos de Mercado Libre
-    const codigoML = await buscarIDDeProductoPorSKU(id, autherizacion, sku.value);
-    producto = await buscarinfoProductoPorId(autherizacion, codigoML);
-    
-    //Traemos del sistema
-    let product = (await axios.get(`${URL}productos/${sku.value}`)).data;
-    const dolar = parseFloat((await axios.get(`${URL}tipoVenta`)).data.dolar);
-
-    precioSujerido.value = calcularPrecioSujerido(product, dolar);;
-    stockSujerido.value = product.stock
-    
-    listarProducto();
-    guardarCambios.disabled = false;
-
-    precio.focus();
-  }
-});
-
-modificarProducto.addEventListener('click', habilitarModificacion);
-
-generarCodigo.addEventListener('click', obtenerAccessToken)
-
-//Hacemos click nen el botono y mandamos a modificar en ML
-guardarCambios.addEventListener('click', guardarCambiosML);
-
-
-//modificar Producto
-precio.addEventListener('keypress', e => {
-  if (e.keyCode === 13) {
-    stock.focus();
-  }
-});
-
-stock.addEventListener('keypress', e => {
-  if (e.keyCode === 13) {
-    guardarCambios.focus();
-  }
-});
-
-precio.addEventListener('focus', () => {
-  precio.select()
-});
-
-stock.addEventListener('focus', () => {
-  stock.select()
-});
-
-document.addEventListener('keyup', e => {
-
-  if (e.keyCode === 113){
-    seccionModificar.classList.toggle('none');
-    sku.focus();
-  };
-
-});
-
-//modificar Varios
-
-actualizarVarios.addEventListener('click', actualizarVariosProductosML);
-
-
-
 
 async function permitirUsuario() {
 
@@ -262,7 +190,15 @@ async function permitirUsuario() {
   }
 };
 
-// obtenerAccessToken();
+buscador.addEventListener('keypress',async e => {
+  if(e.keyCode === 13){
+    await handleSearch(e.target.value);
+  }
+});
+
+// window.addEventListener('load', cargarPagina);
+
+obtenerAccessToken();
 
 
 // obtenerInformacionUsuario(autherizacion)
@@ -271,3 +207,10 @@ async function permitirUsuario() {
 // buscarIDDeProductoPorSKU(id, autherizacion, '210-115');
 // buscarinfoProductoPorId(autherizacion, 'MLA1434872357');
 // modificarPrecioPorIdDeProducto(autherizacion, 'MLA1434872357', 16300);
+
+
+document.addEventListener('keyup', e => {
+  if (e.keyCode === 27){
+    location.href = '../index.html';
+  }
+});
