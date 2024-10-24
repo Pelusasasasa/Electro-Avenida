@@ -35,6 +35,10 @@ const MercadoLibre = new Schema({
         type: Number,
         require: true,
         default: 0
+    },
+    refreshToken:{
+        type: String,
+        
     }
 });
 
