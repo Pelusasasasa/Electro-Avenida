@@ -186,6 +186,7 @@ listar.addEventListener("click", (e) => {
 
 //Si ponemos algo en observaciones que se nos guarde en la cuenta compensada
 listar.addEventListener("keyup", async (e) => {
+  
   if (e.keyCode === 9 || e.keyCode === 40 || e.keyCode === 38) {
     seleccionado = e.target.parentNode.parentNode;
     subSeleccionado = e.target.parentNode;
@@ -194,10 +195,14 @@ listar.addEventListener("keyup", async (e) => {
   const observacion = e.target.value; //valor de la observacion
   const id = e.target.parentNode.parentNode.id; //id de el tr de la observacion en la escribimos
 
-  const comp = (await axios.get(`${URL}cuentaComp/id/${id}`, configAxios))
-    .data[0]; //traemos el la cuenta
+  const comp = (await axios.get(`${URL}cuentaComp/id/${id}`, configAxios)).data[0]; //traemos el la cuenta compensada
+  const hist = (await axios.get(`${URL}cuentaHisto/id/${id}`, configAxios)).data[0];
+
   comp.observaciones = observacion.toUpperCase(); //modificamos la observacion de la cuenta
+  hist.observaciones = observacion.toUpperCase(); //modificamos la observacion de la cuenta
+
   await axios.put(`${URL}cuentaComp/numero/${id}`, comp); //la guardamos
+  await axios.put(`${URL}cuentaHisto/numero/${id}`, hist); //la guardamos
 });
 
 const listarLista = (lista, situacion, tipo) => {
@@ -598,57 +603,57 @@ botonFacturar.addEventListener("click", () => {
 });
 
 facturarVarios.addEventListener("click", async (e) => {
-  await sweet
-    .fire({
+    //Pedimos contraseña para ver si es un vendedor
+    const { isConfirmed, value } = await sweet.fire({
       title: "Contraseña",
       input: "password",
       showCancelButton: true,
       confirmButtonText: "Aceptar",
-    })
-    .then(async ({ isConfirmed, value }) => {
-      if (isConfirmed && value !== "") {
-        let vendedor = (await axios.get(`${URL}usuarios/${value}`, configAxios))
-          .data;
-        let cuentas = listaCompensada;
-        let htmlCuentas = "";
-        for (let cuenta of cuentas) {
-          if (cuenta.tipo_comp === "Presupuesto") {
-            htmlCuentas += `
-                    <div>
-                        <input type="checkbox" id="${cuenta.nro_comp}" name="${cuenta.nro_comp}"/>
-                        <label for="${cuenta.nro_comp}">${cuenta.nro_comp}</label>
-                    </div>
-                `;
-          }
-        }
-        if (vendedor !== "") {
-          await sweet
-            .fire({
+    });
+
+    if (isConfirmed && value !== "") {
+      let vendedor = (await axios.get(`${URL}usuarios/${value}`, configAxios)).data;
+      
+      let cuentas = listaCompensada;
+      let htmlCuentas = "";
+      
+      for (let cuenta of cuentas) {
+        if (cuenta.tipo_comp === "Presupuesto") {
+         htmlCuentas += `
+              <div>
+                  <input type="checkbox" id="${cuenta.nro_comp}" name="${cuenta.nro_comp}"/>
+                  <label for="${cuenta.nro_comp}">${cuenta.nro_comp}</label>
+              </div>`;
+      }};
+
+      if (vendedor !== "") {
+          const {isConfirmed} = await sweet.fire({
               title: "Facturar Varios",
               html: htmlCuentas,
               confirmButtonText: "Aceptar",
               showCancelButton: true,
-            })
-            .then(({ isConfirmed }) => {
-              if (isConfirmed) {
-                const inputscheckeados = document.querySelectorAll(
-                  "input[type=checkbox]"
-                );
-                let value = [];
-                inputscheckeados.forEach((elem) => {
-                  elem.checked && value.push(elem.id);
-                });
-                ipcRenderer.send("facturar_varios", [
-                  vendedor.nombre,
-                  value,
-                  vendedor.empresa,
-                  codigoCliente.value,
-                ]);
-              }
+          });
+        
+          if (isConfirmed) {
+            const inputscheckeados = document.querySelectorAll(
+              "input[type=checkbox]"
+            );
+
+            let value = [];
+                
+            inputscheckeados.forEach((elem) => {
+                elem.checked && value.push(elem.id);
             });
-        }
-      }
-    });
+
+            ipcRenderer.send("facturar_varios", [
+              vendedor.nombre,
+              value,
+              vendedor.empresa,
+              codigoCliente.value,
+            ]);
+          }
+      };
+    };
 });
 
 //Ponemos los datos del cliente en los inputs y traemos las compensadas e historicas

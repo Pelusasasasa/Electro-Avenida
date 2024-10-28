@@ -486,6 +486,7 @@ agregariva.children[0].addEventListener("keypress", (e) => {
 
 //FIN TABLA PRODUCTOS
 
+
 //INICIO PARTE DE DESCUENTO
 
 //aplicamos el descuento
@@ -525,6 +526,7 @@ function inputCobrado(numero) {
   total.value = parseFloat(numero).toFixed(2);
 }
 //FIN PARTE DE DESCUENTO
+
 
 //Vemos el numero para saber de la ultima factura a o b
 let texto = "";
@@ -1281,20 +1283,10 @@ ticketFactura.addEventListener("click", async (e) => {
           alerta.children[1].children[0].innerHTML = "Imprimiendo Venta"; //cartel de que se esta imprimiendo la venta
 
           //mandamos a imprimir el ticket
-          ipcRenderer.send("imprimir-venta", [
-            venta,
-            afip,
-            true,
-            1,
-            "Ticket Factura",
-          ]);
+          ipcRenderer.send("imprimir-venta", [venta, afip, true, 1, "Ticket Factura",]);
 
           //Le mandamos al servidor que cree un pdf con los datos
-          await axios.post(
-            `${URL}crearPdf`,
-            [venta, cliente, afip],
-            configAxios
-          );
+          await axios.post(`${URL}crearPdf`, [venta, cliente, afip], configAxios);
 
           if (!borraNegro && !variasFacturas) {
             for (let producto of venta.productos) {
@@ -1385,6 +1377,8 @@ ticketFactura.addEventListener("click", async (e) => {
               await borrarVenta(numero);
             }
             await descontarSaldo(codigoC.value, total.value);
+
+            window.close();
           }
 
           !borraNegro ? (window.location = "../index.html") : window.close();
@@ -1539,7 +1533,6 @@ async function ponerInputsClientes(cliente) {
   if (cliente.condicion === "M") {
     await sweet.fire({ title: `${cliente.observacion}`, returnFocus: false });
   }
-  console.log(cliente.cond_fact !== '1')
 
   cliente.cond_fact !== "1" ? cuentaC.classList.add("none") : cuentaC.classList.remove("none");
 
@@ -1591,10 +1584,11 @@ ipcRenderer.on("informacion", async (e, args) => {
   vendedor = usuario;
   listaNumeros = numeros;
 
-  let cliente = (
-    await axios.get(`${URL}clientes/id/${codigoCliente}`, configAxios)
-  ).data;
+  let cliente = (await axios.get(`${URL}clientes/id/${codigoCliente}`, configAxios)).data;
   ponerInputsClientes(cliente);
+
+  observaciones.value = numeros.join(', ');
+
   let ventas = [];
   for await (let numero of numeros) {
     ventas.push(
