@@ -325,7 +325,9 @@ async function cambiarPrecioCandil(datos, productos) {
   for await (let elem of productos) {
     let tasaIva = elem.iva === "R" ? 15 : 26;
     let producto = datos.find((n) => n.Id == elem.cod_fabrica);
+    console.log(producto)
     if (producto) {
+
       if (elem.costodolar !== 0) {
         elem.costodolar = parseFloat(
           redondear(producto.Precio / parseFloat(dolar.value), 2)

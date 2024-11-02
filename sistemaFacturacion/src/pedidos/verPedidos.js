@@ -173,6 +173,8 @@ const OrdenarPedidos = (e) => {
       document.getElementById("flechaAbajoMarca").classList.add("none");
       document.getElementById("flechaArribaMarca").classList.remove("none");
 
+      console.log(arregloAux)
+
       arregloAux.sort((a, b) => {
         if (a.marca > b.marca) {
           return 1;
@@ -204,7 +206,7 @@ const OrdenarPedidos = (e) => {
 
 function listarPedidos(pedidos) {
   tbody.innerHTML = "";
-
+  
   for (let [index, pedido] of pedidos.entries()) {
     let fecha = new Date(pedido.fecha);
     const stock = pedido.stock !== undefined ? pedido.stock : 0;
@@ -422,7 +424,7 @@ window.addEventListener("load", async (e) => {
   copiar();
 
   pedidos = (await axios.get(`${URL}pedidos`, configAxios)).data;
-
+  arregloAux = pedidos;
   listarPedidos(pedidos);
 });
 
