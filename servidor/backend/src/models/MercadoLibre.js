@@ -1,4 +1,4 @@
-const { Schema } = require("mongoose");
+const { Schema, model } = require("mongoose");
 
 const MercadoLibre = new Schema({
     gananciaML: {
@@ -39,6 +39,12 @@ const MercadoLibre = new Schema({
     refreshToken:{
         type: String,
         
+    },
+    autherizacion:{
+        type: String,
+        default: ''
     }
 });
+
+module.exports = model('MercadoLibre', MercadoLibre);
 

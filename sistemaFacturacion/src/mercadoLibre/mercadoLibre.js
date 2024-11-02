@@ -18,7 +18,7 @@ const client_secret = 'n03VlrPoBnTyRmGDtDusOQwuu7qaNpHv';
 const redirect_uri = 'https://www.electro-avenida.com.ar/';
 const code = 'TG-670e5faf324be700011ea691-231090073'
 const refresh_token = "TG-670e60957e88f500012c13e8-231090073"
-const autherizacion = "APP_USR-8351426981367452-102208-d2294c0e77e717727b74a2e183811139-231090073"
+let autherizacion = "";
 const id = 231090073;
 
 let productos = [];
@@ -60,7 +60,19 @@ const calcularPrecioSujerido = (product, dolar) => {
 };
 
 const cargarPagina = async() => {
-  const ids = await buscarMilItems(id, autherizacion);
+
+  autherizacion = (await axios.get(`${URL}mercadoLibre/autherizacion`)).data.autherizacion; //Traemos la authorizacion desde la base de datos
+
+  const ids = await buscarMilItems(id, autherizacion);//Buscamos los primeros items
+
+  //En el caso de que no busque los items renueva el codigo de authorizacion
+  if (ids.response?.data.message === 'invalid_token'){
+    
+    const res = await obtenerAccessToken();
+
+    autherizacion = (await axios.put(`${URL}mercadoLibre/autherizacion`, {res}));
+    // location.reload();
+  }
   
   for await(let id of ids.results){
     const pro = await buscarinfoProductoPorId(autherizacion, id);
@@ -196,9 +208,9 @@ buscador.addEventListener('keypress',async e => {
   }
 });
 
-// window.addEventListener('load', cargarPagina);
+window.addEventListener('load', cargarPagina);
 
-obtenerAccessToken();
+// obtenerAccessToken();
 
 
 // obtenerInformacionUsuario(autherizacion)
