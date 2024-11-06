@@ -2,7 +2,7 @@ const axios = require('axios');
 require('dotenv').config();
 
 const gananciaML = 30;
-const porcentajeDescuentoML = 0.79;
+const porcentajeDescuentoML = 0.71;
 const envio = 28000;
 const primerCostoFijo = 12000;
 const segundoCostoFijo = 28000;
@@ -28,9 +28,8 @@ const buscador = document.getElementById('buscador');
 const tbody = document.getElementById('tbody');
 
 const calcularPrecioSujerido = (product, dolar) => {
-    let conIva = product.costodolar !== 0 ? parseFloat(product.impuestos) + product.costodolar : product.costo + parseFloat(product.impuestos);
-    let total = parseFloat((conIva * dolar).toFixed(2));
-
+    let conIva = product.costodolar !== 0 ? parseFloat(product.impuestos) + product.costodolar : parseFloat(product.costo) + parseFloat(product.impuestos);
+    let total = parseFloat((conIva).toFixed(2));
     let precioML = 0;
 
     let utilidad  = total + (total * gananciaML / 100);
@@ -40,7 +39,7 @@ const calcularPrecioSujerido = (product, dolar) => {
 
     //Vemos cuanto nos cobran del envio en mercado libre dependiendo de la utilidad
     if (utilidad > envio){
-      costoEnvio = 5767.19
+      costoEnvio = 6779
     }else{
       costoEnvio = 0;
     };
@@ -55,31 +54,14 @@ const calcularPrecioSujerido = (product, dolar) => {
     };
 
     precioML = utilidad + descuentoML + costoEnvio + costoFijo;
-
     return precioML.toFixed(2);
 };
 
 const cargarPagina = async() => {
 
-  autherizacion = (await axios.get(`${URL}mercadoLibre/autherizacion`)).data.autherizacion; //Traemos la authorizacion desde la base de datos
+ const publicaciones = (await axios.get(`${URL}mercadoLibre`)).data;
 
-  const ids = await buscarMilItems(id, autherizacion);//Buscamos los primeros items
-
-  //En el caso de que no busque los items renueva el codigo de authorizacion
-  if (ids.response?.data.message === 'invalid_token'){
-    
-    const res = await obtenerAccessToken();
-
-    autherizacion = (await axios.put(`${URL}mercadoLibre/autherizacion`, {res}));
-    // location.reload();
-  }
-  
-  for await(let id of ids.results){
-    const pro = await buscarinfoProductoPorId(autherizacion, id);
-    productos.push(pro);
-  };
-
-  listarProductos(productos);
+  listarProductos(publicaciones);
 };
 
 const handleSearch = async(text) => {
@@ -98,53 +80,48 @@ const listarProductos = async(lista) => {
   tbody.innerHTML = '';
 
   lista.sort( (a,b) => {
-    if (a.title < b.title){
+    if (a.descripcion < b.descripcion){
       return -1;
     };
 
-    if (a.title > b.title){
+    if (a.descripcion > b.descripcion){
       return 1;
     };
 
     return 0;
-  })
+  });
 
   for await(let elem of lista){
     
     const tr = document.createElement('tr');
-    tr.id = elem.id;
+    tr.id = elem.codProd;
 
-
-    const tdSKU = document.createElement('td');
     const tdCodigo = document.createElement('td');
     const tdDescripcion = document.createElement('td');
     const tdCostoIva = document.createElement('td');
-    const tdPrecioML = document.createElement('td');
-    const tdStock = document.createElement('td');
     const tdPrecio = document.createElement('td');
+    const tdStock = document.createElement('td');
+    const tdPrecioML = document.createElement('td');
     const tdStockML = document.createElement('td');
 
-        const _id = elem.attributes.find(attr => attr.id === 'SELLER_SKU')?.value_name
-    if (_id){
+    const dolar = (await axios.get(`${URL}tipoVenta`)).data.dolar;
+    const pro = (await axios.get(`${URL}productos/${tr.id}`)).data;
+  
+    const costoIva = pro.costodolar === 0 ? (parseFloat(pro.costo) + parseFloat(pro.impuestos) ) : (pro.costodolar + (pro.costodolar * parseFloat(pro.impuestos) / 100) * dolar);
+    console.log(pro.costo)
+    console.log(pro.impuestos)
+    console.log((parseFloat(pro.costo) * parseFloat(pro.impuestos) / 100))
+    const precio = calcularPrecioSujerido(pro, dolar);
+    tdPrecio.innerText = precio;
+    tdCostoIva.innerText = costoIva.toFixed(2);
+    tdStock.innerText = pro.stock;
 
-      const dolar = (await axios.get(`${URL}tipoVenta`)).data.dolar;
-      const pro = (await axios.get(`${URL}productos/${_id}`)).data;
+    tdCodigo.innerText = elem.codigoML;
+    console.log(elem)
+    tdDescripcion.innerText = elem.descripcion.slice(0,35).toUpperCase();
+    tdPrecioML.innerText = elem.precioML.toFixed(2);
+    tdStockML.innerText = elem.stockML.toFixed(2);
 
-      const costoIva = pro.costodolar === 0 ? pro.costo + (pro.costo * pro.impuestos / 100) : pro.costodolar + (pro.costodolar * pro.impuestos / 100) * dolar;
-      const precioML = calcularPrecioSujerido(pro, dolar);
-      tdPrecioML.innerText = precioML;
-      tdCostoIva.innerText = costoIva.toFixed(2);
-      tdStock.innerText = pro.stock;
-
-    };
-
-    tdSKU.innerText = elem.attributes.find(attr => attr.id === 'SELLER_SKU')?.value_name;
-    tdCodigo.innerText = elem.id;
-    tdDescripcion.innerText = elem.title.slice(0,35).toUpperCase();
-    tdPrecio.innerText = elem.price.toFixed(2);
-    tdStockML.innerText = elem.available_quantity.toFixed(2);
-
-    tdSKU.classList.add('border');
     tdCodigo.classList.add('border');
     tdDescripcion.classList.add('border');
     tdCostoIva.classList.add('border');
@@ -159,16 +136,15 @@ const listarProductos = async(lista) => {
     tdPrecio.classList.add('text-end');
     tdStockML.classList.add('text-end');
 
-    tdPrecio.classList.add('text-bold');
+    tdPrecioML.classList.add('text-bold');
     tdStockML.classList.add('text-bold');
 
-    tr.appendChild(tdSKU);
     tr.appendChild(tdCodigo);
     tr.appendChild(tdDescripcion);
     tr.appendChild(tdCostoIva);
-    tr.appendChild(tdPrecioML);
-    tr.appendChild(tdStock);
     tr.appendChild(tdPrecio);
+    tr.appendChild(tdStock);
+    tr.appendChild(tdPrecioML);
     tr.appendChild(tdStockML);
 
     tbody.appendChild(tr);
