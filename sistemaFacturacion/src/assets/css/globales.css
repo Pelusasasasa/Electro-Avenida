@@ -272,10 +272,21 @@ select{
   justify-content: center;
 }
 
+<<<<<<< HEAD
 .items-center{
   align-items: center;
 }
 
+=======
+.item-center{
+  align-items: center;
+}
+
+.gap-2{
+  gap: 2rem;
+}
+
+>>>>>>> main
 
 /* Texto */
 
@@ -321,6 +332,7 @@ select{
   overflow: scroll;
 }
 
+<<<<<<< HEAD
 /* margin */
 
 .m-0{
@@ -343,4 +355,36 @@ select{
 
 .w-40{
   width: 40rem;
+=======
+
+/* margin */
+.mt-1{
+  margin-top: 10px;
+}
+
+.mt-2{
+  margin-top: 20px;
+}
+
+.mb-1{
+  margin-bottom: 10px;
+}
+
+.mb-2{
+  margin-bottom: 20px;
+}
+
+/* Padding */
+
+.p-1{
+  padding: 1rem;
+}
+
+.p-2{
+  padding: 2rem;
+}
+
+.pt-2{
+  padding-top: 2rem;
+>>>>>>> main
 }

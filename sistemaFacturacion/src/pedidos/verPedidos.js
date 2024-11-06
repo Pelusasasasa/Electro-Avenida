@@ -20,7 +20,11 @@ const {
   configAxios,
   verNombrePc,
 } = require("../funciones");
+
 const { ipcRenderer } = require("electron");
+
+const buscador = document.getElementById('buscador');
+const filtro = document.getElementById('filtro');
 
 const thead = document.querySelector("thead");
 const tbody = document.querySelector("tbody");
@@ -29,6 +33,7 @@ const eliminarVarios = document.getElementById("eliminarVarios");
 const salir = document.querySelector(".salir");
 
 let arreglo;
+let arregloAux;
 let seleccionado;
 let subSeleccionado;
 let inputSeleccionado;
@@ -36,153 +41,16 @@ let acceso = getParameterByName("acceso");
 let vendedor = getParameterByName("vendedor");
 let pedidos = [];
 
-//Mandamos a llamar a pedidos
-window.addEventListener("load", async (e) => {
-  copiar();
+const filtarPedidos = async (e) => {
 
-  pedidos = (await axios.get(`${URL}pedidos`, configAxios)).data;
-
-  listarPedidos(pedidos);
-});
-
-document.addEventListener("contextmenu", clickderecho);
-
-tbody.addEventListener("click", (e) => {
-  seleccionado && seleccionado.classList.remove("seleccionado");
-  subSeleccionado && subSeleccionado.classList.remove("subSeleccionado");
-
-  if (e.target.nodeName === "TD") {
-    seleccionado = e.target.parentNode;
-    subSeleccionado = e.target;
-  } else if (e.target.nodeName === "INPUT") {
-    seleccionado = e.target.parentNode.parentNode;
-    subSeleccionado = e.target.parentNode;
-  }
-
-  seleccionado.classList.add("seleccionado");
-  subSeleccionado.classList.add("subSeleccionado");
-
-  const identificador = seleccionado.id;
-  let pedidoIdentificado = {};
-
-  for (let pedido of arreglo) {
-    pedido._id === identificador && (pedidoIdentificado = pedido);
-  }
-
-  inputSeleccionado && inputSeleccionado.toggleAttribute("disabled");
-  inputSeleccionado = seleccionado.children[8].children[0];
-  inputSeleccionado.toggleAttribute("disabled");
-
-  if (e.target.nodeName === "INPUT") {
-    //pasamos el foco al input al tocar en la fila
-    inputSeleccionado.focus();
-
-    //hacemos que se seleccione todo el input
-    inputSeleccionado.select();
-  }
-
-  //se ejecuta cuando escribimos en el input
-  inputSeleccionado.addEventListener("keyup", async (e) => {
-    pedidoIdentificado.estadoPedido = e.target.value;
-    pedidoIdentificado.maquina = verNombrePc();
-    pedidoIdentificado.vendedorQueModifico = vendedor;
-    await axios.put(
-      `${URL}pedidos/${pedidoIdentificado._id}`,
-      pedidoIdentificado,
-      configAxios
-    );
-  });
-});
-
-tbody.addEventListener("dblclick", async (e) => {
-  await sweet
-    .fire({
-      title: "Cambiar pedido",
-      html: `
-            <label for="cliente">Cliente</label>
-            <input type="text" value="${seleccionado.children[4].innerText}" name="cliente" id="cliente"/>
-            <label for="">Numero</label>
-            <input type="tel" value="${seleccionado.children[5].innerText}" name="numero" id="numero"/>
-        `,
-      confirmButtonText: "Aceptar",
-      showCancelButton: true,
-    })
-    .then(async ({ isConfirmed }) => {
-      if (isConfirmed) {
-        seleccionado.children[4].innerText = document
-          .getElementById("cliente")
-          .value.toUpperCase();
-        seleccionado.children[5].innerText =
-          document.getElementById("numero").value;
-        const pedido = (
-          await axios.get(`${URL}pedidos/${seleccionado.id}`, configAxios)
-        ).data;
-        pedido.cliente = seleccionado.children[4].innerText;
-        pedido.telefono = seleccionado.children[5].innerText;
-        pedido.maquina = verNombrePc();
-        pedido.vendedorQueModifico = vendedor;
-        await axios.put(
-          `${URL}pedidos/${seleccionado.id}`,
-          pedido,
-          configAxios
-        );
-      }
-    });
-});
-
-document.addEventListener("keydown", async (e) => {
-  if (e.key === "Escape") {
-    location.href = "../index.html";
-  }
-  subSeleccionado = await recorrerFlechas(e);
-  seleccionado = subSeleccionado && subSeleccionado.parentNode;
-  subSeleccionado &&
-    subSeleccionado.scrollIntoView({
-      block: "center",
-      inline: "center",
-      behavior: "smooth",
-    });
-});
-
-//Eliminar un pedido
-eliminarPedido.addEventListener("click", async (e) => {
-  seleccionado = document.querySelector(".seleccionado");
-  if (seleccionado) {
-    await sweet
-      .fire({
-        title: "Eliminar Pedido",
-        showCancelButton: true,
-        confirmButtonText: "Aceptar",
-      })
-      .then(async ({ isConfirmed }) => {
-        if (isConfirmed) {
-          await axios.delete(
-            `${URL}pedidos/${seleccionado.id}`,
-            {
-              data: {
-                vendedor,
-                maquina: verNombrePc(),
-                pedido: seleccionado.children[2].innerText,
-              },
-            },
-            configAxios
-          );
-          tbody.removeChild(seleccionado);
-          seleccionado = "";
-        }
-      });
-  } else {
-    sweet.fire({ title: "Pedido no seleccionado" });
-  }
-});
-
-//Eliminar Varios Pedidos
-eliminarVarios.addEventListener("click", eliminarVariosPedidos);
-
-//Nos llega que hicimos un click para seleccionar un pedido a eliminar
-ipcRenderer.on("seleccionarParaEliminar", (e) => {
-  seleccionado.classList.add("eliminar");
-});
+  if (e.target.value === ""){
+    arregloAux = pedidos;
+  }else{
+    arregloAux = pedidos.filter( pedido => pedido[filtro.value].includes(e.target.value.toUpperCase()));
+  };
+  
+  listarPedidos(arregloAux);
+};
 
 async function eliminarVariosPedidos() {
   const pedidosAEliminar = document.querySelectorAll(".eliminar");
@@ -241,7 +109,7 @@ const OrdenarPedidos = (e) => {
       document.getElementById("flechaAbajoCliente").classList.add("none");
       document.getElementById("flechaArribaCliente").classList.remove("none");
 
-      pedidos.sort((a, b) => {
+      arregloAux.sort((a, b) => {
         if (a.cliente > b.cliente) {
           return 1;
         } else if (a.cliente < b.cliente) {
@@ -255,7 +123,7 @@ const OrdenarPedidos = (e) => {
       document.getElementById("flechaAbajoCliente").classList.remove("none");
       document.getElementById("flechaArribaCliente").classList.add("none");
 
-      pedidos.sort((a, b) => {
+      arregloAux.sort((a, b) => {
         if (a.cliente > b.cliente) {
           return -1;
         } else if (a.cliente < b.cliente) {
@@ -273,7 +141,7 @@ const OrdenarPedidos = (e) => {
       document.getElementById("flechaAbajoProvedor").classList.add("none");
       document.getElementById("flechaArribaProvedor").classList.remove("none");
 
-      pedidos.sort((a, b) => {
+      arregloAux.sort((a, b) => {
         if (a.provedor > b.provedor) {
           return 1;
         } else if (a.provedor < b.provedor) {
@@ -287,7 +155,7 @@ const OrdenarPedidos = (e) => {
       document.getElementById("flechaAbajoProvedor").classList.remove("none");
       document.getElementById("flechaArribaProvedor").classList.add("none");
 
-      pedidos.sort((a, b) => {
+      arregloAux.sort((a, b) => {
         if (a.provedor > b.provedor) {
           return -1;
         } else if (a.provedor < b.provedor) {
@@ -305,7 +173,9 @@ const OrdenarPedidos = (e) => {
       document.getElementById("flechaAbajoMarca").classList.add("none");
       document.getElementById("flechaArribaMarca").classList.remove("none");
 
-      pedidos.sort((a, b) => {
+      console.log(arregloAux)
+
+      arregloAux.sort((a, b) => {
         if (a.marca > b.marca) {
           return 1;
         } else if (a.marca < b.marca) {
@@ -319,7 +189,7 @@ const OrdenarPedidos = (e) => {
       document.getElementById("flechaAbajoMarca").classList.remove("none");
       document.getElementById("flechaArribaMarca").classList.add("none");
 
-      pedidos.sort((a, b) => {
+      arregloAux.sort((a, b) => {
         if (a.marca > b.marca) {
           return -1;
         } else if (a.marca < b.marca) {
@@ -331,10 +201,12 @@ const OrdenarPedidos = (e) => {
   }
 
   tbody.innerHTML = "";
-  listarPedidos(pedidos);
+  listarPedidos(arregloAux);
 };
 
 function listarPedidos(pedidos) {
+  tbody.innerHTML = "";
+  
   for (let [index, pedido] of pedidos.entries()) {
     let fecha = new Date(pedido.fecha);
     const stock = pedido.stock !== undefined ? pedido.stock : 0;
@@ -403,10 +275,185 @@ function listarPedidos(pedidos) {
   subSeleccionado.classList.add("subSeleccionado");
 
   arreglo = pedidos;
-}
+};
+
+buscador.addEventListener('keyup', filtarPedidos);
+
+document.addEventListener("contextmenu", clickderecho);
+
+document.addEventListener("keydown", async (e) => {
+  if (e.key === "Escape") {
+    location.href = "../index.html";
+  }
+  subSeleccionado = await recorrerFlechas(e);
+  seleccionado = subSeleccionado && subSeleccionado.parentNode;
+  subSeleccionado &&
+    subSeleccionado.scrollIntoView({
+      block: "center",
+      inline: "center",
+      behavior: "smooth",
+    });
+});
+
+tbody.addEventListener("click", (e) => {
+  seleccionado && seleccionado.classList.remove("seleccionado");
+  subSeleccionado && subSeleccionado.classList.remove("subSeleccionado");
+
+  if (e.target.nodeName === "TD") {
+    seleccionado = e.target.parentNode;
+    subSeleccionado = e.target;
+  } else if (e.target.nodeName === "INPUT") {
+    seleccionado = e.target.parentNode.parentNode;
+    subSeleccionado = e.target.parentNode;
+  }
+
+  seleccionado.classList.add("seleccionado");
+  subSeleccionado.classList.add("subSeleccionado");
+
+  const identificador = seleccionado.id;
+  let pedidoIdentificado = {};
+
+  for (let pedido of arreglo) {
+    pedido._id === identificador && (pedidoIdentificado = pedido);
+  }
+
+  inputSeleccionado && inputSeleccionado.toggleAttribute("disabled");
+  inputSeleccionado = seleccionado.children[11].children[0];
+  inputSeleccionado.toggleAttribute("disabled");
+
+  if (e.target.nodeName === "INPUT") {
+    //pasamos el foco al input al tocar en la fila
+    inputSeleccionado.focus();
+
+    //hacemos que se seleccione todo el input
+    inputSeleccionado.select();
+  }
+
+  //se ejecuta cuando escribimos en el input
+  inputSeleccionado.addEventListener("keyup", async (e) => {
+    pedidoIdentificado.estadoPedido = e.target.value;
+    pedidoIdentificado.maquina = verNombrePc();
+    pedidoIdentificado.vendedorQueModifico = vendedor;
+    await axios.put(
+      `${URL}pedidos/${pedidoIdentificado._id}`,
+      pedidoIdentificado,
+      configAxios
+    );
+  });
+});
+
+tbody.addEventListener("dblclick", async (e) => {
+  await sweet
+    .fire({
+      title: "Cambiar pedido",
+      html: `
+            <label for="cliente">Cliente</label>
+            <input type="text" value="${seleccionado.children[4].innerText}" name="cliente" id="cliente"/>
+            <label for="">Numero</label>
+            <input type="tel" value="${seleccionado.children[5].innerText}" name="numero" id="numero"/>
+        `,
+      confirmButtonText: "Aceptar",
+      showCancelButton: true,
+    })
+    .then(async ({ isConfirmed }) => {
+      if (isConfirmed) {
+        seleccionado.children[4].innerText = document
+          .getElementById("cliente")
+          .value.toUpperCase();
+        seleccionado.children[5].innerText =
+          document.getElementById("numero").value;
+        const pedido = (
+          await axios.get(`${URL}pedidos/${seleccionado.id}`, configAxios)
+        ).data;
+        pedido.cliente = seleccionado.children[4].innerText;
+        pedido.telefono = seleccionado.children[5].innerText;
+        pedido.maquina = verNombrePc();
+        pedido.vendedorQueModifico = vendedor;
+        await axios.put(
+          `${URL}pedidos/${seleccionado.id}`,
+          pedido,
+          configAxios
+        );
+      }
+    });
+});
+
+//Eliminar un pedido
+eliminarPedido.addEventListener("click", async (e) => {
+  seleccionado = document.querySelector(".seleccionado");
+  if (seleccionado) {
+    await sweet
+      .fire({
+        title: "Eliminar Pedido",
+        showCancelButton: true,
+        confirmButtonText: "Aceptar",
+      })
+      .then(async ({ isConfirmed }) => {
+        if (isConfirmed) {
+          await axios.delete(
+            `${URL}pedidos/${seleccionado.id}`,
+            {
+              data: {
+                vendedor,
+                maquina: verNombrePc(),
+                pedido: seleccionado.children[2].innerText,
+              },
+            },
+            configAxios
+          );
+          tbody.removeChild(seleccionado);
+          seleccionado = "";
+        }
+      });
+  } else {
+    sweet.fire({ title: "Pedido no seleccionado" });
+  }
+});
+
+//Eliminar Varios Pedidos
+eliminarVarios.addEventListener("click", eliminarVariosPedidos);
 
 thead.addEventListener("click", OrdenarPedidos);
 
 salir.addEventListener("click", (e) => {
   location.href = "../index.html";
 });
+
+//Mandamos a llamar a pedidos
+window.addEventListener("load", async (e) => {
+  copiar();
+
+  pedidos = (await axios.get(`${URL}pedidos`, configAxios)).data;
+  arregloAux = pedidos;
+  listarPedidos(pedidos);
+});
+
+//Nos llega que hicimos un click para seleccionar un pedido a eliminar
+ipcRenderer.on("seleccionarParaEliminar", (e) => {
+  seleccionado.classList.add("eliminar");
+});
+
+//Abrimos una modal con input para poder cambiar la observacion de los pedidos
+ipcRenderer.on('cambiarObservacion', async() => {
+  const { isConfirmed, value } = await sweet.fire({
+    title: `Cambiar Observacion del pedido`,
+    showCancelButton: true,
+    confirmButtonText: "Aceptar",
+    input: 'text',
+    inputValue: seleccionado.children[10].innerText
+  });
+
+  if (isConfirmed){
+    const pedido = (await axios.get(`${URL}pedidos/${seleccionado.id}`)).data;
+
+    pedido.observacion = value.toUpperCase().trim();
+    seleccionado.children[10].innerText = value.toUpperCase().trim();
+
+    await axios.put(`${URL}pedidos/${seleccionado.id}`, pedido);
+  }
+});
+
+
+
+
+

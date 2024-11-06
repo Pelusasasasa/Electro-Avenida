@@ -38,7 +38,7 @@ app.use('/api/dat_comp',require('./routes/dat_comp'));
 //Diferencia de caja
 app.use('/api/difCaja',require('./routes/difCaja'));
 //Mercado Libre
-app.use('/api/mercadoLibre', require('./routes/mercadoLibre.router'));
+app.use('/api/mercadoLibre', require('./routes/MercadoLibre.route'))
 //movCaja
 app.use('/api/movCajas',require('./routes/movCaja'));
 //Movimiento de productos

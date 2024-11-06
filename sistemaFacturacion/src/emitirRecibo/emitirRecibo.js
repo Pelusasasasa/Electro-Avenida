@@ -216,7 +216,7 @@ const listarLista = (lista, situacion) => {
   if (situacion === "negro") {
     aux = "Presupuesto";
   } else {
-    if (cond_iva.value === "Inscripto") {
+    if (cond_iva.value === "Inscripto" || cond_iva.value === "Monotributista") {
       aux = "Factura A";
     } else {
       aux = "Factura B";

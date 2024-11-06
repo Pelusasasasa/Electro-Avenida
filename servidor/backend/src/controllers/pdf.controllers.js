@@ -108,8 +108,10 @@ pdfCTRL.crearPdf = async(req,res)=>{
 
     if ((venta.condIva === "Monotributista" || venta.condIva === "Inscripto") && venta.tipo_comp !== 'Recibos'){
         html = html.replace('{{subtotalIva}}',`<td>Subtotal c/IVA</td>`) ;
+    }else if(venta.tipo_comp !== "Recibos" && (venta.condIva !== "Monotributista" && venta.condIva !== "Inscripto")){
+        html = html.replace('{{subtotalIva}}',"");
     }else{
-        html.replace('{{subtotalIva}}',"");
+        html = html.replace('{{subtotalIva}}',"");
     };
     
     html = html.replace('{{trs}}',trs)

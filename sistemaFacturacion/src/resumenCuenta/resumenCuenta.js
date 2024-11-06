@@ -242,7 +242,7 @@ imprimir.addEventListener("click", (e) => {
   location.reload();
 });
 
-document.addEventListener("keyup", (e) => {
+document.addEventListener("keydown", (e) => {
   if (e.keyCode === 27) {
     location.href = "../index.html";
   }

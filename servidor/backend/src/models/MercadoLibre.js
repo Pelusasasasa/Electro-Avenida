@@ -1,50 +1,41 @@
-const { Schema, model } = require("mongoose");
+const {Schema, model} = require('mongoose');
 
-const MercadoLibre = new Schema({
-    gananciaML: {
-        type: Number,
-        require: true,
-        default: 0 
-    },
-    porcentajeDescuentoML: {
-        type: Number,
-        require: true,
-        default: 0
-    },
-    envio:{
-        type: Number,
-        require: true,
-        default: 0
-    },
-    valorPrimerCostoFijo:{
-        type: Number,
-        require: true,
-        default: 0
-    },
-    valorSegundoCostoFijo:{
-        type: Number,
-        require: true,
-        default: 0
-    },
-    primerCostoFijo:{
-        type: Number,
-        require: true,
-        default: 0
-    },
-    segundoCostoFijo:{
-        type: Number,
-        require: true,
-        default: 0
-    },
-    refreshToken:{
+const mercadoLibre = new Schema({
+    codigoML:{
         type: String,
-        
+        required: true,
+        unique: true,
+        trim: true
     },
-    autherizacion:{
+
+    fecha:{
+        type: Date,
+        required: true,
+        default: Date.now()
+    },
+
+    codProd:{
         type: String,
-        default: ''
+        required: true,
+        trim: true
+    },
+    
+    descripcion: {
+        type: String,
+        required: true,
+        trim: true,
+        set: value => value.toUpperCase()
+    },
+
+    precioML: {
+        type: Number,
+        required: true
+    },
+
+    stockML:{
+        type: Number,
+        required: true
     }
 });
 
-module.exports = model('MercadoLibre', MercadoLibre);
-
+module.exports = model('MercadoLibre', mercadoLibre);

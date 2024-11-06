@@ -10,6 +10,18 @@
   </head>
   <body class="contenedor-verPedidos">
     <h1>Lista de pedido</h1>
+    <header class="flex justify-center item-center gap-2">
+      <select name="filtro" id="filtro" class="p-1 mt-2">
+        <option value="codigo">Codigo</option>
+        <option value="producto" selected>Producto</option>
+        <option value="marca">Marca</option>
+        <option value="provedor">Provedor</option>
+      </select>
+      <div class="flex justify-center flex-col mt-1 mb-1">
+        <label for="buscador" class="text-center">Buscador</label>
+        <input type="text" name="buscador" id="buscador" placeholder="Buscando..." class="p-1">
+      </div>
+    </header>
     <div class="table">
       <table>
         <thead>
