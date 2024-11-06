@@ -272,21 +272,28 @@ select{
   justify-content: center;
 }
 
-<<<<<<< HEAD
-.items-center{
+.item-center{
   align-items: center;
 }
 
-=======
-.item-center{
-  align-items: center;
+.grid{
+  display: grid;
+}
+
+.label{
+  display: inline-block;
+  width: 10rem;
+
+}
+
+.columns-2{
+  grid-template-columns: 1fr 1fr;
 }
 
 .gap-2{
   gap: 2rem;
 }
 
->>>>>>> main
 
 /* Texto */
 
@@ -332,32 +339,12 @@ select{
   overflow: scroll;
 }
 
-<<<<<<< HEAD
-/* margin */
 
+/* margin */
 .m-0{
   margin: 0;
 }
 
-.mb-1{
-  margin-bottom: 1rem;
-}
-
-.mb-2{
-  margin-bottom: 2rem;
-}
-
-/* widht */
-
-.w-full{
-  width: 100%;
-}
-
-.w-40{
-  width: 40rem;
-=======
-
-/* margin */
 .mt-1{
   margin-top: 10px;
 }
@@ -386,5 +373,4 @@ select{
 
 .pt-2{
   padding-top: 2rem;
->>>>>>> main
 }

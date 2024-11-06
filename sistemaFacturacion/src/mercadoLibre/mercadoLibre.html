@@ -7,9 +7,15 @@
     <title>Mercado Libre</title>
 </head>
 <body>
-    <header class="flex flex-col items-center justify-center items-center mb-2">
-        <h1 class="m-0">Buscador</h1>
-        <input type="text" name="buscador" id="buscador" class="w-40" placeholder="Buscador...">
+    <header class="flex justify-around">
+        <div class="flex flex-col items-center justify-center items-center mb-2">
+            <h1 class="m-0">Buscador</h1>
+            <input type="text" name="buscador" id="buscador" class="w-40" placeholder="Buscador...">
+        </div>
+        <div class="botones flex gap-2">
+            <button id="agregar">Agregar Producto</button>
+            <button id="modificar">Modificar Producto</button>
+        </div>
     </header>
 
     <section id="seccionVarios" class="h-80 bg-white overflow-scroll">

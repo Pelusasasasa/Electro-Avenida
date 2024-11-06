@@ -11,6 +11,7 @@ const valorSegundoCostoFijo = 1800;
 
 
 const { devolveDireccion, obtenerInformacionUsuario, buscarIDDeProductoPorSKU,buscarMilItems, buscarinfoProductoPorId, modificarPrecioPorIdDeProducto, modificarPrecioYStockPorIdDeProducto, filtrarPorTitle } = require('./helpers');
+const { ipcRenderer } = require('electron');
 const aux = 'https://api.mercadolibre.com/';
 const URL = process.env.URL;
 const client_id = '8351426981367452';
@@ -24,6 +25,8 @@ const id = 231090073;
 let productos = [];
 
 const buscador = document.getElementById('buscador');
+const agregar = document.getElementById('agregar');
+const modificar = document.getElementById('modificar');
 
 const tbody = document.getElementById('tbody');
 
@@ -152,6 +155,15 @@ const listarProductos = async(lista) => {
   }
 };
 
+const producto = async(e) => {
+  ipcRenderer.send('abrir-ventana-argumentos', {
+    path: 'mercadoLibre/producto.html',
+    width: 1200,
+    heigth: 900,
+    informacion: e.target.id
+  })
+}
+
 async function permitirUsuario() {
 
   const url = `https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}`;
@@ -177,6 +189,9 @@ async function permitirUsuario() {
     console.error('Error obteniendo el token:', error.response.data);
   }
 };
+
+agregar.addEventListener('click', producto);
+modificar.addEventListener('click', producto);
 
 buscador.addEventListener('keypress',async e => {
   if(e.keyCode === 13){
