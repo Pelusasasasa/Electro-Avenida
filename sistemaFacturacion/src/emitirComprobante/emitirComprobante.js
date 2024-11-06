@@ -1608,8 +1608,9 @@ ipcRenderer.on("editarPresupuesto", async (e, numero) => {
     title:
       "Se edita el presupuesto pero se crea uno nuevo, el anterior sigue estando",
   });
-
+  
   const presupuesto = (await axios.get(`${URL}presupuesto/${numero}`)).data;
+  inputEmpresa.value = presupuesto.empresa;
   const cliente = (
     await axios.get(`${URL}clientes/id/${presupuesto.cliente}`, configAxios)
   ).data;
@@ -1617,11 +1618,20 @@ ipcRenderer.on("editarPresupuesto", async (e, numero) => {
     await axios.get(`${URL}movProductos/${numero}/${presupuesto.tipo_comp}`)
   ).data;
 
+
   ponerInputsClientes(cliente);
+
   for (let mov of movimientos) {
-    const producto = (
-      await axios.get(`${URL}productos/${mov.codProd}`, configAxios)
-    ).data;
+    let producto = {};
+
+    if (mov.codProd === '999-999'){
+      producto.descripcion = mov.descripcion;
+      producto._id = mov.codProd;
+      producto.precio_venta = mov.precio_unitario;
+      producto.marca = mov.marca ? mov.marca : '';
+    }else{
+      producto = (await axios.get(`${URL}productos/${mov.codProd}`, configAxios)).data;
+    };
     await mostrarVentas(producto, mov.egreso);
   }
 });

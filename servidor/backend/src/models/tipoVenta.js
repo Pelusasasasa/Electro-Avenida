@@ -17,6 +17,10 @@ const tipoVenta = new Schema({
    "Ultimo Remito Contado": String,
    "Ultimo Remito Cta Cte": String,
    "dolar": String,
+   "autorizacionML":{
+      type: String,
+      default:""
+   },
    "Ultimo Pago":{
       type:Number,
       default:0
