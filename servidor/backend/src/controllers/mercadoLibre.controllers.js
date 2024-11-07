@@ -2,6 +2,14 @@ const mlCTRL = {};
 
 const MercadoLibre = require('../models/MercadoLibre');
 
+mlCTRL.deleteForCodigo = async(req, res) => {
+    const { codigoML } = req.params;
+
+    const mercadoLibre = await MercadoLibre.findOneAndDelete({codigoML: codigoML});
+
+    res.send(mercadoLibre);
+}
+
 mlCTRL.getAll = async(req, res) => {
     const mercadoLibres = await MercadoLibre.find();
 
@@ -31,5 +39,6 @@ mlCTRL.putForCodigo  = async(req, res) => {
 
     res.send( mercadolibre );
 };
+
 
 module.exports = mlCTRL;

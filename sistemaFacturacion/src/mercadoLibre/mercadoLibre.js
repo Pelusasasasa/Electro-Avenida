@@ -23,10 +23,13 @@ let autherizacion = "";
 const id = 231090073;
 
 let productos = [];
+let seleccionado;
+let subSeleccionado;
 
 const buscador = document.getElementById('buscador');
 const agregar = document.getElementById('agregar');
 const modificar = document.getElementById('modificar');
+const eliminar = document.getElementById('eliminar');
 
 const tbody = document.getElementById('tbody');
 
@@ -67,6 +70,27 @@ const cargarPagina = async() => {
   listarProductos(publicaciones);
 };
 
+const clickEnTBody = (e) => {
+  if (e.target.nodeName === 'TD'){
+    seleccionado && seleccionado.classList.remove('seleccionado');
+    subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
+
+    seleccionado = e.target.parentNode;
+    subSeleccionado = e.target;
+
+    seleccionado.classList.add('seleccionado');
+    subSeleccionado.classList.add('subSeleccionado');
+  }
+};
+
+const deleteProduct = async(e) => {
+  if (seleccionado) {
+    const res = (await axios.delete(`${URL}mercadoLibre/forCodigo/${seleccionado.id}`)).data;
+    tbody.removeChild(seleccionado)
+    seleccionado = '';
+  };
+};
+
 const handleSearch = async(text) => {
   productos = [];
   const ids = await filtrarPorTitle(id, autherizacion, text);
@@ -97,7 +121,7 @@ const listarProductos = async(lista) => {
   for await(let elem of lista){
     
     const tr = document.createElement('tr');
-    tr.id = elem.codProd;
+    tr.id = elem.codigoML;
 
     const tdCodigo = document.createElement('td');
     const tdDescripcion = document.createElement('td');
@@ -108,12 +132,9 @@ const listarProductos = async(lista) => {
     const tdStockML = document.createElement('td');
 
     const dolar = (await axios.get(`${URL}tipoVenta`)).data.dolar;
-    const pro = (await axios.get(`${URL}productos/${tr.id}`)).data;
+    const pro = (await axios.get(`${URL}productos/${elem.codProd}`)).data;
   
     const costoIva = pro.costodolar === 0 ? (parseFloat(pro.costo) + parseFloat(pro.impuestos) ) : (pro.costodolar + (pro.costodolar * parseFloat(pro.impuestos) / 100) * dolar);
-    console.log(pro.costo)
-    console.log(pro.impuestos)
-    console.log((parseFloat(pro.costo) * parseFloat(pro.impuestos) / 100))
     const precio = calcularPrecioSujerido(pro, dolar);
     tdPrecio.innerText = precio;
     tdCostoIva.innerText = costoIva.toFixed(2);
@@ -162,7 +183,7 @@ const producto = async(e) => {
     heigth: 900,
     informacion: e.target.id
   })
-}
+};
 
 async function permitirUsuario() {
 
@@ -171,7 +192,7 @@ async function permitirUsuario() {
   window.location.href = url;
 };
 
- async function obtenerAccessToken() {
+async function obtenerAccessToken() {
   
    try {
      const respuesta = await axios.post(`${aux}oauth/token`, {
@@ -192,6 +213,9 @@ async function permitirUsuario() {
 
 agregar.addEventListener('click', producto);
 modificar.addEventListener('click', producto);
+eliminar.addEventListener('click', deleteProduct);
+
+tbody.addEventListener('click', clickEnTBody);
 
 buscador.addEventListener('keypress',async e => {
   if(e.keyCode === 13){

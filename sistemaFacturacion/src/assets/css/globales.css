@@ -283,7 +283,10 @@ select{
 .label{
   display: inline-block;
   width: 10rem;
+}
 
+.grid-column{
+  grid-column: span 2;
 }
 
 .columns-2{

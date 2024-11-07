@@ -11,10 +11,27 @@ const stockML = document.getElementById('stockML');
 const agregar = document.getElementById('agregar');
 const salir = document.getElementById('salir');
 
+let producto = {};
 
+const agregarML = async() => {
+    const elem = {};
+    
+    elem.codigoML = codigoML.value;
+    elem.codProd = codigoInterno.value;
+    elem.descripcion = descripcion.value;
+    elem.precioML = precioML.value;
+    elem.stockML = stockML.value;
 
+    const res = (await axios.post(`${URL}mercadoLibre`, elem)).data;
+    
+    window.close();
+};
 
+const listarProducto = (elem) => {
+    descripcion.value = elem.descripcion;
+};
 
+agregar.addEventListener('click', agregarML);
 
 codigoML.addEventListener('keypress', e => {
     if (e.keyCode === 13){
@@ -22,8 +39,11 @@ codigoML.addEventListener('keypress', e => {
     };
 });
 
-codigoInterno.addEventListener('keypress', e => {
+codigoInterno.addEventListener('keypress', async e => {
     if (e.keyCode === 13){
+        producto = (await axios.get(`${URL}productos/${codigoInterno.value}`)).data;
+        listarProducto(producto);
+
         descripcion.focus();
     };
 });
@@ -48,4 +68,4 @@ stockML.addEventListener('keypress', e => {
 
 salir.addEventListener('click', e => {
     window.close();
-})
+});
