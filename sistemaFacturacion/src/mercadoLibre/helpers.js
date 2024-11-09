@@ -1,5 +1,11 @@
+const client_id = '8351426981367452';
+const aux = 'https://api.mercadolibre.com/';
+const client_secret = 'n03VlrPoBnTyRmGDtDusOQwuu7qaNpHv';
+const code = 'TG-670e5faf324be700011ea691-231090073'
+const refresh_token = "TG-670e60957e88f500012c13e8-231090073"
+const redirect_uri = 'https://www.electro-avenida.com.ar/';
+
 async function obtenerInformacionUsuario(autherizacion) {
-  console.log(aux)
   try {
     const res = (await axios.get(`${aux}users/me`, {
       headers:{
@@ -7,12 +13,11 @@ async function obtenerInformacionUsuario(autherizacion) {
       }
     })).data;
 
-  console.log(res)
+  return res
   } catch (error) {
     console.log(error)
   }
 };
-
 
 const devolveDireccion = async(id, autherizacion) => {
     try {
@@ -85,6 +90,37 @@ const buscarinfoProductoPorId = async(authorizacion, codigo) => {
     }
 };
 
+const buscarVariacionesProducto = async(authorizacion, codigo) => {
+    try {
+        const res = (await axios.get(`${aux}items/${codigo}/variations`,{
+            headers: {
+                'Authorization': `Bearer ${authorizacion}`
+            }
+        })).data;
+
+        return res
+    } catch (error) {
+        return error
+    }
+};
+
+const modificarVariacionProducto = async(authorizacion, codigoML, codigoVaration) => {
+    try {
+        const res = (await axios.get(`${aux}items/${codigoML}/variations/${codigoVaration}`,{
+            {
+                price: precioML,
+                available_quantity: stockML
+            },
+            headers: {
+                'Authorization': `Bearer ${authorizacion}`
+            }
+        })).data;
+        return res
+    } catch (error) {
+        return error
+    }
+};
+
 const modificarPrecioPorIdDeProducto = async(authorizacion, codigo, precio) => {
     try {
         const res = (await axios.put(`${aux}items/${codigo}`,
@@ -122,6 +158,25 @@ const modificarPrecioYStockPorIdDeProducto = async(authorizacion, codigo, precio
     }
 };
 
+const obtenerAccessToken = async() => {
+  
+   try {
+     const respuesta = await axios.post(`${aux}oauth/token`, {
+      grant_type: 'refresh_token',
+      client_id,
+      client_secret,
+      redirect_uri,
+      refresh_token,
+      code,
+    });
+    console.log(respuesta.data)
+    console.log(respuesta.data.access_token);
+    return respuesta.data.access_token;
+  } catch (error) {
+    console.error('Error obteniendo el token:', error.response.data);
+  }
+};
+
 module.exports = {
     buscarIDDeProductoPorSKU,
     buscarinfoProductoPorId,
@@ -131,4 +186,7 @@ module.exports = {
     modificarPrecioPorIdDeProducto,
     modificarPrecioYStockPorIdDeProducto,
     obtenerInformacionUsuario,
+    obtenerAccessToken,
+    buscarVariacionesProducto,
+    modificarVariacionProducto
 };

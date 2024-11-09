@@ -9,22 +9,24 @@ const segundoCostoFijo = 28000;
 const valorPrimerCostoFijo = 900;
 const valorSegundoCostoFijo = 1800;
 
-
-const { devolveDireccion, obtenerInformacionUsuario, buscarIDDeProductoPorSKU,buscarMilItems, buscarinfoProductoPorId, modificarPrecioPorIdDeProducto, modificarPrecioYStockPorIdDeProducto, filtrarPorTitle } = require('./helpers');
+const { devolveDireccion, obtenerInformacionUsuario, buscarIDDeProductoPorSKU,buscarMilItems, buscarinfoProductoPorId, modificarPrecioPorIdDeProducto, modificarPrecioYStockPorIdDeProducto, filtrarPorTitle, obtenerAccessToken } = require('./helpers');
 const { ipcRenderer } = require('electron');
-const aux = 'https://api.mercadolibre.com/';
 const URL = process.env.URL;
+
 const client_id = '8351426981367452';
+const aux = 'https://api.mercadolibre.com/';
 const client_secret = 'n03VlrPoBnTyRmGDtDusOQwuu7qaNpHv';
-const redirect_uri = 'https://www.electro-avenida.com.ar/';
 const code = 'TG-670e5faf324be700011ea691-231090073'
 const refresh_token = "TG-670e60957e88f500012c13e8-231090073"
-let autherizacion = "";
+const redirect_uri = 'https://www.electro-avenida.com.ar/';
+
+let autherizacion = "APP_USR-8351426981367452-110710-f9931ad7fab07741a3fe89b74841d393-231090073";
 const id = 231090073;
 
 let productos = [];
 let seleccionado;
 let subSeleccionado;
+let autorizacion = '';
 
 const buscador = document.getElementById('buscador');
 const agregar = document.getElementById('agregar');
@@ -34,7 +36,7 @@ const eliminar = document.getElementById('eliminar');
 const tbody = document.getElementById('tbody');
 
 const calcularPrecioSujerido = (product, dolar) => {
-    let conIva = product.costodolar !== 0 ? parseFloat(product.impuestos) + product.costodolar : parseFloat(product.costo) + parseFloat(product.impuestos);
+    let conIva = product.costodolar !== 0 ? parseFloat(product.impuestos) + product.costodolar * dolar : parseFloat(product.costo) + parseFloat(product.impuestos);
     let total = parseFloat((conIva).toFixed(2));
     let precioML = 0;
 
@@ -64,6 +66,17 @@ const calcularPrecioSujerido = (product, dolar) => {
 };
 
 const cargarPagina = async() => {
+  const numeros = (await axios.get(`${URL}tipoVenta`)).data;
+  autorizacion = numeros.autorizacionML;
+
+  const res = await obtenerInformacionUsuario(autorizacion);
+
+  if (!res) {
+    numeros.autorizacionML = await obtenerAccessToken();
+    autorizacion = numeros.autorizacionML
+    await axios.put(`${URL}tipoVenta`, numeros);
+  }
+  
 
  const publicaciones = (await axios.get(`${URL}mercadoLibre`)).data;
 
@@ -133,15 +146,13 @@ const listarProductos = async(lista) => {
 
     const dolar = (await axios.get(`${URL}tipoVenta`)).data.dolar;
     const pro = (await axios.get(`${URL}productos/${elem.codProd}`)).data;
-  
-    const costoIva = pro.costodolar === 0 ? (parseFloat(pro.costo) + parseFloat(pro.impuestos) ) : (pro.costodolar + (pro.costodolar * parseFloat(pro.impuestos) / 100) * dolar);
+    const costoIva = pro.costodolar === 0 ? (parseFloat(pro.costo) + parseFloat(pro.impuestos) ) : ((pro.costodolar + (pro.costodolar * parseFloat(pro.impuestos) / 100)) * dolar);
     const precio = calcularPrecioSujerido(pro, dolar);
     tdPrecio.innerText = precio;
     tdCostoIva.innerText = costoIva.toFixed(2);
     tdStock.innerText = pro.stock;
 
     tdCodigo.innerText = elem.codigoML;
-    console.log(elem)
     tdDescripcion.innerText = elem.descripcion.slice(0,35).toUpperCase();
     tdPrecioML.innerText = elem.precioML.toFixed(2);
     tdStockML.innerText = elem.stockML.toFixed(2);
@@ -181,40 +192,13 @@ const producto = async(e) => {
     path: 'mercadoLibre/producto.html',
     width: 1200,
     heigth: 900,
-    informacion: e.target.id
+    informacion: e.target.id === 'agregar' ? 'agregar' : seleccionado.id
   })
-};
-
-async function permitirUsuario() {
-
-  const url = `https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}`;
-
-  window.location.href = url;
-};
-
-async function obtenerAccessToken() {
-  
-   try {
-     const respuesta = await axios.post(`${aux}oauth/token`, {
-      grant_type: 'refresh_token',
-      client_id,
-      client_secret,
-      redirect_uri,
-      refresh_token,
-      code,
-    });
-    console.log(respuesta.data)
-    console.log('Access Token:', respuesta.data.access_token);
-    return respuesta.data.access_token;
-  } catch (error) {
-    console.error('Error obteniendo el token:', error.response.data);
-  }
 };
 
 agregar.addEventListener('click', producto);
 modificar.addEventListener('click', producto);
 eliminar.addEventListener('click', deleteProduct);
-
 tbody.addEventListener('click', clickEnTBody);
 
 buscador.addEventListener('keypress',async e => {
@@ -225,9 +209,13 @@ buscador.addEventListener('keypress',async e => {
 
 window.addEventListener('load', cargarPagina);
 
+document.addEventListener('keyup', e => {
+  if (e.keyCode === 27){
+    location.href = '../index.html';
+  }
+});
+
 // obtenerAccessToken();
-
-
 // obtenerInformacionUsuario(autherizacion)
 // devolveDireccion(id, autherizacion)
 // buscarMilItems(id, autherizacion);
@@ -235,9 +223,11 @@ window.addEventListener('load', cargarPagina);
 // buscarinfoProductoPorId(autherizacion, 'MLA1434872357');
 // modificarPrecioPorIdDeProducto(autherizacion, 'MLA1434872357', 16300);
 
+async function permitirUsuario() {
 
-document.addEventListener('keyup', e => {
-  if (e.keyCode === 27){
-    location.href = '../index.html';
-  }
-});
+  const url = `https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=${client_id}&redirect_uri=${redirect_uri}`;
+
+  window.location.href = url;
+};
+
+
