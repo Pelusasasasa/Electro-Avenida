@@ -55,7 +55,8 @@ const Producto = new Schema({
     },
     provedor: {
         type: String,
-        default: ""
+        default: "",
+        set: ( valor ) => valor.toUpperCase().trim()
     },
     precioOferta:{
         type:Number,

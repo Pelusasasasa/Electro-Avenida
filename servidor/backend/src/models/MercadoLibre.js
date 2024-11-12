@@ -13,12 +13,6 @@ const mercadoLibre = new Schema({
         required: true,
         default: Date.now()
     },
-
-    codProd:{
-        type: String,
-        required: true,
-        trim: true
-    },
     
     descripcion: {
         type: String,
@@ -27,15 +21,19 @@ const mercadoLibre = new Schema({
         set: value => value.toUpperCase()
     },
 
+    categoria: {
+        type: String,
+        default: ""
+    },
     precioML: {
         type: Number,
         required: true
     },
-
-    stockML:{
-        type: Number,
-        required: true
+    variaciones: {
+        type: Schema.Types.ObjectId,
+        ref: 'Variacion'
     }
+
 });
 
 module.exports = model('MercadoLibre', mercadoLibre);
