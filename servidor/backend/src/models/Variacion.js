@@ -16,7 +16,7 @@ const Variacion = new Schema({
         require: true
     },
     publicacion:{
-        type: Schema.types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'MercadoLibre'
     }
 

@@ -69,6 +69,8 @@ app.use('/api/ultimos',require('./routes/ultimos'));
 app.use('/api/usuarios',require('./routes/usuarios'))
 //Vales
 app.use('/api/vales',require('./routes/vale'));
+//Variaciones
+app.use('/api/variacion', require('./routes/variacion.route'));
 //Ventas
 app.use('/api/ventas',require('./routes/ventas'))
 
