@@ -106,15 +106,17 @@ const buscarVariacionesProducto = async(authorizacion, codigo) => {
 
 const modificarVariacionProducto = async(authorizacion, codigoML, codigoVaration) => {
     try {
-        const res = (await axios.get(`${aux}items/${codigoML}/variations/${codigoVaration}`,{
+        const res = (await axios.get(`${aux}items/${codigoML}/variations/${codigoVaration}`,
             {
                 price: precioML,
                 available_quantity: stockML
             },
-            headers: {
-                'Authorization': `Bearer ${authorizacion}`
+            {
+                headers: {
+                    'Authorization': `Bearer ${authorizacion}`
+                }
             }
-        })).data;
+        )).data;
         return res
     } catch (error) {
         return error

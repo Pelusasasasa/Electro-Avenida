@@ -377,3 +377,16 @@ select{
 .pt-2{
   padding-top: 2rem;
 }
+
+
+.w-full{
+  width: full;
+}
+
+.w-10{
+  width: 10rem;
+}
+
+.transform-150{
+  transform: scale(1.50);
+}

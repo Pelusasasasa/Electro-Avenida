@@ -6,7 +6,7 @@ const { postMany, putMany, getForPublicacionId } = require('../controllers/varia
 router.route('/')
     .post(postMany)
     .put(putMany)
-router.route('/forPublicacion') 
+router.route('/forPublicacion/:publicacionId') 
     .get(getForPublicacionId)
 
 module.exports = router;

@@ -32,6 +32,10 @@ const mercadoLibre = new Schema({
     variaciones: {
         type: Schema.Types.ObjectId,
         ref: 'Variacion'
+    },
+    esCatalogo: {
+        type: Boolean,
+        required: true
     }
 
 });

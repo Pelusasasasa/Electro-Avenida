@@ -35,6 +35,8 @@ const eliminar = document.getElementById('eliminar');
 
 const tbody = document.getElementById('tbody');
 
+let publicaciones = [];
+
 const calcularPrecioSujerido = (product, dolar) => {
     let conIva = product.costodolar !== 0 ? parseFloat(product.impuestos) + product.costodolar * dolar : parseFloat(product.costo) + parseFloat(product.impuestos);
     let total = parseFloat((conIva).toFixed(2));
@@ -78,9 +80,9 @@ const cargarPagina = async() => {
   }
   
 
- const publicaciones = (await axios.get(`${URL}mercadoLibre`)).data;
-
-  listarProductos(publicaciones);
+  publicaciones = (await axios.get(`${URL}mercadoLibre`)).data;
+  console.log(publicaciones)
+  listarProductos(publicaciones.filter(elem => elem.esCatalogo));
 };
 
 const clickEnTBody = (e) => {
@@ -196,9 +198,9 @@ const producto = async(e) => {
   })
 };
 
-agregar.addEventListener('click', producto);
-modificar.addEventListener('click', producto);
-eliminar.addEventListener('click', deleteProduct);
+// agregar.addEventListener('click', producto);
+// modificar.addEventListener('click', producto);
+// eliminar.addEventListener('click', deleteProduct);
 tbody.addEventListener('click', clickEnTBody);
 
 buscador.addEventListener('keypress',async e => {
