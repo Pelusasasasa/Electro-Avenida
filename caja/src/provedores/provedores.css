@@ -82,6 +82,12 @@ footer  main{
     justify-content: space-around;
 }
 
+.botonFalso{
+    text-align: center;
+    background-color: rgb(179, 179, 179);
+    border: .1rem solid black;
+}
+
 table button{
     padding: 0;
     width: 100%;
@@ -103,6 +109,14 @@ table button:hover{
     margin: .5rem 0;
 }
 
+.ingresarVarios .inputs #puntoVenta{
+    width: 7rem;
+}
+
+.ingresarVarios .inputs #nro_comp{
+    width: 12rem;
+}
+
 .ingresarVarios .inputs main input{
     font-size: 1.8rem;
 }
@@ -120,4 +134,122 @@ table button:hover{
 .ingresarVarios label{
     width: 9rem;
     display: inline-block;
+}
+
+
+.cuentaCorriente .buscador{
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem;
+}
+
+.cuentaCorriente .buscador main{
+    display: flex;
+    flex-direction: column;
+}
+
+.cuentaCorriente .buscador input,.cuentaCorriente .buscador select,.cuentaCorriente .buscador label{
+    font-size: 2rem;
+}
+
+#desde,#hasta{
+    font-size: 1.5rem;
+}
+
+.table{
+    height: 75vh;
+    background-color: white;
+    overflow: scroll;
+}
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cuentaCorriente #codigo{
+    width: 10rem;
+}
+
+.cuentaCorriente #saldo{
+    width: 20rem;
+}
+
+.comprobantePago header{
+    text-align: center;
+    border: .1rem solid black;
+}
+
+.comprobantePago header h1,.comprobantePago header p{
+    margin: 0;
+}
+
+.comprobantePago .provedor{
+    border: .1rem solid black;
+    padding: 0 1rem;
+}
+
+.comprobantePago .provedor p{
+    margin: 0;
+}
+
+.provedor main{
+    display:  flex;
+    justify-content: space-between;
+}
+
+.tabla{
+    border: .1rem solid black;
+    height: auto;
+    min-height: 20vh;
+}
+
+.tabla tbody tr td.importe{
+    border: .1rem solid black;
+}
+
+.comprobantePago .total{
+    display: flex;
+    justify-content: space-between;
+}
+
+.comprobantePago .total :first-child{
+    /* justify-self: end; */
+    margin: auto;
+}
+
+.comprobantePago .total main{
+    display: flex;
+}
+
+.comprobantePago .total main label{
+    font-size: 1.6rem;
+}
+
+.comprobantePago .total main p{
+    padding: .5rem;
+    margin: 0;
+    border: .1rem solid black;
+}
+
+.comprobantePago footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.comprobantePago footer :nth-child(2){
+    border-top: .1rem solid black;
+}
+
+.mostrarPago{
+    height: 90vh;
+    background-color: white;
+    overflow: scroll;
+}
+
+
+.mostrarPago table tbody tr td{
+    border: .1rem solid black;
 }

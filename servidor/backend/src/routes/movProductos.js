@@ -1,7 +1,16 @@
 const {Router} = require("express");
 const router = Router();
 
-const {cargarMovimientoProducto,modificarVarios,traerMovProducto,traerMoviemientoPorNumeroYTipo,modificarMovimiento, getsForRubro} = require("../controllers/movProductos.controllers");
+const {
+        cargarMovimientoProducto,
+        modificarVarios,
+        traerMovProducto,
+        traerMoviemientoPorNumeroYTipo,
+        modificarMovimiento,
+        getsForRubro,
+        getsForDate,
+        traerMoviemientoPorNumeroTipoYCliente
+    } = require("../controllers/movProductos.controllers");
 
 router.route('/')
     .post(cargarMovimientoProducto)
@@ -13,6 +22,12 @@ router.route('/:id')
 
 router.route('/:numero/:tipo')
     .get(traerMoviemientoPorNumeroYTipo)
+
+router.route('/movimientosPorCliente/:numero/:tipo/:cliente')
+    .get(traerMoviemientoPorNumeroTipoYCliente)
+
+router.route('/forDate/:desde/:hasta')
+    .get(getsForDate)
 
 router.route('/:desde/:hasta/:rubro')
     .get(getsForRubro)

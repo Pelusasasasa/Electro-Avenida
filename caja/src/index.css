@@ -2,28 +2,36 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif;
   margin: auto;
-  max-width: 38rem;
+  background-color: lightgreen;
   padding: 2rem;
 }
 
-section{
+.placas{
   display: grid;
   grid-template-columns: repeat(3,1fr);
+  gap: 4rem;
 }
-
-main{
-  border: .1rem solid black;
-}
-
 
 .fechas{
   display: flex;
   justify-content: space-around;
 }
-main{
-  border: none;
+
+.placas main{
+  background-color: white;
+  width: 100%;
   display: flex;
   flex-direction: column;
+  border: .1rem solid black;
+  cursor: pointer;
+}
+
+.placas main h1{
+  text-align: center;
+}
+
+.placas main:hover{
+  transform: scale(1.1);
 }
 
 .fechas input{
@@ -34,4 +42,9 @@ main{
 .ingreso{
   display: grid;
   grid-template-columns: 1fr 1fr ;
+}
+
+#saldoInicial{
+  font-size: 1.5rem;
+  padding: 1rem;
 }

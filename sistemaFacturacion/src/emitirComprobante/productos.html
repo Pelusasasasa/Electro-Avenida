@@ -5,14 +5,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Electro Avenida</title>
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="../productos/productos.css">
   </head>
-  <body class="productosEmitirComprobante">
-    <div class="contenedor productos">
-      <fieldset>
+  <body class="productos">
+      <fieldset class="buscador">
         <legend>Buscador</legend>
-        <div class="buscador">
-          <div class="productos-codigo">
+          <main class="productos-codigo">
             <label for="">Seleccion</label>
             <select class="" name="seleccion" id="seleccion">
               <option value="descripcion">Descripcion</option>
@@ -21,23 +20,15 @@
               <option value="provedor">Provedor</option>
               <option value="cod_fabrica">Fabrica</option>
             </select>
-          </div>
+          </main>
 
-          <div class="buscador-producto">
+          <main class="buscador-producto">
             <label for="buscarProducto" class="">Buscar Producto</label>
-            <input
-            autofocus
-              type="search"
-              name="buscarProducto"
-              id="buscarProducto"
-              class="fs-2 form-control"
-            />
-          </div>
-        </div>
+            <input autofocus type="search" name="buscarProducto" id="buscarProducto" class="fs-2 form-control"/>
+          </main>
       </fieldset>
 
-      <div class="listar-productos">
-        <div class="m-0">
+        <section class="m-0 lista">
           <table class="tabla-productos">
             <thead>
               <tr>
@@ -52,8 +43,7 @@
             </thead>
             <tbody id="resultado" class="tbody"></tbody>
           </table>
-        </div>
-      </div>
+        </section>
 
     <script src="productos.js"></script>
   </body>

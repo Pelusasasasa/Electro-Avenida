@@ -3,16 +3,17 @@ const { ipcRenderer } = require('electron/renderer');
 require('dotenv').config();
 const URL = process.env.URL;
 
+const XLSX = require('xlsx');
 const sweet = require('sweetalert2');
-const { redondear, copiar } = require('../assets/js/globales');
+const { redondear, copiar, configAxios } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
+const buscador = document.getElementById('buscador');
 const inputTotal = document.getElementById('total');
 
 const agregar = document.querySelector('.agregar');
-const modificar = document.querySelector('.modificar');
-const borrar = document.querySelector('.borrar');
 const sumar = document.querySelector('.sumar');
+const exportar = document.querySelector('.exportar');
 const salir = document.querySelector('.salir');
 
 let vales = [];
@@ -22,11 +23,29 @@ let subSeleccionado;
 
 window.addEventListener('load',async e=>{
     copiar();
-    vales = (await axios.get(`${URL}vales/personal`)).data;
+    vales = (await axios.get(`${URL}vales/personal`,configAxios)).data;
+
+    vales.sort((a,b)=>{
+        console.log(a)
+        if(a.rsoc < b.rsoc){
+            return 1
+        }else if(a.rsoc > b.rsoc){
+            return -1
+        }
+        return 0
+    })
+
     listarVales(vales);
 });
 
+buscador.addEventListener('keyup',e=>{
+    const valeFiltrado = vales.filter(vale=>vale.rsoc.startsWith(e.target.value.toUpperCase()));
+    listarVales(valeFiltrado)
+});
+
 const listarVales = (vales)=>{
+    total = 0;
+    tbody.innerHTML = "";
     for(let vale of vales){
     const tr = document.createElement('tr');
     tr.id = vale._id;
@@ -98,7 +117,7 @@ tbody.addEventListener('click',e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
+                    await axios.delete(`${URL}vales/id/${seleccionado.id}`,configAxios);
                     tbody.removeChild(seleccionado);
                     inputTotal.value = redondear(parseFloat(inputTotal.value) - parseFloat(seleccionado.children[4].innerHTML),2);
                 } catch (error) {
@@ -129,12 +148,6 @@ agregar.addEventListener('click',e=>{
     })
 });
 
-borrar.addEventListener('click',async e=>{
-    if (seleccionado) {
-
-    }
-});
-
 sumar.addEventListener('click',async e=>{
     let suma = 0;
     for(let vale of vales){
@@ -145,6 +158,30 @@ sumar.addEventListener('click',async e=>{
     await sweet.fire({
         title:`La suma de ${seleccionado.children[2].innerHTML} es: $${redondear(suma,2)}`
     })
+});
+
+exportar.addEventListener('click',async e=>{
+    let path = await ipcRenderer.invoke('elegirPath');
+
+    let wb = XLSX.utils.book_new();
+    let extencion = "xlsx";
+
+    vales.forEach(vale=>{
+        delete vale._id;
+        delete vale.__v;
+    });
+        
+    wb.props = {
+        Title: "Vales",
+        subject: "Test",
+        Author: "Electro Avenida"
+    }
+
+    let newWs = XLSX.utils.json_to_sheet(vales);
+
+    XLSX.utils.book_append_sheet(wb,newWs,'Vales');
+    XLSX.writeFile(wb,path + "." + extencion);
+
 });
 
 salir.addEventListener('click',e=>{

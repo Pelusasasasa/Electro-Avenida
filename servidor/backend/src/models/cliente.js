@@ -12,7 +12,7 @@ const cliente = new Schema({
     },
     direccion:{
         type:String,
-        required:true
+        default:""
     },
     cod_postal:{
         type: String,
@@ -48,16 +48,15 @@ const cliente = new Schema({
     },
     mail:String,
     saldo: {
-        type:String,
-        default: "0"
+        type:Number,
+        default: 0
     },
     lim_compra: Number,
     cond_fact: String,
     saldo_p: {
-        type: String,
-        default: "0"
-    },
-    listaVentas:[]
+        type: Number,
+        default: 0
+    }
 })
 
 module.exports = model('Cliente',cliente)

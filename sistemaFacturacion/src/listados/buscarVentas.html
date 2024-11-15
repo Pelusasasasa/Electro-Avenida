@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Informe por Comprobante</title>
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./listados.css">
   </head>
   <body class="buscarVentas">
     <div class="seleccionar">
@@ -50,12 +51,12 @@
       </main>
     </section>
 
-    <div class="nombre none">
-      <label for="Hasta">Razon social</label>
-      <input type="text" id="razon" name="razon" />
-    </div>
-
     <div class="buscador">
+      <div class="nombre none">
+        <label for="Hasta">Razon social</label>
+        <input type="text" id="razon" name="razon" />
+      </div>
+
       <div class="desde none">
         <label for="desde">Desde</label>
         <input type="date" autofocus name="desde" id="desde" />
@@ -65,10 +66,10 @@
         <label for="Hasta">Hasta</label>
         <input type="date" name="hasta" id="hasta" />
       </div>
+    </div>
 
-      <div>
-        <button class="buscar">Buscar</button>
-      </div>
+    <div>
+      <button class="buscar">Buscar</button>
     </div>
 
     <div class="listar">

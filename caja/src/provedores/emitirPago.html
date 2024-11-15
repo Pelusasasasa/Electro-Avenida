@@ -40,7 +40,7 @@
                 <select name="tipo" id="tipo">
                     <option value="Pago Anticipado">Pago Anticipado</option>
                     <option value="Descuento">Descuento</option>
-                    <option value="Pago A Cuenta">Pago A cuenta</option>
+                    <option value="Pago A Cuenta">Pago A Cuenta</option>
                 </select>
             </main>
             <main>
@@ -57,7 +57,10 @@
             </main>
             <main>
                 <label for="banco">Banco</label>
-                <input type="text" name="banco" id="banco">
+                <select name="banco" id="banco">
+                    <option value="BANCO DE ENTRE RIOS">Banco Entre Rios</option>
+                    <option value="efectivo">Efectivo</option>
+                </select>
             </main>
             <main>
                 <label for="fecha">Fecha</label>
@@ -65,7 +68,7 @@
             </main>
             <main>
                 <label for="importeCheque">Importe Cheque</label>
-                <input type="number" name="importeCheque" id="importeCheque">
+                <input type="number" value="0.00" name="importeCheque" id="importeCheque">
             </main>
         </fieldset>
     </section>
@@ -90,6 +93,7 @@
                         <tr>
                             <th>Nº Cheque</th>
                             <th>Banco</th>
+                            <th>Fecha Cheque</th>
                             <th>Importe</th>
                             <th>Acciones</th>
                         </tr>

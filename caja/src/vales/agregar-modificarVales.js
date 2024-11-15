@@ -4,7 +4,7 @@ require('dotenv').config();
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
-const { cerrarVentana } = require('../assets/js/globales');
+const { cerrarVentana, configAxios } = require('../assets/js/globales');
 
 const h1 = document.querySelector('h1');
 
@@ -45,6 +45,9 @@ nro_comp.addEventListener('keyup',e=>{
 });
 
 agregar.addEventListener('click',async e=>{
+
+    if (!imp.value) return await sweet.fire('Poner un importe al vale');
+
     const vale = {};
     vale.nro_comp = nro_comp.value;
     vale.rsoc = rSocial.value.toUpperCase();
@@ -53,12 +56,13 @@ agregar.addEventListener('click',async e=>{
     vale.tipo = "C";
 
     try {
-        await axios.post(`${URL}vales`,vale);
+        await axios.post(`${URL}vales`,vale,configAxios);
         window.close();
     } catch (error) {
         await sweet.fire({
             title:"No se pudo cargar la venta"
-        })
+        });
+        console.log(error)
     }
 });
 
@@ -71,7 +75,7 @@ modificar.addEventListener('click',async e=>{
     vale.tipo = "C";
 
     try {
-        await axios.put(`${URL}vales/id/${modificar.id}`,vale);
+        await axios.put(`${URL}vales/id/${modificar.id}`,vale,configAxios);
         window.close();
     } catch (error) {
         await sweet.fire({
@@ -113,7 +117,7 @@ salir.addEventListener('click',e=>{
 });
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    const vale = (await axios.get(`${URL}vales/id/${args}`)).data;
+    const vale = (await axios.get(`${URL}vales/id/${args}`,configAxios)).data;
     llenarInputs(vale);
 });
 

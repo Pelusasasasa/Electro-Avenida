@@ -87,3 +87,5 @@ typings/
 
 # Electron-Forge
 out/
+
+caja-win32-x64

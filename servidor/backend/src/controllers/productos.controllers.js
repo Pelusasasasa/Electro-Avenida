@@ -1,10 +1,12 @@
 const productosCTRL = {};
 const path = require('path');
+const fs = require('fs');
 
-const Productos = require("../models/producto");
+const Productos = require("../models/Producto");
 
 productosCTRL.traerProductos = async(req,res)=>{
-    const {texto,tipoBusqueda} = req.params;
+    let {texto,tipoBusqueda} = req.params;
+    texto = texto.replace('ALT47','/');
     if(texto[0] === "*"){
             const contenga = texto.substr(1);
             const re = new RegExp(`${contenga}`)
@@ -32,7 +34,7 @@ productosCTRL.traerProductos = async(req,res)=>{
 
 productosCTRL.getproducto = async(req,res)=>{
     const {id} = req.params
-    let producto
+    let producto;
     if(id === "stockNegativo"){
         productos = await Productos.find({stock:{$lt: 0}})
         res.send(productos)
@@ -46,14 +48,15 @@ productosCTRL.getproducto = async(req,res)=>{
 productosCTRL.crearProducto = async(req,res)=>{
     const productonuevo = new Productos(req.body);
     await productonuevo.save();
-    console.log(`Producto ${req.body.descripcion} Creado`);
+    console.log(`Producto ${req.body.descripcion} Creado por el vendedor ${req.body.vendedor} en la maquina ${req.body.maquina} con la fecha y hora ${(new Date()).toLocaleString()}`);
     res.send("Producto Cargado");
-}
+};
 
 productosCTRL.modificarProducto = async(req,res)=>{
     const {id} = req.params;
+    const {vendedor,maquina} = req.body;
     const productoModificado = await Productos.findByIdAndUpdate({_id:id},req.body);
-    console.log(`Producto ${req.body.descripcion} modificado`)
+    console.log(`Producto ${req.body.descripcion} modificado por el vendedor ${vendedor} de la maquina ${maquina} con la fecha y hora ${(new Date()).toLocaleString()}`);
     res.send("Producto Modificado")
 }
 
@@ -68,9 +71,10 @@ productosCTRL.modificarProductos = async(req,res)=>{
 
 productosCTRL.borrarProducto = async(req,res)=>{
     const {id} = req.params;
-    await Productos.findByIdAndDelete({_id:id})
-    console.log(`Producto ${id} borrado`)
-    res.send("Producto Borrado")
+    const {vendedor,maquina,producto} = req.body;
+    await Productos.findByIdAndDelete({_id:id});
+    console.log(`Producto ${producto} borrado por el vendedor ${vendedor} de la maquina ${maquina} con la fecha y hora ${(new Date()).toLocaleString()}`);
+    res.send("Producto Borrado");
 }
 
 productosCTRL.traerProductosPorRango = async(req,res)=>{
@@ -88,33 +92,64 @@ productosCTRL.traerMarcas = async(req,res)=>{
         }
     })
     res.send(marcas)
-}
+};
 
+productosCTRL.getProvedores = async(req,res)=>{
+    const productos = await Productos.find({},{_id:0 , provedor:1});
+    let provedores = [];
+    productos.filter((ele)=>{
+        if(!provedores.includes(ele.provedor)){
+            provedores.push(ele.provedor);
+        };
+    });
+    res.send(provedores);
+};
 
 productosCTRL.productosPorMarca = async(req,res)=>{
     const {marca} = req.params;
-    console.log(marca)
     const productos = await Productos.find({marca:marca});
     res.send(productos)
-}
+};
 
+productosCTRL.productosPorProvedor = async(req,res)=>{
+    const {provedor} = req.params;
+    const productos = await Productos.find({provedor});
+    res.send(productos)
+};
 
 productosCTRL.subirImagen = async(req,res)=>{
     const file = req.file;
     const {id} = req.params;
-    console.log(file)
     const producto = (await Productos.find({_id:id}))[0];
     producto.imgURL = req.file.path;
     await Productos.findOneAndUpdate({_id:id},producto);
     res.send("Imagen subida")
-}
+};
 
 productosCTRL.mostrarImagen = async(req,res)=>{
     const {id} = req.params;
-    let producto = (await Productos.find({_id:id}))[0].imgURL;
-    const a = path.join(__dirname,'../../');
-    
-    res.sendFile(a + producto)
-}
+    const direccion = path.join(__dirname,'../../') + `imagenes/` + id + ".jpg";
+    const imagenGenerica = path.join(__dirname,'../../') + "imagenes/Generica.jpg";
+    fs.access(direccion,fs.constants.F_OK,err=>{
+        if (err) {
+            res.sendFile(imagenGenerica);
+        }else{
+            res.sendFile(direccion);
+        }
+    });
+};
+
+productosCTRL.getStockCero = async(req,res)=>{
+    const productos = await Productos.find({stock:"0"});
+    res.send(productos)
+};
+
+productosCTRL.putStockCero = async(req,res)=>{
+    const id = req.body._id;
+    const producto = await Productos.findByIdAndUpdate({_id:id},req.body,{new:true});
+    res.send(producto);
+};
+
+
 
 module.exports = productosCTRL;

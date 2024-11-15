@@ -4,42 +4,60 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="../clientes/clientes.css">
     <title>ARREGLAR COMPENSADA/HISTORICA</title>
-    <link rel="stylesheet" href="../../build/css/app.css">
 </head>
 <body class="arreglarCompensada">
     <h1 class="titulo">Arreglar Compensada</h1>
-    <section class="botones">
-        <button class="compensada">Compensada</button>
-        <button class="historica">Historica</button>
+    <section class="cliente">
+        <main>
+            <label for="codigo">Codigo</label>
+            <input type="text" autofocus name="codigo" id="codigo">
+        </main>
+        <main>
+            <label for="cliente">Cliente</label>
+            <input type="text" name="cliente" disabled id="cliente">
+        </main>
     </section>
-    <section>
+    <section class="inputs">
         <main>
             <label for="puntoVenta">Punto Venta</label>
             <input type="number" name="puntoVenta" id="puntoVenta">
+        </main> 
+        <main>            
             <label for="numero">Numero</label>
             <input type="number" name="numero" id="numero">
         </main>
     </section>
-    <section class="tabla">
-        <table>
-            <thead>
-                <tr>
-                    <th>idCliente</th>
-                    <th>Cliente</th>
-                    <th>Tipo</th>
-                    <th>Numero</th>
-                    <th>Importe</th>
-                    <th>Pagado</th>
-                    <th>Saldo</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
+    <section class="datos">
+        <fieldset>
+            <legend>Datos</legend>
+            <main>
+                <label for="tipoComp">Tipo_Comp</label>
+                <input type="text" name="tipoComp" id="tipoComp">
+            </main>
+            <main>
+                <label for="importe">Importe</label>
+                <input type="number" name="importe" id="importe">
+            </main>
+            <main>
+                <label for="pagado">Pagado</label>
+                <input type="number" name="pagado" id="pagado">
+            </main>
+            <main>
+                <label for="saldo">Saldo</label>
+                <input type="number" name="saldo" id="saldo">
+            </main>
+            <main>
+                <label for="observaciones">Observaciones</label>
+                <input type="text" name="observaciones" id="observaciones">
+            </main>
+        </fieldset>
+        
     </section>
     <section class="botones">
+        <button class="modificar">Modificar</button>
         <button class="salir">Salir</button>
     </section>
 </body>

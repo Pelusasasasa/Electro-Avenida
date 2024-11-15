@@ -4,18 +4,23 @@ require('dotenv').config();
 const URL = process.env.URL;
 
 const sweet = require('sweetalert2');
+const { configAxios } = require('../assets/js/globales');
 
 let seleccionado;
 let subSeleccionado;
+
+const nombre = document.getElementById('nombre');
+const codigo = document.getElementById('codigo');
 
 const tbody = document.querySelector('tbody');
 const agregar = document.querySelector('.agregar');
 const salir = document.querySelector('.salir');
 
-let botones = true;
+let botones = false;
+let provedores
 
 window.addEventListener('load',async e=>{
-    const provedores = (await axios.get(`${URL}provedor`)).data;
+    provedores = (await axios.get(`${URL}provedor`,configAxios)).data;
     await listar(provedores);
 
     seleccionado = tbody.firstElementChild;
@@ -26,6 +31,15 @@ window.addEventListener('load',async e=>{
     
 });
 
+nombre.addEventListener('keyup',async e=>{
+    const listaAux = provedores ? provedores.filter(provedor=>provedor.provedor.startsWith(nombre.value.toUpperCase())) : [];
+    await listar(listaAux)
+});
+
+codigo.addEventListener('keyup',async e=>{
+    const listaAux = provedores.filter(provedor=>provedor.codigo === codigo.value);
+    await listar(listaAux);
+});
 
 agregar.addEventListener('click',e=>{
     ipcRenderer.send('abrir-ventana',{
@@ -52,12 +66,22 @@ document.addEventListener('keyup',e=>{
 });
 
 const listar = (lista)=>{
+    tbody.innerHTML = "";
+
+    lista.sort((a,b)=>{
+        if (a.provedor > b.provedor) {
+            return 1;
+        }else if(a.provedor < b.provedor){
+            return -1;
+        }
+        return 0;
+    });
+
     for (let elem of lista){
         const tr = document.createElement('tr');
 
         const tdCodigo = document.createElement('td');
         const tdCliente = document.createElement('td');
-        const tdRazonSocial = document.createElement('td');
         const tdDireccion = document.createElement('td');
         const tdLocalidad = document.createElement('td');
         const tdAcciones = document.createElement('td');
@@ -65,8 +89,7 @@ const listar = (lista)=>{
         tdAcciones.classList.add('acciones')
 
         tdCodigo.innerHTML = elem.codigo;
-        tdCliente.innerHTML = elem.nombre;
-        tdRazonSocial.innerHTML = elem.provedor;
+        tdCliente.innerHTML = elem.provedor;
         tdDireccion.innerHTML = elem.direccion;
         tdLocalidad.innerHTML = elem.localidad;
         tdAcciones.innerHTML = `
@@ -82,7 +105,6 @@ const listar = (lista)=>{
 
         tr.appendChild(tdCodigo);
         tr.appendChild(tdCliente);
-        tr.appendChild(tdRazonSocial);
         tr.appendChild(tdDireccion);
         tr.appendChild(tdLocalidad);
         tr.appendChild(tdAcciones);
@@ -90,6 +112,12 @@ const listar = (lista)=>{
         tr.id = elem.codigo;
         tbody.appendChild(tr);
     }
+
+    seleccionado = tbody.firstElementChild;
+    subSeleccionado = seleccionado?.children[0];
+
+    seleccionado && seleccionado.classList.add('seleccionado');
+    subSeleccionado && subSeleccionado.classList.add('subSeleccionado')
 };
 
 const body = document.querySelector('body');
@@ -128,7 +156,7 @@ tbody.addEventListener('click',async e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}provedor/codigo/${seleccionado.id}`);
+                    await axios.delete(`${URL}provedor/codigo/${seleccionado.id}`,configAxios);
                     location.reload();
                 } catch (error) {
                     sweet.fire({
@@ -142,20 +170,26 @@ tbody.addEventListener('click',async e=>{
 
 });
 
-body.addEventListener('keyup',e=>{
+body.addEventListener('keyup',e=>{  
+    
     if (e.keyCode === 13 && seleccionado && !botones) {
         ipcRenderer.send('enviar-info-ventana-principal',seleccionado.id);
         window.close();
+
     }else if (e.keyCode === 40 && seleccionado.nextElementSibling) {
+
         const tds = document.querySelectorAll('.seleccionado td');
         let i = 0;
         let index
+
+
         for(let td of tds){
             if (td.classList.contains('subSeleccionado')) {
                 index = i
             }
             i++
-        }
+        };
+
 
         seleccionado && seleccionado.classList.remove('seleccionado');
         seleccionado = seleccionado.nextElementSibling;
@@ -164,6 +198,8 @@ body.addEventListener('keyup',e=>{
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
         subSeleccionado = seleccionado.children[index];
         subSeleccionado.classList.add('subSeleccionado');
+        
+        nombre.blur();
         
     }else if(e.keyCode === 38 && seleccionado.previousElementSibling){
         const tds = document.querySelectorAll('.seleccionado td');

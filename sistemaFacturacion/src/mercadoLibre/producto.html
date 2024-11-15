@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <title></title>
+</head>
+<body class="flex flex-col">
+    <section class="grid columns-2 gap-2">
+        <div>
+            <label for="codigoML"  class="label">Codigo ML</label>
+            <input type="text" autofocus name="codigoML" id="codigoML">
+        </div>
+        <div>
+            <label class="label" for="codigoInterno">Codigo Interno</label>
+            <input type="text" name="codigoInterno" id="codigoInterno">
+        </div>
+        <div class="grid-column flex flex-col">
+            <label class="label" for="descripcion">Descripcion</label>
+            <input type="text" name="descripcion"  id="descripcion">
+        </div>
+        
+        <div>
+            <label class="label" for="precioML">Precio ML</label>
+            <input type="number" name="precioML" id="precioML">
+        </div>
+        <div>
+            <label class="label" for="stockML">Stock ML</label>
+            <input type="number" name="stockML" id="stockML">
+        </div>
+    </section>
+    <section class="botones">
+        <button id="agregar">Agregar</button>
+        <button id="modificar">Modificar</button>
+        <button id="salir">Salir</button>
+    </section>
+</body>
+<script src="producto.js"></script>
+</html>

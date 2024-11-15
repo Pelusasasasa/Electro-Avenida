@@ -18,6 +18,7 @@ table{
 
 .tabla table thead tr th,.tabla table tbody tr td{
     border: .1rem solid black;
+    white-space: nowrap;
 }
 
 .buscador{
@@ -67,4 +68,9 @@ table{
 
 .agregarModificarCheque main{
     padding: .7rem;
+}
+
+
+.agregarModificarCheque main input[type=checkbox]{
+    transform: scale(1.9);
 }

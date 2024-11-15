@@ -6,7 +6,6 @@ const Provedores = new Schema({
         type:String
     },
     provedor:String,
-    nombre:String,
     direccion:String,
     localidad:{
         type:String,
@@ -52,6 +51,10 @@ const Provedores = new Schema({
         default:""
     },
     provinciaPosta:{
+        type:String,
+        default:""
+    },
+    observaciones:{
         type:String,
         default:""
     }

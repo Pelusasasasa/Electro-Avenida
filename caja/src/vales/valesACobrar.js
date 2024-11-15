@@ -4,7 +4,7 @@ const URL = process.env.URL;
 const sweet = require('sweetalert2');
 
 const { ipcRenderer } = require('electron');
-const { copiar, redondear } = require('../assets/js/globales');
+const { copiar, redondear, configAxios } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
 
@@ -24,11 +24,12 @@ let vales;
  
 window.addEventListener('load',async e=>{
     copiar();
-    vales = (await axios.get(`${URL}vales/cliente`)).data;
+    vales = (await axios.get(`${URL}vales/cliente`,configAxios)).data;
     listarVales(vales);
 });
 
 buscador.addEventListener('keyup',e=>{
+    console.log(vales)
     const valesFiltrados = vales.filter(vale => (vale.rsoc).startsWith(buscador.value.toUpperCase()));
     listarVales(valesFiltrados);
 });
@@ -37,6 +38,25 @@ buscador.addEventListener('keyup',e=>{
 const listarVales = (lista)=>{
     total = 0;
     tbody.innerHTML = "";
+
+    lista.sort((a,b)=>{
+        if (a.fecha > b.fecha) {
+            return 1;
+        }else if(a.fecha < b.fecha){
+            return -1;
+        };
+        return 0;
+    });
+
+    lista.sort((a,b)=>{
+        if (a.rsoc > b.rsoc) {
+            return 1;
+        }else if(a.rsoc < b.rsoc){
+            return -1;
+        };
+        return 0;
+    });
+
     for(let elem of lista){
         total += elem.imp;
 
@@ -113,7 +133,7 @@ tbody.addEventListener('click',e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
+                    await axios.delete(`${URL}vales/id/${seleccionado.id}`,configAxios);
                     tbody.removeChild(seleccionado);
                     totalInput.value = redondear(parseFloat(totalInput.value) - parseFloat(seleccionado.children[5].innerHTML),2);
                 } catch (error) {
@@ -158,6 +178,12 @@ sumar.addEventListener('click',async e=>{
         await sweet.fire({
             title:`El total de ${seleccionado.children[2].innerHTML} es: $${suma}`
         });
+    }
+});
+
+document.addEventListener('keyup',e=>{
+    if (e.keyCode === 27) {
+        location.href = '../index.html';
     }
 });
 

@@ -14,7 +14,10 @@
                 <label for="desde">Desde</label>
                 <input type="date" name="desde" id="desde">
             </main>
-            <h1>Informe Caja</h1>
+            <main>
+                <label>Informe Caja</label>
+                <button id="exportar">Exportar</button>
+            </main>
             <main>
                 <label for="hasta">Hasta</label>
                 <input type="date" name="hasta" id="hasta">
@@ -24,6 +27,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Fecha</th>
                         <th>Nro_Comp</th>
                         <th>Descripcion</th>
                         <th>Cuenta</th>
@@ -39,6 +43,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>Fecha</th>
                         <th>Nro_Comp</th>
                         <th>Descripcion</th>
                         <th>Cuenta</th>
@@ -53,12 +58,11 @@
         <section class="totales botones">
             <button class="salir">Salir</button>
             <main>
-                <p>Saldo Anterior: <span ></span></p>
+                <p>Saldo Anterior: <span class="saldoAnterior"></span></p>
                 <p>Total Ingresos: <span class="totalIngresos"></span></p>
                 <p>Total Egresos: <span class="totalEgresos"></span></p>
                 <p>Saldo Final: <span class="saldoFinal"></span></p>
             </main>
-            <button class="modificar">Modificar</button>
         </section>
 </body>
 <script src="./informeCaja.js"></script>

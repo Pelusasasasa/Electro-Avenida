@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./style.css">
+    <link href="../../node_modules/material-icons/iconfont/material-icons.css" rel="stylesheet">
+    <title>Facturacion</title>
+</head>
+<body id="facturacion">
+
+    <header class="botones">
+        <div>
+            <label for="mes">Mes</label>
+            <input type="month" name="mes" id="mes">
+        </div>
+        
+        <button id="buscar">Buscar</button>
+        <button id="excel" disabled>Exportar</button>
+
+        
+    </header>
+
+    <section class="totales">
+        <div class="">
+            <p>Gravado: <span id="gravadoF"></span></p>
+            <p>Iva 21: <span id="iva21F"></span></p>
+            <p>Iva 10.5: <span id="iva105F"></span></p>
+            <p>Total: <span id="totalF"></span></p>
+        </div>
+        <div class="">
+            <p>Gravado: <span id="gravadoN"></span></p>
+            <p>Iva 21: <span id="iva21N"></span></p>
+            <p>Iva 10.5: <span id="iva105N"></span></p>
+            <p>Total: <span id="totalN"></span></p>
+        </div>
+        <div class="">
+            <p>Iva: <span id="ivaC"></span></p>
+            <p>P Brutos: <span id="pBru"></span></p>
+            <p>R Brutos: <span id="rBru"></span></p>
+            <p>P Iva: <span id="pIva"></span></p>
+            <p>R Iva: <span id="rIva"></span></p>
+        </div>
+    </section>
+
+    <section class="listas">
+        <main class="facturas">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dia</th>
+                        <th>Gravado</th>
+                        <th>Iva 21</th>
+                        <th>Iva 10.5</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody class="tbodyFacturas"></tbody>
+            </table>
+        </main>
+        <main class="notaCreditos">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dia</th>
+                        <th>Gravado</th>
+                        <th>Iva 21</th>
+                        <th>Iva 10.5</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody class="tbodyNotaCreditos"></tbody>
+            </table>
+        </main>
+        <main class="compras">
+            <table>
+                <thead>
+                    <th>Iva</th>
+                    <th>P. Bru.</th>
+                    <th>R. Bru</th>
+                    <th>P. Iva</th>
+                    <th>R. Iva</th>
+                </thead>
+                <tbody class="tbodyCompras">
+                </tbody>
+            </table>
+        </main>
+    </section>
+
+    <aside>
+        <div class="aside_flechas">
+            <span id="flecha_forward" class="material-icons">arrow_forward_ios</span>
+            <span id="flecha_back" class="material-icons none">arrow_back_ios</span>
+        </div>
+        <section>
+            <main id="aside-total">
+                <p>Gravado: <span id="gravadoT"></span></p>
+                <p>Iva: <span id="ivaT"></span></p>
+                <p>Total: <span id="total"></span></p>
+            </main>
+            <main>
+                <p>DGR: <span id="dgr"></span></p>
+                <p>Retencion: <span id="retencion"></span></p>
+                <p>Total DGR: <span id="totalDGR"></span></p>
+            </main>
+            <main>
+                <p>Municipal: <span id="municipal"></span></p>
+                <p>Fdo. Insf. 15%: <span id="fdo"></span></p>
+                <p>Total Municipal: <span id="totalMunicipal"></span></p>
+            </main>
+            <main>
+                <p>Total Iva: <span id="totalIva"></span></p>
+                <p>Iva Ventas/Iva Compras: <span id="ivas"></span></p>
+                <p>% de Iva Pagado: <span id="porcentajeIva"></span></p>
+            </main>
+        </section>
+    </aside>
+
+</body>
+<script src="./facturacion.js"></script>
+</html>

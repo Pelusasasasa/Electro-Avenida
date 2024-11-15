@@ -32,6 +32,7 @@
     display: flex;
     flex-direction: column;
     text-align: center;
+    width: 40%;
 }
 
 .provedores .inputs fieldset input{
@@ -42,6 +43,7 @@
 .provedores .tabla{
     height: 70vh;
     background-color: white;
+    overflow: scroll;
 }
 
 .provedores table{
@@ -68,6 +70,7 @@
     display: grid;
 }
 
+
 .agregarProvedor .inputs input{
     font-size: 1.5rem;
     padding: .5rem;
@@ -78,6 +81,11 @@
 }
 .agregarProvedor .inputs .igual{
     grid-template-columns: 1fr 1fr;
+}
+
+.agregarProvedor .inputs .tres{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 .agregarProvedor .inputs label{

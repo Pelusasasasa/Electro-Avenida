@@ -4,7 +4,7 @@ const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
 
-const { copiar, redondear } = require('../assets/js/globales');
+const { copiar, redondear, configAxios } = require('../assets/js/globales');
 const { ipcRenderer } = require('electron/renderer');
 
 const buscador = document.getElementById('buscador');
@@ -24,7 +24,7 @@ let facturas;
 
 window.addEventListener('load',async e=>{
     copiar();
-    facturas = (await axios.get(`${URL}vales/factura`)).data;
+    facturas = (await axios.get(`${URL}vales/factura`,configAxios)).data;
     listarFacturas(facturas);
 });
 
@@ -105,7 +105,7 @@ tbody.addEventListener('click',e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}vales/id/${seleccionado.id}`);
+                    await axios.delete(`${URL}vales/id/${seleccionado.id}`,configAxios);
                     tbody.removeChild(seleccionado);
                     inputTotal.value = redondear(parseFloat(inputTotal.value) - parseFloat(seleccionado.children[4].innerHTML),2)
                 } catch (error) {

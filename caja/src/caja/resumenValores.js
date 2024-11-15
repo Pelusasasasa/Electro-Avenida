@@ -1,10 +1,13 @@
 const { ipcRenderer } = require("electron");
+const sweet = require('sweetalert2');
 
 const axios = require('axios');
-const { redondear } = require("../assets/js/globales");
+const { redondear, configAxios } = require("../assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
+
+const cambio = document.querySelector('#cambio');
 const efectivoCaja = document.querySelector('#efectivoCaja');
 const cheques = document.querySelector('#cheques');
 const cien = document.querySelector('#cien');
@@ -15,7 +18,7 @@ const monedas = document.querySelector('#monedas');
 const guardado = document.querySelector('#guardado');
 const uno = document.querySelector('#uno');
 const cambioCaja = document.querySelector('#cambioCaja');
-const ceroVeinticinco = document.querySelector('#ceroVeinticinco');
+const cajaMañana = document.querySelector('#cajaMañana');
 const ceroCincuenta = document.querySelector('#ceroCincuenta');
 const maleta = document.querySelector('#maleta');
 
@@ -32,43 +35,64 @@ const valesEfectivo = document.getElementById('valesEfectivo');
 const caja1 = document.getElementById('caja1');
 const diferencia = document.getElementById('diferencia');
 
+const confirmar = document.getElementById('confirmar');
+const salir = document.getElementById('salir');
+
 let desde;
 let hasta;
 
 let ultimos = {};
+let total = 0;
 
-window.addEventListener('load',async e=>{
-    valesCobrar .value = (await axios.get(`${URL}vales/totalPrice/C`)).data.toFixed(2);
-    personal.value = (await axios.get(`${URL}vales/totalPrice/P`)).data.toFixed(2);
-    incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`)).data.toFixed(2);
-    facturasCobrar.value = (await axios.get(`${URL}vales/totalPrice/F`)).data.toFixed(2);
-    tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`)).data.toFixed(2);
 
-    totalVales.value = redondear(parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value) + parseFloat(facturasCobrar.value),2);
-    ultimos = (await axios.get(`${URL}ultimos`)).data;
-
+const cambiarTotales = (input)=>{
+    ultimos[input.id] = parseFloat(input.value)
     ponerValores(ultimos);
+};
 
+const confirmarCambios = async(e) => {
+
+    const { isConfirmed } = await sweet.fire({
+        title: "Desea Guardar los cambios?",
+        confirmButtonText: "Aceptar",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar"
+    });
+
+    if (isConfirmed) {
+        ultimos.efectivoCaja = efectivoCaja.value === "" ? 0 : efectivoCaja.value;
+        ultimos.cheques = cheques.value === "" ? 0 : cheques.value;
+        ultimos.cien = cien.value === "" ? 0 : cien.value;
+        ultimos.cincuenta = cincuenta.value === "" ? 0 : cincuenta.value;
+        ultimos.veinte = veinte.value === "" ? 0 : veinte.value;
+        ultimos.diez = diez.value === "" ? 0 : diez.value;
+        ultimos.monedas = monedas.value === "" ? 0 : monedas.value;
+        ultimos.guardado = guardado.value === "" ? 0 : guardado.value;
+        ultimos.uno = uno.value === "" ? 0 : uno.value;
+        ultimos.cambioCaja = cambioCaja.value === "" ? 0 : cambioCaja.value;
+        ultimos.cajaMañana = cajaMañana.value === "" ? 0 : cajaMañana.value;
+        ultimos.ceroCincuenta = ceroCincuenta.value === "" ? 0 : ceroCincuenta.value;
+        ultimos.maleta = maleta.value === "" ? 0 : maleta.value;
     
-    //traemos el total el movimiento de caja
-});
+        try {
+            await axios.put(`${URL}ultimos`,ultimos,configAxios);
+            window.close();
+        } catch (error) {
+            console.log(error)
+        }
+    };
 
-window.addEventListener('beforeunload',async e=>{
-    ultimos.efectivoCaja = efectivoCaja.value;
-    ultimos.cheques = cheques.value;
-    ultimos.cien = cien.value;
-    ultimos.cincuenta = cincuenta.value;
-    ultimos.veinte = veinte.value;
-    ultimos.diez = diez.value;
-    ultimos.monedas = monedas.value;
-    ultimos.guardado = guardado.value;
-    ultimos.uno = uno.value;
-    ultimos.cambioCaja = cambioCaja.value;
-    ultimos.ceroVeinticinco = ceroVeinticinco.value;
-    ultimos.ceroCincuenta = ceroCincuenta.value;
-    ultimos.maleta = maleta.value;
-    await axios.put(`${URL}ultimos`,ultimos);
-});
+};
+
+const modificarCambio = () => {
+    const cienInput = parseFloat(cien.value);
+    const cincuentaInput = parseFloat(cincuenta.value);
+    const veinteInput = parseFloat(veinte.value);
+    const diezInput = parseFloat(diez.value);
+    const monedaInput = parseFloat(monedas.value);
+    
+    cambio.value = redondear(cienInput + cincuentaInput + veinteInput + diezInput + monedaInput,2);
+};
 
 const ponerValores = (obj) =>{
     if (obj) {
@@ -83,22 +107,70 @@ const ponerValores = (obj) =>{
         guardado.value = obj.guardado.toFixed(2);
         uno.value = obj.uno.toFixed(2);
         cambioCaja.value = obj.cambioCaja.toFixed(2);
-        ceroVeinticinco.value = obj.ceroVeinticinco.toFixed(2);
+        cajaMañana.value = obj.cajaMañana.toFixed(2);
         ceroCincuenta.value = obj.ceroCincuenta.toFixed(2);
         maleta.value = obj.maleta.toFixed(2);
 
-        totalValesCheques+= (obj.efectivoCaja + obj.cheques + obj.cien + obj.cincuenta + obj.veinte + obj.diez + obj.monedas + obj.guardado + obj.uno + obj.cambioCaja + obj.ceroVeinticinco + obj.ceroCincuenta + obj.maleta);
+        totalValesCheques += (obj.efectivoCaja + obj.cheques + obj.cien + obj.cincuenta + obj.veinte + obj.diez + obj.monedas + obj.guardado + obj.uno + obj.cambioCaja + obj.cajaMañana + obj.ceroCincuenta + obj.maleta);
         chequesEfectivo.value = redondear(totalValesCheques,2);
 
-        valesEfectivo.value = parseFloat(chequesEfectivo.value) + parseFloat(totalVales.value);
+        valesEfectivo.value = redondear(parseFloat(chequesEfectivo.value) + parseFloat(totalVales.value),2);
 
-        diferencia.value = redondear(parseFloat(caja1.value) - parseFloat(valesEfectivo.value),2);
+        diferencia.value = redondear(-parseFloat(caja1.value) + parseFloat(valesEfectivo.value),2);
+
+        modificarCambio();
     }
 };
+
+const cerrarVentana = async() => {
+    const {isConfirmed} = await sweet.fire({
+        title:"Al salir no se guardaran los cambios",
+        confirmButtonText: "Salir",
+        showCancelButton: true,
+        cancelButtonText: "Cancelar"
+    });
+
+    if (isConfirmed) {
+        window.close();
+    }
+}
 
 const selected = (e)=>{
     e.select()
 }
+    
+ipcRenderer.on('recibir-informacion',async (e,args)=>{
+        desde = args.desde;
+        hasta = args.hasta;
+        const movimientos = (await axios.get(`${URL}movCajas/${desde}/${hasta}`,configAxios)).data;
+        for await(let mov of movimientos){
+            if (mov.pasado) {
+                if (mov.tMov === "I") {
+                    total += mov.imp;
+                }else{
+                    total -= mov.imp;
+                }
+            }
+        };  
+
+        valesCobrar.value = (await axios.get(`${URL}vales/totalPrice/C`,configAxios)).data.toFixed(2);
+        personal.value = (await axios.get(`${URL}vales/totalPrice/P`,configAxios)).data.toFixed(2);
+        incobrable.value = (await axios.get(`${URL}vales/totalPrice/I`,configAxios)).data.toFixed(2);
+        facturasCobrar.value = (await axios.get(`${URL}vales/totalPrice/F`,configAxios)).data.toFixed(2);
+        tarjetasCobrar.value = (await axios.get(`${URL}tarjetas/totalPrice`,configAxios)).data.toFixed(2);
+        caja1.value = redondear((await axios.get(`${URL}tipoVenta`,configAxios)).data["saldo Inicial"] + total,2);
+    
+        totalVales.value = redondear(parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value) + parseFloat(facturasCobrar.value),2);
+        ultimos = (await axios.get(`${URL}ultimos`,configAxios)).data;
+    
+        ponerValores(ultimos);
+});
+
+document.addEventListener('keyup',async e=>{
+    if ((e.keyCode === 27)) {
+        cerrarVentana();
+    }
+});
 
 efectivoCaja.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
@@ -156,11 +228,11 @@ uno.addEventListener('keypress',e=>{
 
 cambioCaja.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
-       ceroVeinticinco.focus();
+       cajaMañana.focus();
     };
 });
 
-ceroVeinticinco.addEventListener('keypress',e=>{
+cajaMañana.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
        ceroCincuenta.focus();
     };
@@ -172,21 +244,9 @@ ceroCincuenta.addEventListener('keypress',e=>{
     };
 });
 
-salir.addEventListener('click',e=>{
-    window.close();
-})
+confirmar.addEventListener('click', confirmarCambios);
 
-document.addEventListener('keyup',e=>{
-    if (e.keyCode === 27) {
-        window.close();
-    }
-});
-
-ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    const saldo = (await axios.get(`${URL}movCajas/price/${args.desde}/${args.hasta}`)).data;
-    caja1.value = saldo;
-});
-
+salir.addEventListener('click', cerrarVentana);
 
 efectivoCaja.addEventListener('change',e=>{
     cambiarTotales(e.target)
@@ -197,23 +257,28 @@ cheques.addEventListener('change',e=>{
 });
 
 cien.addEventListener('change',e=>{
-    cambiarTotales(e.target)
+    cambiarTotales(e.target);
+    modificarCambio();
 });
 
 cincuenta.addEventListener('change',e=>{
-    cambiarTotales(e.target)
+    cambiarTotales(e.target);
+    modificarCambio();
 });
 
 veinte.addEventListener('change',e=>{
-    cambiarTotales(e.target)
+    cambiarTotales(e.target);
+    modificarCambio();
 });
 
 diez.addEventListener('change',e=>{
     cambiarTotales(e.target)
+    modificarCambio();
 });
 
 monedas.addEventListener('change',e=>{
-    cambiarTotales(e.target)
+    cambiarTotales(e.target);
+    modificarCambio();
 });
 
 guardado.addEventListener('change',e=>{
@@ -228,7 +293,7 @@ cambioCaja.addEventListener('change',e=>{
     cambiarTotales(e.target)
 });
 
-ceroVeinticinco.addEventListener('change',e=>{
+cajaMañana.addEventListener('change',e=>{
     cambiarTotales(e.target)
 });
 
@@ -239,9 +304,3 @@ ceroCincuenta.addEventListener('change',e=>{
 maleta.addEventListener('change',e=>{
     cambiarTotales(e.target)
 });
-
-const cambiarTotales = (input)=>{
-    ultimos[input.id] = parseFloat(input.value)
-    console.log(ultimos)
-    ponerValores(ultimos);
-}

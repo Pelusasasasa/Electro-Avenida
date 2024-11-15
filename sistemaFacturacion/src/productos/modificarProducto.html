@@ -5,217 +5,166 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Modificar Producto</title>
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./productos.css">
   </head>
-  <body class="contenedor-modificarProducto">
-    <form class="formularioModificar">
-      <div class="codigo">
-        <div class="formulario__campo">
+  <body class="modificarProducto">
+      <section class="codigos">
+        <main>
           <label class="" for="codigo">Codigo</label>
-          <input
-            disabled
-            disabled
-            class=""
-            type="text"
-            name="codigo"
-            id="codigo"
-            placeholder="codigo"
-          />
-        </div>
+          <input disabled class="" type="text" name="codigo" id="codigo" placeholder="codigo"/>
+        </main>
 
-        <div class="formulario__campo">
+        <main>
           <label class="" for="cod-fabrica">cod-Fabrica</label>
-          <input
-            disabled
-            class=""
-            autofocus
-            type="tel"
-            name="cod-fabrica"
-            id="cod-fabrica"
-            placeholder="cod-fabrica"
-          />
-        </div>
-      </div>
+          <input disabled class="" autofocus type="tel" name="cod-fabrica" id="cod-fabrica" placeholder="cod-fabrica"/>
+        </main>
 
-      <div class="descripcion formulario__campo"> 
-        <label class="" for="descripcion">Descripcion</label>
-        <input
-          disabled
-          class=""
-          type="text"
-          name="descripcion"
-          id="descripcion"
-          placeholder="descripcion"
-        />
-      </div>
+        <main>
+          <label for="dolar">Dolar</label>
+          <input type="number" name="dolar" id="dolar" disabled>
+        </main>
+      </section>
 
-      <div class="d-g"> 
-          
+      <section class="descripcion">
+        <main> 
+          <label class="" for="descripcion">Descripcion</label>
+          <input disabled type="text" name="descripcion" id="descripcion" placeholder="descripcion" />
+        </main>
+      </section>
 
-      <div class="unidad formulario__campo">
-        <label for="unidad">Unidad</label>
-        <select name="unidad" id="unidad" disabled>
-          <option value="U">Unidad</option>
-          <option value="M">Metro</option>
-        </select>
-      </div>
+      <section class="unidad">
+        <main class="">
+          <label for="unidad">Unidad</label>
+          <select name="unidad" id="unidad" disabled>
+            <option value="U">Unidad</option>
+            <option value="M">Metro</option>
+          </select>
+        </main>
 
-      <div>
-        <label for="imagen">Imagen</label>
-        <input type="file" name="imagen" id="imagen">
-      </div>
+        <main>
+          <label for="stock">Stock</label>
+          <input disabled type="text" name="stock" id="stock" placeholder="stock"/>
+        </main>
+      </section>
 
-        <div class="stock formulario__campo">
-          <label class="" for="stock">Stock</label>
-          <input
-            disabled
-            class=""
-            type="text"
-            name="stock"
-            id="stock"
-            placeholder="stock"
-          />
-        </div>
-    </div>
-
-      <div class="marca">
-        <div class="formulario__campo">
-          <label class="" for="provedor">Provedor</label>
-          <input
-            disabled
-            class=""
-            type="text"
-            name="provedor"
-            id="provedor"
-            placeholder="provedor"
-          />
-        </div>
-
-        <div class="formulario__campo">
+      <section class="marca">
+        <main>
+          <label for="provedor">Provedor</label>
+          <input disabled type="text" name="provedor" id="provedor" placeholder="provedor" />
+        </main>
+        
+        <main>
           <label for="rubros">Rubros</label>
           <select disabled name="rubros" id="rubros">
-            <option value="">---Seleccionar---</option>
+            <option value="0">---Seleccionar---</option>
           </select>
-        </div>
+        </main>
+        
+        <main>
+          <label for="subRubros">Sub Rubros</label>
+          <select disabled name="subRubros" id="subRubros">
+            <option value="0">---Seleccionar---</option>
+          </select>
+        </main>
 
-        <div class="formulario__campo">
+        <main>
           <label class="" for="marca">Marca</label>
-          <input
-            disabled
-            class=""
-            type="text"
-            name="marca"
-            id="marca"
-            placeholder="marca"
-          />
-        </div>
-      </div>
+          <input disabled type="text" name="marca" id="marca" placeholder="marca" />
+        </main>
+      </section>
 
-
-      <div class="costos">
-        <div class="formulario__campo">
+      <section class="costos">
+        <main>
           <label class="" for="tasaIva">Tasa IVA</label>
           <select name="tasaIva" id="tasaIva" disabled>
             <option value="N">Normal</option>
             <option value="R">Reducido</option>
           </select>
-        </div>
+        </main>
 
-        <div class="formulario__campo">
+        <main>
           <label class="" for="costoPesos">Costo $</label>
-          <input
-            disabled
-            class=""
-            type="number"
-            name="costoPesos"
-            id="costoPesos"
-            placeholder="costoPesos"
-          />
-        </div>
+          <input disabled type="number" name="costoPesosclass="" id="costoPesos" placeholder="costoPesos" />
+        </main>
 
-        <div class="formulario__campo">
+        <main>
           <label class="" for="costoDolares">Costo U$S</label>
-          <input
-            disabled
-            class=""
-            type="number"
-            name="costoDolares"
-            id="costoDolares"
-            placeholder="costoDolares"
-          />
-        </div>
+          <input disabled type="number" name="costoDolares" id="costoDolares" placeholder="costoDolares" />
+        </main>
 
-        <div class="formulario__campo">
+        <main>
           <label class="" for="ivaImp">Iva + Imp</label>
-          <input
-            disabled
-            class=""
-            type="number"
-            name="ivaImp"
-            id="ivaImp"
-            placeholder="iva + Imp"
-          />
-        </div>
+          <input disabled type="number" name="ivaImp" id="ivaImp" placeholder="iva + Imp" />
+        </main>
 
-        <div class="formulario__campo">
+        <main>
           <label class="" for="costoTotal">Costo Total</label>
-          <input
-            disabled
-            class=""
-            type="number"
-            name="costoTotal"
-            id="costoTotal"
-            placeholder="costo Total"
-          />
-        </div>
-      </div>
+          <input disabled type="number" name="costoTotal" id="costoTotal" placeholder="costo Total"/>
+        </main>
+      </section>
 
-      <div class="observaciones formulario__campo">
-        <label for="">Oservaciones</label>
-        <input
-          disabled
-          type="text"
-          id="observaciones"
-          name="observaciones"
-          placeholder="Observaciones"
-        />
-      </div>
+      <section class="observaciones">
+        <main>
+          <label for="observaciones">Oservaciones</label>
+          <input disabled type="text" id="observaciones" name="observaciones" placeholder="Observaciones" />
+        </main>
+        <main class="formulario__campo oferta">
+            <label for="oferta">Oferta?</label>
+            <input type="checkbox" disabled name="oferta" id="oferta">
+          </main>
+          <main>
+            <label for="precioOferta">Precio Oferta</label>
+            <input type="number" disabled id="precioOferta" value="0.00" name="precioOferta" value="0.00">
+          </main>
+      </section>
 
-      <div class="precioFinal ">
-        <div class="formulario__campo utilidad">
+      <section class="precioFinal">
+        <main>
           <label class="" for="utilidad">Utilidad</label>
-          <input
-            disabled
-            class=""
-            type="number"
-            name="utilidad"
-            id="utilidad"
-            placeholder="Utilidad"
-          />
-        </div>
+          <input disabled type="number" name="utilidad" id="utilidad" placeholder="Utilidad"/>
+        </main>
 
-        <div class="formulario__campo">
+        <main>
           <label class="" for="precioVenta">Precio venta</label>
-          <input
-            disabled
-            class=""
-            type="number"
-            name="precioVenta"
-            id="precioVenta"
-            placeholder="precioVenta"
-          />
-        </div>
-      </div>
+          <input disabled type="number" name="precioVenta" id="precioVenta" placeholder="precioVenta" />
+        </main>
+      </section>
+
+      <section>
+        <fieldset id="web">
+          <legend>Pagina Web</legend>
+      
+          <main class="formulario__campo">
+            <label for="imagen">Imagen</label>
+            <input type="file" name="imagen" id="imagen">
+          </main>
+      
+          <main class="formulario__campo">
+            <label for="mostrarWeb">Mostrar en Pagina</label>
+            <input type="checkbox" name="mostrarWeb" disabled id="mostrarWeb">
+          </main>
+      
+          <main class="formulario__campo">
+            <label for="destacado">Destacado en Pagina</label>
+            <input type="checkbox" name="destacado" disabled id="destacado">
+          </main>
+        </fieldset>
+      </section>
     </form>
+    
 
-    <div class="botones">
+    <section class="botones">
       <button class="modificar">modificar</button>
-
-      <button class="guardar disable">Guardar</button>
-
+      <button class="guardar none">Guardar</button>
       <button class="salir">Salir</button>
-    </div>
+    </section>
+
+    <section class="extencion">
+      <button id="masDatos">Mas datos</button>
+    </section>
 
     <script src="./modificarProducto.js"></script>
   </body>
 </html>
+ 

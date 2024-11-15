@@ -4,10 +4,11 @@ const URL = process.env.URL;
 const { ipcRenderer } = require("electron");
 
 const sweet = require('sweetalert2');
+const { configAxios } = require('../assets/js/globales');
 
 const codigo = document.querySelector('#codigo');
-const nombre = document.querySelector('#nombre');
 const inputProvedor = document.querySelector('#provedor');
+const saldo = document.querySelector('#saldo');
 const localidad = document.querySelector('#localidad');
 const direccion = document.querySelector('#direccion');
 const codPostal = document.querySelector('#codPostal');
@@ -23,22 +24,21 @@ const codigoPostal = document.querySelector('#codigoPostal');
 const provinciaPostal = document.querySelector('#provinciaPostal');
 const observaciones = document.querySelector('#observaciones');
 
-
-
 const modificar = document.querySelector('.modificar');
 const consultar = document.querySelector('.consultar');
 const salir = document.querySelector('.salir');
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    const provedor = (await axios.get(`${URL}provedor/codigo/${args}`)).data;
+    const provedor = (await axios.get(`${URL}provedor/codigo/${args}`,configAxios)).data;
     console.log(provedor)
     llenarinputs(provedor);
 });
 
 const llenarinputs = async(provedor)=>{
+    console.log(provedor)
     codigo.value = provedor.codigo;
-    nombre.value = provedor.nombre;
     inputProvedor.value = provedor.provedor;
+    saldo.value = provedor.saldo.toFixed(2);
     localidad.value = provedor.localidad;
     direccion.value = provedor.direccion;
     codPostal.value = provedor.codPostal;
@@ -46,13 +46,13 @@ const llenarinputs = async(provedor)=>{
     telefono.value = provedor.telefono;
     email.value = provedor.mail;
     cuit.value = provedor.cuit;
-    condIva.value = provedor.condIva;
+    condIva.value = provedor.situa;
     condDGR.value = provedor.dgr;
     nroDGR.value = provedor.nro_dgr ? provedor.nro_dgr : "";
     observaciones.value = provedor.observaciones;
     codigoPostal.value = provedor.codigoPostal;
     localidadPostal.value = provedor.localidadPostal;
-    provinciaPostal.value = provedor.provinciaPostal;
+    provinciaPostal.value = provedor.provinciaPosta;
     direccionPostal.value = provedor.direccionPostal
 };
 
@@ -84,10 +84,11 @@ consultar.addEventListener('click',e=>{
 modificar.addEventListener('click',async e=>{
     const provedorModificado = {};
     provedorModificado.codigo = codigo.value;
-    provedorModificado.nombre = nombre.value;
     provedorModificado.provedor = inputProvedor.value;
     provedorModificado.direccion = direccion.value;
+    provedorModificado.saldo = saldo.value;
     provedorModificado.localidad = localidad.value;
+    provedorModificado.saldo = saldo.value;
     provedorModificado.codPostal = codPostal.value;
     provedorModificado.telefono = telefono.value;
     provedorModificado.mail = email.value;
@@ -102,9 +103,9 @@ modificar.addEventListener('click',async e=>{
     provedorModificado.provinciaPostal = provinciaPostal.value;
 
     try {
-        await axios.put(`${URL}provedor/${provedorModificado.codigo}`,provedorModificado);
+        await axios.put(`${URL}provedor/codigo/${provedorModificado.codigo}`,provedorModificado,configAxios);
         await sweet.fire({
-            title:`Provedor ${provedorModificado.nombre} Modificado`
+            title:`Provedor ${provedorModificado.provedor} Modificado`
         });
         window.close();
     } catch (error) {
@@ -112,4 +113,8 @@ modificar.addEventListener('click',async e=>{
             title:"No se pudo modificar el provedor"
         });
     }
+});
+
+saldo.addEventListener('focus',e=>{
+    saldo.select();
 });

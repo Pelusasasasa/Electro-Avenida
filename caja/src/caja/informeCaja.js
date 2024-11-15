@@ -2,18 +2,21 @@ const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
 
-const {clipboard} = require('electron')
-const sweet = require('sweetalert2')
+const {clipboard, ipcRenderer} = require('electron')
+const sweet = require('sweetalert2');
+const { redondear, configAxios } = require('../assets/js/globales');
 
 const desde = document.querySelector('#desde');
 const hasta = document.querySelector('#hasta');
 const tbodyIngreso = document.querySelector('.tbodyIngreso');
 const tbodyEgreso = document.querySelector('.tbodyEgreso');
+
+const exportar = document.getElementById('exportar');
 const salir = document.querySelector('.salir');
-const modificar = document.querySelector('.modificar');
 
 const today = new Date();
 
+let saldoAnterior = 0
 let totalIngresos = 0;
 let totalEgresos = 0;
 
@@ -35,13 +38,10 @@ window.addEventListener('load',async e=>{
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
 
-    let nextDay = new Date(today);
-    nextDay.setDate(today.getDate() + 1);
+    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
 
-    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
-
-    arregloEgresos = movimientos.filter(mov => mov.tMov === "E");
-    arregloIngresos = movimientos.filter(mov => mov.tMov === "I");
+    arregloEgresos = movimientos.filter(mov => (mov.pasado && mov.tMov === "E") && mov.pasado === true);
+    arregloIngresos = movimientos.filter(mov => (mov.pasado && mov.tMov === "I") && mov.pasado === true);
     arregloEgresos.length !== 0 && listar(arregloEgresos,tbodyEgreso);
     arregloIngresos.length !== 0 && listar(arregloIngresos,tbodyIngreso);
 
@@ -51,7 +51,6 @@ const listar = async(lista,tbody)=>{
     tbody.innerHTML = '';
     totalEgresos = 0;
     totalIngresos = 0;
-    let cuenta = lista[0].cuenta;
     let total = 0;
     lista.sort((a,b)=>{
         if (a.cuenta > b.cuenta) {
@@ -61,6 +60,7 @@ const listar = async(lista,tbody)=>{
         }
         return 0
     })
+    let cuenta = lista[0].cuenta;
     for await(let mov of lista){
         if (tbody.classList.contains('tbodyEgreso')) {
             totalEgresos += mov.imp;
@@ -77,18 +77,22 @@ const listar = async(lista,tbody)=>{
         const tr = document.createElement('tr');
         tr.id = mov._id
             
+        const tdFecha = document.createElement('td');
         const tdNumero = document.createElement('td');
         const tdDescripcion = document.createElement('td');
         const tdTipo = document.createElement('td');
         const tdImporte = document.createElement('td');
 
         tdImporte.classList.add('text-right');
-
+        const fecha = mov.fecha.slice(0,10).split('-',3);
+        const hora = mov.fecha.slice(11,19).split(':',3);
+        tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]} - ${hora[0]}:${hora[1]}:${hora[2]}`
         tdNumero.innerHTML = mov.nro_comp;
         tdDescripcion.innerHTML = mov.desc;
         tdTipo.innerHTML = mov.cuenta;
         tdImporte.innerHTML = mov.imp.toFixed(2);
 
+        tr.appendChild(tdFecha)
         tr.appendChild(tdNumero);
         tr.appendChild(tdDescripcion);
         tr.appendChild(tdTipo);
@@ -123,12 +127,13 @@ const listar = async(lista,tbody)=>{
     tdTotal.classList.add('bold');
 
     tbody.appendChild(tr);
+    document.querySelector('.saldoAnterior').innerHTML = (await axios.get(`${URL}tipoVenta`,configAxios)).data["saldo Inicial"];
     if (tbody.classList.contains('tbodyEgreso')) {
         document.querySelector('.totalEgresos').innerHTML = totalEgresos.toFixed(2);
     }else{
         document.querySelector('.totalIngresos').innerHTML = totalIngresos.toFixed(2);
     }
-    document.querySelector('.saldoFinal').innerHTML = (totalIngresos-totalEgresos).toFixed(2)
+    document.querySelector('.saldoFinal').innerHTML = redondear(totalIngresos-totalEgresos + (await axios.get(`${URL}tipoVenta`,configAxios)).data["saldo Inicial"],2);
     
 };
 
@@ -151,14 +156,12 @@ const ponerTotal = (total,cuenta,tbody)=>{
     
     tdCuenta.innerHTML = cuenta;
     tdTotal.innerHTML = total.toFixed(2)
-    
     tr.appendChild(tdCuenta)
     tr.appendChild(td)
     tr.appendChild(td1)
     tr.appendChild(tdTotal);
     tbody.appendChild(tr);
 };
-
 
 desde.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
@@ -168,13 +171,14 @@ desde.addEventListener('keypress',e=>{
 
 hasta.addEventListener('keypress', async e=>{
     if (e.key === "Enter") {
-        const fecha = hasta.value.split('-',3);
-        
-        let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
-        nextDay.setDate(nextDay.getDate() + 1);
-        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}`)).data;
-        arregloEgresos = movimientos.filter(elem => elem.tMov === "Egreso")
-        arregloIngresos = movimientos.filter(elem => elem.tMov === "Ingreso")
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
+
+        arregloEgresos = movimientos.filter(elem => (elem.pasado && elem.tMov === "E"));
+        arregloIngresos = movimientos.filter(elem => (elem.pasado & elem.tMov === "I"));
+
+        tbodyEgreso.innerHTML = "";
+        tbodyIngreso.innerHTML = "";
+
         arregloEgresos.length !== 0 && listar(arregloEgresos,tbodyEgreso);
         arregloIngresos.length !== 0 && listar(arregloIngresos,tbodyIngreso);
     }
@@ -193,7 +197,6 @@ tbodyEgreso.addEventListener('click',e=>{
         e.target.select()
     } 
 });
-
 
 document.addEventListener('keyup',e=>{
         recorrerConFlechas(e);
@@ -258,7 +261,7 @@ const recorrerConFlechas = (e)=>{
         subSeleccionado = subSeleccionado.nextElementSibling;
         subSeleccionado.classList.add('subSeleccionado');
     }
-}
+};
 
 //hacer pintar el tr y el td de colores para saber que ese es el seleccionado
 const seleccionarTr = (e)=>{
@@ -271,34 +274,47 @@ const seleccionarTr = (e)=>{
     subSeleccionado.classList.add('subSeleccionado');
 };
 
+exportar.addEventListener('click',async e=>{
 
-modificar.addEventListener('click',async e=>{
-    const arreglo = [];
-    for(let elem of arregloDeMovimientosAModificar){
-        const agregarEgreso = arregloEgresos.find(mov=>mov._id === elem);
-        const agregarIngreso = arregloIngresos.find(mov=>mov._id === elem);
-        if (agregarEgreso !== undefined) {
-            agregarEgreso.imp = parseFloat(document.getElementById(elem).children[3].children[0].value)
-            arreglo.push(agregarEgreso);
-        }
-        if (agregarIngreso !== undefined) {
-            agregarIngreso.imp = parseFloat(document.getElementById(elem).children[3].children[0].value);
-            arreglo.push(agregarIngreso)
-        }
-    }
+    const XLSX = require('xlsx');
+    let wb = XLSX.utils.book_new();
 
-    try {
-        await axios.put(`${URL}movCajas`,arreglo);
-        location.reload();
-    } catch (error) {
-        await sweet.fire({
-            title:"No se pudieron modificar los movimientos"
-        });
-    }
+    let extencion = 'xlsx';
+    let path = await ipcRenderer.invoke('elegirPath');
+    let sheetData = []
 
-})
+    wb.props = {
+        Title: "Informe de Caja",
+        Author: "Electro Avenida"
+    };
+
+    sheetData = await ponerDatos(sheetData,arregloIngresos);
+    sheetData = await ponerDatos(sheetData,arregloEgresos);
+    const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
+    worksheet['!cols'] = [{wch:40}]
+
+    XLSX.utils.book_append_sheet(wb,worksheet,'ingresos');
+    XLSX.writeFile(wb,path + "." + extencion); 
+
+});
 
 salir.addEventListener('click',e=>{
     window.close();
 });
 
+async function  ponerDatos(sheetData,arreglo) {
+    let cuenta = arreglo[0].cuenta;
+    let total = 0;
+
+    for await(let ingreso of arreglo){
+        if (ingreso.cuenta !== cuenta) {
+            sheetData.push([cuenta,total]);
+            total = 0;
+            cuenta = ingreso.cuenta;
+        };
+        total += ingreso.imp;
+    };
+
+    sheetData.push([cuenta,total]);
+    return sheetData;
+}

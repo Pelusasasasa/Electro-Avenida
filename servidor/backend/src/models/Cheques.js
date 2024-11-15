@@ -15,7 +15,8 @@ const Cheque = new Schema({
         default:""
     },
     f_cheque:{
-        type:Date
+        type:Date,
+        default:Date.now
     },
     i_cheque:{
         type:Number,
@@ -41,7 +42,7 @@ const Cheque = new Schema({
         type:String,
         default:""
     },
-    f_entragado:{
+    fechaPago:{
         type:Date
     },
     vendedor:String

@@ -24,7 +24,7 @@ window.addEventListener('load',e=>{
     const date = new Date();
     
     let day = date.getDate();
-    let month = date.getMonth();
+    let month = date.getMonth() +1;
     let year = date.getFullYear();
 
     day = day < 10 ? `0${day}` : day;
@@ -44,7 +44,7 @@ aceptar.addEventListener('click',async e=>{
     vale.tipo = "I";
      
     try {
-        await axios.post(`${URL}vales`,vale);
+        await axios.post(`${URL}vales`,vale,configAxios);
         window.close();
     } catch (error) {
         await sweet.fire({
@@ -61,7 +61,7 @@ modificar.addEventListener('click',async e=>{
     vale.imp = imp.value;
 
     try {
-        await axios.put(`${URL}vales/id/${modificar.id}`);
+        await axios.put(`${URL}vales/id/${modificar.id}`,configAxios);
         window.close();
     } catch (error) {
         sweet.fire({
@@ -75,7 +75,7 @@ salir.addEventListener('click',e=>{
 });
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    vale = (await axios.get(`${URL}vales/id/${args}`)).data;
+    vale = (await axios.get(`${URL}vales/id/${args}`,configAxios)).data;
     modificar.classList.remove('none');
     modificar.id = args;
     aceptar.classList.add('none');

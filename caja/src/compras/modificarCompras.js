@@ -1,16 +1,16 @@
 const desde = document.getElementById('desde');
 const hasta = document.getElementById('hasta');
 
-const { ipcRenderer } = require('electron');
 const sweet = require('sweetalert2');
 
 const axios = require('axios');
-const { redondear, copiar, cerrarVentana } = require('../assets/js/globales');
+const { redondear, copiar,configAxios, cerrarVentana } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
-const modificar = document.querySelector('.modificar');
-const salir = document.querySelector('.salir');
+const modificar = document.getElementById('modificar');
+const eliminar = document.getElementById('eliminar');
+const salir = document.getElementById('salir');
 
 const tbody = document.querySelector('tbody');
 
@@ -34,11 +34,26 @@ window.addEventListener('load',async e=>{
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
 
-    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`)).data;
+    facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`,configAxios)).data;
     listarCompras(facturas)
 });
 
+desde.addEventListener('change',async e=>{
+    if (desde.value) {
+        facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`,configAxios)).data;
+        listarCompras(facturas)
+    }
+});
+
+hasta.addEventListener('change',async e=>{
+    if (hasta.value) {
+        facturas = (await axios.get(`${URL}dat_comp/between/${desde.value}/${hasta.value}`,configAxios)).data;
+        listarCompras(facturas);
+    }
+});
+
 const listarCompras = async(lista)=>{
+    tbody.innerHTML = "";
     for(let elem of lista){
         const tr = document.createElement('tr');
         tr.id = elem._id;
@@ -119,6 +134,25 @@ modificar.addEventListener('click',e=>{
         })
     }
 });
+
+eliminar.addEventListener('click',e=>{
+    sweet.fire({
+        title:"Eliminar compra?",
+        confirmButtonText:"Aceptar",
+        showCancelButton:true
+    }).then(async ({isConfirmed})=>{
+        if(isConfirmed){
+            try {
+                await axios.delete(`${URL}dat_comp/id/${seleccionado.id}`,configAxios);
+            } catch (error) {
+                console.log(error);
+                sweet.fire({
+                    title:"No se pudo eliminar la compra"
+                })
+            }
+        }
+    })
+})
 
 salir.addEventListener('click',e=>{
     location.href = '../index.html';

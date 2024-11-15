@@ -1,0 +1,315 @@
+.listadoPorMarca .marcas{
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+}
+
+.listadoPorMarca .lista{
+    height: 80vh;
+    background-color: white;
+    overflow: scroll;
+}
+
+.listadoPorMarca .lista table,.listadoStock .listar table{
+    width: 100%;
+}
+
+.letra-chica{
+    font-size: 1.5rem;
+}
+
+.letra-chica table tbody tr #observaciones,.letra-chica table thead tr #observaciones{
+    font-size: 1rem;
+}
+
+.imagen{
+    margin-left: auto;
+}
+
+.imagenProducto{
+    width: 10rem;
+    height: 8rem;
+    cursor: pointer;
+}
+
+.listadoPorMarca .lista table tr th,.listadoPorMarca .lista table tr td,.listadoStock .listar table tr th,.listadoStock .listar table tr td{
+    border: .1rem solid black;
+}
+
+.aumentoPorcentaje{
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.aumentoPorcentaje .inputs{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.aumentoPorcentaje .inputs main{
+    display: flex;
+    flex-direction: column;
+}
+
+.aumentoPorcentaje .inputs main input,.aumentoPorcentaje .inputs main select{
+    width: 100%;
+    font-size: 2.5rem;
+}
+
+.seccionCambioCodigo .inputs,.seccionCambioCodigo .inputs main{
+    display: flex;
+    flex-direction: column;
+    margin: 2rem;
+}
+
+.seccionCambioCodigo .botones{
+    align-self: flex-end;
+    padding-top: 5rem;
+}
+
+.seccionCambioCodigo input:not(#descripcion){
+    font-size: 3rem;
+}
+.seccionCambioCodigo #codigo,.seccionCambioCodigo #nuevoCodigo{
+    width: 30%;
+}
+
+.listadoStock .buscador{
+    display: flex;
+    justify-content: space-around;
+}
+
+.listadoStock .buscador main{
+    display: flex;
+    flex-direction: column;
+}
+
+.listadoStock .buscador .button{
+    align-self: flex-end;
+}
+
+.listadoStock .listar{
+    background-color: white;
+    height: 70vh;
+    overflow: scroll;
+}
+
+
+.productos .buscador{
+    display: flex;
+    gap: 2rem;
+}
+
+.productos .buscador main{
+    display: flex;
+    flex-direction: column;
+
+}
+
+.productos select,.productos .buscador input{
+    font-size: 3rem;
+}
+
+.productos .buscador .buscador-producto{
+    width: 70%;
+}
+
+.productos .lista{
+    background-color: white;
+    overflow: scroll;
+    height: 65vh;    
+}
+
+.productos .lista tr th,.productos .lista tr td{
+    border: .1rem solid black;
+    font-size: 2.2rem;
+    white-space: nowrap;
+}
+
+th svg{
+    margin-top: auto;
+    width: 20px;
+}
+
+.productos tr .oferta{
+    display: flex;
+    margin: 0;
+    flex-direction: column;
+}
+
+.productos tr .oferta span:last-child{
+    font-size: 1.5rem;
+    text-align: center;
+    text-decoration: line-through;
+    color: red;
+}
+
+.agregarProducto .codigos,.modificarProducto .codigos{
+    display: flex;
+    justify-content: space-around;
+}
+
+.agregarProducto main, .modificarProducto main{
+    display: flex;
+    flex-direction: column;
+}
+
+.agregarProducto .unidad, .modificarProducto .unidad{
+    display: flex;
+    justify-content: space-around;
+}
+
+.agregarProducto .marcaProvedor,.modificarProducto .marca{
+    display: flex;
+    justify-content: space-around;
+}
+
+.agregarProducto .precio,.modificarProducto .costos{
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+.agregarProducto section,.modificarProducto section{
+    margin: 1.2rem auto;
+}
+
+.agregarProducto input,.modificarProducto input{
+    font-size: 1.6rem;
+}
+
+
+.modificarProducto .datos{
+    display: grid;
+    grid-template-columns: 2fr 2fr 1fr;
+    gap:  2rem;
+}
+
+.modificarProducto .datos main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.modificarProducto .datos main #destacado{
+    transform: scale(1.7);
+}
+
+.agregarProducto .observaciones,.modificarProducto .observaciones{
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2rem;
+}
+
+.agregarProducto .observaciones .oferta,.modificarProducto .observaciones .oferta{
+    text-align: center;
+}
+
+.agregarProducto .observaciones .oferta input,.modificarProducto .observaciones .oferta input{
+    transform: scale(1.8);
+    width: fit-content;
+    align-self: center;
+}
+
+.agregarProducto .precioFinal,.modificarProducto .precioFinal{
+    display: flex;
+    justify-content: space-around;
+} 
+
+/* cambio de precios */
+
+h1{
+    text-align: center;
+}
+
+.entradas{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.entradas main{
+    display: flex;
+    flex-direction: column;
+}
+
+.entradas #dolar{
+    width: 50%;
+}
+
+.tablas{
+    display: flex;
+    justify-content: space-around;
+}
+
+.tablaNuevo{
+    border-left: .1rem solid black;
+}
+
+.tablaViejo{
+    border-right: .1rem solid black;
+}
+
+.tablaViejo,.tablaNuevo{
+    width: 100%;
+    background-color: white;
+    height: 70vh;
+    overflow: scroll;
+}
+
+table thead tr{
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: #fff;
+}
+
+table tr th{
+    border: .1rem solid black;
+}
+
+
+.imagenGrande{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,.7);
+    z-index: 1;
+}
+
+
+.imagenGrande img{
+    cursor: pointer;
+    position: absolute;
+}
+
+.extencion{
+    display: flex;
+    justify-content: center;
+}
+
+#masDatos{
+    padding: 1rem;
+    font-size: 1.3rem;
+}
+
+.agregarProducto #web,.modificarProducto #web{
+    display: flex;
+    justify-content: space-around;
+}
+
+.agregarProducto #web input[type="checkbox"],.modificarProducto #web input[type="checkbox"]{
+    transform: scale(1.5);
+}

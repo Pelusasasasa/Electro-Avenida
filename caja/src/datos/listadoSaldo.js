@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { configAxios } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -10,29 +11,33 @@ const saldo = document.querySelector('#saldo');
 saldo.classList.add('text-end')
 
 window.addEventListener('load',async e=>{
-    provedores = (await axios.get(`${URL}provedor/conSaldo`)).data;
+    provedores = (await axios.get(`${URL}provedor/conSaldo`,configAxios)).data;
+    provedores.sort((a,b)=>{
+        if(a.provedor > b.provedor){
+            return 1
+        }else if(a.provedor < b.provedor){
+            return -1
+        }
+        return 0
+    })
     listar(provedores)
 });
 
 
 const listar = async(lista)=>{
     for await(let elem of  lista){
-        console.log(elem)
         const tr = document.createElement('tr');
 
         const tdCodigo = document.createElement('td');
-        const tdNombre = document.createElement('td');
         const tdProvedor = document.createElement('td');
         const tdSaldo = document.createElement('td');
         tdSaldo.classList.add('text-end')
 
         tdCodigo.innerHTML = elem.codigo.padStart(5,'0');
-        tdNombre.innerHTML = elem.nombre;
         tdProvedor.innerHTML = elem.provedor;
         tdSaldo.innerHTML = elem.saldo.toFixed(2);
 
         tr.appendChild(tdCodigo);
-        tr.appendChild(tdNombre);
         tr.appendChild(tdProvedor);
         tr.appendChild(tdSaldo);
 

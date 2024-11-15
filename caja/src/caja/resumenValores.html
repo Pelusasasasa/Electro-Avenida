@@ -10,7 +10,13 @@
 </head>
 <body class="listadoValores">
     <h1>Listado de Valores</h1>
-    <p>Los valores se guardan en la base de datos una vez cerrada la ventana</p>
+    <div class="cambioCaja">
+        <p>Los valores se guardan en la base de datos una vez cerrada la ventana</p>
+        <div>
+            <label for="cambio">Cambio Caja</label>
+            <input type="number" disabled name="cambio" id="cambio">
+        </div>
+    </div>
     <hr>
     <section class="dividir2">
         <section class="izquierda">
@@ -55,8 +61,8 @@
                 <input onfocus="selected(this)" class="text-right" type="number" name="cambioCaja" id="cambioCaja">
             </main>
             <main>
-                <label for="ceroVeinticinco">$ 0.25</label>
-                <input onfocus="selected(this)" class="text-right" type="number" name="ceroVeinticinco" id="ceroVeinticinco">
+                <label for="cajaMañana">$ Caja Mañana</label>
+                <input onfocus="selected(this)" class="text-right" type="number" name="cajaMañana" id="cajaMañana">
             </main>
             <main>
                 <label for="ceroCincuenta">$ 0.5</label>
@@ -105,15 +111,15 @@
             <section class="abajo">
                 <main>
                     <label for="chequesEfectivo">Total Cheques + Efectivo</label>
-                    <input onfocus="selected(this)" type="number" name="chequesEfectivo" id="chequesEfectivo">
+                    <input disabled onfocus="selected(this)" type="number" name="chequesEfectivo" id="chequesEfectivo">
                 </main>
                 <main>
                     <label for="valesEfectivo">Total Vales + Efectivo</label>
-                    <input onfocus="selected(this)" type="number" name="valesEfectivo" id="valesEfectivo">
+                    <input disabled onfocus="selected(this)" type="number" name="valesEfectivo" id="valesEfectivo">
                 </main>
                 <main>
                     <label for="diferencia">Diferencia</label>
-                    <input onfocus="selected(this)" type="number" name="diferencia" id="diferencia">
+                    <input disabled onfocus="selected(this)" value="0.00" type="number" name="diferencia" id="diferencia">
                 </main>
             </section>
         </section>
@@ -122,7 +128,8 @@
    
     <section class="botones">
         <button id="salir">Salir</button>
-        <button>Imprimir</button>
+        <button id="confirmar">Confirmar Cambios</button>
+        <button id="imprimir">Imprimir</button>
     </section>
 </body>
     <script src="./resumenValores.js"></script>

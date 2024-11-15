@@ -1,22 +1,24 @@
 const {ipcRenderer} = require('electron')
 
 ipcRenderer.on('info-para-imprimir',(e,args)=>{
-    const [Venta,Cliente,arreglo,total,opciones] = JSON.parse(args)
-    listar(Venta,Cliente,arreglo,total,opciones);
-    console.log(arreglo)
-})
+    const [venta,cliente,arreglo,tipo,opciones] = JSON.parse(args)
+    listar(venta,cliente,arreglo,tipo,opciones);
+});
 
-const listar = async(venta,Cliente,lista,precio,opciones)=>{
-
-const numero = document.querySelector('.numero')
+const listar = async(venta,Cliente,lista,tipo,opciones)=>{
+const numero = document.querySelector('.numero');
 const fecha = document.querySelector('.fecha');
-const cliente = document.querySelector('.cliente')
-const cuit = document.querySelector('.cuit')
+const cliente = document.querySelector('.cliente');
+const idCliente = document.querySelector('.idCliente');
+const cuit = document.querySelector('.cuit');
 const localidad = document.querySelector('.localidad')
 const direccion = document.querySelector('.direccion')
 const iva = document.querySelector('.cond_iva')
 const total = document.querySelector('#total')
-const tbody = document.querySelector('.tbody')
+const tbody = document.querySelector('.tbody');
+
+const observaciones = document.querySelector('.observaciones');
+
 const tomarFecha = new Date();
 let hoy = tomarFecha.getDate()
 let mes = tomarFecha.getMonth() + 1;
@@ -26,14 +28,16 @@ mes = (mes<10) ? `0${mes}` : mes;
 hoy = (hoy<10) ? `0${hoy}` : hoy;
 
 const cond_iva = (Cliente.iva === undefined) && "Consumidor Final";
-fecha.innerHTML = `${hoy}/${mes}/${anio}`;
-numero.innerHTML = venta.nro_comp;
-cliente.innerHTML = Cliente.cliente;
-cuit.innerHTML = Cliente.cuit;
-localidad.innerHTML=Cliente.localidad;
-direccion.innerHTML=Cliente.direccion;
-iva.innerHTML = cond_iva;
-tbody.innerHTML = ""
+fecha.innerText = `${hoy}/${mes}/${anio}`;
+numero.innerText = venta.nro_comp;
+idCliente.innerText = venta.codigo;
+cliente.innerText = Cliente.cliente;
+cuit.innerText = Cliente.cuit;
+localidad.innerText=Cliente.localidad;
+direccion.innerText=Cliente.direccion;
+iva.innerText = cond_iva;
+observaciones.innerText = venta.observaciones;
+tbody.innerHTML = "";
 for(let objeto of lista){
     const tr = document.createElement('tr');
 
@@ -46,8 +50,8 @@ for(let objeto of lista){
     tdFecha.innerHTML = objeto.fecha;
     tdComprobante.innerHTML = objeto.comprobante;
     tdNumero.innerHTML = objeto.numero;
-    tdPagado.innerHTML = objeto.pagado;
-    tdSaldo.innerHTML = objeto.saldo;
+    tdPagado.innerHTML = parseFloat(objeto.pagado).toFixed(2);
+    tdSaldo.innerHTML = parseFloat(objeto.saldo).toFixed(2);
 
     tr.appendChild(tdFecha);
     tr.appendChild(tdComprobante);
@@ -58,20 +62,20 @@ for(let objeto of lista){
     tbody.appendChild(tr);
 };
 
-if (venta.abonado !== "") {
-    console.log(venta.abonado)
+if (venta.saldoAFavor !== 0) {
     const tr = document.createElement('tr');
 
     const tdFecha = document.createElement('td');
-    tdFecha.innerHTML = fecha.innerHTML;
     const tdComprobante  = document.createElement('td');
-    tdComprobante.innerHTML = "Pago A Cuenta";
     const tdNumero = document.createElement('td');
-    tdNumero.innerHTML = "";
     const tdPagado  = document.createElement('td');
-    tdPagado.innerHTML = venta.abonado;
     const tdSaldo = document.createElement('td');
-    tdSaldo.innerHTML = venta.abonado;
+    
+    tdFecha.innerHTML = fecha.innerHTML;
+    tdComprobante.innerHTML = "Pago A Cuenta";
+    tdNumero.innerHTML = "";
+    tdPagado.innerHTML = venta.saldoAFavor.toFixed(2);
+    tdSaldo.innerHTML = venta.saldoAFavor.toFixed(2);
 
     tr.appendChild(tdFecha);
     tr.appendChild(tdComprobante);
@@ -81,7 +85,8 @@ if (venta.abonado !== "") {
 
     tbody.appendChild(tr);
 }
-total.value = precio;
+total.value = venta.precioFinal;
+
 await ipcRenderer.send('imprimir',JSON.stringify(opciones));
 }
 

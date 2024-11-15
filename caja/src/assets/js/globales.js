@@ -1,4 +1,8 @@
-const { clipboard } = require("electron");
+const { clipboard, ipcRenderer } = require("electron");
+
+require('dotenv').config();
+const URL = process.env.URL
+
 
 const alerta = async(mensaje)=>{
     await sweet.fire({
@@ -32,7 +36,30 @@ const cerrarVentana = ()=>{
             window.close();
         }
     });
-}
+    document.getElementById('salir') && document.getElementById('salir').addEventListener('click',e=>{
+        window.close();
+    });
+};
+
+const generarMovimientoCaja = async (fecha,tMov,nro_comp,cuenta,idCuenta,imp,desc)=>{
+    const movimiento = {};
+    movimiento.fecha = fecha;
+    movimiento.tMov = tMov;
+    movimiento.nro_comp = nro_comp;
+    movimiento.cuenta = cuenta.toUpperCase();
+    movimiento.idCuenta = idCuenta;
+    movimiento.imp = imp;
+    movimiento.desc = desc.toUpperCase();
+    movimiento.pasado = true;
+    try {
+        await axios.post(`${URL}movCajas`,movimiento,configAxios);
+    } catch (error) {
+        console.log(error)
+        await sweet.fire({
+            title:"no se pudo cargar el movimiento de caja"
+        });
+    }
+};
 
 const recorrerFlechas =  async(code) => {
     if (code === 40 && seleccionado.nextElementSibling) {
@@ -95,4 +122,24 @@ const recorrerFlechas =  async(code) => {
     })
 };
 
-module.exports = {alerta,cerrarVentana,copiar,redondear}
+const clave = btoa(`electroAvenida:Elbio935`);
+const configAxios = {
+    headers:{
+        "ngrok-skip-browser-warning": "69420",
+        "Authorization": `Basic ${clave}`
+    }
+};
+
+
+const clickderecho = (e,texto) => {
+    const cordenadas = {
+        x: e.clientX,
+        y: e.clientY,
+        ventana:texto
+    };
+
+    ipcRenderer.send('mostrar-menu-secundario',cordenadas);
+
+};
+
+module.exports = {alerta,cerrarVentana,copiar,redondear,generarMovimientoCaja,configAxios,clickderecho}

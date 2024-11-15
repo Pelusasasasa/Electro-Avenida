@@ -119,6 +119,7 @@
 
 .table table th,.table table td{
     border: .1rem solid black;
+    white-space: nowrap;
 }
 
 tbody tr:hover{
@@ -130,24 +131,134 @@ tbody tr:hover{
     margin: 2rem;
 }
 
-.deCompras header{
+.deCompras header main{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .deCompras p{
     margin: .5rem;
 }
 
-.table-imprimir{
-    overflow:auto;
+.listas{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
 }
 
-.table-imprimir th{
-    font-size: 1rem !important;
+.listas main{
+    border: .1rem solid black;
 }
 
-.table-imprimir td{
-    font-size: 1rem !important;
-    border: none !important;
+#facturacion .facturas,#facturacion .notaCreditos,#facturacion .compras{
+    background-color: white;
+    min-height: calc(100vh - 7rem);
+}
+
+#facturacion .facturas table,#facturacion .notaCreditos table,#facturacion .compras table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#facturacion .facturas table thead th,#facturacion .tbodyFacturas td,#facturacion .notaCreditos thead th,#facturacion .notaCreditos td,#facturacion .compras th,#facturacion .compras td{
+    border: .1rem solid black;
+}
+
+#facturacion .listas{
+    margin-top: 1rem;
+}
+
+#facturacion table td{
+    text-align: right;
+}
+
+
+#facturacion .totales{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+#facturacion .totales div{
+    background-color: lightgray;
+}
+
+
+#facturacion .totales p{
+    margin: 0;
+    margin-top: 0.5rem;
+    padding-left: 1rem;
+    font-weight: bold;
+}
+
+#facturacion .totales p span{
+    font-weight: 600;
+}
+
+#facturacion{
+    position: relative;
+
+}
+
+#facturacion aside{
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: lightgray;
+    height: 100%;
+    width: 55%;
+    display: flex;
+    align-items: center;
+}
+
+.aside_flechas{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: gray;
+    height: 100%;
+    top: 0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    position: fixed;
+    cursor: pointer;
+}
+
+.aside_flechas:hover{
+    background-color: rgb(170,170,170);
+}
+
+#facturacion aside section{
+    height: 100%;
+    width: 100%;
+    padding-left: 5rem;
+    color: white;
+    background-color: rgb(131, 88, 88);
+}
+
+#facturacion aside main{
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+@media print{
+    .table{
+        overflow: hidden;
+        font-size: 1rem;
+        width: auto;
+        height: auto;
+    }
+    body{
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    .fechas{
+        display: none;
+    }
 }

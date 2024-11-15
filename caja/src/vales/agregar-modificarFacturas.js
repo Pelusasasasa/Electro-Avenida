@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 require('dotenv').config();
 const URL = process.env.URL;
 
-const { cerrarVentana } = require("../assets/js/globales")
+const { cerrarVentana, configAxios } = require("../assets/js/globales")
 
 const h1 = document.querySelector('h1');
 
@@ -52,7 +52,7 @@ aceptar.addEventListener('click',async e=>{
     vale.concepto = concepto.value.toUpperCase();
     vale.fecha = fecha.value;
     vale.tipo = "F";
-    await axios.post(`${URL}vales`,vale);
+    await axios.post(`${URL}vales`,vale,configAxios);
     window.close();
 });
 
@@ -64,7 +64,7 @@ modificar.addEventListener('click',async e=>{
     vales.concepto = concepto.value.toUpperCase();
     vales.fecha = fecha.value;
 
-    await axios.put(`${URL}vales/id/${modificar.id}`,vales);
+    await axios.put(`${URL}vales/id/${modificar.id}`,vales,configAxios);
 
     window.close();
 });
@@ -107,9 +107,6 @@ concepto.addEventListener('focus',e=>{
     concepto.select();
 });
 
-imp.addEventListener('focus',e=>{
-    imp.select();
-});
 
 ipcRenderer.on('recibir-informacion',async(e,args)=>{
     h1.innerHTML = "MODIFICAR FACTURA";
@@ -118,7 +115,7 @@ ipcRenderer.on('recibir-informacion',async(e,args)=>{
     modificar.classList.remove('none');
     modificar.id = args;
 
-    const factura = (await axios.get(`${URL}vales/id/${args}`)).data
+    const factura = (await axios.get(`${URL}vales/id/${args}`,configAxios)).data
     llenarInputs(factura)
 });
 

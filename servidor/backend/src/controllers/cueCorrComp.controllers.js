@@ -23,9 +23,10 @@ cuentaCompCTRL.cargarCompensada = async(req,res)=>{
     let id = (await CuentaComp.find().sort({$natural:-1}).limit(1))[0]
     nuevaCompensada._id = id ? id._id + 1 : 1; 
     nuevaCompensada.save();
-    console.log(`Compensada ${req.body.nro_comp} al cliente ${req.body.cliente} cargado`)
+    console.log(`Compensada ${req.body.nro_comp} al cliente ${req.body.cliente} cargado por el vendedor ${req.body.vendedor} en la maquina ${req.body.maquina} con la hora y fecha ${(new Date()).toLocaleString()}`);
     res.send("Nueva compensada cargada");
-}
+};
+
 cuentaCompCTRL.modificarCompensadaPorNumero = async(req,res)=>{
     const {numero} = req.params;
     delete req.body._id;
@@ -42,7 +43,7 @@ cuentaCompCTRL.borrarCompensada = async(req,res)=>{
 
 cuentaCompCTRL.traerCompensadasPorNumero = async(req,res)=>{
     const {numero} = req.params;
-    const cuentas = await CuentaComp.find({nro_comp:numero});
+    const cuentas = await CuentaComp.findOne({nro_comp:numero});
     res.send(cuentas);
 }
 
@@ -51,6 +52,27 @@ cuentaCompCTRL.modificarCompensada = async(req,res)=>{
     await CuentaComp.findByIdAndUpdate({_id:id},req.body);
     console.log(`Compensada de ${req.body.cliente} con numero ${req.body.nro_comp} Modificada`);
     res.send(`Compensada de ${req.body.cliente} con numero ${req.body.nro_comp} Modificada`);
+};
 
+cuentaCompCTRL.getPorNumeroYCliente = async(req,res)=>{
+    const {numero,cliente} = req.params;
+    const cuenta = await CuentaComp.findOne({
+        $and:[
+            {nro_comp:numero},
+            {codigo:cliente}
+        ]
+    });
+    res.send(cuenta)
+}
+
+
+cuentaCompCTRL.modificarPorNumeroYCliente = async(req,res)=>{
+    const {numero,cliente} = req.params;
+    delete req.body._id;
+    await CuentaComp.findOneAndUpdate({$and:[
+        {nro_comp:numero},
+        {codigo:cliente}
+    ]},req.body);
+    res.end();
 }
 module.exports = cuentaCompCTRL

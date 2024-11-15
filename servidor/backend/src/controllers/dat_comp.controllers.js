@@ -23,9 +23,15 @@ datCompCTRL.putForId = async(req,res)=>{
     res.end();
 }
 
+datCompCTRL.deleteForId = async(req,res)=>{
+    const {id} = req.params;
+    await DatComp.findByIdAndDelete({_id:id});
+    console.log(`Comprobante ${id} Eliminado`);
+    res.end();
+}
+
 datCompCTRL.getBetween = async(req,res)=>{
     const {desde,hasta} = req.params;
-
     const datComps = await DatComp.find({$and:[
         {fecha_comp: {$gte:desde}},
         {fecha_comp: {$lte:hasta}}
@@ -35,20 +41,45 @@ datCompCTRL.getBetween = async(req,res)=>{
 
 datCompCTRL.getFechaImpt = async(req,res)=>{
     const {desde,hasta} = req.params;
-    const desdeSim = desde.split('-',2);
-    const hastaSim = hasta.split('-',2);
-    const mes = new Date(desdeSim[0],parseFloat(desdeSim[1])-1,1,0,0,0)
-    const mesSig = new Date(hastaSim[0],parseFloat(hastaSim[1]),1,0,0,0);
-    const compras = await DatComp.find({$and:[
-        {fecha_imput:{$gte:mes}},
-        {fecha_imput:{$lte:mesSig}}
-    ]});
+
+    const mes = new Date(desde + "-01T00:00:00.000Z");
+    const mesSig = new Date(hasta + "-01T23:59:59.000Z")
+    let compras
+    try {
+        compras = await DatComp.find({$and:[
+            {fecha_imput:{$gte:mes}},
+            {fecha_imput:{$lt:mesSig}}
+        ]});
+    } catch (error) {
+        console.log(error)
+    }
+
     res.send(compras)
 }
 
-datCompCTRL.getForNumeroComp = async(req,res)=>{
-    const {numero} = req.params;
-    const datComp = await DatComp.findOne({nro_comp:numero},{total:1,tipo_comp:1});
+datCompCTRL.getForNumeroCompAndProv = async(req,res)=>{
+    const {numero,codProv} = req.params;
+    const datComp = await DatComp.find({$and:[
+        {nro_comp:numero},
+        {codProv:codProv}
+    ]},{total:1,tipo_comp:1,codProv:1,nro_comp:1});
     res.send(datComp)
-}
+};
+
+datCompCTRL.getForMonthAndYear = async(req,res)=>{
+
+    const {month,year} = req.params;
+
+    const datos = await DatComp.find({
+        $expr:{
+            $and:[
+                {$eq:[{$month:"$fecha_imput"},Number(month)]},
+                {$eq:[{$year:"$fecha_imput"},Number(year)]},
+                {$ne:["$tipo_comp","Presupuesto"]}
+            ]}
+    });
+
+    res.send(datos);
+
+};
 module.exports = datCompCTRL;

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheque</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./bancos.css">
+</head>
+<body class=ingresoPago>
+    <section class="inputs">
+        <main>
+            <label for="numero">Nº Cheque:</label>
+            <input autofocus type="text" name="numero" id="numero">
+        </main>
+        <main>
+            <label for="entreg">Entregado a:</label>
+            <input type="text" name="entreg" id="entreg">
+        </main>
+        <main>
+            <label for="banco">Banco</label>
+            <input type="text" name="banco" id="banco">
+        </main>
+        <main>
+            <label for="fechaCheque">Fecha Cheque</label>
+            <input type="date" name="fechaCheque" id="fechaCheque">
+        </main>
+        <main>
+            <label for="importe">Importe</label>
+            <input type="importe" name="importe" id="importe">
+        </main>
+        <main>
+            <label for="fechaPago">Fecha Pago</label>
+            <input type="date" name="fechaPago" id="fechaPago">
+        </main>
+    </section>
+
+    <section class="botones">
+        <button id="aceptar">Aceptar</button>
+        <button id="cancelar">Cancelar</button>
+    </section>
+    <script src="./ingresarPagoCheques.js"></script>
+</body>
+</html>

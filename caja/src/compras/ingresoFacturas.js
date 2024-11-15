@@ -15,7 +15,7 @@ let numeroIvaAnterior = 0;
 
 const sweet = require('sweetalert2');
 
-const {redondear} = require('../assets/js/globales');
+const {redondear, configAxios} = require('../assets/js/globales');
 
 const provedor = document.getElementById('provedor');
 const codigo = document.getElementById('codigo');
@@ -29,11 +29,12 @@ const empresa = document.getElementById('empresa');
 const factura = document.getElementById('Factura');
 const notaCredito = document.getElementById('Nota Credito');
 const presupuesto = document.getElementById('Presupuesto');
+const debito = document.getElementById('Debito');
+const ret_Pres = document.getElementById('Ret/Pres');
 
+//Fechas
 const fechaComp = document.getElementById('fechaComp');
 const fechaImput = document.getElementById('fechaImput');
-const fechaVencimiento = document.getElementById('fechaVencimiento');
-const fechaVencimientoCAI = document.getElementById('fechaVencimientoCAI');
 
 const netoNoGravado = document.getElementById('netoNoGravado');
 const netoGravado = document.getElementById('netoGravado');
@@ -69,12 +70,10 @@ month = month < 10 ? `0${month}` : month;
 
 window.addEventListener('load',async e=>{
     fechaComp.value = `${year}-${month}-${day}`;
-    fechaImput.value  = `${year}-${month}-${day}`;
-    fechaVencimiento.value = `${year}-${month}-${day}`;
-    fechaVencimientoCAI.value = `${year}-${month}-${day}`;
+    fechaImput.value  = `${year}-${month}`;
 
     if (numeroParaModifcar) {
-        const factura = (await axios.get(`${URL}dat_comp/id/${numeroParaModifcar}`)).data;
+        const factura = (await axios.get(`${URL}dat_comp/id/${numeroParaModifcar}`,configAxios)).data;
         listarFactura(factura)
     }
     
@@ -93,17 +92,11 @@ provedor.addEventListener('keypress',e=>{
     }else if(e.keyCode === 13 && provedor.value === "0"){
         codigo.value = "0000";
         provedor.value = "Provedor Eventual";
-        cuentaCorriente.parentNode.classList.add('none');
         provedor.removeAttribute('disabled');
-        cuit.removeAttribute('disabled');
         cond_iva.removeAttribute('disabled');
+        cuit.removeAttribute('disabled');
         cond_iva.focus();
-    }
-});
-
-cond_iva.addEventListener('keypress',e=>{
-    if (e.keyCode === 13) {
-        cuit.focus();
+        cuentaCorriente.parentNode.classList.add('none')
     }
 });
 
@@ -118,7 +111,6 @@ numero.addEventListener('keypress',e=>{
         empresa.focus();
     }
 });
-
 
 empresa.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
@@ -141,6 +133,18 @@ notaCredito.addEventListener('keypress',e=>{
 
 presupuesto.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
+        debito.focus();
+    }
+});
+
+debito.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        ret_Pres.focus();
+    }
+});
+
+ret_Pres.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
         fechaComp.focus();
     }
 });
@@ -153,21 +157,9 @@ fechaComp.addEventListener('keypress',e=>{
 
 fechaImput.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
-        fechaVencimiento.focus();
-    }
-});
-
-fechaVencimiento.addEventListener('keypress',e=>{
-    if (e.keyCode === 13) {
-        fechaVencimientoCAI.focus();
-    }
-});
-
-fechaVencimientoCAI.addEventListener('keypress',e=>{
-    if (e.keyCode === 13) {
         netoNoGravado.focus();
     }
-}); 
+});
 
 netoNoGravado.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
@@ -271,23 +263,23 @@ netoNoGravado.addEventListener('change',e=>{
 });
 
 netoGravado.addEventListener('change',e=>{
-    total.value = parseFloat(netoGravado.value) + parseFloat(total.value) - aux;
+    total.value = redondear(parseFloat(netoGravado.value) + parseFloat(total.value) - aux, 2);
 });
 
 percepcionIVA.addEventListener('change',e=>{
-    total.value = parseFloat(total.value) + parseFloat(percepcionIVA.value)
+    total.value = redondear(parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value), 2);
 });
 
 retencionDGR.addEventListener('change',e=>{
-    total.value = parseFloat(total.value) + parseFloat(retencionDGR.value)
+    total.value = redondear(parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value), 2);
 });
 
 percepcionDGR.addEventListener('change',e=>{
-    total.value = parseFloat(percepcionDGR.value) + parseFloat(total.value);
+    total.value = redondear(parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value), 2);
 });
 
 retencionIVA.addEventListener('change',e=>{
-    total.value = parseFloat(retencionIVA.value) + parseFloat(total.value);
+    total.value = redondear(parseFloat(netoGravado.value) + parseFloat(percepcionIVA.value) + parseFloat(netoNoGravado.value) + parseFloat(retencionDGR.value) + parseFloat(retencionIVA.value) + parseFloat(percepcionDGR.value) + parseFloat(numeroIva.value), 2);
 });
 
 puntoVenta.addEventListener('focus',e=>{
@@ -325,6 +317,9 @@ retencionIVA.addEventListener('focus',e=>{
 });
 
 total.addEventListener('focus',e=>{
+    if (modificar.classList.contains('none')) {
+        aceptar.classList.remove('none');
+    }
     total.select();
 });
 
@@ -355,7 +350,6 @@ document.addEventListener('keyup',e=>{
 });
 
 aceptar.addEventListener('click',async e=>{
-    
     const dat_comp = {};
 
     dat_comp.provedor = provedor.value;
@@ -376,19 +370,20 @@ aceptar.addEventListener('click',async e=>{
     dat_comp.p_iva_c = percepcionIVA.value;
     dat_comp.r_dgr_c = retencionDGR.value;
     dat_comp.r_iva_c = retencionIVA.value;
-    dat_comp.total = neto.value;
+    dat_comp.total = total.value;
 
     if (cuentaCorriente.checked) {
-        await ponerEnCuentaCorrienteProvedor(dat_comp);
+        const aDescontar = await actualizarCuentasPosterioreres(parseFloat(dat_comp.total),parseFloat(descuento.value));
+        await ponerEnCuentaCorrienteProvedor(dat_comp,aDescontar);
         await ponerSaldoAlProvedor(dat_comp);
-
         if (parseFloat(descuento.value) !== 0) {
             await ponerEnCuentaCorrienteProvedorDescuento(dat_comp);
+            await ponerDatoComprobanteDescuento(dat_comp);
         }
     }
 
     try {
-        await axios.post(`${URL}dat_comp`,dat_comp);
+        await axios.post(`${URL}dat_comp`,dat_comp,configAxios);
         location.reload();
     } catch (error) {
         await sweet.fire({
@@ -398,27 +393,55 @@ aceptar.addEventListener('click',async e=>{
     console.log(dat_comp)
 });
 
-const ponerEnCuentaCorrienteProvedor = async(datos)=>{
+const ponerDatoComprobanteDescuento = async()=>{
+    const datos = {};
+    datos.provedor = provedor.value;
+    datos.codProv = codigo.value;
+    datos.cuit = cuit.value;
+    datos.nro_comp = puntoVenta.value.padStart(4,'0') + "-" + numero.value.padStart(8,'0');
+    datos.tipo_comp = "Descuento";
+    datos.empresa = empresa.value;
+
+    datos.fecha_comp = fechaComp.value;
+    datos.fecha_imput = fechaImput.value;
+    
+    datos.netoNoGravado = 0.0
+    datos.netoGravado = 0
+    datos.tasaIva = 0
+    datos.iva = 0
+    datos.p_dgr_c = 0
+    datos.p_iva_c = 0
+    datos.r_dgr_c = 0
+    datos.r_iva_c = 0
+    datos.total = redondear(parseFloat(descuento.value) * -1,2);
+    try {
+        await axios.post(`${URL}dat_comp`,datos,configAxios);
+    } catch (error) {
+        await sweet.fire({
+            title:"No se pudo cargar le descuento"
+        })
+    }
+};
+
+const ponerEnCuentaCorrienteProvedor = async(datos,aDescontar = 0)=>{
     const cuenta = {};
     cuenta.fecha = datos.fecha_comp;
     cuenta.codProv = datos.codProv;
     cuenta.provedor = datos.provedor;
     cuenta.tipo_comp = datos.tipo_comp;
     cuenta.nro_comp = datos.nro_comp;
-    cuenta.debe = datos.total;
+    cuenta.debe = datos.tipo_comp === "Nota Credito" ? "-" + datos.total  : datos.total;
     cuenta.haber = 0;
-    cuenta.saldo = parseFloat(total.value) + provedorTraido.saldo;
+    cuenta.saldo = datos.tipo_comp === "Nota Credito" ? redondear(aDescontar - parseFloat(datos.total),2) : redondear(aDescontar + parseFloat(datos.total),2);
     cuenta.emp = datos.empresa;
-    console.log(cuenta)
     try {
-        await axios.post(`${URL}ctactePro`,cuenta);
+        await axios.post(`${URL}ctactePro`,cuenta,configAxios);
     } catch (error) {
         console.log(error)
         sweet.fire({
             title:"No se pudo cargar a cuenta corriente provedor"
         });
     }
-
 };
 
 const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
@@ -430,14 +453,10 @@ const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
     cuenta.nro_comp = datos.nro_comp;
     cuenta.debe = 0;
     cuenta.haber = descuento.value;
-    console.log(provedorTraido.saldo);
-    console.log(total.value);
-    console.log(descuento.value)
-    cuenta.saldo = (parseFloat(provedorTraido.saldo) - parseFloat(descuento.value));
-    console.log(cuenta.saldo)
+    cuenta.saldo = parseFloat(provedorTraido.saldo);
     cuenta.emp = datos.empresa;
     try {
-        await axios.post(`${URL}ctactePro`,cuenta);
+        await axios.post(`${URL}ctactePro`,cuenta,configAxios);
     } catch (error) {
         console.log(error)
         sweet.fire({
@@ -447,13 +466,58 @@ const ponerEnCuentaCorrienteProvedorDescuento = async(datos)=>{
 }
 
 const ponerSaldoAlProvedor = async(datos)=>{
-    provedorTraido.saldo = redondear(provedorTraido.saldo + parseFloat(datos.total),2)
+    provedorTraido.saldo = datos.tipo_comp === "Nota Credito" ? redondear(provedorTraido.saldo - parseFloat(neto.value),2) : redondear(provedorTraido.saldo + parseFloat(neto.value),2);
     try {
-        await axios.put(`${URL}provedor/codigo/${datos.codProv}`,provedorTraido);
+        await axios.put(`${URL}provedor/codigo/${datos.codProv}`,provedorTraido,configAxios);
     } catch (error) {
         sweet.fire({title:"No se pudo modificar el saldo del provedor"})
     }
 }
+
+const actualizarCuentasPosterioreres = async(total,descuento)=>{
+    let retorno = 0;
+    const cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${codigo.value}/${fechaComp.value}`,configAxios)).data;
+    cuentas.sort((a,b)=>{
+        if (a.fecha < b.fecha) {
+            return -1
+        }else if (a.fecha > b.fecha) {
+            return 1
+        }
+        return 0
+    });
+    let saldoAnterior = 0
+    provedorTraido.saldo - cuentas.forEach(cuenta => {
+        saldoAnterior += cuenta.debe;    
+    });
+    let aux =  provedorTraido.saldo - saldoAnterior + total - descuento;//penmos en una varaible el total menos el descuento:
+    retorno = provedorTraido.saldo - saldoAnterior;
+    for await(let cuenta of cuentas){
+        if (cuenta.haber === 0) {
+            cuenta.saldo = redondear(aux + cuenta.debe,2);
+            aux = parseFloat(cuenta.saldo);
+            try {
+                await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta,configAxios);
+            } catch (error) {
+                console.log(error)
+                sweet.fire({
+                    title:"No se pudo ordenar las cuentas corriente"
+                })
+            }
+        }else{
+            cuenta.saldo = redondear(aux - cuenta.debe,2);
+            aux = parseFloat(cuenta.saldo);
+            try {
+                await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta,configAxios);
+            } catch (error) {
+                console.log(error)
+                sweet.fire({
+                    title:"No se pudo ordenar las cuentas corrientes"
+                })
+            }
+        }
+    } 
+    return retorno
+};
 
 const verTipoComprobante = ()=>{
     const radios =  document.querySelectorAll('input[name=tipoComprobante]')
@@ -462,7 +526,7 @@ const verTipoComprobante = ()=>{
             return radio.id;
         }
     }
-}
+};
 
 modificar.addEventListener('click',async e=>{
     const factura = {};
@@ -475,7 +539,7 @@ modificar.addEventListener('click',async e=>{
     factura.empresa = empresa.value;
 
     factura.fecha_comp = fechaComp.value;
-    factura.fechaImput = fechaImput.value;
+    factura.fecha_imput = fechaImput.value;
 
     factura.netoNoGravado = redondear(netoNoGravado.value,2);
     factura.netoGravado = redondear(netoGravado.value,2);
@@ -487,7 +551,7 @@ modificar.addEventListener('click',async e=>{
     factura.r_iva_c = redondear(retencionIVA.value,2);
     factura.total = redondear(neto.value,2);
     try {
-        await axios.put(`${URL}dat_comp/id/${numeroParaModifcar}`,factura);
+        await axios.put(`${URL}dat_comp/id/${numeroParaModifcar}`,factura,configAxios);
         if (aceptar.classList.contains('none')) {
             location.href = '../compras/modificarCompras.html'
         }else{
@@ -499,23 +563,20 @@ modificar.addEventListener('click',async e=>{
             title:"No se Puedo modificar la factura"
         })
     }
-})
+});
 
 cancelar.addEventListener('click',e=>{
     location.href = "../index.html"
 });
 
-
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    provedorTraido = (await axios.get(`${URL}provedor/codigo/${args}`)).data;
+    provedorTraido = (await axios.get(`${URL}provedor/codigo/${args}`,configAxios)).data;
     provedor.value = provedorTraido.provedor;
     codigo.value = provedorTraido.codigo;
-    cond_iva.value = provedorTraido.condIva
+    cond_iva.value = provedorTraido.situa;
     cuit.value = provedorTraido.cuit;
     puntoVenta.focus(); 
 });
-
-
 
 const listarFactura = async(factura)=>{
     const fecha_comp = factura.fecha_comp.slice(0,10).split('-',3);
@@ -528,7 +589,7 @@ const listarFactura = async(factura)=>{
     numero.value = factura.nro_comp.split('-',2)[1];
     document.getElementById(factura.tipo_comp).checked = true;
     fechaComp.value = `${fecha_comp[0]}-${fecha_comp[1]}-${fecha_comp[2]}`;
-    fechaImput.value = `${fecha_imput[0]}-${fecha_imput[1]}-${fecha_imput[2]}`;
+    fechaImput.value = `${fecha_imput[0]}-${fecha_imput[1]}`;
 
     netoNoGravado.value = redondear(factura.netoNoGravado,2);
     netoGravado.value = redondear(factura.netoGravado,2);
@@ -552,4 +613,4 @@ const listarFactura = async(factura)=>{
 
     modificar.classList.remove('none');
     aceptar.classList.add('none');
-}
+};

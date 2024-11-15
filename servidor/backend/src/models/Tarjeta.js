@@ -5,6 +5,15 @@ const Tarjeta = new Schema({
         type:Date,
         default: Date.now
     },
+    cliente:{
+        type:String,
+        default:"A Consumidor Final"
+    },
+    tipo_comp:{
+        type:String,
+        require:true,
+        set:(value) => value.toUpperCase()
+    },
     tarjeta:{
         type:String,
         default:""

@@ -9,10 +9,8 @@ PresupuestoCTRL.cargarPresupuesto = async(req,res)=>{
     const presupuesto = new Presupuesto(req.body);
     let id = (await Presupuesto.find().sort({$natural:-1}).limit(1))[0];
     presupuesto._id = id ? id._id + 1 : 1;
-    console.log(req.body.fecha);
-    console.log(presupuesto)
     presupuesto.save();
-    console.log(`Presupuesto ${req.body.nro_comp} guardado`)
+    console.log(`Presupuesto ${req.body.nro_comp} cargado por el vendedor ${req.body.vendedor} en la maquina ${req.body.maquina} con la hora ${(new Date()).toLocaleString()}`);
     res.send(presupuesto)
 }
 
@@ -23,7 +21,6 @@ PresupuestoCTRL.traerPresupuesto = async(req,res)=>{
 }
 
 PresupuestoCTRL.modificarPresupuesto = async(req,res) =>{
-    console.log(req.params)
     const {id} = req.params;
     delete req.body._id
     const presupuesto = await Presupuesto.findOneAndUpdate({nro_comp:id},req.body);
@@ -32,20 +29,31 @@ PresupuestoCTRL.modificarPresupuesto = async(req,res) =>{
 
 PresupuestoCTRL.entreFechas = async(req,res)=>{
     const {id,desde,hasta} = req.params;
-    const ventaARetornar = await Presupuesto.find({$and:[{fecha:{$gte: new Date(desde)}},{fecha:{$lte: new Date(hasta)}}]})
+    const ventaARetornar = await Presupuesto.find({
+        $and:[
+            {fecha:{$gte: new Date(desde)}},
+            {fecha:{$lte: new Date(hasta + "T23:59:59.000Z")}}
+        ]})
     res.send(ventaARetornar)
 }
 
 PresupuestoCTRL.entreFechasConId = async(req,res)=> {
     const {id,desde,hasta} = req.params;
-    console.log(req.params)
-    const ventaARetornar =  await Presupuesto.find({$and:[{nro_comp:id},{fecha:{$gte: new Date(desde)}},{fecha:{$lte: new Date(hasta)}}]})
+    const ventaARetornar =  await Presupuesto.find({
+        $and:[
+            {nro_comp:id},{fecha:{$gte: new Date(desde)}},
+            {fecha:{$lte: new Date(hasta + "T23:59:59.000Z")}}
+        ]})
     res.send(ventaARetornar)
 }
 PresupuestoCTRL.entreFechasConCliente = async(req,res) => {
     const {idCliente,desde,hasta} = req.params;
-    console.log(req.params)
-    const VentaAretornar = await Presupuesto.find({$and:[{cliente:idCliente},{fecha:{$gte: new Date(desde)}},{fecha:{$lte: new Date(hasta)}}]})
+    const VentaAretornar = await Presupuesto.find({
+        $and:[
+            {cliente:idCliente},
+            {fecha:{$gte: new Date(desde)}},
+            {fecha:{$lte: new Date(hasta + "T23:59:59.000Z")}}
+        ]});
     res.send(VentaAretornar);
 };
 

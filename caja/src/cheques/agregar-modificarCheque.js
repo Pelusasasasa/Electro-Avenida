@@ -1,11 +1,14 @@
 const { ipcRenderer } = require('electron');
 const sweet = require('sweetalert2');
 
-const {cerrarVentana, redondear} = require('../assets/js/globales')
+const {cerrarVentana, redondear, configAxios} = require('../assets/js/globales')
 
 const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
+
+let cerrar = false;
+let bandera = false;
 
 const f_entrega = document.getElementById('f_entrega');
 const n_cheque = document.getElementById('n_cheque');
@@ -17,6 +20,7 @@ const ent_por = document.getElementById('ent_por');
 const entre_a = document.getElementById('entre_a');
 const domicilio = document.getElementById('domicilio');
 const telefono = document.getElementById('telefono');
+const propio = document.getElementById('propio');
 
 const agregar = document.querySelector('.agregar');
 const modificar = document.querySelector('.modificar');
@@ -51,13 +55,39 @@ agregar.addEventListener('click',async e=>{
     cheque.entreg_a = entre_a.value.toUpperCase();
     cheque.domicilio = domicilio.value.toUpperCase();
     cheque.telefono = telefono.value;
+    cheque.tipo = propio.checked ? "P" : "";
     
     try {
-        await axios.post(`${URL}cheques`,cheque);
-        window.close();
+        await axios.post(`${URL}cheques`,cheque,configAxios);
+        await sweet.fire({
+            title:"Otro Cheque?",
+            confirmButtonText:"Aceptar",
+            returnFocus:false,
+            showCancelButton:true
+        })
+        .then(({isConfirmed})=>{
+            if (isConfirmed) {
+                n_cheque.value = "";
+                banco.value = "";
+                plaza.value = "";
+                i_cheque.value = "";
+                domicilio.value = "";
+                telefono.value = "";
+                n_cheque.focus();    
+                bandera = true;
+            }else{
+                if (cerrar) {
+                    ipcRenderer.send('enviar-info-ventana-principal',"Cheque cargado")
+                }    
+                window.close();
+            }
+            
+        
+        });
     } catch (error) {
+        console.log(error)
     await sweet.fire({
-            title:"No se pudo agregar Cheuqe"
+            title:"No se pudo agregar Cheque"
         })
         
     }
@@ -65,19 +95,22 @@ agregar.addEventListener('click',async e=>{
 
 modificar.addEventListener('click',async e=>{
     const cheque = {};
-
-    cheque.f_recibido = f_cheque.value;
+    cheque._id = modificar.id;
+    cheque.f_recibido = f_entrega.value;
     cheque.n_cheque = n_cheque.value;
     cheque.banco = banco.value.toUpperCase();
     cheque.plaza = plaza.value.toUpperCase();
     cheque.f_cheque = f_cheque.value;
-    cheque.i_cheque = i_cheque.value;
+    cheque.i_cheque = parseFloat(i_cheque.value);
     cheque.ent_por = ent_por.value.toUpperCase();
     cheque.entreg_a = entre_a.value.toUpperCase();
     cheque.domicilio = domicilio.value.toUpperCase();
     cheque.telefono = telefono.value;
+    cheque.tipo = propio.checked ? "P" : "";
+    
     try {
-        await axios.put(`${URL}cheques/id/${modificar.id}`,cheque);
+        await axios.put(`${URL}cheques/id/${modificar.id}`,cheque,configAxios);
+        ipcRenderer.send('enviar-info-ventana-principal',cheque);
         window.close();
     } catch (error) {
         await sweet.fire({
@@ -86,14 +119,25 @@ modificar.addEventListener('click',async e=>{
     }
 });
 
-
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
     agregar.classList.add('none');
     modificar.classList.remove('none');
     modificar.id = args;
-    const cheque = (await axios.get(`${URL}cheques/id/${args}`)).data;
+    const cheque = (await axios.get(`${URL}cheques/id/${args}`,configAxios)).data;
     listarCheque(cheque)
 });
+
+//Aca hacemos que cuando queremos agregar un cheque desde cobranza y facturas se llame a la funcion
+ipcRenderer.on('informacionAgregar',cobranzaDeCheques);
+
+//La funcion lo que hace es autocompletar algunos inputs y tambien sacar el entregado a
+function cobranzaDeCheques(e,{cliente,imp,vendedor}) {
+    entre_a.parentNode.classList.add('none');
+    propio.parentNode.classList.add('none');
+
+    ent_por.value = cliente,
+    i_cheque.value = imp
+}
 
 function listarCheque(cheque) {
     const fechaEntrega = cheque.f_recibido.slice(0,10).split('-',3);
@@ -112,7 +156,14 @@ function listarCheque(cheque) {
     telefono.value = cheque.telefono;
 }
 
+ipcRenderer.on('cerrar-ventana',(e,args)=>{
+    cerrar = args;
+})
+
 salir.addEventListener('click',e=>{
+    if (cerrar && bandera) {
+        ipcRenderer.send('enviar-info-ventana-principal',"Cheque cargado")
+    }
     window.close();
 });
 
@@ -154,7 +205,11 @@ i_cheque.addEventListener('keypress',e=>{
 
 ent_por.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
-        entre_a.focus();    
+        if (entre_a.parentNode.classList.contains('none')) {
+            domicilio.focus();
+        }else{
+            entre_a.focus();
+        }
     }
 });
 

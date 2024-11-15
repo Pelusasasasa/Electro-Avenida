@@ -13,6 +13,14 @@ const Pedido = new Schema({
         type: String,
         required: false
     },
+    marca:{
+        type:String,
+        required: true
+    },
+    provedor:{
+        type:String,
+        required: true
+    },
     cantidad:{
         type: Number,
         default: 0

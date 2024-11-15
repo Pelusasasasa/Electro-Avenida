@@ -6,8 +6,8 @@ const URL = process.env.URL;
 const sweet = require('sweetalert2');
 const fs = require('fs');
 
-const { cerrarVentana, redondear } = require('../assets/js/globales');
-const personal = require('./Personal.json')
+const { cerrarVentana, redondear, configAxios } = require('../assets/js/globales');
+const { CLIENT_RENEG_LIMIT } = require('tls');
 
 const fecha = document.getElementById('fecha');
 const nro_comp = document.getElementById('nro_comp');
@@ -15,14 +15,11 @@ const rSocial = document.getElementById('rSocial');
 const concepto = document.getElementById('concepto');
 const imp = document.getElementById('imp');
 
-
-const nuevo = document.querySelector('.nuevo');
-const borrar = document.querySelector('.borrar');
 const agregar = document.querySelector('.agregar');
 const modificar = document.querySelector('.modificar');
 const salir = document.querySelector('.salir');
 
-window.addEventListener('load',e=>{
+window.addEventListener('load',async e=>{
     cerrarVentana();
     const date = new Date();
 
@@ -37,58 +34,29 @@ window.addEventListener('load',e=>{
 
     fecha.value = `${year}-${month}-${day}`;
 
-    ponerPersonal();
+    const vendedores = (await axios.get(`${URL}usuarios`,configAxios)).data;
+    ponerPersonal(vendedores);
 
 });
 
-//AGREGAMOS A LA LSITA DE PERSONAL UN ELEMENTO
-nuevo.addEventListener('click',e=>{
-    sweet.fire({
-        title: "Agregar Personal",
-        input:"text",
-        confirmButtonText:"Aceptar",
-        showCancelButton:true,
-    }).then(({isConfirmed,value})=>{
-        if (isConfirmed) {
-            if (!personal.find(elem=>elem === value.toUpperCase())) {
-                personal.push(value.toUpperCase());
-                fs.writeFile('src/vales/Personal.json',JSON.stringify(personal),(error)=>{
-                    if(error) throw error;
-                    console.log("Informacion Recibida");
-                })
-            }
-            
-        }
-    })
-});
-
-//BORRAMOS DE LA LISTA DE PERSONAL A UN ELEMENTO
-borrar.addEventListener('click',e=>{
-    const index = personal.indexOf(rSocial.value);
-    personal.splice(index,1);
-    fs.writeFile('src/vales/Personal.json',JSON.stringify(personal),(error)=>{
-        if(error) throw error;
-        console.log("Informacion Recibida");
-    })
-});
-
-const ponerPersonal = () => {
-    personal.sort((a,b)=>{
+const ponerPersonal = (lista) => {
+    lista.sort((a,b)=>{
         if (a>b) {
             return 1
         }else if(a<b){
             return -1
         }
         return 0
-    })
-    for(let elem of personal){
+    });
+
+    for(let elem of lista){
         const option = document.createElement('option');
-        option.value = elem;
-        option.text = elem;
+        option.value = elem.nombre;
+        option.text = elem.nombre;
 
         rSocial.appendChild(option);
     }
-}
+};
 
 agregar.addEventListener('click',async e=>{
     const vale = {};
@@ -101,7 +69,7 @@ agregar.addEventListener('click',async e=>{
     vale.tipo = "P";
 
     try {
-        await axios.post(`${URL}vales`,vale);
+        await axios.post(`${URL}vales`,vale,configAxios);
         window.close();
     } catch (error) {
         console.log(error)
@@ -121,7 +89,7 @@ modificar.addEventListener('click',async e=>{
     vale.tipo = "P";
 
     try {
-        await axios.put(`${URL}vales/id/${modificar.id}`,vale);
+        await axios.put(`${URL}vales/id/${modificar.id}`,vale,configAxios);
         window.close();
     } catch (error) {
         await sweet.fire({
@@ -129,7 +97,6 @@ modificar.addEventListener('click',async e=>{
         })
     }
 });
-
 
 nro_comp.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
@@ -166,7 +133,7 @@ salir.addEventListener('click',e=>{
 });
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    const vale = (await axios.get(`${URL}vales/id/${args}`)).data;
+    const vale = (await axios.get(`${URL}vales/id/${args}`,configAxios)).data;
     modificar.classList.remove('none');
     modificar.id = args;
     agregar.classList.add('none');
@@ -189,6 +156,6 @@ concepto.addEventListener('focus',e=>{
     concepto.select();
 });
 
-imp.addEventListener('focus',e=>{
-    imp.select();
-});
+// imp.addEventListener('focus',e=>{
+//     imp.select();
+// });

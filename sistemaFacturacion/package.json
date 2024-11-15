@@ -7,9 +7,13 @@
     "start": "electron-forge start",
     "dev": "nodemon src/index.js",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make",
+    "publish": "electron-forge publish"
   },
-  "repository": {},
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Pelusasasasa/Electro-Avenida.git"
+  },
   "keywords": [],
   "author": "Pelusa",
   "license": "ISC",
@@ -20,31 +24,30 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.63",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
-    "electron": "^19.0.5",
-    "gulp-autoprefixer": "^6.1.0",
+    "electron": "^24.3.0",
     "gulp-postcss": "^9.0.1",
-    "gulp-sass": "^5.0.0",
-    "gulp-sourcemaps": "^3.0.0",
-    "gulp-util": "^1.0.0",
-    "sass": "^1.44.0"
+    "gulp-sourcemaps": "^3.0.0"
   },
   "dependencies": {
-    "@afipsdk/afip.js": "^0.7.1",
-    "axios": "^0.24.0",
-    "cssnano": "^5.0.7",
+    "@afipsdk/afip.js": "^0.7.3",
+    "axios": "^1.4.0",
+    "cloudinary": "^2.1.0",
     "cuit-validator": "^1.0.0",
-    "dotenv": "^16.0.0",
+    "d3": "^7.8.5",
+    "d3-node": "^3.0.0",
+    "dotenv": "^16.0.3",
     "electron-osx-prompt": "^1.4.1",
     "electron-prompt": "^1.7.0",
-    "electron-reload": "^1.5.0",
+    "electron-reload": "^2.0.0-alpha.1",
     "electron-squirrel-startup": "^1.0.0",
-    "gulp": "^4.0.2",
-    "luxon": "^2.0.2",
+    "electron-updater": "^5.3.0",
+    "hostname-patcher": "^1.2.0",
     "node-notifier": "^10.0.1",
-    "postcss": "^8.3.6",
-    "qrcode": "^1.5.0",
-    "sweetalert2": "^11.4.17",
-    "xlsx": "^0.17.1"
+    "puppeteer": "^21.1.1",
+    "qrcode": "^1.5.3",
+    "sweetalert2": "^11.4.8",
+    "update-electron-app": "^2.0.1",
+    "xlsx": "^0.18.5"
   },
   "config": {
     "forge": {

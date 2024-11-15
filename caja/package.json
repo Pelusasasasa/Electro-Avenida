@@ -4,6 +4,10 @@
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Pelusasasasa/Electro-Avenida"
+  },
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
@@ -24,7 +28,8 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "caja"
+            "name": "caja",
+            "certificateFile": "./cert.pem"
           }
         },
         {
@@ -47,11 +52,13 @@
   "dependencies": {
     "axios": "^0.27.2",
     "dotenv": "^16.0.1",
+    "electron": "^32.1.2",
     "electron-reload": "^2.0.0-alpha.1",
     "electron-squirrel-startup": "^1.0.0",
     "material-icons": "^1.12.2",
     "node-notifier": "^10.0.1",
     "sweetalert2": "^11.4.24",
+    "update-electron-app": "^3.0.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
@@ -60,6 +67,7 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.63",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.63",
     "@electron-forge/maker-zip": "^6.0.0-beta.63",
-    "electron": "19.0.10"
+    "@electron-forge/publisher-github": "^7.4.0",
+    "electron-packager": "^17.1.2"
   }
 }

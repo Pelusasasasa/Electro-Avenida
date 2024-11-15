@@ -4,16 +4,20 @@ require('dotenv').config();
 const URL = process.env.URL;
 const sweet = require('sweetalert2');
 
-const {redondear} = require('../assets/js/globales');
+const {redondear, cerrarVentana, configAxios} = require('../assets/js/globales');
 
 const selectTarjeta = document.querySelector('#tarjeta');
 const selectVendedor = document.querySelector('#vendedor');
+const cliente = document.querySelector('#cliente');
 const fecha = document.querySelector('#fecha');
 const importe = document.querySelector('#importe');
+const tipoComprobante = document.querySelector('#tipoComprobante');
 
 const aceptar = document.querySelector('.aceptar');
 const modificar = document.querySelector('.modificar');
 const salir = document.querySelector('.salir');
+
+let cerrar = false;
 
 const hoy = new Date();
 let date = hoy.getDate();
@@ -24,17 +28,18 @@ month = month===13 ? 1 : month;
 month = month<10 ? `0${month}` : month;
 fecha.value = `${year}-${month}-${date}`;
 
+let vendedorForSelect;
 let tarjeta;
 
 window.addEventListener('load',async e=>{
-    const tipos = (await axios.get(`${URL}tipoTarjetas`)).data;
-    const usuarios = (await axios.get(`${URL}usuarios`)).data;
+    const tipos = (await axios.get(`${URL}tipoTarjetas`,configAxios)).data;
+    const usuarios = (await axios.get(`${URL}usuarios`,configAxios)).data;
     for await(let usuario of usuarios){
         const option = document.createElement('option');
         option.value = usuario.nombre;
         option.text = usuario.nombre.toUpperCase();
         selectVendedor.appendChild(option);
-        usuario.nombre === "ELBIO" && (selectVendedor.value = "ELBIO");
+        // usuario.nombre === "ELBIO" && (selectVendedor.value = "ELBIO");
     }
     for await(let tipo of tipos){
         const option = document.createElement('option');
@@ -42,16 +47,21 @@ window.addEventListener('load',async e=>{
         option.text = tipo.nombre.toUpperCase();
         selectTarjeta.appendChild(option);
     }
+
+    if(vendedorForSelect){
+        selectVendedor.value = vendedorForSelect;
+    }
     tarjeta && listarTarjeta(tarjeta);
+    selectTarjeta.value = "";
 });
 
 fecha.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-        selectTarjeta.focus();
+        cliente.focus();
     }
 });
 
-fecha.addEventListener('keypress',e=>{
+cliente.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         selectTarjeta.focus();
     }
@@ -65,6 +75,12 @@ selectTarjeta.addEventListener('keypress',e=>{
 });
 
 importe.addEventListener('keypress',e=>{
+    if (e.key === "Enter") {
+        tipoComprobante.focus();
+    }
+});
+
+tipoComprobante.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
         selectVendedor.focus();
     }
@@ -81,22 +97,33 @@ selectVendedor.addEventListener('keypress',e=>{
     }
 });
 
+ipcRenderer.on('cerrar-ventana',async(e,args)=>{
+    cerrar = args;
+});
+
 ipcRenderer.on('recibir-informacion',async(e,args)=>{
-    tarjeta = (await axios.get(`${URL}tarjetas/id/${args}`)).data;
+    tarjeta = (await axios.get(`${URL}tarjetas/id/${args}`,configAxios)).data;
     modificar.classList.remove('none');
     aceptar.classList.add('none');
     modificar.id = args;
     listarTarjeta(tarjeta)
 });
 
+ipcRenderer.on('informacionAgregar',(e,args)=>{
+    const {imp,vendedor,cliente: clienteTraido,tipo} = args;
+    cliente.value = clienteTraido;
+    importe.value = imp.toFixed(2);
+    tipoComprobante.value = tipo;
+    vendedorForSelect = vendedor;
+});
+
 const listarTarjeta = (tarjeta)=>{
-    console.log(tarjeta.fecha)
     const date = tarjeta.fecha.slice(0,10).split('-',3);
     fecha.value = `${date[0]}-${date[1]}-${date[2]}`;
     selectTarjeta.value = tarjeta.tarjeta;
-    console.log(selectTarjeta)
-    console.log(selectTarjeta.value)
+    cliente.value = tarjeta.cliente;
     importe.value = redondear(tarjeta.imp,2);
+    tipoComprobante.value = tarjeta.tipo_comp;
     selectVendedor.value = tarjeta.vendedor;
 }
 
@@ -106,11 +133,15 @@ importe.addEventListener('focus',e=>{
 
 aceptar.addEventListener('click',async e=>{
     const tarjeta = {} ;
-    const pasarFecha = (fecha.value).split('-',3);
-    tarjeta.fecha = new Date(pasarFecha[0],pasarFecha[1] - 1, pasarFecha[2],"08","24","00")
+    const now = new Date();
+    const fechaArgentina = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+    tarjeta.fecha = fechaArgentina;
     tarjeta.tarjeta = selectTarjeta.value;
-    tarjeta.imp = importe.value;
+    tarjeta.imp = importe.value = "" ? 0 : importe.value;
+    tarjeta.cliente = cliente.value.toUpperCase();
     tarjeta.vendedor = selectVendedor.value;
+    tarjeta.tipo = "Tarjeta";
+    tarjeta.tipo_comp = tipoComprobante.value;
 
     if (selectTarjeta.value  === "") {
      await sweet.fire({
@@ -126,15 +157,22 @@ aceptar.addEventListener('click',async e=>{
     importe.focus();
     }else{
         try {
-            await axios.post(`${URL}tarjetas`,tarjeta);
-            location.reload();
+            await axios.post(`${URL}tarjetas`,tarjeta,configAxios);
+            await ipcRenderer.send('enviar-info-ventana-principal',tarjeta);
+            if (cerrar) {
+                window.close();
+            }else{
+                location.reload();
+            }
+            
         } catch (error) {
             console.log(error)
             await sweet.fire({
                 title:"No se pudo cargar la tarjeta"
             });
         };
-    }
+    };
+
 });
 
 modificar.addEventListener('click',async e=>{
@@ -143,8 +181,9 @@ modificar.addEventListener('click',async e=>{
     tarjeta.tarjeta = selectTarjeta.value;
     tarjeta.imp = redondear(importe.value,2);
     tarjeta.vendedor = selectVendedor.value;
+    tarjeta.cliente = cliente.value;
     try {
-        await axios.put(`${URL}tarjetas/id/${modificar.id}`,tarjeta);
+        await axios.put(`${URL}tarjetas/id/${modificar.id}`,tarjeta,configAxios);
         window.close();
     } catch (error) {
         console.log(error)

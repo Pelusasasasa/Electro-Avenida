@@ -1,0 +1,80 @@
+h1{
+    margin: 0;
+    margin-bottom:.5rem;
+}
+
+.fechas{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.fechas main{
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+label,input{
+    font-size: 2rem;
+}
+
+.table{
+    height: 80vh;
+    border: .1rem solid black;
+    background-color: white;
+    overflow: scroll;
+}
+
+table{
+    width: 100%;
+}
+
+table thead tr th{
+    border: .1rem solid black;
+}
+
+table tbody tr td{
+    border: .1rem solid black;
+    text-align: center;
+}
+
+
+.detallesProducto{
+    bottom: 0%;
+    background-color: lightgray;
+    border: .1rem solid black;
+    
+    width: 100%;
+    left: 0;
+}
+.detallesProducto p{
+    text-align: end;
+    display: inline-block;
+    margin-right: 2rem;
+    cursor: pointer;
+    font-size: 2rem;
+    background-color: lightgray;
+    border-radius: 50%;
+    padding: 2rem;
+    position: absolute;
+    right: 0;
+    top: -35%;
+}
+
+.detallesProducto p:hover{
+    transform: scale(1.2);
+}
+
+.detalleTabla{
+    overflow: scroll;
+    height: 45vh;
+}
+
+input[type=checkbox]{
+    transform: scale(1.5);
+}
+
+input:hover{
+    cursor: pointer;
+}

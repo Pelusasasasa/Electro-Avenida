@@ -3,6 +3,7 @@ const { ipcRenderer } = require('electron/renderer');
 require('dotenv').config();
 const URL = process.env.URL;
 const sweet = require('sweetalert2');
+const { configAxios } = require('../assets/js/globales');
 
 const tbody = document.querySelector('tbody');
 const desde = document.querySelector('#desde');
@@ -29,11 +30,62 @@ window.addEventListener('load',async e=>{
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
 
-    const movimientos = (await axios.get(`${URL}movCajas`)).data;
-    listar(movimientos);
+
+    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
+    const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
+
+    movimientosPasados.sort((a,b)=>{
+        if (a.fecha > b.fecha) {
+            return 1
+        }else if(a.fecha < b.fecha){
+            return -1
+        };
+        return 0
+    });
+    
+    listar(movimientosPasados);
+});
+
+desde.addEventListener('keypress',async e=>{
+    if (e.keyCode === 13) {
+
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
+        const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
+
+        movimientosPasados.sort((a,b)=>{
+            if (a.fecha > b.fecha) {
+                return 1
+            }else if(a.fecha < b.fecha){
+                return -1
+            };
+            return 0
+        });
+
+        listar(movimientosPasados);
+        hasta.focus();
+    }
+});
+
+hasta.addEventListener('keypress',async e=>{
+    if(e.keyCode === 13){
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
+        const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
+
+        movimientosPasados.sort((a,b)=>{
+            if (a.fecha > b.fecha) {
+                return 1
+            }else if(a.fecha < b.fecha){
+                return -1
+            };
+            return 0
+        });
+
+        listar(movimientosPasados);
+    }
 });
 
 const listar = (lista)=>{
+    tbody.innerHTML = "";
     for(let mov of lista){
         const tr = document.createElement('tr');
         tr.id = mov._id;
@@ -54,7 +106,7 @@ const listar = (lista)=>{
         tdTipo.innerHTML = mov.tMov.slice(0,1);
         tdNumero.innerHTML = mov.nro_comp;
         tdDescripcion.innerHTML = mov.desc;
-        tdImporte.innerHTML = mov.imp.toFixed(2);
+        tdImporte.innerHTML = mov.imp ? mov.imp.toFixed(2) : "0.00";
         tdCuenta.innerHTML = mov.cuenta;
         tdEmpresa.innerHTML = "Electro Avenida";
         tdACciones.innerHTML = `
@@ -117,7 +169,7 @@ tbody.addEventListener('click',async e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}movCajas/id/${seleccionado.id}`);
+                    await axios.delete(`${URL}movCajas/id/${seleccionado.id}`,configAxios);
                     tbody.removeChild(seleccionado);
                 } catch (error) {
                     sweet.fire({
@@ -147,4 +199,5 @@ document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {
         location.href = '../index.html';
     }
-})
+});
+

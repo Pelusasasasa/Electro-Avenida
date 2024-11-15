@@ -10,27 +10,26 @@ const path = require('path');
 
 let html = fs.readFileSync(__dirname + '/pdf.html','utf8');
 
-
 pdfCTRL.crearPdf = async(req,res)=>{
 
     const [venta,cliente,{QR,cae,vencimientoCae,texto,numero}] = req.body;
     let trs = "";
-    if (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito") {
+    if (venta.tipo_comp === "Ticket Factura" || venta.tipo_comp === "Nota Credito" || venta.tipo_comp === "Factura A" || venta.tipo_comp === "Factura B") {
     venta.productos.forEach(({objeto,cantidad})=>{
         trs = trs + `<tr>
                             <td>${objeto._id}</td>
                             <td>${objeto.descripcion}</td>
                             <td class="izquierda">${parseFloat(cantidad).toFixed(2)}</td>
                             <td class="izquierda">${objeto.unidad}</td>
-                            ${venta.condIva !== "Inscripto" ? `<td class="izquierda">${parseFloat(objeto.precio_venta).toFixed(2)}</td>` : ""}
-                            ${(venta.condIva === "Inscripto" && objeto.iva === "N") ? `<td class="izquierda">${(parseFloat(objeto.precio_venta)/1.21).toFixed(2)}</td>` : ""}
-                            ${(venta.condIva === "Inscripto" && objeto.iva === "R") ? `<td class="izquierda">${(parseFloat(objeto.precio_venta)/1.105).toFixed(2)}</td>` : ""}
-                            ${venta.condIva !== "Inscripto" ? `<td class="izquierda">${(parseFloat(cantidad)*parseFloat(objeto.precio_venta)).toFixed(2)}</td>` : ""}
-                            ${(venta.condIva === "Inscripto" && objeto.iva === "N") ? `<td class="izquierda">${((parseFloat(cantidad)*parseFloat(objeto.precio_venta))/1.21).toFixed(2)}</td>`  : ""}
-                            ${(venta.condIva === "Inscripto" && objeto.iva === "R") ? `<td class="izquierda">${((parseFloat(cantidad)*parseFloat(objeto.precio_venta))/1.105).toFixed(2)}</td>`  : ""}
-                            ${(venta.condIva === "Inscripto" && objeto.iva === "N") ? `<td class="izquierda">21%</td>`  : "" }
-                            ${(venta.condIva === "Inscripto" && objeto.iva === "R") ? `<td class="izquierda">10.5%</td>`  : "" }
-                            ${(venta.condIva === "Inscripto") ? `<td class="izquierda">${(parseFloat(cantidad)*parseFloat(objeto.precio_venta)).toFixed(2)}</td>`  : "" }
+                            ${(venta.condIva !== "Inscripto" && venta.condIva !== "Monotributista") ? `<td class="izquierda">${parseFloat(objeto.precio_venta).toFixed(2)}</td>` : ""}
+                            ${((venta.condIva === "Inscripto" || venta.condIva === "Monotributista") && objeto.iva === "N") ? `<td class="izquierda">${(parseFloat(objeto.precio_venta)/1.21).toFixed(2)}</td>` : ""}
+                            ${((venta.condIva === "Inscripto" || venta.condIva === "Monotributista") && objeto.iva === "R") ? `<td class="izquierda">${(parseFloat(objeto.precio_venta)/1.105).toFixed(2)}</td>` : ""}
+                            ${(venta.condIva !== "Inscripto" && venta.condIva !== "Monotributista") ? `<td class="izquierda">${(parseFloat(cantidad)*parseFloat(objeto.precio_venta)).toFixed(2)}</td>` : ""}
+                            ${((venta.condIva === "Inscripto" || venta.condIva === "Monotributista") && objeto.iva === "N") ? `<td class="izquierda">${((parseFloat(cantidad)*parseFloat(objeto.precio_venta))/1.21).toFixed(2)}</td>`  : ""}
+                            ${((venta.condIva === "Inscripto" || venta.condIva === "Monotributista") && objeto.iva === "R") ? `<td class="izquierda">${((parseFloat(cantidad)*parseFloat(objeto.precio_venta))/1.105).toFixed(2)}</td>`  : ""}
+                            ${((venta.condIva === "Inscripto" || venta.condIva === "Monotributista") && objeto.iva === "N") ? `<td class="izquierda">21%</td>`  : "" }
+                            ${((venta.condIva === "Inscripto" || venta.condIva === "Monotributista") && objeto.iva === "R") ? `<td class="izquierda">10.5%</td>`  : "" }
+                            ${((venta.condIva === "Inscripto" || venta.condIva === "Monotributista")) ? `<td class="izquierda">${(parseFloat(cantidad)*parseFloat(objeto.precio_venta)).toFixed(2)}</td>`  : "" }
                        </tr>`;
         });
     }else{
@@ -38,10 +37,10 @@ pdfCTRL.crearPdf = async(req,res)=>{
             trs = trs + `<tr>
                                 <td>${ticket.fecha}</td>
                                 <td>${ticket.numero}</td>
-                                <td>${ticket.pagado}</td>
+                                <td>${parseFloat(ticket.pagado).toFixed(2)}</td>
                            </tr>`;
             });
-    }
+    };
 
     const date = new Date(venta.fecha);
     let day = date.getDate();
@@ -55,12 +54,9 @@ pdfCTRL.crearPdf = async(req,res)=>{
     const codigoComprobante = verCodigoComp(venta.cod_comp);
     const tipoCompropobante = verTipoComp(venta.cod_comp);
     
-    
-    // const qr = (await qrcode.toDataURL(QR)).split('/\r\n|\r|\n/');
     const a = await generarQR(texto);
     
     const img = (await qrcode.toDataURL(a));
-
 
     //Generamos el qr
     async function generarQR(texto) {
@@ -73,8 +69,10 @@ pdfCTRL.crearPdf = async(req,res)=>{
         textoFactura = "RECIBO";
     }else if(venta.tipo_comp === "Ticket Factura"){
         textoFactura = "FACTURA";
+    }else if(venta.tipo_comp === "Nota Credito"){
+        textoFactura = "NOTA CREDITO"
     }else{
-        textoFactura === "NOTA CREDITO"
+        textoFactura = venta.tipo_comp
     }
 
     html = html.replace('{{tipoCompropobante}}',tipoCompropobante);
@@ -85,13 +83,13 @@ pdfCTRL.crearPdf = async(req,res)=>{
     html = html.replace('{{month}}',month);
     html = html.replace('{{year}}',year);
     //cliente
-    html = html.replace('{{cliente}}',venta.nombreCliente);
+    html = html.replace('{{cliente}}',venta.tipo_comp === "Recibos" ? venta.cliente : venta.nombreCliente);
     html = venta.dnicuit.length === 8 ? html.replace('{{dniocuit}}',"DNI") : html.replace('{{dniocuit}}','CUIT');
     html = html.replace('{{dnicuit}}',venta.dnicuit);
     html = venta.condIva === "" ? html.replace('{{condIva}}',"Consumidor Final") : html.replace('{{condIva}}',venta.condIva)
-    html = html.replace('{{direccion}}',venta.direccion + "" + venta.localidad);
-    html = html.replace('{{}}',);
-    html = (venta.tipo_pago !== "CC" || venta.cliente === "M122") ? html.replace('{{condVenta}}',"Contado") : html.replace('{{condVenta}}',"Cuenta Corriente")
+    html = html.replace('{{direccion}}',venta.direccion);
+    html = html.replace('{{localidad}}',venta.localidad);
+    html = (venta.tipo_pago !== "CC" || venta.cliente === "M122" || venta.cliente === "A029") ? html.replace('{{condVenta}}',"Contado") : html.replace('{{condVenta}}',"Cuenta Corriente")
     html = html.replace('{{}}',);
 
     //encabezado
@@ -101,8 +99,20 @@ pdfCTRL.crearPdf = async(req,res)=>{
     html = venta.tipo_comp === "Recibos" ? html.replace('{{medida}}',"") : html.replace('{{medida}}',"<td>U. Medida</td>");
     html = venta.tipo_comp === "Recibos" ? html.replace('{{precioU}}',"") : html.replace('{{precioU}}',"<td>Precio Unit.</td>");
     html = venta.tipo_comp === "Recibos" ? html.replace('{{subtotal}}',"") : html.replace('{{subtotal}}',"<td>Subtotal</td>");
-    html = (venta.condIva === "Inscripto" && venta.tipo_comp === "Ticket Factura") ? html.replace('{{alicuota}}',`<td>Alicuota IVA</td>`) : html.replace('{{alicuota}}',"");
-    html = (venta.condIva === "Inscripto"  && venta.tipo_comp === "Ticket Factura") ? html.replace('{{subtotalIva}}',`<td>Subtotal c/IVA</td>`) : html.replace('{{subtotalIva}}',"");
+
+    if ((venta.condIva === "Monotributista" || venta.condIva === "Inscripto") && venta.tipo_comp !== 'Recibos') {
+        html = html.replace('{{alicuota}}',`<td>Alicuota IVA</td>`);
+    }else{
+        html = html.replace('{{alicuota}}',"");
+    };
+
+    if ((venta.condIva === "Monotributista" || venta.condIva === "Inscripto") && venta.tipo_comp !== 'Recibos'){
+        html = html.replace('{{subtotalIva}}',`<td>Subtotal c/IVA</td>`) ;
+    }else if(venta.tipo_comp !== "Recibos" && (venta.condIva !== "Monotributista" && venta.condIva !== "Inscripto")){
+        html = html.replace('{{subtotalIva}}',"");
+    }else{
+        html = html.replace('{{subtotalIva}}',"");
+    };
     
     html = html.replace('{{trs}}',trs)
 
@@ -119,28 +129,29 @@ pdfCTRL.crearPdf = async(req,res)=>{
     
 
     //totales
-    html = (venta.condIva === "Inscripto" && venta.tipo_comp === "Ticket Factura") ? html.replace('{{importeNeto}}',`<p class="IVA neto">Importe Neto Gravado: $<span>${venta.gravado21 + venta.gravado105}</span></p>`) : html.replace('{{importeNeto}}',"");
-    html = (venta.condIva === "Inscripto" && venta.tipo_comp === "Ticket Factura") ? html.replace('{{iva21}}',`<p class="IVA iva21">IVA 21%: $<span>${venta.iva21.toFixed(2)}</span></p>`) : html.replace('{{iva21}}',"");
-    html = (venta.condIva === "Inscripto" && venta.tipo_comp === "Ticket Factura") ? html.replace('{{iva105}}',`<p class="IVA iva105">IVA 10.5%: $<span>${venta.iva105.toFixed(2)}</span></p>`) : html.replace('{{iva105}}',"");
-    html = venta.condIva !== "Inscripto" ? html.replace('{{subtotal}}',`<p class="SinIVA">Subtotal: $<span>${venta.precioFinal + parseFloat(venta.descuento)}</span></p>`) : html.replace('{{subtotal}}',"");
-    html = html.replace('{{descuento}}',parseFloat(venta.descuento).toFixed(2));
-    html = html.replace('{{precioFinal}}',venta.precioFinal.toFixed(2));
+    html = ((venta.condIva === "Inscripto" || venta.condIva === "Monotributista") && (venta.tipo_comp === "Factura A" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{importeNeto}}',`<p class="IVA neto">Importe Neto Gravado: $<span>${venta.gravado21 + venta.gravado105}</span></p>`) : html.replace('{{importeNeto}}',"");
+    html = ((venta.condIva === "Inscripto" || venta.condIva === "Monotributista") && (venta.tipo_comp === "Factura A" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{iva21}}',`<p class="IVA iva21">IVA 21%: $<span>${venta.iva21.toFixed(2)}</span></p>`) : html.replace('{{iva21}}',"");
+    html = ((venta.condIva === "Inscripto" || venta.condIva === "Monotributista") && (venta.tipo_comp === "Factura A" || venta.tipo_comp === "Nota Credito")) ? html.replace('{{iva105}}',`<p class="IVA iva105">IVA 10.5%: $<span>${venta.iva105.toFixed(2)}</span></p>`) : html.replace('{{iva105}}',"");
+    html = ((venta.condIva === "Inscripto" && venta.condIva === "Monotributista")) || venta.tipo_comp === "Recibos" ? html.replace('{{subtotal}}',`<p class="SinIVA">Subtotal: $<span>${(parseFloat(venta.precioFinal) + parseFloat(venta.descuento))}</span></p>`) : html.replace('{{subtotal}}',"");
+
+    html = html.replace('{{descuento}}', venta.tipo_comp === "Recibos" ? "0.00" : parseFloat(venta.descuento));
+    html = html.replace('{{precioFinal}}',venta.precioFinal);
 
     const config = {
          "height": "10.5in", "width": "8in",  "format" : "A4", "type": "pdf", "zoomFactor": "0.65",    
         };
-        pdf.create(html,config).toFile(`pdfs/${venta.nro_comp}--${venta.nombreCliente}--${venta.tipo_comp}.pdf`,(err,res)=>{
+        pdf.create(html,config).toFile(`pdfs/${venta.nro_comp}--${venta.tipo_comp === "Recibos" ? venta.cliente : venta.nombreCliente}--${venta.tipo_comp}.pdf`,(err,res)=>{
             if (err) {
                 console.log(err);
             }else{
                 console.log(res)
+                console.log("")
+                console.log("")
             }
             html = fs.readFileSync(__dirname + '/pdf.html','utf8');
         })
         res.send("a");
-}
-
-
+};
 
 const verCodigoComp = (codigoComprobante)=>{
     if (codigoComprobante === 6) {
@@ -156,7 +167,7 @@ const verCodigoComp = (codigoComprobante)=>{
     }else if(codigoComprobante === 9){
         return "Cod: 009"
     }
-}
+};
 
 const verTipoComp = (codigo)=>{
     if(codigo === 1 || codigo === 4 ||  codigo === 3){
@@ -164,7 +175,7 @@ const verTipoComp = (codigo)=>{
     }else{
         return "B"
     }
-}
+};
 
 module.exports = pdfCTRL;
 

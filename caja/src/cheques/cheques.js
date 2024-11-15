@@ -2,6 +2,7 @@ const { ipcRenderer } = require('electron');
 const sweet = require('sweetalert2');
 
 const axios = require('axios');
+const { configAxios } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -23,21 +24,25 @@ let seleccionado;
 let subSeleccionado;
 
 window.addEventListener('load', async e =>{
-    cheques = (await axios.get(`${URL}cheques`)).data;
+    cheques = (await axios.get(`${URL}cheques`,configAxios)).data;
     listarCheques(cheques);
 });
 
 buscador.addEventListener('keyup',e=>{
-    if (porNumero.checked) {
-        const chequesFiltrados = cheques.filter(cheque=> cheque.n_cheque.startsWith(buscador.value))
-        listarCheques(chequesFiltrados)
-    }else if(porRazon.checked){
-        const chequesFiltrados = cheques.filter(cheque=> cheque.ent_por.startsWith(buscador.value.toUpperCase()));
-        listarCheques(chequesFiltrados)
+    if (buscador.value !== "") {
+        if (porNumero.checked) {
+            const chequesFiltrados = cheques.filter(cheque=> cheque.n_cheque.startsWith(buscador.value))
+            listarCheques(chequesFiltrados)
+        }else if(porRazon.checked){
+            const chequesFiltrados = cheques.filter(cheque=> cheque.ent_por.startsWith(buscador.value.toUpperCase()));
+            listarCheques(chequesFiltrados)
+        }else{
+            const chequesFiltrados = cheques.filter(cheque => cheque.i_cheque?.toString().startsWith(buscador.value));
+            listarCheques(chequesFiltrados);
+        }
     }else{
-        const chequesFiltrados = cheques.filter(cheque => cheque.i_cheque === parseFloat(buscador.value));
-        listarCheques(chequesFiltrados)
-    }
+        listarCheques(cheques);
+    };
 });
 
 agregar.addEventListener('click',async e=>{
@@ -47,9 +52,9 @@ agregar.addEventListener('click',async e=>{
         height:700,
         reinicio:true
     })
-})
+});
 
-
+//Seleccionamos cheques
 tbody.addEventListener('click',async e=>{
     seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
@@ -76,7 +81,7 @@ tbody.addEventListener('click',async e=>{
         }).then(async ({isConfirmed})=>{
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}cheques/id/${seleccionado.id}`);
+                    await axios.delete(`${URL}cheques/id/${seleccionado.id}`,configAxios);
                     tbody.removeChild(seleccionado);
                 } catch (error) {
                     console.log(error)
@@ -91,21 +96,17 @@ tbody.addEventListener('click',async e=>{
             path:"./cheques/agregar-modificarCheques.html",
             width:500,
             height:700,
-            reinicio:true,
+            reinicio:false,
             informacion: seleccionado.id
         });
     }
 });
 
-salir.addEventListener('click',async e=>{
-    location.href = "../index.html";
-});
-
 const listarCheques = async(cheques)=>{
     tbody.innerHTML = "";
-    for await(let {_id,f_recibido,n_cheque,banco,f_cheque,plaza,i_cheque,ent_por,entreg_a,domicilio,telefono} of cheques){
+    for await(let {_id,f_recibido,n_cheque,banco,f_cheque,plaza,i_cheque,ent_por,entreg_a,domicilio,telefono,tipo} of cheques){
         const fechaCorta = f_recibido.slice(0,10).split('-',3);
-        const fechaCheque = f_cheque.slice(0,10).split('-',3);
+        const fechaCheque = f_cheque ? f_cheque.slice(0,10).split('-',3) : "0000-00-00";
         
         let recibido = fechaCorta[2] + "/" + fechaCorta[1] + "/" + fechaCorta[0]
         let F_cheque = fechaCheque[2] + "/" + fechaCheque[1] + "/" + fechaCheque[0];
@@ -123,6 +124,7 @@ const listarCheques = async(cheques)=>{
         const tdEntreg_a = document.createElement('td');
         const tdDomicilio = document.createElement('td');
         const tdTelefono = document.createElement('td');
+        const tdPropio = document.createElement('td');
         const tdAcciones = document.createElement('td');
 
         tdAcciones.classList.add('acciones');
@@ -132,11 +134,12 @@ const listarCheques = async(cheques)=>{
         tdBanco.innerHTML = banco;
         tdF_cheque.innerHTML = F_cheque;
         tdPLaza.innerHTML = plaza;
-        tdImporte.innerHTML = i_cheque.toFixed(2);
+        tdImporte.innerHTML = i_cheque;
         tdEntrePor.innerHTML = ent_por;
         tdEntreg_a.innerHTML = entreg_a;
         tdDomicilio.innerHTML = domicilio;
         tdTelefono.innerHTML = telefono;
+        tdPropio.innerHTML = tipo;
 
         tdAcciones.innerHTML = `
             <div class=tool>
@@ -159,8 +162,37 @@ const listarCheques = async(cheques)=>{
         tr.appendChild(tdEntreg_a);
         tr.appendChild(tdDomicilio);
         tr.appendChild(tdTelefono);
+        tr.appendChild(tdPropio);
         tr.appendChild(tdAcciones);
 
         tbody.appendChild(tr)
     }
+};
+
+salir.addEventListener('click',async e=>{
+    location.href = "../index.html";
+});
+
+document.addEventListener('keyup',e=>{
+    if(e.keyCode === 27){
+        location.href = "../index.html";
+    }
+});
+
+ipcRenderer.on('recibir-informacion',modificarInputs);
+
+function modificarInputs(e,cheque) {
+    const tr = document.getElementById(cheque._id);
+    console.log(cheque)
+    tr.children[0].innerText = cheque.f_recibido.split('-',3).reverse().join('/');
+    tr.children[1].innerText = cheque.n_cheque;
+    tr.children[2].innerText = cheque.banco;
+    tr.children[3].innerText = cheque.plaza;
+    tr.children[4].innerText = cheque.f_cheque.split('-',3).reverse().join('/');;
+    tr.children[5].innerText = cheque.i_cheque.toFixed(2);
+    tr.children[6].innerText = cheque.ent_por;
+    tr.children[7].innerText = cheque.entreg_a;
+    tr.children[8].innerText = cheque.domicilio;
+    tr.children[9].innerText = cheque.telefono;
+    tr.children[10].innerText = cheque.tipo;
 }

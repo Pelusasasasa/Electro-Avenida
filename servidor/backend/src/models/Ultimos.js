@@ -41,7 +41,7 @@ const Ultimos = new Schema({
         type:Number,
         default:0
     },
-    ceroVeinticinco:{
+    cajaMañana:{
         type:Number,
         default:0
     },

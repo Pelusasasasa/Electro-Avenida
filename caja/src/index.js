@@ -1,13 +1,27 @@
-const { app, BrowserWindow, ipcMain, Menu } = require('electron');
+const {updateElectronApp} = require('update-electron-app');
+updateElectronApp();
+
+const { app, BrowserWindow, ipcMain, Menu,dialog } = require('electron');
 const path = require('path');
+const mostrarMenu = require('./assets/menuSecundario');
+
 
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
-let ventanaPrincipal
-let nuevaVentana
+global.ventanaPrincipal = null;
+global.nuevaVentana = null;
 
-const abrirVentana = (direccion,width,height,reinicio,informacion)=>{
+require('dotenv').config();
+// Lo usamos para cuando alla un cambio en la aplicacion se reinicie
+
+if (process.env.NODE_ENV === 'desarrollo') {
+  require('electron-reload')(__dirname, {
+      electron: path.join(__dirname, '../node_modules', '.bin', 'electron')
+  })
+};
+
+const abrirVentana = (direccion,width,height,reinicio,informacion,cerrarVentana=false,informacionAgregar)=>{
   nuevaVentana = new BrowserWindow({
     width: width,
     height: height,
@@ -22,10 +36,19 @@ const abrirVentana = (direccion,width,height,reinicio,informacion)=>{
 
   nuevaVentana.once('ready-to-show',()=>{
     nuevaVentana.show();
+
+    if (cerrarVentana) {
+      nuevaVentana.webContents.send('cerrar-ventana',cerrarVentana);
+    }
+    
     if (informacion) {
-      console.log(informacion)
       nuevaVentana.webContents.send('recibir-informacion',informacion);
     }
+
+    if(informacionAgregar){
+      nuevaVentana.webContents.send('informacionAgregar',informacionAgregar)
+    }
+
   });
 
   nuevaVentana.on('closed',()=>{
@@ -71,20 +94,44 @@ app.on('activate', () => {
 });
 
 ipcMain.on('abrir-ventana',(e,args)=>{
-  const {path,width,height,reinicio,informacion} = args;
-  abrirVentana(path,width,height,reinicio,informacion);
-}); 
+  const {path,width,height,reinicio,informacion,cerrarVentana,informacionAgregar} = args;
+  abrirVentana(path,width,height,reinicio,informacion,cerrarVentana,informacionAgregar);
+});
 
-// Lo usamos para cuando alla un cambio en la aplicacion se reinicie
-if (process.env.NODE_ENV !== 'production') {
-  require('electron-reload')(__dirname, {
-      electron: path.join(__dirname, '../node_modules', '.bin', 'electron')
+ipcMain.on('imprimirComprobantePago',(e,args)=>{
+  abrirVentana('./provedores/comprobanteDePago.html',1000,1000,false,args)
+});
+
+ipcMain.on('imprimir',(e,args)=>{
+  nuevaVentana.webContents.print({},(success,errorType)=>{
+      ventanaPrincipal.focus()
+      nuevaVentana.close();
+      nuevaVentana=null;
   })
-};
+});
+
+ipcMain.on('imprimir-libroIva',e=>{
+  const opciones = {
+    landscape:false  
+  }
+  ventanaPrincipal.webContents.print(opciones,(success,errorType)=>{
+    console.log("a")
+  })
+})
+
+
 
 ipcMain.on('enviar-info-ventana-principal',(e,args)=>{
   ventanaPrincipal.webContents.send('recibir-informacion',args);
 });
+
+ipcMain.on('mostrar-menu-secundario',(e,{ventana,x,y}) => {
+
+  e.preventDefault();
+  mostrarMenu(ventana,x,y);
+
+});
+
 
 const templateMenu = [
 
@@ -103,7 +150,6 @@ const templateMenu = [
             label:"Provedores",
             click(){
               ventanaPrincipal.loadFile(path.join(__dirname, 'datos/provedores.html'))
-              // abrirVentana("datos/provedores.html",600,500)
             }
           },
           {
@@ -130,7 +176,10 @@ const templateMenu = [
     label:"Caja",
     submenu:[
       {
-        label:"Cobranza Facturas"
+        label:"Cobranza Facturas",
+        click(){
+          ventanaPrincipal.loadFile(path.join(__dirname, 'caja/cobranzaFacturas.html'));
+        }
       },
       {
         label:"Ingreso - Egreso",
@@ -167,6 +216,12 @@ const templateMenu = [
         click(){
           ventanaPrincipal.webContents.send('fechas');
         }
+      },
+      {
+        label:"Diferencia de Caja",
+        click(){
+          abrirVentana('caja/difCaja.html',600,550)
+        }
       }
     ]
   },
@@ -176,37 +231,37 @@ const templateMenu = [
       {
         label:"Facturas A Cobrar",
         click(){
-          ventanaPrincipal.webContents.send('facturas');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'vales/facturasACobrar.html'));
         }
       },
       {
         label:"A Cobrar/Pagar",
         click(){
-          ventanaPrincipal.webContents.send('valesACobrar');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'vales/valesACobrar.html'));
         }
       },
       {
         label:"Personal",
         click(){
-          ventanaPrincipal.webContents.send('valesPersonal');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'vales/valesPersonal.html'));
         }
       },
       {
         label:"Incobrables",
         click(){
-          ventanaPrincipal.webContents.send('valesIncobrables');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'vales/valesIncobrables.html'));
         }
       },
       {
         label:"Tarjetas de Credito",
         click(){
-          ventanaPrincipal.webContents.send('tarjetas');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'tarjetas/tarjetas.html'));
         }
       },
       {
         label:"Cheques",
         click(){
-          ventanaPrincipal.webContents.send('cheques');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'cheques/cheques.html'));
         }
       },
     ]
@@ -217,19 +272,25 @@ const templateMenu = [
       {
         label:"Ingreso Facturas",
         click(){
-          ventanaPrincipal.webContents.send('ingresoFacturas');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'compras/ingresoFacturas.html'));
         }
       },
       {
         label:"Modificar Compras",
         click(){
-          ventanaPrincipal.webContents.send('modificarCompras');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'compras/modificarCompras.html'));
         }
       },
       {
         label: "De Compras",
         click(){
-          ventanaPrincipal.webContents.send('deCompras');
+          ventanaPrincipal.loadFile(path.join(__dirname, 'compras/deCompras.html'));
+        }
+      },
+      {
+        label: "Facturacion",
+        click(){
+          ventanaPrincipal.loadFile(path.join(__dirname, 'compras/facturacion.html'));
         }
       }
     ]
@@ -240,13 +301,25 @@ const templateMenu = [
       {
         label:"Emitir Pago",
         click(){
-          ventanaPrincipal.webContents.send('emitirPago')
+          ventanaPrincipal.loadFile(path.join(__dirname, 'provedores/emitirPago.html'));
         }
       },
       {
         label:"Ingresar Varios",
         click(){
           abrirVentana('provedores/ingresarVarios.html',400,500)
+        }
+      },
+      {
+        label:"Cuenta Corriente",
+        click(){
+          abrirVentana('provedores/cuentaCorriente.html',1200,1000)
+        }
+      },
+      {
+        label:"Reordenar Saldo",
+        click(){
+          ventanaPrincipal.webContents.send('reordenarSaldo');
         }
       }
     ]
@@ -255,7 +328,15 @@ const templateMenu = [
     label:"Bancos",
     submenu:[
       {
-        label:"Cheques No Cobrados"
+        label:"Cheques No Cobrados",
+        click(){
+          abrirVentana("bancos/chequesNoCobrados.html",1000,1000)
+        }
+      },{
+        label:"Ingresar Pago Cheques Propios",
+        click(){
+          abrirVentana("bancos/ingresarPagoCheques.html",600,400)
+        }
       }
     ]
   },
@@ -271,3 +352,7 @@ const templateMenu = [
 const mainMenu = Menu.buildFromTemplate(templateMenu);
 Menu.setApplicationMenu(mainMenu);
 
+ipcMain.handle('elegirPath',async (e,args)=>{
+  const path = (await dialog.showSaveDialog()).filePath;
+  return path;
+});

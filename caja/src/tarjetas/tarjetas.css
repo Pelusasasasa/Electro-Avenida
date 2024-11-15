@@ -15,6 +15,12 @@
     font-size: 1.5rem;
 }
 
+
+#hoy{
+    margin-top: 1.5rem;
+    transform: scale(2);
+}
+
 .encabezado input{
     padding: .5rem;
     font-size: 1.5rem;
@@ -30,7 +36,7 @@ table{
     border-collapse: collapse;
 }
 
-table input{
+table input:not(.eliminarVarios){
     width: 100%;
     height: 100%;
     font-size: 1.5rem;
@@ -38,6 +44,16 @@ table input{
     font-weight: bold;
     color: black;
 }
+
+.divEliminarVarios{
+    display: flex;
+    justify-content: center;
+}
+
+.eliminarVarios{
+    transform: scale(1.9);
+}
+
 table tr:hover{
     cursor: pointer;
 }
@@ -66,6 +82,10 @@ thead th{
 
 .agregarTarjeta main{
     padding: 1rem;
+}
+
+.agregarTarjeta .inputs main input,.agregarTarjeta .inputs main select{
+    width: 70%;
 }
 
 .agregarTarjeta input,.agregarTarjeta select{

@@ -30,17 +30,23 @@ movProductosCTRL.cargarMovimientoProducto = async(req,res)=>{
         id = id + 1;
         const nuevoMovimiento = new movProducto(movimiento);
         await nuevoMovimiento.save();
-        console.log(`Movimiento con el id: ${movimiento._id} --- ${movimiento.descripcion} Cargado`);
+        console.log(`Movimiento del producto ${movimiento.descripcion} Cargado por el vendedor ${movimiento.vendedor} de la maquina ${movimiento.maquina} con la fecha y hora ${(new Date()).toLocaleString()}`);
     }
     res.send("movimientos guardado");
-}
-
+};
 
 movProductosCTRL.traerMoviemientoPorNumeroYTipo = async(req,res)=>{
     const {numero,tipo} = req.params;
     const movimientos = await movProducto.find({nro_comp:numero,tipo_comp:tipo});
     res.send(movimientos);
-}
+};
+
+movProductosCTRL.traerMoviemientoPorNumeroTipoYCliente = async(req,res)=>{
+    const {numero,tipo,cliente} = req.params;
+    const movimientos = await movProducto.find({nro_comp:numero,tipo_comp:tipo,codCliente:cliente});
+    res.send(movimientos);
+
+};
 
 movProductosCTRL.modificarMovimiento = async(req,res)=>{
     const {id} = req.params;
@@ -52,14 +58,24 @@ movProductosCTRL.modificarMovimiento = async(req,res)=>{
 
 movProductosCTRL.getsForRubro = async(req,res)=>{
     const {rubro,desde,hasta} = req.params;
-    const diaSiguiente = new Date(hasta.slice(0,15));
-    console.log(hasta)
     const movimientos = await movProducto.find({$and:[
         {rubro:rubro},
-        {fecha:{$gte:desde}},
-        {fecha:{$lte:diaSiguiente}}
+        {fecha:{$gte:new Date(desde + "T00:00:00.000Z")}},
+        {fecha:{$lte:new Date(hasta + "T23:59:59.000Z")}}
     ]});
     res.send(movimientos)
-}
+};
+
+movProductosCTRL.getsForDate = async(req, res) => {
+    const {desde, hasta} = req.params;
+    const movs = await movProducto.find({
+        $and:[
+            {fecha:{$gte:new Date(desde + "T00:00:00.000Z")}},
+            {fecha:{$lte:new Date(hasta + "T23:59:59.000Z")}}
+        ]
+    });
+
+    res.send(movs);
+};
 
 module.exports = movProductosCTRL

@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { ipcRenderer } = require('electron/renderer');
-const { cerrarVentana, copiar, redondear } = require('../assets/js/globales');
+const { cerrarVentana, copiar, configAxios } = require('../assets/js/globales');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -38,13 +38,10 @@ window.addEventListener('load',async e=>{
     
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
-
 });
 
 select.addEventListener('change',async e=>{
-    let nextDay = new Date(hasta.value);
-    nextDay.setDate(today.getDate() + 1);
-    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data
+    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${hasta.value}/${select.value}`,configAxios)).data
     listar(ingresos);
 });
 
@@ -59,14 +56,13 @@ const listarRubros = async(cuentasConTipo)=>{
     let nextDay = new Date(hasta.value);
     nextDay.setDate(today.getDate() + 1);
 
-    const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data;
-    
+    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${nextDay}/${select.value}`,configAxios)).data;
     listar(ingresos.filter(ingreso => ingreso.tMov === tipo))
 }
 
 const listar = async(lista)=>{
-    console.log(lista)
-    const listaOrdenada = lista.sort((a,b)=>{//la usamos para ordenar la lsita
+    const listaOrdenada = lista.filter(elem=>elem.tMov === tipo);
+    listaOrdenada.sort((a,b)=>{//la usamos para ordenar la lsita
         if (a.idCuenta>b.idCuenta) {
             return 1
         }else if(a.idCuenta<b.idCuenta){
@@ -121,30 +117,16 @@ const listar = async(lista)=>{
         const tdNumero = document.createElement('td');
         const tdDescripcion = document.createElement('td');
         const tdImporte = document.createElement('td');
-        const tdAcciones = document.createElement('td');
-
-        tdAcciones.classList.add('acciones');
         
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         tdNumero.innerHTML = elem.nro_comp;
         tdDescripcion.innerHTML = elem.desc;
         tdImporte.innerHTML = elem.imp.toFixed(2);
-        tdAcciones.innerHTML = `
-            <div class=tool>
-                <span class=material-icons>edit</span>
-                <p class=tooltip>Modificar</p>
-            </div>
-            <div class=tool>
-                <span class=material-icons>delete</span>
-                <p class=tooltip>Eliminar</p>
-            </div>
-        `
 
         tr.appendChild(tdFecha);
         tr.appendChild(tdNumero);
         tr.appendChild(tdDescripcion);
         tr.appendChild(tdImporte);
-        tr.appendChild(tdAcciones);
 
         tdImporte.classList.add('text-right');
 
@@ -163,19 +145,19 @@ select.addEventListener('keypress',e=>{
     }
 });
 
-desde.addEventListener('keypress',e=>{
-    if (e.keyCode === 13) {
-        hasta.focus();
-    }
+desde.addEventListener('keypress',async e=>{
+    const fecha = hasta.value.split('-',3);
+    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${hasta.value}/${select.value}`,configAxios)).data
+    listar(ingresos);
 });
 
-hasta.addEventListener('keypress',async e=>{
-    if (e.keyCode === 13) {
-        let nextDay = new Date(hasta.value);
-        nextDay.setDate(today.getDate() + 1);
-        const ingresos = (await axios.get(`${URL}movCajas/${desde.value}/${nextDay}/${select.value}`)).data
+hasta.addEventListener('change',async e=>{
+        const fecha = hasta.value.split('-',3);
+        let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
+        nextDay.setDate(nextDay.getDate() + 1);
+
+        const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${nextDay}/${select.value}`,configAxios)).data
         listar(ingresos);
-    }
 });
 
 //cuando hacemos click en la tabla seleccioonamos el tr y subseleccionamos el td
@@ -197,28 +179,10 @@ tbody.addEventListener('click',e=>{
 
     seleccionado.classList.add('seleccionado');
     subSeleccionado.classList.add('subSeleccionado');
-
-
-    if (e.target.innerHTML === "delete") {
-        sweet.fire({
-            title:"Eliminar Movimiento Caja",
-            confirmButtonText:"Aceptar",
-            showCancelButton:true,
-        }).then(async ({isConfirmed})=>{
-            if (isConfirmed) {
-                await axios.delete(`${URL}movCajas/id/${seleccionado.id}`);
-                tbody.removeChild(seleccionado);
-                totalInput.value = redondear(parseFloat(totalInput.value) - parseFloat(seleccionado.children[3].innerHTML),2);
-            }
-        });
-    }else if(e.target.innerHTML === "edit"){
-        location.href = `./movCaja.html?informacion=${seleccionado.id}`;
-    }
-
 });
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    cuentas = (await axios.get(`${URL}cuentas`)).data;
+    cuentas = (await axios.get(`${URL}cuentas`,configAxios)).data;
     tipo = args;
     if (tipo === "I") {
         titulo.innerHTML = "Ingreso de Caja";
@@ -229,3 +193,9 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
     }
     listarRubros(cuentasConTipo)
 });
+
+desde.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
+        hasta.focus();
+    }
+})

@@ -60,14 +60,32 @@ button:hover{
   background-color: rgb(0, 112, 112) !important;
 }
 
+tbody tr:hover{
+  cursor: pointer;
+  background-color: gray;
+}
+
 .acciones{
   display: flex;
   justify-content: space-around;
 }
 
+.tool{
+  width: 50%;
+  position: relative;
+  /* color: blue; */
+}
+
+.tool span{
+  width: 100%;
+  text-align: center;
+}
+
 .tooltip{
   position: absolute;
   border: .1rem solid black;
+  right: 4.5rem;
+  top: -1rem;
   background-color: gray;
   color: white;
 }

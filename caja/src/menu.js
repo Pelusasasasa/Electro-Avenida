@@ -3,18 +3,80 @@ const sweet = require('sweetalert2');
 
 
 const axios = require('axios');
+const { redondear, configAxios } = require("./assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
+const ingresarFacturas = document.querySelector('.ingresarFacturas');
+const emitirPago = document.querySelector('.emitirPago');
+const cuentaCorriente = document.querySelector('.cuentaCorriente');
 const cheques = document.querySelector('.cheques');
 const tarjetas = document.querySelector('.tarjetas');
+const cajaGeneral = document.querySelector('.cajaGeneral');
 
-document.addEventListener('click',e=>{
-    if (e.target.nodeName === "MAIN") {
-        window.location = `${e.target.className}/${e.target.className}.html`;
-    }else if(e.target.nodeName === "H1"){
-        window.location = `${e.target.parentNode.className}/${e.target.parentNode.className}.html`;
-    }
+document.addEventListener('keyup',e=>{
+    if (e.keyCode === 112) {
+        location.href = 'compras/ingresoFacturas.html';
+    }else if(e.keyCode === 113){
+        location.href = 'provedores/emitirPago.html';
+    }else if(e.keyCode === 114){
+        const options = {
+            path:"provedores/cuentaCorriente.html",
+            width:1200,
+            height:1000
+        };
+    
+        ipcRenderer.send('abrir-ventana',options);
+    }else if(e.keyCode === 115){
+        location.href = 'cheques/cheques.html';
+    }else if(e.keyCode === 116){
+        location.href = 'tarjetas/tarjetas.html';
+    }else if(e.keyCode === 117){
+        const options = {
+            path: "caja/informeCaja.html",
+            width:1200,
+            height:1200
+        };
+    
+        ipcRenderer.send('abrir-ventana',options);
+    };
+
+});
+
+ingresarFacturas.addEventListener('click',()=>{
+    location.href = 'compras/ingresoFacturas.html';
+});
+
+emitirPago.addEventListener('click',()=>{
+    location.href = 'provedores/emitirPago.html';
+});
+
+cuentaCorriente.addEventListener('click',()=>{
+    const options = {
+        path:"provedores/cuentaCorriente.html",
+        width:1200,
+        height:1000
+    };
+
+    ipcRenderer.send('abrir-ventana',options);
+});
+
+cheques.addEventListener('click',e=>{
+    location.href = 'cheques/cheques.html';
+});
+
+tarjetas.addEventListener('click',e=>{
+    location.href = 'tarjetas/tarjetas.html';
+});
+
+cajaGeneral.addEventListener('click',e=>{
+    const options = {
+        path: "caja/informeCaja.html",
+        width:1200,
+        height:1200
+    };
+
+    ipcRenderer.send('abrir-ventana',options);
 });
 
 ipcRenderer.on('fechas',async e=>{
@@ -48,6 +110,7 @@ ipcRenderer.on('fechas',async e=>{
     fechaHoy('hasta')
     primeroDelMes('desde')
 });
+
 ipcRenderer.on('fecha',(e,args)=>{
     sweet.fire({
         html:"<input id='fecha' type='date'>",
@@ -68,23 +131,26 @@ ipcRenderer.on('fecha',(e,args)=>{
 });
 
 ipcRenderer.on('saldoInicial',async (e,args)=>{
-    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
+    const numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
     const saldo = numeros["saldo Inicial"];
     sweet.fire({
-        // html:"<input id='saldoInicial' type:number>",
         title:"Saldo Inicial",
-        input:"number",
-        inputValue:`${saldo.toFixed(2)}`,
+        html:`<input id='saldoInicial' value=${saldo} type:number>`,
         confirmButtonText:"Guardar",
         showCancelButton:true,
     }).then(async ({isConfirmed,value})=>{
-        if (isConfirmed && parseFloat(value) !== saldo) {
-            numeros["saldo Inicial"] = value
-            await axios.put(`${URL}tipoVenta`,numeros)
+        const saldoNuevo = parseFloat(document.getElementById('saldoInicial').value)
+        if (isConfirmed && saldoNuevo !== saldo) {
+            numeros["saldo Inicial"] = saldoNuevo
+            try {
+                console.log(numeros)
+                await axios.put(`${URL}tipoVenta`,numeros,configAxios)
+            } catch (error) {
+                console.log(error)
+            }
         }
     });
 });
-
 
 const fechaHoy = (id)=>{
     const input = document.getElementById(id);
@@ -115,56 +181,83 @@ const primeroDelMes = (id)=>{
 }
 
 ipcRenderer.on('modificar',async e=>{
+    await reingresarContraseña();
+});
+
+ipcRenderer.on('reordenarSaldo',async e=>{
+    let select = "";
+    const provedores = (await axios.get(`${URL}provedor`,configAxios)).data;
+    provedores.sort((a,b)=>{
+        if (a.provedor>b.provedor) {
+            return 1
+        }else if(a.provedor < b.provedor){
+            return -1
+        }
+        return 0
+    });
+    for(let provedor of provedores){
+        const option = document.createElement('option');
+        option.value = provedor._id;
+        option.text = provedor.provedor;
+        select += `<option value="${provedor.codigo}">${provedor.provedor}</option>`;
+    }
+    await sweet.fire({
+        title:"Provedores",
+        html:`
+            <select name="provedores" autofocus id="provedores">
+            ${select}
+            </select>
+        `,
+        showCancelButton:true,
+        confirmButtonText:"Aceptar",
+    }).then(async({isConfirmed})=>{
+        if (isConfirmed) {
+            reodernarSaldos();
+        }
+    });
+});
+
+const reingresarContraseña = async()=>{ 
+    let retorno = false
     await sweet.fire({
         title:"Contraseña",
         input:"password",
         confirmButtonText:"Aceptar",
         showCancelButton:true
-    }).then(({isConfirmed,value})=>{
+    }).then(async({isConfirmed,value})=>{
         if (isConfirmed && value === "54321") {
-            location.href = 'caja/modificar.html'
+            location.href = './caja/modificar.html';
+        }else if(isConfirmed && value !== "54321"){
+            await sweet.fire({
+                title:"Contraseña Incorrecta"
+            })
+            reingresarContraseña();
         }
-    })
-});
+    });
+};
 
-ipcRenderer.on('facturas',(e,args)=>{
-    location.href = "vales/facturasACobrar.html";
-});
+async function reodernarSaldos(){
+    const codigo = document.getElementById('provedores').value;
+    const cuentas = (await axios.get(`${URL}ctactePro/codigo/${codigo}`,configAxios)).data;
 
-ipcRenderer.on('valesACobrar',(e,args)=>{
-    location.href = "vales/valesACobrar.html";
-});
-
-ipcRenderer.on('valesPersonal',(e,args)=>{
-    location.href = "vales/valesPersonal.html";
-});
-
-ipcRenderer.on('valesIncobrables',(e,args)=>{
-    location.href = "vales/valesIncobrables.html";
-});
-
-ipcRenderer.on('tarjetas',(e,args)=>{
-    location.href = "tarjetas/tarjetas.html";
-});
-
-ipcRenderer.on('cheques',(e,args)=>{
-    location.href = "cheques/cheques.html";
-});
-
-ipcRenderer.on('ingresoFacturas',(e,args)=>{
-    location.href = "compras/ingresoFacturas.html";
-});
-
-ipcRenderer.on('modificarCompras',(e,args)=>{
-    location.href = "compras/modificarCompras.html";
-});
-
-ipcRenderer.on('deCompras',(e,args)=>{
-    location.href = "compras/deCompras.html";
-});
-
-ipcRenderer.on('emitirPago',(e,args)=>{
-    location.href = "provedores/emitirPago.html";
-});
-
-
+    cuentas.sort((a,b)=>{
+        if (a.fecha>b.fecha) {
+            return 1
+        }else if (a.fecha<b.fecha) {
+            return -1
+        }
+        return 0
+    });
+    let saldo = 0;
+    
+    for await(let cuenta of cuentas){
+        saldo =  parseFloat(redondear(saldo + cuenta.debe,2));
+        saldo = parseFloat(redondear(saldo - cuenta.haber,2));
+        cuenta.saldo = saldo;
+        await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta,configAxios);
+    };
+    sweet.fire({
+        title:"Saldo reodenado",
+        icon:"success"
+    });
+}

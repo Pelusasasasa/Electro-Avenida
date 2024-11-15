@@ -101,6 +101,11 @@
             padding: 2rem;
         }
 
+        .importeTotal{
+            font-size: 1.6rem;
+            font-weight: bold;
+        }
+
         img{
             width: 60%;
         }
@@ -143,6 +148,7 @@
         </section>
         <section class="condicion">
             <p>Condicion de Venta:<span>{{condVenta}}</span></p>
+            <p>Localidad: <span>{{localidad}}</span></p>
         </section>
     </main>
     <main class="productos">
@@ -176,10 +182,10 @@
 
         <div>
             {{importeNeto}}
+            <p>Descuento:$ <span>{{descuento}}</span></p>
+            {{subtotal}}
             {{iva21}}
             {{iva105}}
-            {{subtotal}}
-            <p>Descuento:$ <span>{{descuento}}</span></p>
             <p class='importeTotal'>Importe Total: $      <span>{{precioFinal}}</span></p>
         </div>
     </main>

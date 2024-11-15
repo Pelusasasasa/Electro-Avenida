@@ -12,7 +12,7 @@
     <section class="provedor">
         <main>
             <label for="provedor">Provedor</label>
-            <input type="text" name="provedor" id="provedor">
+            <input type="text" autofocus name="provedor" id="provedor">
         </main>
 
         <main>
@@ -47,16 +47,24 @@
         <legend>Tipo Comprobante</legend>
         <fieldset>
             <main>
-                <label for="factura">Factura</label>
+                <label for="Factura">Factura</label>
                 <input type="radio" name="tipoComprobante" id="Factura">
             </main>
             <main>
-                <label for="notaCredito">Nota Credito</label>
+                <label for="Nota Credito">Nota Credito</label>
                 <input type="radio" name="tipoComprobante" id="Nota Credito">
             </main>
             <main>
-                <label for="presupuesto">Presupuesto</label>
+                <label for="Presupuesto">Presupuesto</label>
                 <input type="radio" name="tipoComprobante" id="Presupuesto">
+            </main>
+            <main>
+                <label for="Debito">Debito</label>
+                <input type="radio" name="tipoComprobante" id="Debito">
+            </main>
+            <main>
+                <label for="Ret/Pres">Ret/Pres</label>
+                <input type="radio" name="tipoComprobante" id="Ret/Pres">
             </main>
         </fieldset>
     </section>
@@ -68,14 +76,6 @@
         <main>
             <label for="fechaImput">Fecha Imput</label>
             <input type="month" name="fechaImput" id="fechaImput">
-        </main>
-        <main>
-            <label for="fechaVencimiento">Fecha Vencimi.</label>
-            <input type="date" name="fechaVencimiento" id="fechaVencimiento">
-        </main>
-        <main>
-            <label for="fechaVencimientoCAI">Fecha Vencim. C.A.I.</label>
-            <input type="date" name="fechaVencimientoCAI" id="fechaVencimientoCAI">
         </main>
     </section>
     <section class="valores">
@@ -147,7 +147,7 @@
         </main>
     </section>
     <section class="botones">
-        <button class="aceptar">Aceptar</button>
+        <button class="none aceptar">Aceptar</button>
         <button class="modificar none">Modificar</button>
         <button class="cancelar">Cancelar</button>
     </section>

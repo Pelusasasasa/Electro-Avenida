@@ -5,11 +5,11 @@ const movProducto = new Schema({
     _id: Number,
     codCliente:{
         type: String,
-        default: ""
+        default: "9999"
     },
     cliente:{
         type: String,   
-        default: ""
+        default: "A CONSUMIDOR FINAL"
     },
     codProd: {
         type: String,
@@ -39,6 +39,10 @@ const movProducto = new Schema({
     tipo_pago:{
         type:String,
         default:""
+    },
+    iva:{
+        type:String,
+        default:"N"
     },
     stock:Number,
     precio_unitario: {

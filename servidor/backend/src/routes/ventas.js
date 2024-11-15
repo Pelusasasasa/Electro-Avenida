@@ -2,7 +2,7 @@ const {Router} = require("express");
 const { get } = require("express/lib/response");
 const router = Router();
 
-const {cargarVenta,traerVentas,modificarVentas,entreFechas,entreFechasConId,eliminarVenta,traerTicket,entreFechasConCliente,traerVentaUnica} = require("../controllers/ventas.controllers")
+const {cargarVenta,traerVentas,modificarVentas,entreFechas,entreFechasConId,eliminarVenta,traerTicket,entreFechasConCliente,traerVentaUnica, getVentasForMonth} = require("../controllers/ventas.controllers")
 
 router.route('/')
     .post(cargarVenta)
@@ -11,6 +11,9 @@ router.route('/:id')
     .get(traerVentas)
     .put(modificarVentas)
     .delete(eliminarVenta)
+
+router.route('/forMonthAndYear/:month/:year')
+    .get(getVentasForMonth)
 
 router.route('/:desde/:hasta')
     .get(entreFechas)
@@ -26,5 +29,6 @@ router.route('/cliente/:idCliente/:desde/:hasta')
 
 router.route('/venta/ventaUnica/:numero/:tipo')
     .get(traerVentaUnica)
+
 
 module.exports = router

@@ -5,7 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Informe por Comprobante</title>
-    <link rel="stylesheet" href="../../build/css/app.css" />
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./listados.css">
   </head>
   <body class="porComprobante">
     <div class="buscador">
@@ -22,6 +23,7 @@
     <div class="elegir">
       <button class="cteCorriente">Cuenta Corriente</button>
       <button class="contado">Contado</button>
+      <button class="imprimir">Imprimir</button>
     </div>
 
     <div class="listar">
@@ -42,6 +44,10 @@
         </thead>
         <tbody class="tbody"></tbody>
       </table>
+    </div>
+    <div class="alerta none">
+      <div class="spinner"></div>
+      <p>Cargando Ventas</p>
     </div>
     <script src="./porComprobante.js"></script>
   </body>

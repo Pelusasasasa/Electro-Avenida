@@ -5,8 +5,7 @@ function getParameterByName(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
-
-const {alerta} = require('../assets/js/globales');
+const {alerta, configAxios} = require('../assets/js/globales');
 const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
@@ -34,6 +33,8 @@ date = date<10 ? `0${date}` : date;
 month = month===13 ? 1 : month;
 month = month<10 ? `0${month}` : month;
 
+let cuentas;
+
 
 inputFecha.value = `${year}-${month}-${date}`;
 
@@ -57,8 +58,8 @@ numero.addEventListener('keypress',e=>{
 
 tipoMovimiento.addEventListener('keypress',e=>{
     if (e.key === "Enter") {
-     e.preventDefault();
-     tipoCuenta.focus();
+        e.preventDefault();
+        tipoCuenta.focus();
     }
 });
 
@@ -97,26 +98,15 @@ descripcion.addEventListener('focus',e=>{
     descripcion.select();
 });
 
-importe.addEventListener('focus',e=>{
-    importe.select();
-});
-
 window.addEventListener('load',async e=>{
     const informacion = getParameterByName("informacion");
-    let movimiento;
     if (informacion) {
         aceptar.classList.add('none');
         modificar.classList.remove('none');
     }
-    const cuentas = (await axios.get(`${URL}cuentas`)).data;
-    for(let cuenta of cuentas){
-        const option = document.createElement('option');
-        option.text = cuenta.desc;
-        option.value = cuenta.cod;
-        tipoCuenta.appendChild(option);
-    }
+    cuentas = (await axios.get(`${URL}cuentas`,configAxios)).data;
+    rellenarSelect(cuentas);
 });
-
 
 aceptar.addEventListener('click',async e=>{
     if (tipoMovimiento.value === "") {
@@ -135,9 +125,11 @@ aceptar.addEventListener('click',async e=>{
         movimientoCaja.desc = descripcion.value.toUpperCase();
         movimientoCaja.tMov = tipoMovimiento.value;
         movimientoCaja.nro_comp = punto.value.padStart(4,'0') + "-" + numero.value.padStart(8,'0');
+        movimientoCaja.pasado = true;
         try {
-            await axios.post(`${URL}movCajas`,movimientoCaja);
-            window.close();
+            await axios.post(`${URL}movCajas`,movimientoCaja,configAxios);
+            // window.close();
+            location.reload();
         } catch (error) {
             alerta("No se pudo cargar el movimiento")
         }
@@ -147,14 +139,14 @@ aceptar.addEventListener('click',async e=>{
 modificar.addEventListener('click',async e=>{
     const movimiento = {};
     movimiento.fecha = fecha.value;
-    movimiento.nro_comp = `${punto.value.padStart(4,'0')} - ${numero.value.padStart(8,'0')}`;
+    movimiento.nro_comp =  punto.value.padStart(4,'0') + "-" + numero.value.padStart(8,'0');
     movimiento.tMov = tipoMovimiento.value;
     movimiento.idCuenta = tipoCuenta.value;
-    movimiento.cuenta = tipoCuenta.innerText;
+    movimiento.cuenta = document.querySelector('option[value = ' + tipoCuenta.value + ']').innerHTML;
     movimiento.desc = descripcion.value.toUpperCase();
     movimiento.imp = importe.value;
     try {
-        await axios.put(`${URL}movCajas/id/${modificar.id}`,movimiento);
+        await axios.put(`${URL}movCajas/id/${modificar.id}`,movimiento,configAxios);
         window.close();
     } catch (error) {
         sweet.fire({
@@ -162,7 +154,7 @@ modificar.addEventListener('click',async e=>{
         });
         console.log(error)
     }
-})
+});
 
 document.addEventListener('keyup',e=>{
     if (e.keyCode === 27) {
@@ -183,12 +175,28 @@ const listarMovimiento = (movimiento)=>{
     tipoCuenta.value = movimiento.idCuenta;
     descripcion.value = movimiento.desc;
     importe.value = movimiento.imp.toFixed(2);
-}
+};
 
 ipcRenderer.on('recibir-informacion',async (e,args)=>{
     aceptar.classList.add('none');
     modificar.classList.remove('none')
     modificar.id = args
-    movimiento = (await axios.get(`${URL}movCajas/id/${args}`)).data;
+    movimiento = (await axios.get(`${URL}movCajas/id/${args}`,configAxios)).data;
     listarMovimiento(movimiento);
-})
+});
+
+tipoCuenta.addEventListener('focus',e=>{
+    const aux = cuentas.filter(cuenta=>cuenta.tipo === tipoMovimiento.value);
+    console.log(aux)
+    rellenarSelect(aux)
+});
+
+const rellenarSelect = (lista)=>{
+    tipoCuenta.innerHTML = "";
+    for(let cuenta of lista){
+        const option = document.createElement('option');
+        option.text = cuenta.desc;
+        option.value = cuenta.cod;
+        tipoCuenta.appendChild(option);
+    }
+}
