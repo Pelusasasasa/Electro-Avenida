@@ -1,0 +1,20 @@
+{
+  "name": "mercadolibre",
+  "version": "0.0.1",
+  "description": "Aplicacion de electron y react para manejar mercado libre con el sistema",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "keywords": [
+    "react",
+    "electronjs",
+    "tailwindcss"
+  ],
+  "author": "Agustin",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^33.2.0"
+  }
+}
