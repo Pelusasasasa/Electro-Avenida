@@ -7,7 +7,13 @@ const createMainWindow = () => {
     const mainWindow = new BrowserWindow({
         title: 'Mercado Libre',
         width: 1000,
-        height: 600
+        height: 600,
+
+        webPreferences:{
+            contextIsolation: true,
+            nodeIntegration: true,
+            preload: path.join(__dirname, 'preload.js')
+        }
     });
 
 
