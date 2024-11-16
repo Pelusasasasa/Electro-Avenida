@@ -10,13 +10,16 @@ const createMainWindow = () => {
         height: 600
     });
 
+
+    mainWindow.webContents.openDevTools();
+
     const startURL = url.format({
-        pathname: path.join(__dirname, 'index.html'),
+        pathname: path.join(__dirname, './app/build/index.html'),
         protocol: 'file'
     });
 
     //Cargamos la url del domuneot html que se va acargar
-    mainWindow.loadURL(startURL);
+    mainWindow.loadURL("http://localhost:3000");
 
 };
 
