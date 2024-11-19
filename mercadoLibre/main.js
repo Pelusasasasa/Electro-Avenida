@@ -2,6 +2,12 @@ const { app, BrowserWindow } = require("electron");
 const url = require('url');
 const path = require('path');
 
+require('electron-reload')(path.join(__dirname), {
+  electron: path.join(__dirname, 'node_modules', '.bin', 'electron'),
+  ignored: /node_modules|[\/\\]\./
+});
+
+
 //Funcion para crear la ventana principal del proyecto
 const createMainWindow = () => {
     const mainWindow = new BrowserWindow({

@@ -1,7 +1,31 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import swal from 'sweetalert2';
 
 import { Button } from "../../components/Button";
+import { getPublicaciones } from "../../store/publicacones";
+import { PublicacionItem } from "../components/PublicacionItem";
+import { Modal } from "../components/Modal";
+import { closeModal, openModal } from "../../store/ui/uiSlice";
 
 export const ListPublicaciones = () => {
+
+  const { active, publicaciones } = useSelector( state => state.publicaciones);
+  const { isOpenModal } = useSelector(state => state.ui);
+
+  const dispatch = useDispatch();
+
+  //Sirve para traer las publicaciones por primera vez
+  useEffect(() => {
+    dispatch(getPublicaciones())
+  }, []);
+
+  const modificar = async(e) => {
+    
+    if (!active.codigoML) return await swal.fire('Seleccionar publicacion a modificar');
+
+    dispatch( openModal() );
+  }
 
   // const electron = (window).electron;
   return (
@@ -23,16 +47,22 @@ export const ListPublicaciones = () => {
             </tr>
           </thead>
           <tbody>
-
+            {
+              publicaciones.map((elem, index) => (
+                <PublicacionItem {...elem} index={index} key={elem._id} />
+              ))
+            }
           </tbody>
         </table>
       </div>
 
       <section className="flex justify-around pt-2">
         <Button text='Agregar'/>
-        <Button text='Modificar'/>
+        <Button text='Modificar' funcion={modificar}/>
         <Button text='Salir'/>
       </section>
+
+      {isOpenModal && <Modal closeModal={closeModal} type={'put'} precioML={active.precioML} stockML={active.stockML}/>}
     </div>
   )
 }

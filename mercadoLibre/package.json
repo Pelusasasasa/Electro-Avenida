@@ -18,5 +18,8 @@
   "license": "MIT",
   "dependencies": {
     "electron": "^33.2.0"
+  },
+  "devDependencies": {
+    "electron-reload": "^2.0.0-alpha.1"
   }
 }
