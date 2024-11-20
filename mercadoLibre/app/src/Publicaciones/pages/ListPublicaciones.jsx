@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import swal from 'sweetalert2';
 
 import { Button } from "../../components/Button";
-import { getPublicaciones } from "../../store/publicacones";
+import { eliminarPublicacion, getPublicaciones } from "../../store/publicacones";
 import { PublicacionItem } from "../components/PublicacionItem";
 import { Modal } from "../components/Modal";
 import { closeModal, openModal } from "../../store/ui/uiSlice";
@@ -25,7 +25,13 @@ export const ListPublicaciones = () => {
     if (!active.codigoML) return await swal.fire('Seleccionar publicacion a modificar');
 
     dispatch( openModal() );
-  }
+  };
+
+  const eliminar = async(e) => {
+    if (!active.codigoML) return swal.fire('Seleccionar una plubicacion a eliminar');
+
+    dispatch(eliminarPublicacion(active.codigoML))
+  };
 
   // const electron = (window).electron;
   return (
@@ -33,17 +39,17 @@ export const ListPublicaciones = () => {
       <header>
         <h2 className="text-center text-2xl pb-5">Publicaciones</h2>
       </header>
-      <div className="w-full overflow-scroll h-96 bg-white">
+      <div className="w-full overflow-scroll h-[calc(100vh-120px)] bg-white">
         <table className="w-full">
           <thead>
             <tr>
               <th className="border border-black">N° </th>
               <th className="border border-black">Codigo ML</th>
               <th className="border border-black">Descripcion</th>
+              <th className="border border-black">Costo + Iva</th>
+              <th className="border border-black">Precio Sujerido</th>
               <th className="border border-black">Precio</th>
               <th className="border border-black">Stock</th>
-              <th className="border border-black">Cant. Ventas</th>
-              <th className="border border-black">Catalogo</th>
             </tr>
           </thead>
           <tbody>
@@ -59,7 +65,7 @@ export const ListPublicaciones = () => {
       <section className="flex justify-around pt-2">
         <Button text='Agregar'/>
         <Button text='Modificar' funcion={modificar}/>
-        <Button text='Salir'/>
+        <Button text='Eliminar' funcion={eliminar}/>
       </section>
 
       {isOpenModal && <Modal closeModal={closeModal} type={'put'} precioML={active.precioML} stockML={active.stockML}/>}

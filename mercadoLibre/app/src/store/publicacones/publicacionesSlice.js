@@ -5,9 +5,16 @@ export const publicacionesSlice = createSlice({
     initialState: {
         publicaciones: [],
         active: {},
+        productoRelacionado: {},
         isSaving: false
     },
     reducers: {
+        deletePublication:(state, action) => {
+            state.active = {};
+
+            state.publicaciones = state.publicaciones.filter( elem => elem.codigoML !== action.payload);
+
+        },
         saved: (state, /* action */ ) => {
             state.isSaving = false
         },
@@ -24,10 +31,11 @@ export const publicacionesSlice = createSlice({
             const aux = state.publicaciones.find(elem => elem.codigoML === payload.codigoML);
             aux.stockML = payload.stockML;
             aux.precioML = payload.precioML
-        }
+        },
+        
     }
 });
 
 
 // Action creators are generated for each case reducer function
-export const { saved, setActive, ponerPublicaciones, putPublicacion } = publicacionesSlice.actions;
+export const { deletePublication, saved, setActive, ponerPublicaciones, putPublicacion } = publicacionesSlice.actions;

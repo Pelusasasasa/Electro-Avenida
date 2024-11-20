@@ -1,6 +1,10 @@
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux';
+import swal from 'sweetalert2';
+
 import { useForm } from '../../hooks/useForm';
 import { actualizarPublicacion } from '../../store/publicacones';
+import { buscarVariacionesProducto, modificarVariacionProducto } from '../../helpers/funciones';
+
 
 const initialState = {
     precioML: '',
@@ -15,13 +19,21 @@ export const Modal = ({closeModal, type}) => {
 
     const {onInputChange, formState, precioML, stockML} = useForm(initialState);
 
-    const onSubmit = (e) => {
+    const onSubmit = async(e) => {
         e.preventDefault();
 
         if(type === 'put'){
             dispatch(actualizarPublicacion(active.codigoML, formState.precioML, formState.stockML))
 
+            const {id} = (await buscarVariacionesProducto(active.codigoML))[0];
+            
+            const res = await modificarVariacionProducto(active.codigoML, id, precioML, stockML);
+            
+            if(res) await swal.fire('Se modifico el producto');
+
             dispatch(closeModal());
+
+            if(!res) swal.fire('No se modifico el producto');
         }
     }
 
