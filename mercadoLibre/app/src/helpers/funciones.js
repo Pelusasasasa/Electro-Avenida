@@ -10,9 +10,9 @@ const URL = process.env.REACT_APP_URL
 
 export const actualizarToken = async() => {
     const numeros = (await axios.get(`${URL}tipoVenta`)).data;
-
+    
     numeros.autorizacionML = await obtenerAccessToken();
-    await axios.put(`${URL}tipoVenta`, numeros);
+    // await axios.put(`${URL}tipoVenta`, numeros);
 };
 
 export const buscarVariacionesProducto = async(codigo) => {
@@ -41,7 +41,15 @@ export const obtenerAccessToken = async() => {
       redirect_uri,
       refresh_token,
       code,
-    });
+    },
+    {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        }
+    }
+);
     console.log(respuesta.data)
     console.log(respuesta.data.access_token);
     return respuesta.data.access_token;
@@ -120,5 +128,22 @@ export const modificarPrecioYStockPorIdDeProducto = async(codigo, precio, stock)
     } catch (error) {
         console.log(error.response.data)
     }
+};
+
+export const traerCategorias = async() => {
+    const categorias = (await axios.get(`${aux}sites/MLA/categories`)).data;
+
+    return categorias;
+};
+
+export const traerSubCategorias = async(id) => {
+    
+    if (id){
+        const subCategorias = (await axios.get(`${aux}categories/${id}`)).data;
+
+        return subCategorias.children_categories;
+    }
+
+    return [];
 };
 

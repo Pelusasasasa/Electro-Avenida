@@ -7,6 +7,7 @@ import { eliminarPublicacion, getPublicaciones } from "../../store/publicacones"
 import { PublicacionItem } from "../components/PublicacionItem";
 import { Modal } from "../components/Modal";
 import { closeModal, openModal } from "../../store/ui/uiSlice";
+import { Link } from "react-router-dom";
 
 export const ListPublicaciones = () => {
 
@@ -63,7 +64,9 @@ export const ListPublicaciones = () => {
       </div>
 
       <section className="flex justify-around pt-2">
-        <Button text='Agregar'/>
+        <Link to='../agregar'>
+          <Button text='Agregar' />
+          </Link>
         <Button text='Modificar' funcion={modificar}/>
         <Button text='Eliminar' funcion={eliminar}/>
       </section>
