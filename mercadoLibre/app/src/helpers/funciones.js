@@ -6,7 +6,14 @@ const client_secret = 'n03VlrPoBnTyRmGDtDusOQwuu7qaNpHv';
 const code = 'TG-670e5faf324be700011ea691-231090073'
 const refresh_token = "TG-670e60957e88f500012c13e8-231090073"
 const redirect_uri = 'https://www.electro-avenida.com.ar/';
-const URL = process.env.REACT_APP_URL
+const URL = process.env.REACT_APP_URL;
+const gananciaML = 25;
+const porcentajeDescuentoML = 0.54;
+const envio = 28000;
+const primerCostoFijo = 12000;
+const segundoCostoFijo = 28000;
+const valorPrimerCostoFijo = 900;
+const valorSegundoCostoFijo = 1800;
 
 export const actualizarToken = async() => {
     const numeros = (await axios.get(`${URL}tipoVenta`)).data;
@@ -30,6 +37,35 @@ export const buscarVariacionesProducto = async(codigo) => {
         return error
     }
 };
+
+export const calcularPrecioSujerido = (costo, impuesto) => {
+    const costoFinal = costo + impuesto;
+    let utilidad = costoFinal + (costoFinal * gananciaML / 100);
+    let descuentoML = (utilidad / porcentajeDescuentoML);
+
+    let costoEnvio = 0;
+    let costoFijo = 0;
+
+    //Vemos cuanto nos cobran del envio en mercado libre dependiendo de la utilidad
+    if (descuentoML > envio){
+        costoEnvio = 6779;
+    }else{
+        costoEnvio = 0;
+    };
+
+    //Vemos cuanto nos descuentan por el costo fijo dependiendo de el valor de la utilidad
+    if (descuentoML < primerCostoFijo){
+        costoFijo = valorPrimerCostoFijo;
+    }else if(descuentoML < segundoCostoFijo){
+        costoFijo = valorSegundoCostoFijo
+    }else{
+        costoFijo = 0;
+    };
+
+    let precioML = 0;
+    precioML = descuentoML + costoEnvio + costoFijo
+    return precioML.toFixed(2);
+}
 
 export const obtenerAccessToken = async() => {
   
