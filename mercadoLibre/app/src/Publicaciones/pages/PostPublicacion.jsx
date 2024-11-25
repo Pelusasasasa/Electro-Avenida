@@ -3,6 +3,9 @@ import {useDispatch, useSelector} from 'react-redux';
 import { calcularPrecioSujerido, traerCategorias, traerSubCategorias } from '../../helpers/funciones'
 import { useForm } from '../../hooks/useForm';
 import { setProducto } from '../../store/productos/thunks';
+import { Button } from '../../components/Button';
+import { postPublicaciones, subirImagenes } from '../../store/publicacones/thunks';
+import { saved } from '../../store/publicacones/publicacionesSlice';
 
 const initialForm = {
     categories: '',
@@ -10,13 +13,16 @@ const initialForm = {
     stockSujerido: 0,
     precioSujerido: 0,
     costoIva: 0,
+    precio: 0,
+    stock: 0,
+    imagenes: []
 }
 
 export const PostPublicacion = () => {
     const { active } = useSelector(state => state.productos);
     const dispatch = useDispatch()
 
-    const {onInputChange, codigo, descripcion, costoIva, precioSujerido, stockSujerido, categories, subCategories, subCategories1, onChanges} = useForm(initialForm);
+    const {onInputChange, codigo, descripcion, marca, costoIva, imagenes, precioSujerido, stockSujerido, precio, stock, categories, subCategories, subCategories1, formState ,onChanges} = useForm(initialForm);
 
     const [categorias, setCategorias] = useState([]);
     const [subCategorias, setSubCategorias] = useState([]);
@@ -65,26 +71,101 @@ export const PostPublicacion = () => {
         if (active._id) {
             listarProductoTraido();
         }
-    }, [active])
+    }, [active]);
+
+    useEffect(() => {
+        console.log(imagenes)
+    }, [imagenes]);
+
     
     const listarProductoTraido = () => {
         onChanges({
             descripcion: active.descripcion,
             costoIva: (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
             stockSujerido: active.stock,
+            marca: active.marca,
             precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos))
         });
     };
 
     const onInputKeyDown = (e) => {
         if (e.keyCode === 13){
+            e.preventDefault();
             dispatch( setProducto(codigo) );
         }
     };
 
+    const agregar = async(e) => {
+        e.preventDefault();
+        dispatch(saved());
+
+        await subirImagenes(imagenes.files);
+
+        // let producto = {};
+        // producto.title = formState.descripcion;
+        // producto.category_id = formState.subCategories2
+        // producto.price = formState.precio;
+        // producto.currency_id = 'ARS';
+        // producto.available_quantity = formState.stock;
+        // producto.buying_mode = 'buy_it_now';
+        // producto.condition = 'new';
+        // producto.listing_type_id = 'gold_special'
+        // producto.sale_terms = [
+        //     {
+        //         id: 'WARRANTY_TYPE',
+        //         value_name: 'Garantía del vendedor'
+        //     },
+        //     {
+        //         id: 'WARRANTY_TIME',
+        //         value_name: '3 meses'
+        //     }
+        // ];
+        // producto.pictures = [
+        //     {
+        //         'source': imagenes
+        //     }
+        // ];
+        // producto.shipping = {
+        //     mode: 'me2',
+        //     tags: [
+        //         'local_pick_up_not_allowed',
+        //         'mandatory_free_shipping'
+        //     ]
+        // };
+
+        // producto.attributes = [
+        //     {
+        //         id: 'BRAND',
+        //         value_name: formState.marca
+        //     },
+        //     {
+        //         id: 'MODEL',
+        //         value_name: active.cod_fabrica
+        //     }
+        // ]
+
+        // producto.variations = [
+        //     {
+        //         'price': formState.precio,
+        //         'available_quantity': formState.stock,
+        //         // 'attributes': producto.attributes,
+        //         'pictures': producto.pictures,
+        //         'attribute_combinations': [
+        //             {
+        //                 'name': 'Color',
+        //                 'value_id': '52049',
+        //                 'value_name': 'Negro'
+        //             }
+        //         ]
+        //     }
+        // ]
+
+        // dispatch( postPublicaciones(producto) )
+    };
+
   return (
-    <form className='bg-yellow-600 w-full'>
-        <section id='header' className='grid grid-cols-[0.5fr_2fr] gap-3 m-2'>
+    <form className='bg-yellow-600 w-full' onSubmit={agregar}>
+        <section id='header' className='grid grid-cols-[0.5fr_2fr_0.5fr] gap-3 m-2'>
             <div className='flex flex-col'>
                 <label htmlFor="codigo" className='text-center font-bold '>Codigo</label>
                 <input type="text" name="codigo" id="codigo" className='' autoFocus onChange={onInputChange} onKeyDown={onInputKeyDown} />
@@ -93,6 +174,11 @@ export const PostPublicacion = () => {
             <div className='flex flex-col'>
                 <label htmlFor="descripcion" className='text-center font-bold '>Descripcion</label>
                 <input type="text" name="descripcion" onChange={onInputChange} value={descripcion} id="descripcion" />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="marca" className='text-center font-bold '>Marca</label>
+                <input type="text" name="marca" onChange={onInputChange} value={marca} id="marca" />
             </div>
         </section>
 
@@ -114,15 +200,15 @@ export const PostPublicacion = () => {
         <section className='grid grid-cols-3 gap-3 m-2'>
             <div className='flex flex-col'>
                 <label htmlFor="imagenes" className='text-center font-bold '>Imagenes</label>
-                <input type="file" multiple accept='image/*' name="imagenes" id="imagenes" className='bg-white'/>
+                <input type="file" multiple accept='image/*' name="imagenes" id="imagenes" className='bg-white' value={imagenes.value} onChange={onInputChange}/>
             </div>
             <div className='flex flex-col'>
                 <label htmlFor="precio" className='text-center font-bold '>Precio</label>
-                <input type="number" name="precio" id="precio" className='bg-white'/>
+                <input type="number" name="precio" id="precio" value={precio} onChange={onInputChange} className='bg-white'/>
             </div>
             <div className='flex flex-col'>
                 <label htmlFor="stock" className='text-center font-bold '>Stock</label>
-                <input type="number" name="stock" id="stock" className='bg-white'/>
+                <input type="number" name="stock" id="stock" value={stock} onChange={onInputChange} className='bg-white'/>
             </div>
         </section>
 
@@ -165,18 +251,11 @@ export const PostPublicacion = () => {
             
         </section>
 
-        <section className='grid grid-cols-4 gap-3 m-2'>
-            <div className='flex flex-col'>
-                <label htmlFor="cuotas" className='text-center font-bold '>Cuotas</label>
-                <select name="cuotas" id="cuotas" onChange={onInputChange}>
-                    {subCategorias2.map(elem => (
-                        <option key={elem.id} value={elem.id}>{elem.name}</option>
-                    ))}
-                </select>
-            </div>
+        <section className='flex justify-around pt-2'>
+            <Button text='Agregar' type='submit'/>
+            <Button text='Salir' />
+            
         </section>
-
-        
         
     </form>
   )

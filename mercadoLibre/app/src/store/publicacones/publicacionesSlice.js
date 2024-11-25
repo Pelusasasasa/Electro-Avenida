@@ -9,6 +9,10 @@ export const publicacionesSlice = createSlice({
         isSaving: false
     },
     reducers: {
+        addPublicacion: (state, action ) =>{
+            state.publicaciones.push(action.payload);
+            state.isSaving = false;
+        },
         deletePublication:(state, action) => {
             state.active = {};
 
@@ -38,4 +42,4 @@ export const publicacionesSlice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { deletePublication, saved, setActive, ponerPublicaciones, putPublicacion } = publicacionesSlice.actions;
+export const { deletePublication, saved, setActive, ponerPublicaciones, putPublicacion, addPublicacion } = publicacionesSlice.actions;

@@ -7,20 +7,17 @@ const mercadoLibre = new Schema({
         unique: true,
         trim: true
     },
-
     fecha:{
         type: Date,
         required: true,
         default: Date.now()
     },
-    
     descripcion: {
         type: String,
         required: true,
         trim: true,
         set: value => value.toUpperCase()
     },
-
     categoria: {
         type: String,
         default: ""
@@ -29,9 +26,9 @@ const mercadoLibre = new Schema({
         type: Number,
         required: true
     },
-    variaciones: {
-        type: Schema.Types.ObjectId,
-        ref: 'Variacion'
+    stockML: {
+        type: Number,
+        required: true
     }
 
 });

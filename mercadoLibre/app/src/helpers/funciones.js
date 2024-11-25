@@ -183,3 +183,21 @@ export const traerSubCategorias = async(id) => {
     return [];
 };
 
+export const publicarML = async(elem) => {
+    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
+    const autherizacion = numeros.autorizacionML;
+
+    try {
+        const res = (await axios.post(`${aux}items`, elem, {
+            headers: {
+                'Authorization': `Bearer ${autherizacion}`
+            }
+        })).data;
+        return res;
+    } catch (error) {
+        console.log(error)
+        return error
+        
+    }
+}
+

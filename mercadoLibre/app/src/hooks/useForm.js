@@ -24,14 +24,15 @@ export const useForm = ( initialForm = {}, formValidations = {} ) => {
     }, [formValidation]);
 
     const onInputChange = ({ target }) => {
-        const { name, value } = target;
+        const { name, value, files } = target;
         setFormState({
             ...formState,
-            [ name ]: value
+            [ name ]: target.type === 'file' ? {files, value} : value
         });
     };
     
     const onChanges = ( value ) => {
+        console.log(value)
         setFormState({
             ...formState,
             ...value
