@@ -1,185 +1,177 @@
-const axios = require('axios');
-const { ipcRenderer } = require('electron/renderer');
-require('dotenv').config();
+const axios = require("axios");
+const { ipcRenderer } = require("electron/renderer");
+require("dotenv").config();
 const URL = process.env.URL;
 
-const sweet = require('sweetalert2');
-const { configAxios } = require('../assets/js/globales');
+const sweet = require("sweetalert2");
+const { configAxios } = require("../assets/js/globales");
 
-const codigo = document.querySelector('#codigo');
-const provedor = document.querySelector('#provedor');
-const direccion = document.querySelector('#direccion');
-const codPostal = document.querySelector('#codPostal');
-const localidad = document.querySelector('#localidad');
-const provincia = document.querySelector('#provincia');
-const telefono = document.querySelector('#telefono');
-const email = document.querySelector('#email');
-const condIva = document.querySelector('#condIva');
-const cuit = document.querySelector('#cuit');
-const viajante = document.querySelector('#viajante');
-const contacto = document.querySelector('#contacto');
-const condDGR = document.querySelector('#condDGR');
-const nroDGR = document.querySelector('#nroDGR');
-const direccionPostal = document.querySelector('#direccionPostal');
-const localidadPostal = document.querySelector('#localidadPostal');
-const codigoPostal = document.querySelector('#codigoPostal');
-const provinciaPostal = document.querySelector('#provinciaPostal');
+const codigo = document.querySelector("#codigo");
+const provedor = document.querySelector("#provedor");
+const direccion = document.querySelector("#direccion");
+const codPostal = document.querySelector("#codPostal");
+const localidad = document.querySelector("#localidad");
+const provincia = document.querySelector("#provincia");
+const telefono = document.querySelector("#telefono");
+const email = document.querySelector("#email");
+const condIva = document.querySelector("#condIva");
+const cuit = document.querySelector("#cuit");
+const viajante = document.querySelector("#viajante");
+const contacto = document.querySelector("#contacto");
+const condDGR = document.querySelector("#condDGR");
+const nroDGR = document.querySelector("#nroDGR");
+const direccionPostal = document.querySelector("#direccionPostal");
+const localidadPostal = document.querySelector("#localidadPostal");
+const codigoPostal = document.querySelector("#codigoPostal");
+const provinciaPostal = document.querySelector("#provinciaPostal");
 
+const agregar = document.querySelector(".agregar");
+const salir = document.querySelector(".salir");
 
-
-const agregar = document.querySelector('.agregar');
-const salir = document.querySelector('.salir');
-
-
-agregar.addEventListener('click',async e=>{
-    const nuevoProvedor = {};
-    nuevoProvedor.codigo = codigo.value;
-    nuevoProvedor.provedor = provedor.value.toUpperCase();
-    nuevoProvedor.direccion = direccion.value.toUpperCase();
-    nuevoProvedor.localidad = localidad.value.toUpperCase();
-    nuevoProvedor.provincia = provincia.value.toUpperCase();
-    nuevoProvedor.codPostal = codPostal.value;
-    nuevoProvedor.condIva = condIva.value;
-    nuevoProvedor.telefono = telefono.value;
-    nuevoProvedor.mail = email.value;
-    nuevoProvedor.cuit = cuit.value;
-    nuevoProvedor.nro_dgr = nroDGR.value;
-    nuevoProvedor.dgr = condDGR.value;
-    nuevoProvedor.localidadPostal = localidadPostal.value;
-    nuevoProvedor.direccionPostal = direccionPostal.value;
-    nuevoProvedor.codigoPostal = codigoPostal.value;
-    nuevoProvedor.provinciaPostal = provinciaPostal.value;
-    try {
-        await axios.post(`${URL}provedor`,nuevoProvedor,configAxios);
-        window.close();
-    } catch (error) {
-        console.log(error)
-        await sweet.fire({
-            title:"No se puedo cargar provedor"
-        });
-    }
-});
-
-
-window.addEventListener('load',async e=>{
-    const id = (await axios.get(`${URL}provedor/traerId`,configAxios)).data;
-    codigo.value = id;
-});
-
-salir.addEventListener('click',e=>{
+agregar.addEventListener("click", async (e) => {
+  const nuevoProvedor = {};
+  nuevoProvedor.codigo = codigo.value;
+  nuevoProvedor.provedor = provedor.value.toUpperCase();
+  nuevoProvedor.direccion = direccion.value.toUpperCase();
+  nuevoProvedor.localidad = localidad.value.toUpperCase();
+  nuevoProvedor.provincia = provincia.value.toUpperCase();
+  nuevoProvedor.codPostal = codPostal.value;
+  nuevoProvedor.condIva = condIva.value;
+  nuevoProvedor.telefono = telefono.value;
+  nuevoProvedor.mail = email.value;
+  nuevoProvedor.cuit = cuit.value;
+  nuevoProvedor.nro_dgr = nroDGR.value;
+  nuevoProvedor.dgr = condDGR.value;
+  nuevoProvedor.localidadPostal = localidadPostal.value;
+  nuevoProvedor.direccionPostal = direccionPostal.value;
+  nuevoProvedor.codigoPostal = codigoPostal.value;
+  nuevoProvedor.provinciaPostal = provinciaPostal.value;
+  try {
+    await axios.post(`${URL}provedor`, nuevoProvedor, configAxios);
     window.close();
+  } catch (error) {
+    console.log(error);
+    await sweet.fire({
+      title: "No se puedo cargar provedor",
+    });
+  }
 });
 
-document.addEventListener('keyup',e=>{
-    if (e.key === "Escape") {
-        window.close();
-    }
+window.addEventListener("load", async (e) => {
+  const id = (await axios.get(`${URL}provedor/traerId`, configAxios)).data;
+  codigo.value = id;
 });
 
-
-provedor.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        direccion.focus();
-    }
+salir.addEventListener("click", (e) => {
+  window.close();
 });
 
-direccion.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        codPostal.focus();
-    }
+document.addEventListener("keyup", (e) => {
+  if (e.key === "Escape") {
+    window.close();
+  }
 });
 
-codPostal.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        localidad.focus();
-    }
+provedor.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    direccion.focus();
+  }
 });
 
-localidad.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        provincia.focus();
-    }
+direccion.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    codPostal.focus();
+  }
 });
 
-
-provincia.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        telefono.focus();
-    }
+codPostal.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    localidad.focus();
+  }
 });
 
-
-telefono.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        email.focus();
-    }
+localidad.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    provincia.focus();
+  }
 });
 
-email.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        condIva.focus();
-    }
+provincia.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    telefono.focus();
+  }
 });
 
-condIva.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        e.preventDefault();
-        cuit.focus();
-    }
+telefono.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    email.focus();
+  }
 });
 
-cuit.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        viajante.focus();
-    }
+email.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    condIva.focus();
+  }
 });
 
-viajante.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        contacto.focus();
-    }
+condIva.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    cuit.focus();
+  }
 });
 
-contacto.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        condDGR.focus();
-    }
+cuit.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    viajante.focus();
+  }
 });
 
-condDGR.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        e.preventDefault();
-        nroDGR.focus();
-    }
+viajante.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    contacto.focus();
+  }
 });
 
-nroDGR.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        direccionPostal.focus();
-    }
+contacto.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    condDGR.focus();
+  }
 });
 
-direccionPostal.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        localidadPostal.focus();
-    }
+condDGR.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    nroDGR.focus();
+  }
 });
 
-localidadPostal.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        codigoPostal.focus();
-    }
+nroDGR.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    direccionPostal.focus();
+  }
 });
 
-codigoPostal.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        provinciaPostal.focus();
-    }
+direccionPostal.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    localidadPostal.focus();
+  }
 });
 
-provinciaPostal.addEventListener('keypress',e=>{
-    if (e.key === "Enter") {
-        agregar.focus();
-    }
+localidadPostal.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    codigoPostal.focus();
+  }
 });
 
+codigoPostal.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    provinciaPostal.focus();
+  }
+});
+
+provinciaPostal.addEventListener("keypress", (e) => {
+  if (e.key === "Enter") {
+    agregar.focus();
+  }
+});
