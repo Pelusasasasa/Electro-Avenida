@@ -12,6 +12,11 @@ const mercadoLibre = new Schema({
         required: true,
         default: Date.now()
     },
+    codProd: {
+        type: String,
+        required: true,
+        trim: true
+    },
     descripcion: {
         type: String,
         required: true,

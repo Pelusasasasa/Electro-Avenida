@@ -18,15 +18,15 @@ export const modificarPublicacion = async(id, precio, stock) => {
 
 };
 
-export const postPublicaciones = async(publicacion) => {
-    const res = (await axios.post(`${URL}`, publicacion)).data;
+export const agregarPublicaciones = async(publicacion) => {
+    const res = (await axios.post(`${URL}mercadoLibre`, publicacion)).data;
 
     return res;
 }
 
 export const traerPublicaciones = async() => {
     const res = (await axios.get(`${URL}mercadoLibre`)).data;
-
+    
     for (let elem of res) {
         const productoRelacionado = (await axios.get(`${URL}productos/${elem.codProd}`)).data;
     

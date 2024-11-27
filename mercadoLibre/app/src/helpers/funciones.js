@@ -201,3 +201,10 @@ export const publicarML = async(elem) => {
     }
 };
 
+export const subirImagenes = async(files) => {
+    console.log(files)
+
+    const res = (await axios.post(`${URL}mercadoLibre/imagenes`, files)).data;
+    console.log(res)
+};
+

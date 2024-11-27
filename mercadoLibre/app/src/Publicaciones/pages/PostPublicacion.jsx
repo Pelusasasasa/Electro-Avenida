@@ -1,20 +1,21 @@
 import { useEffect, useState } from 'react'
 import {useDispatch, useSelector} from 'react-redux';
-import { calcularPrecioSujerido, traerCategorias, traerSubCategorias } from '../../helpers/funciones'
+import { calcularPrecioSujerido, subirImagenes, traerCategorias, traerSubCategorias } from '../../helpers/funciones'
 import { useForm } from '../../hooks/useForm';
 import { setProducto } from '../../store/productos/thunks';
 import { Button } from '../../components/Button';
-import { postPublicaciones, subirImagenes } from '../../store/publicacones/thunks';
+import { postPublicaciones } from '../../store/publicacones/thunks';
 import { saved } from '../../store/publicacones/publicacionesSlice';
 
 const initialForm = {
-    categories: '',
     descripcion: '',
     stockSujerido: 0,
     precioSujerido: 0,
     costoIva: 0,
     precio: 0,
     stock: 0,
+    categories: 'MLA1574',
+    subCategories: 'MLA1582',
     imagenes: []
 }
 
@@ -73,10 +74,6 @@ export const PostPublicacion = () => {
         }
     }, [active]);
 
-    useEffect(() => {
-        console.log(imagenes)
-    }, [imagenes]);
-
     
     const listarProductoTraido = () => {
         onChanges({
@@ -98,69 +95,67 @@ export const PostPublicacion = () => {
     const agregar = async(e) => {
         e.preventDefault();
         dispatch(saved());
+        console.log(new URL(imagenes))
 
-        await subirImagenes(imagenes.files);
 
-        // let producto = {};
-        // producto.title = formState.descripcion;
-        // producto.category_id = formState.subCategories2
-        // producto.price = formState.precio;
-        // producto.currency_id = 'ARS';
-        // producto.available_quantity = formState.stock;
-        // producto.buying_mode = 'buy_it_now';
-        // producto.condition = 'new';
-        // producto.listing_type_id = 'gold_special'
-        // producto.sale_terms = [
-        //     {
-        //         id: 'WARRANTY_TYPE',
-        //         value_name: 'Garantía del vendedor'
-        //     },
-        //     {
-        //         id: 'WARRANTY_TIME',
-        //         value_name: '3 meses'
-        //     }
-        // ];
-        // producto.pictures = [
-        //     {
-        //         'source': imagenes
-        //     }
-        // ];
-        // producto.shipping = {
-        //     mode: 'me2',
-        //     tags: [
-        //         'local_pick_up_not_allowed',
-        //         'mandatory_free_shipping'
-        //     ]
-        // };
+         let producto = {};
+         producto.title = formState.descripcion;
+         producto.category_id = formState.subCategories2
+         producto.price = formState.precio;
+         producto.currency_id = 'ARS';
+         producto.available_quantity = formState.stock;
+         producto.buying_mode = 'buy_it_now';
+         producto.condition = 'new';
+         producto.listing_type_id = 'gold_special'
+         producto.sale_terms = [
+             {
+                 id: 'WARRANTY_TYPE',
+                 value_name: 'Garantía del vendedor'
+             },
+             {
+                 id: 'WARRANTY_TIME',
+                 value_name: '3 meses'
+             }
+         ];
+         producto.pictures = [
+             {
+                 'source': (new URL(imagenes)).href
+             }
+         ];
+         producto.shipping = {
+             mode: 'me2',
+             tags: [
+                 'local_pick_up_not_allowed',
+                 'mandatory_free_shipping'
+             ]
+         };
 
-        // producto.attributes = [
-        //     {
-        //         id: 'BRAND',
-        //         value_name: formState.marca
-        //     },
-        //     {
-        //         id: 'MODEL',
-        //         value_name: active.cod_fabrica
-        //     }
-        // ]
+         producto.attributes = [
+             {
+                 id: 'BRAND',
+                 value_name: formState.marca
+             },
+             {
+                 id: 'MODEL',
+                 value_name: active.cod_fabrica
+             },
+             {
+            "id": "SELLER_SKU",
+            "name": "SKU",
+            "value_id": null,
+            "value_name": `${codigo}`,
+            "values": [
+                {
+                    "id": null,
+                    "name": `${codigo}`,
+                    "struct": null
+                }
+            ],
+            "value_type": "string"
+        },
+         ]
 
-        // producto.variations = [
-        //     {
-        //         'price': formState.precio,
-        //         'available_quantity': formState.stock,
-        //         // 'attributes': producto.attributes,
-        //         'pictures': producto.pictures,
-        //         'attribute_combinations': [
-        //             {
-        //                 'name': 'Color',
-        //                 'value_id': '52049',
-        //                 'value_name': 'Negro'
-        //             }
-        //         ]
-        //     }
-        // ]
-
-        // dispatch( postPublicaciones(producto) )
+         dispatch( postPublicaciones(producto) )
     };
 
   return (
@@ -200,7 +195,7 @@ export const PostPublicacion = () => {
         <section className='grid grid-cols-3 gap-3 m-2'>
             <div className='flex flex-col'>
                 <label htmlFor="imagenes" className='text-center font-bold '>Imagenes</label>
-                <input type="file" multiple accept='image/*' name="imagenes" id="imagenes" className='bg-white' value={imagenes.value} onChange={onInputChange}/>
+                <input type="file" multiple accept='image/*' name="imagenes" id="imagenes" className='bg-white' value={imagenes} onChange={onInputChange}/>
             </div>
             <div className='flex flex-col'>
                 <label htmlFor="precio" className='text-center font-bold '>Precio</label>
@@ -215,7 +210,7 @@ export const PostPublicacion = () => {
         <section id='interno' className='grid grid-cols-4 gap-3 m-2'>
             <div className='flex flex-col'>
                 <label htmlFor="categoria" className='text-center font-bold '>Categoria</label>
-                <select name="categories" id="categories" onChange={onInputChange}>
+                <select name="categories" id="categories" value={categories} onChange={onInputChange}>
                     {categorias.map(elem => (
                         <option key={elem.id} value={elem.id}>{elem.name}</option>
                     ))}
@@ -224,7 +219,7 @@ export const PostPublicacion = () => {
 
             <div className='flex flex-col'>
                 <label htmlFor="subCategories" className='text-center font-bold '>Sub Categoria</label>
-                <select name="subCategories" id="subCategories" onChange={onInputChange}>
+                <select name="subCategories" id="subCategories" value={subCategories} onChange={onInputChange}>
                     {subCategorias.map(elem => (
                         <option key={elem.id} value={elem.id}>{elem.name}</option>
                     ))}
