@@ -5,16 +5,16 @@ import { actualizarToken, obtenerInformacionUsuario } from './helpers/funciones'
 
 export const MercadoApp = () => {
 
-  const cargarAplicacion = async() =>{
-    const res = await obtenerInformacionUsuario();
+  // const cargarAplicacion = async() =>{
+  //   const res = await obtenerInformacionUsuario();
     
-    if (res === 'error'){
-       await actualizarToken()
-    }
-  };
+  //   if (res === 'error'){
+  //      await actualizarToken()
+  //   }
+  // };
 
   useEffect(() => {
-    cargarAplicacion();
+    // cargarAplicacion();
   }, [])
 
   return (

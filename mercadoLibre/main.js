@@ -7,7 +7,6 @@ require('electron-reload')(path.join(__dirname), {
   ignored: /node_modules|[\/\\]\./
 });
 
-
 //Funcion para crear la ventana principal del proyecto
 const createMainWindow = () => {
     const mainWindow = new BrowserWindow({

@@ -199,5 +199,5 @@ export const publicarML = async(elem) => {
         return error
         
     }
-}
+};
 
