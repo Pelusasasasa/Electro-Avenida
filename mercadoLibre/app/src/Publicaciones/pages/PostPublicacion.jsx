@@ -18,7 +18,28 @@ const initialForm = {
     subCategories: 'MLA1582',
     voltaje: '220V',
     temperaturaLuz: '',
-    imagenes: []
+    colorLuz: '',
+    potencia: '',
+    tipofuente: '',
+    voltaje2: '',
+    formato: '',
+    forma: '',
+    lugarMontaje: '',
+    material: '',
+    ambiente: '',
+    capacidadFoco: '',
+    incluyeFoco: false,
+    inalamabrico: false,
+    boton: false,
+    incluyeControl: false,
+    autoadhesivo: false,
+    wifi: false,
+    asistenteVirtual: '',
+    appInteligente: '',
+    eficienciaEnerg: '',
+
+    imagenes: [],
+
 }
 
 export const PostPublicacion = () => {
@@ -28,7 +49,8 @@ export const PostPublicacion = () => {
     const {
          subCategories, subCategories1, voltaje, temperaturaLuz, colorLuz, potencia, tipofuente, voltaje2, formState ,onChanges,
         onInputChange, codigo, descripcion, marca, costoIva, imagenes, precioSujerido, stockSujerido, precio, stock, categories,
-        tipoBateria, formato, forma, lugarMontaje, material, ambiente, capacidadFoco
+        tipoBateria, formato, forma, lugarMontaje, material, ambiente, capacidadFoco, incluyeFoco, inalamabrico, boton, incluyeControl,
+        autoadhesivo, wifi, asistenteVirtual, appInteligente, eficienciaEnerg
         } = useForm(initialForm);
 
     const [categorias, setCategorias] = useState([]);
@@ -101,8 +123,6 @@ export const PostPublicacion = () => {
     const agregar = async(e) => {
         e.preventDefault();
         dispatch(saved());
-        console.log(potencia)
-
 
          let producto = {};
          producto.title = formState.descripcion;
@@ -125,7 +145,7 @@ export const PostPublicacion = () => {
          ];
          producto.pictures = [
              {
-                 'source': (new URL(imagenes)).href
+                 'source': "https://res.cloudinary.com/dyo36foif/image/upload/v1713298195/EA/401-047.png"
              }
          ];
          producto.shipping = {
@@ -143,7 +163,11 @@ export const PostPublicacion = () => {
              },
              {
                  id: 'BATTERY_TYPE',
-                 value_name: tipoBateria
+                 value_id: "-1",
+             },
+             {
+                 id: 'BATTERY_VOLTAGE',
+                 value_id: "-1"
              },
              {
                  id: 'BRAND',
@@ -151,8 +175,38 @@ export const PostPublicacion = () => {
              },
              {
                 id: 'COLOR_TEMPERATURE',
-                value_name: temperaturaLuz
+                value_id: temperaturaLuz ? temperaturaLuz : "-1",
+                value_name: temperaturaLuz ? temperaturaLuz : null
              },
+             {
+                id: 'COMPATIBLE_SMART_APPS',
+                value_id: appInteligente ? appInteligente : "-1",
+             },
+             {
+                id: 'COMPATIBLE_VIRTUAL_ASSISTANTS',
+                value_id: asistenteVirtual ? asistenteVirtual : "-1",
+             },
+             {
+                id: 'ENERGY_EFFICIENCY',
+                value_id: eficienciaEnerg ? eficienciaEnerg : "-1",
+             },
+             {
+                id: 'INCLUDES_BULBS',
+                value_id: incluyeFoco ? "242085" : "242084",
+             },
+             {
+                id: 'INCLUDES_REMOTE_CONTROL',
+                value_id: incluyeControl ? "242085" : "242084",
+             },
+             {
+                id: 'IS_AUTOADHESIVE',
+                value_id: autoadhesivo ? "242085" : "242084",
+             },
+             {
+                id: 'IS_WIRELESS',
+                value_id: inalamabrico ? "242085" : "242084",
+             },
+             
              {
                  id: 'MATERIALS',
                  value_name: material
@@ -175,11 +229,12 @@ export const PostPublicacion = () => {
              },
              {
                 id: 'LIGHT_COLOR',
-                value_name: colorLuz
+                value_id: colorLuz ? colorLuz : "-1" ,
+                value_name: colorLuz ? colorLuz : null
              },
              {
                 id: 'LIGHT_SOURCES_TYPES',
-                value_name: tipofuente
+                value__id: tipofuente ? tipofuente : '-1',
              },
              {
                 id: 'SHAPE',
@@ -211,6 +266,14 @@ export const PostPublicacion = () => {
             {
                 id: 'VOLTAGE',
                 value_name: voltaje
+            },
+            {
+                id: 'WITH_PUSH_BUTTON',
+                value_id: boton ? "242085" : "242084"
+            },
+            {
+                id: 'WITH_WI_FI',
+                value_id: wifi ? "242085" : "242084"
             }
          ]
 
@@ -352,8 +415,8 @@ export const PostPublicacion = () => {
             <div className='flex flex-col'>
                 <label htmlFor="voltaje2" className='text-center font-bold '>Voltaje 2</label>
                 <select name="voltaje2" id="voltaje2" value={voltaje2} onChange={onInputChange}>
-                    <option value="220V">220V</option>
-                    <option value="12V">12V</option>
+                    <option value="13417945">220 V</option>
+                    <option value="12V">12 V</option>
                 </select>
             </div>
 
@@ -390,6 +453,47 @@ export const PostPublicacion = () => {
             <div className='flex flex-col'>
                 <label htmlFor="capacidadFoco" className='text-center font-bold '>Capacidad Foco</label>
                 <input type="number" name="capacidadFoco" id="capacidadFoco" onChange={onInputChange} value={capacidadFoco} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="asistenteVirtual" className='text-center font-bold '>Asistente Virtual</label>
+                <input type="text" name="asistenteVirtual" id="asistenteVirtual" onChange={onInputChange} value={asistenteVirtual} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="appInteligente" className='text-center font-bold '>App Inteligente</label>
+                <input type="text" name="appInteligente" id="appInteligente" onChange={onInputChange} value={appInteligente} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="eficienciaEnerg" className='text-center font-bold '>Eficiencia Energetica</label>
+                <input type="text" name="eficienciaEnerg" id="eficienciaEnerg" onChange={onInputChange} value={eficienciaEnerg} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="incluyeFoco" className='text-center font-bold '>Incluye Foco</label>
+                <input type="checkbox" name="incluyeFoco" id="incluyeFoco" onChange={onInputChange} value={incluyeFoco} />
+            </div>
+            
+            <div className='flex flex-col'>
+                <label htmlFor="inalamabrico" className='text-center font-bold '>Es Inalambrico</label>
+                <input type="checkbox" name="inalamabrico" id="inalamabrico" onChange={onInputChange} value={inalamabrico} />
+            </div>
+            <div className='flex flex-col'>
+                <label htmlFor="boton" className='text-center font-bold '>Con Boton Pulsador</label>
+                <input type="checkbox" name="boton" id="boton" onChange={onInputChange} value={boton} />
+            </div>
+            <div className='flex flex-col'>
+                <label htmlFor="incluyeControl" className='text-center font-bold '>Incluye Control</label>
+                <input type="checkbox" name="incluyeControl" id="incluyeControl" onChange={onInputChange} value={incluyeControl} />
+            </div>
+            <div className='flex flex-col'>
+                <label htmlFor="autoadhesivo" className='text-center font-bold '>Es Authodesivo</label>
+                <input type="checkbox" name="autoadhesivo" id="autoadhesivo" onChange={onInputChange} value={autoadhesivo} />
+            </div>
+            <div className='flex flex-col'>
+                <label htmlFor="wifi" className='text-center font-bold '>Con Wifi</label>
+                <input type="checkbox" name="wifi" id="wifi" onChange={onInputChange} value={wifi} />
             </div>
             
 
