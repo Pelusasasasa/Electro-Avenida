@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modifcar Cliente</title>
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./clientes.css">
+  </head>
+  <body class="modificarCliente">
+      <main class="nombre">
+        <label for="nombre">Nombre</label>
+        <input disabled type="text" name="nombre" id="nombre" />
+      </main>
+
+      <section class="inputs">
+        <main>
+          <label for="conIva">Cond IVA</label>
+            <select name="conIva" disabled id="conIva">
+              <option value="Consumidor Final">Consumidor Final</option>
+              <option value="Monotributista">Monotributista</option>
+              <option value="Inscripto">Inscripto</option>
+              <option value="Exento">Exento</option>
+            </select>
+        </main>
+  
+          <main>
+            <label for="direccion">Direccion</label>
+            <input disabled type="text" name="direccion" id="direccion"/>
+          </main>
+  
+  
+          <main>
+            <label for="localidad">Localidad</label>
+            <input disabled type="text" name="localidad" id="localidad"/>
+          </main>
+      </section>
+
+        <section class="inputs">
+          <main>
+            <label for="provincia">Provincia</label>
+            <input disabled type="text" name="provincia" id="provincia"/>
+          </main>
+  
+          <main>
+            <label for="cod_postal">Cod. Postal</label>
+            <input disabled type="text" name="cod_postal" id="cod_postal"/>
+          </main>
+  
+          <main>
+            <label for="dnicuit">Dni o Cuit</label>
+            <input disabled type="text" name="dnicuit" id="dnicuit"/>
+          </main>
+        </section>
+
+        <section class="inputs">
+          <main>
+            <label for="email">Email</label>
+            <input disabled type="mail" name="email" id="email" />
+          </main>
+  
+          <main>
+            <label for="telefono">Telefono</label>
+            <input type="tel" disabled name="telefono" id="telefono" />
+          </main>
+  
+          <main>
+            <label for="limite">Lim. Comp.</label>
+            <input type="Number" disabled name="limite" id="limite" />
+          </main>
+        </section>
+
+        <section class="inputs">
+          <main>
+            <label for="conFact">Cond. Fact.</label>
+            <select name="conFact" disabled id="conFact">
+              <option value="1">1- Ctu. Cte. Normal</option>
+              <option value="4">4- Contado</option>
+            </select>
+          </main>
+          
+          <div class="tipo">
+            <main class="moroso">
+              <label for="normal">Normal</label>
+              <input disabled type="radio" name="moroso" id="moroso/normal" value="N"/>
+            </main>
+  
+            <main class="moroso">
+              <label for="moroso">Moroso</label>
+              <input disabled type="radio" name="moroso" id="moroso/normal" value="M"/>
+            </main>
+          </div>
+        </section>
+
+        <section>
+          <main>
+            <label for="observaciones">Observaciones</label>
+            <input type="text" name="observaciones" id="observaciones" disabled />
+          </main>
+        </section>
+    </div>
+
+    <section class="botones">
+      <button class="modificar">Modificar</button>
+
+      <button class="guardar">Guardar</button>
+
+      <button class="salir">Salir</button>
+    </section>
+
+    <script src="./modificarCliente.js"></script>
+  </body>
+</html>
+ 

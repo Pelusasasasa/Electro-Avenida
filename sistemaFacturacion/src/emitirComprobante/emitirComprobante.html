@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Emitir Comprobante</title>
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./index.css">
+  </head>
+  <body class="emitir">
+    <div class="emitirComprobante">
+      
+      <div class="contenedor parteNegra ">
+          <fieldset>
+            <div id="cliente">
+              <section class="arriba">
+                <div class="buscar">
+                  <main>
+                    <label for="codigoC">Codigo</label>
+                    <input  type="text" name="codigoC" autofocus id="codigoC"/>
+                  </main>
+  
+                  <main class="nombre">
+                    <label  for="nombre">Nombre</label>
+                    <input disabled  type="text" name="nombre" id="nombre" placeholder="Nombre"/>
+                  </main>
+                </div>
+
+                <main class=" saldo">
+                  <label class="" for="saldo">Saldo</label>
+                  <input disabled type="text" name="saldo" id="saldo" placeholder="Saldo"/>
+                </main>
+
+                <main class=" saldoNegro none">
+                  <label class="" for="saldo_p">Saldo P</label>
+                  <input disabled type="text" name="saldo_p" id="saldo_p" placeholder="Saldo_p"/>
+                </main>
+
+                <main class="">
+                  <label class="" for="telefono">Telefono</label>
+                  <input disabled type="tel" name="telefono" id="telefono" placeholder="Telefono"/>
+                </main>
+              </section>
+
+              <section class="medio">
+                <main class="">
+                  <label class="" for="direccion">Direccion</label>
+                  <input disabled type="text" name="direccion" id="direccion" placeholder="Direccion"/>
+                </main>
+
+                <main class="">
+                  <label class="" for="localidad">Localidad</label>
+                  <input disabled type="text" name="localidad" id="localidad" placeholder="Localidad"/>
+                </main>
+
+                <main class="">
+                  <label class="" for="provincia">Provincia</label>
+                  <input disabled type="text" name="provincia" id="provincia" placeholder="Provincia"/>
+                </main>
+
+                <main class="parteAfip">
+                  <button class="buscarAfip">Buscar AFIP</button>
+                </main>
+              </section>
+
+              <section class="abajo">
+                <main class=" select">
+                  <label class="" for="conIva">Cond IVA</label>
+                  <select name="conIva" id="conIva" disabled>
+                    <option value="Consumidor Final">Consumidor Final</option>
+                    <option value="Monotributista">Monotributista</option>
+                    <option value="Inscripto">Inscripto</option>
+                    <option value="Exento">Exento</option>
+                  </select>
+                </main>
+
+                <main class="">
+                  <label class="" for="dnicuit">Dni o Cuit</label>
+                  <input type="text" name="dnicuit" disabled id="dnicuit" placeholder="Dni o Cuit"/>
+                </main>
+
+                <main class="">
+                  <label class="" for="observaciones">Observaciones</label>
+                  <input type="text" name="observaciones" id="observaciones" placeholder="Observaciones"/>
+                </main>
+              </section>
+            </div>  
+          </fieldset>
+
+          <fieldset>
+            <div class="productos">
+              <section class="parteInfo">
+                <main class="codigo">
+                  <input type="text" placeholder="codigo" id="codigo" name="codigo" />
+                </main>
+
+                <main class="nuevaCantidad none">
+                  <input type="text" placeholder="Nueva Cantidad" id="nuevaCantidad" name="nuevaCantidad">
+                </main>
+
+                <main class="descripcion none">
+                  <input type="text" placeholder="descripcion" id="descripcion" name="descripcion" />
+                </main>
+
+                <main class="none iva">
+                  <select name="iva" id="iva">
+                    <option value="N">21.00%</option>
+                    <option value="R">10.50%</option>
+                  </select>
+                </main>
+
+                <main class="nuevoPrecio none">
+                  <input type="text" placeholder="nuevoPrecio" id="nuevoPrecio" name="nuevoPrecio" />
+                </main>
+
+                <main class="precio none">
+                  <input type="text" placeholder="precio" id="precio" name="precio" />
+                </main>
+
+                <main class="porcentaje none">
+                  <input type="text" placeholder="porcentaje" id="porcentaje" name="porcentaje" />
+                </main>
+            </section>
+
+              <main class="empresa">
+                <select name="empresa" id="empresa">
+                  <option value="Electro Avenida">Electro Avenida</option>
+                  <option value="Seguridad">Seguridad</option>
+                </select>
+              </main>
+            
+          </fieldset>
+      </div>
+
+      <section class="tabla listaProductos">
+        <table>
+          <thead>
+            <tr>
+              <th>Cantidad</th>
+              <th>Codigo</th>
+              <th>Descripcion</th>
+              <th>Iva</th>
+              <th>Precio</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="resultado"></tbody>
+        </table>
+      </section>
+
+      <div class="total">
+        <div class="numeroDeFactura">
+          <button>Ver Numero</button>
+          <input type="text" id="numeroFactura" name="numeroFactura" class="input-sm" disabled/>
+        </div>
+
+        <div class="descuento">
+          <label for="descuento">Descuento</label>
+          <input type="number" value="0.00" name="descuento%" id="descuento" />
+          <input disabled type="Number" value="0.00" name="descuentoN" id="descuentoN" />
+        </div>
+
+        <div class="total__input">
+          <input type="text" disabled name="total" id="total" placeholder="Total"/>
+        </div>
+      </div>
+
+      <main class="radioYtotal tipoVenta">
+        <main>
+          <p class="usuario vendedor"></p>
+        </main>
+
+        <main class="radios">
+          <div class="form-check">
+            <input type="radio" name="tipoVenta" id="presupuesto" value="PP"/>
+            <label for="presupuesto">Presupuesto</label>
+          </div>
+  
+          <div class="form-check">
+            <input type="radio" name="tipoVenta" id="contado" value="CD"/>
+            <label  for="contado">Contado</label>
+          </div>
+  
+          <div class="form-check cuentaC">
+            <input type="radio" name="tipoVenta" id="cuentaCorriente" value="CC"/>
+            <label for="cuentaCorriente">Cuenta Corriente</label>
+          </div>
+        </main>
+
+        <div class="opcional">
+          <div class="form-check none ventaValorizado">
+            <input class="valorizado" type="checkbox" name="valorizado" id="valorizado" value="valorizado"/>
+            <label class="" for="valorizado">Valorizado</label>
+          </div>
+  
+          <div class="form-check none imprimirCheck">
+            <input class="impresion" type="checkbox" name="Impresion" id="Impresion" value="Impresion" checked/>
+            <label class="" for="Impresion">Impresion (F6)</label>
+          </div>
+        </div>
+
+        <div class="cobrado">
+          <input type="number" name="cobrado" id="cobrado" placeholder="cobrado"/>
+        </div>
+      </main>
+
+      <div class="botones">
+          <button type="submit" class="borrarProducto none seccion-enviar-boton">
+            <img src="../imagenes/remito.webp" alt="" />
+            <p>Borrar Producto</p>
+          </button>
+
+          <button class="seccion-enviar-boton cancelar">
+            <img src="../imagenes/file.webp" alt="" />
+            <p>Cancelar</p>
+          </button>
+
+          <button class="prestamo none">
+            <img src="../imagenes/Prestamo.png" alt="Prestamo">
+            <p>Prestamo</p>
+          </button>
+
+          <button id="facturar-prestamo" class="facturar-prestamo none">
+            <img src="../imagenes/Prestamo.png" alt="Prestamo">
+            <p>Prestamo Facturar</p>
+          </button>
+
+          <button type="submit" class="remito seccion-enviar-boton">
+            <img src="../imagenes/remito.webp" alt="" />
+            <p>Remito</p>
+          </button>
+
+          <button type="submit" class="ticketFactura seccion-enviar-boton">
+            <img src="../imagenes/factura.webp" alt="" />
+            <p href="" class="">Ticket Factura</p>
+          </button>
+
+          <button type="submit" class="none ventaNegro presupuesto seccion-enviar-boton">
+            <img src="../imagenes/factura.webp" alt="" />
+            <p href="" class="">Presupuesto</p>
+          </button>
+      </div>
+
+    </div>
+
+    <div class="alerta none">
+      <div class="spinner">
+      </div>
+      <div class="texto">
+        <p>Generando Venta!! Aguarde</p>
+      </div>
+    </div>
+
+    <div class="notificacion none autoCierre">
+      <div class="icon">
+        <svg xmlns="http://www.w3.org/2000/svg"fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+        </svg>
+      </div>
+      <div class="descripcion">
+        <h3>Info!</h3>
+        <span id="notificacion-texto"></span>
+      </div>
+      <div class="close">
+        <span id="notificacion-close">X</span>
+      </div>
+    </div>
+
+    <script src="./emitirComprobante.js"></script>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gerencial</title>
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./utilidad.css">
+  </head>
+  <body class="seccionCancelados">
+    <div class="buscador botones">
+      <div>
+        <label for="desde">Desde</label>
+        <input type="date" autofocus name="desde" id="desde" autofocus />
+      </div>
+      <div>
+        <label for="Hasta">Hasta</label>
+        <input type="date" name="hasta" id="hasta" />
+      </div>
+
+      <div>
+        <button class="buscar">Buscar</button>
+      </div>
+    </div>
+    <div class="listar">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>CodProd</th>
+            <th>Descripcion</th>
+            <th>Egreso</th>
+            <th>Total</th>
+            <th>Vendedor</th>
+            <th>Hora</th>
+          </tr>
+        </thead>
+        <tbody class="tbody"></tbody>
+      </table>
+    </div>
+    <script src="./gerencial.js"></script>
+  </body>
+</html>
