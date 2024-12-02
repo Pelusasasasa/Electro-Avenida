@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Caja</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./caja.css">
+</head>
+<body class="informeCaja">
+        <section class="header">
+            <main>
+                <label for="desde">Desde</label>
+                <input type="date" name="desde" id="desde">
+            </main>
+            <main>
+                <label>Informe Caja</label>
+                <button id="exportar">Exportar</button>
+            </main>
+            <main>
+                <label for="hasta">Hasta</label>
+                <input type="date" name="hasta" id="hasta">
+            </main>
+        </section>
+        <section class="ingreso">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Nro_Comp</th>
+                        <th>Descripcion</th>
+                        <th>Cuenta</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody class="tbodyIngreso">
+    
+                </tbody>
+            </table>
+        </section>
+        <section class="egreso">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Nro_Comp</th>
+                        <th>Descripcion</th>
+                        <th>Cuenta</th>
+                        <th>Importe</th>
+                    </tr>
+                </thead>
+                <tbody class="tbodyEgreso">
+
+                </tbody>
+            </table>
+        </section>
+        <section class="totales botones">
+            <button class="salir">Salir</button>
+            <main>
+                <p>Saldo Anterior: <span class="saldoAnterior"></span></p>
+                <p>Total Ingresos: <span class="totalIngresos"></span></p>
+                <p>Total Egresos: <span class="totalEgresos"></span></p>
+                <p>Saldo Final: <span class="saldoFinal"></span></p>
+            </main>
+        </section>
+</body>
+<script src="./informeCaja.js"></script>
+</html>

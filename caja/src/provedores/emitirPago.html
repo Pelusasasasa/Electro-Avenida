@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emitir Pago</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./provedores.css">
+</head>
+<body>
+    <section class="header">
+        <main>
+            <select name="provedores" autofocus id="provedores"></select>
+            <input type="text" disabled name="codigo" id="codigo">
+        </main>
+        <main>
+            <label for="saldo">Saldo</label>
+            <input type="number" disabled id="saldo" name="saldo">
+            <input type="text" disabled id="condIva" name="condIva">
+            <input type="text" disabled id="cuit" name="cuit">
+        </main>
+        <main>
+            <label for="numeroVenta">Nº</label>
+            <input type="number" disabled name="numeroVenta" id="numeroVenta">
+        </main>
+    </section>
+    <section class="principal">
+        <fieldset>
+            <legend>Ingresar Datos</legend>
+            <main>
+                <label for="nro_comp">Nro Comp</label>
+                <div class="puntoVenta">
+                    <input type="text" name="puntoVenta" id="puntoVenta" value="0000">
+                    <input type="text" name=numero id=numero value="00000000">
+                </div>
+            </main>
+            <main>
+                <label for="tipo">Tipo</label>
+                <select name="tipo" id="tipo">
+                    <option value="Pago Anticipado">Pago Anticipado</option>
+                    <option value="Descuento">Descuento</option>
+                    <option value="Pago A Cuenta">Pago A Cuenta</option>
+                </select>
+            </main>
+            <main>
+                <label for="importe">Importe</label>
+                <input type="number" value="0.00" name="descuento" id="descuento" class="none">
+                <input type="number" value="0.00" name="importe" id="importe">
+            </main>
+        </fieldset>
+        <fieldset class="cheques">
+            <legend>Valores</legend>
+            <main>
+                <label for="numeroCheque">Nº Cheque</label>
+                <input type="text" name="numeroCheque" id="numeroCheque">
+            </main>
+            <main>
+                <label for="banco">Banco</label>
+                <select name="banco" id="banco">
+                    <option value="BANCO DE ENTRE RIOS">Banco Entre Rios</option>
+                    <option value="efectivo">Efectivo</option>
+                </select>
+            </main>
+            <main>
+                <label for="fecha">Fecha</label>
+                <input type="date" name="fecha" id="fecha">
+            </main>
+            <main>
+                <label for="importeCheque">Importe Cheque</label>
+                <input type="number" value="0.00" name="importeCheque" id="importeCheque">
+            </main>
+        </fieldset>
+    </section>
+    <section class="tables">
+            <main>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nº Comprobante</th>
+                            <th>Tipo</th>
+                            <th>Descuento</th>
+                            <th>Importe</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyComprobante"></tbody>
+                </table>
+            </main>
+            <main>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nº Cheque</th>
+                            <th>Banco</th>
+                            <th>Fecha Cheque</th>
+                            <th>Importe</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyCheque"></tbody>
+                </table>
+            </main>
+    </section>
+    <footer class="totales">
+        <section class="totalComprobante">
+            <main>
+                <label for="observaciones">Observaciones</label>
+                <input type="text" name="observaciones" id="observaciones">
+            </main>
+            <main>
+                <label for="total">Total</label>
+                <input type="number" value="0.00" name="total" id="total">
+            </main>
+        </section>
+        <section class="totalCheques">
+            <main>
+                <label for="totalCheque">Total Cheque</label>
+                <input type="number" value="0.00" name="totalCheque" id="totalCheque">
+            </main>
+        </section>
+    </footer>
+    <section class="botones">
+        <button id="aceptar">Aceptar</button>
+        <button id="cancelar">Cancelar</button>
+    </section>
+    <script src="./emitirPago.js"></script>
+</body>
+</html>

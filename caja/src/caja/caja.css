@@ -1,0 +1,286 @@
+
+.inputs label{
+    display: inline-block;
+    width: 15rem;
+    text-align: end;
+}
+
+.inputs #descripcion{
+    width: 70%;
+}
+
+.inputs main{
+    padding: .5rem 0;
+}
+
+.inputs input,.inputs select{
+    font-size: 2rem;
+    padding: .5rem;
+}
+
+/*Modifcar caja*/
+.seccionModificar .fechas{
+    display: flex;
+    justify-content: space-around;
+    margin: 2rem 0;
+}
+
+.seccionModificar .fechas input{
+    padding: .5rem;
+    font-size: 1.5rem;
+}
+
+.seccionModificar .fechas label{
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.seccionModificar .tabla{
+    height: 80vh;
+    background: white;
+    overflow: scroll;
+}
+
+.seccionModificar table{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.seccionModificar td,.seccionModificar th{
+    border: .1rem solid black;
+    white-space: nowrap;
+}
+
+.informeCaja h1{
+    text-align: center;
+}
+
+.informeCaja .header{
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1rem;
+}
+
+.informeCaja .header main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.informeCaja .header main label{
+    font-size: 2rem;
+}
+
+.informeCaja .header main input{
+    padding: .5rem;
+    font-size: 1.5rem;
+}
+
+.informeCaja .egreso,.ingreso{
+    margin-bottom: 2rem;
+    min-height: 20vh;
+    background-color: white;
+    border: .1rem solid black;
+    overflow: scroll;
+    height: 35vh;
+}
+
+.informeCaja .egreso,.ingreso tr:hover{
+    cursor: pointer;
+}
+
+.informeCaja table{
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.informeCaja table input{
+    width: 100%;
+}
+
+.informeCaja th,.informeCaja td{
+    border: .1rem solid black;
+}
+
+.informeCaja .totales{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+}
+
+.informeCaja .totales main{
+    border: .1rem solid black;
+    padding: 2rem;
+}
+
+.informeCaja .totales p{
+    margin: 0;
+}
+
+.listadoValores h1{
+    text-align: center;
+}
+
+.dividir2{
+    display: flex;
+    justify-content: space-between;
+}
+
+.dividir2 main{
+    margin: 1rem 0;
+}
+
+.dividir2 section{
+    width: 100%;
+}
+
+.dividir2 label{
+    display: inline-block;
+    width: 40%;
+}
+
+.dividir2 input{
+    padding: .5rem;
+    font-size: 1.5rem;
+}
+
+.abajo{
+    border: .1rem solid black;
+    padding: .5rem;
+    margin: .5rem;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+}
+
+.abajo label{
+    display: inline-block;
+    width: 90%;
+}
+
+.abajo input{
+    padding: .5rem;
+    font-size: 1.5rem;
+}
+
+.listado header{
+    display: flex;
+    justify-content: space-around;
+}
+
+.listado header main{
+    display: flex;
+    flex-direction: column;
+}
+
+.listado header main input,.listado header main select{
+    padding: .5rem;
+    font-size: 1.5rem;
+}
+
+
+.listado header main label{
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.listado .tabla,.cobtranzaFacturas .tabla{
+    height: 60vh;
+    background-color: white;
+    border: .1rem solid black;
+    overflow: scroll;
+}
+
+.listado table,.cobtranzaFacturas table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.listado table th,.cobtranzaFacturas table th,.cobtranzaFacturas table td{
+    border: .1rem solid black;
+}
+
+.listado table tbody tr:hover,.cobtranzaFacturas table tbody tr:hover{
+    background-color: gray;
+    cursor: pointer;
+}
+
+.cobtranzaFacturas .inputs{
+    display: flex;
+    justify-content: space-around;
+}
+
+.cobtranzaFacturas .inputs main{
+    margin: 2rem;
+}
+
+.cobtranzaFacturas .inputs main{
+    width: 20rem;
+    gap: 3rem;
+}
+
+.cobtranzaFacturas .inputs main input{
+    width: 100%;
+}
+
+.cobtranzaFacturas .inputs .radio{
+    border: .1rem solid black;
+}
+
+.cobtranzaFacturas .inputs .radio div{
+    margin: 1rem 0;
+}
+
+.cobtranzaFacturas .inputs .radio input{
+    transform: scale(1.5);
+}
+
+.radio div{
+    display: flex;
+}
+
+
+#difCaja .tabla{
+    height: 80vh;
+    background-color: white;
+    overflow: scroll;
+    border: .1rem solid black;
+    margin-top: 2rem;
+}
+
+#difCaja .tabla table{
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#difCaja .tabla table th{
+    border: .1rem solid black;
+}
+
+#difCaja .agregar{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+#difCaja .agregar main{
+    display: flex;
+    flex-direction: column;
+}
+
+#difCaja main input,#difCaja main label{
+    font-size: 2rem;
+}
+
+.cambioCaja{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.cambioCaja input{
+    /* padding: 1rem; */
+    font-size: 2rem;
+}

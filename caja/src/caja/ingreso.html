@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe de Ingreso</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./caja.css">
+    <link href="../../node_modules/material-icons/iconfont/material-icons.css" rel="stylesheet">
+</head>
+<body class="listado">
+    <header>
+        <h1>Ingreso de Caja</h1>
+        <main>
+            <label for="cuenta">Cuentas</label> 
+            <select autofocus name="cuenta" id="cuenta">
+                <option value="todos">TODOS</option>
+            </select>
+        </main>
+        <main>
+            <label for="desde">Desde</label>
+            <input type="date" name="desde" id="desde">
+        </main>
+        <main>
+            <label for="hasta">Hasta</label>
+            <input type="date" name="hasta" id="hasta">
+        </main>
+        
+    </header>
+    <section class="tabla">
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Ncomp</th>
+                    <th>Descripcion</th>
+                    <th>Importe</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+    <section class="totales">
+        <h3>Total Ingresos: <input type="number" class="text-right" id="total"></input></h3>
+    </section>
+</body>
+    <script src="./ingreso.js"></script>
+</html>

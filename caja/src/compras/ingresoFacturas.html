@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ingreso Facturas</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body class="ingresoFactura">
+    <section class="provedor">
+        <main>
+            <label for="provedor">Provedor</label>
+            <input type="text" autofocus name="provedor" id="provedor">
+        </main>
+
+        <main>
+            <label for="codigo">Codigo</label>
+            <input disabled type="text" name="codigo" id="codigo">
+        </main>
+
+        <main>
+            <label for="cond_iva">Cond_Iva</label>
+            <input disabled type="text" name="cond_iva" id="cond_iva">
+        </main>
+        <main>
+            <label for="cuit">Cuit</label>
+            <input disabled type="text" name="cuit" id="cuit">
+        </main>
+    </section>
+    <section class="informacionComprobante">
+        <main>
+            <label for="nroComp">Nº Comprobante</label>
+            <input type="text" value="0000" name="puntoVenta" id="puntoVenta">
+            <input type="text" name="numero" value="00000000" id="numero">
+        </main>
+        <main>
+            <label for="empresa">Empresa</label>
+            <select name="empresa" id="empresa">
+                <option value="Electro Avenida">Electro Avenida</option>
+                <option value="seguridad">Seguridad</option>
+            </select>
+        </main>
+    </section>
+    <section class="tipoComprobante">
+        <legend>Tipo Comprobante</legend>
+        <fieldset>
+            <main>
+                <label for="Factura">Factura</label>
+                <input type="radio" name="tipoComprobante" id="Factura">
+            </main>
+            <main>
+                <label for="Nota Credito">Nota Credito</label>
+                <input type="radio" name="tipoComprobante" id="Nota Credito">
+            </main>
+            <main>
+                <label for="Presupuesto">Presupuesto</label>
+                <input type="radio" name="tipoComprobante" id="Presupuesto">
+            </main>
+            <main>
+                <label for="Debito">Debito</label>
+                <input type="radio" name="tipoComprobante" id="Debito">
+            </main>
+            <main>
+                <label for="Ret/Pres">Ret/Pres</label>
+                <input type="radio" name="tipoComprobante" id="Ret/Pres">
+            </main>
+        </fieldset>
+    </section>
+    <section class="fechas">
+        <main>
+            <label for="fechaComp">Fecha Conp.</label>
+            <input type="date" name="fechaComp" id="fechaComp">
+        </main>
+        <main>
+            <label for="fechaImput">Fecha Imput</label>
+            <input type="month" name="fechaImput" id="fechaImput">
+        </main>
+    </section>
+    <section class="valores">
+        <main class="ayuda">
+            <div>
+                <p> <strong>1</strong>  Fact. Proveedores</p>
+                <p> <strong>2</strong>  Tarj. Credito - Cliente</p>
+                <p> <strong>3</strong>  Fact Proveedores</p>
+                <p> <strong>4</strong>  Tarj. Credito - Cliente</p>
+            </div>
+            <div class="radios">
+                <div>
+                    <label for="contado">Contado</label>
+                    <input type="radio" name="tipo" checked id="contado">
+                </div>
+                <div>
+                    <label for="cuentaCorriente">Cuenta Corriente</label>
+                    <input type="radio" name="tipo" id="cuentaCorriente">
+                </div>
+            </div>
+        </main>
+        <main class="inputs">
+            <div>
+                <label for="netoNoGravado">Neto No Gravado</label>
+                <input type="number" name="netoNoGravado" id="netoNoGravado" value="0.00">
+            </div>
+            <div>
+                <label for="netoGravado">Neto gravado</label>
+                <input type="number" name="netoGravado" id="netoGravado" value="0.00">
+            </div>
+            <div>
+                <label class="iva" for="iva">I.V.A</label>
+                <select name="iva" id="iva">
+                    <option value="21.00">21.00</option>
+                    <option value="10.50">10.50</option>
+                    <option value="27.00">27.00</option>
+                </select>
+                <input type="number" name="numeroIva" value="0.00" id="numeroIva">
+            </div>
+            <div>
+                <label for="percepcionIVA"><strong>1</strong>  Percepcion IVA Compras</label>
+                <input type="number" name="percepcionIVA" id="percepcionIVA" value="0.00">
+            </div>
+            <div>
+                <label for="retencionDGR"><strong>2</strong> Retencion DGR</label>
+                <input type="number" name="retencionDGR" id="retencionDGR" value="0.00">
+            </div>
+            <div>
+                <label for="percepcionDGR"><strong>3</strong> Percepcion DGR Compras</label>
+                <input type="number" name="percepcionDGR" id="percepcionDGR" value="0.00">
+            </div>
+            <div>
+                <label for="retencionIVA"><strong>4</strong> Retencion IVA</label>
+                <input type="number" name="retencionIVA" id="retencionIVA" value="0.00">
+            </div>
+            <div>
+                <label for="total">Total Factura</label>
+                <input type="number" name="total" id="total" value="0.00">
+            </div>
+            <div>
+                <label class="descuento" for="descuento">Descuento</label>
+                <input type="number" name="descuentoPor" id="descuentoPor" value="0.00">
+                <input type="number" name="descuento" id="descuento" value="0.00">
+            </div>
+            <div>
+                <label for="neto">Neto</label>
+                <input type="number" name="neto" id="neto" value="0.00">
+            </div>
+        </main>
+    </section>
+    <section class="botones">
+        <button class="none aceptar">Aceptar</button>
+        <button class="modificar none">Modificar</button>
+        <button class="cancelar">Cancelar</button>
+    </section>
+    <script src="./ingresoFacturas.js"></script>
+</body>
+</html>

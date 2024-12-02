@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vales Personales</title>
+    <link rel="stylesheet" href="./vales.css">
+</head>
+<body>
+    <section class="busqueda">
+        <label for="buscador">Buscador</label>
+        <input type="text" name="buscador" id="buscador">
+    </section>
+    <section class="tabla">
+      <table>
+        <thead>
+            <tr>
+                <th>Fecha</th>
+                <th>N_Comprobante</th>
+                <th>R.Social</th>
+                <th>Concepto</th>
+                <th class="">Importe</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+    <section class="total">
+        <label for="total">Total Facturas a cobrar</label>
+        <input type="number" name="total" id="total">
+    </section>
+    <section class="botones">
+        <button class="agregar">Agregar</button>
+        <button class="borrar">Borrar</button>
+        <button class="salir">Salir</button>
+    </section>
+</body>
+    <script src="./vales.js"></script>
+</html>

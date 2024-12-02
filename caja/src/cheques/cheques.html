@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheque en Cartera</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./cheques.css">
+    <link href="../../node_modules/material-icons/iconfont/material-icons.css" rel="stylesheet">
+</head>
+<body>
+    <section class="buscador">
+        <main class="input">
+            <label for="buscador"></label>
+            <input type="text" name="buscador" id="buscador">
+        </main>
+        <main class="radio">
+            <div>
+                <input type="radio" name="radio" checked id="porNumero">
+                <label for="porNumero">Por Numero</label>
+            </div>
+            <div>
+                <input type="radio" name="radio" id="porRazon">
+                <label for="porRazon">Por Razon Social</label>
+            </div>
+            <div>
+                <input type="radio" name="radio" id="porImporte">
+                <label for="porImporte">Por Importe</label>
+            </div>
+        </main>
+    </section>
+    <section class="tabla">
+        <table>
+            <thead>
+                <tr>
+                    <th>F_entrega</th>
+                    <th>N_cheque</th>
+                    <th>Banco</th>
+                    <th>Plaza</th>
+                    <th>F_cheque</th>
+                    <th>I_cheque</th>
+                    <th>Ent_por</th>
+                    <th>Entreg_a</th>
+                    <th>Domicilio</th>
+                    <th>Telefono</th>
+                    <th>Propio</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </section>
+    <section class="botones">
+        <button class="agregar">Agregar</button>
+        <button class="salir">Salir</button>
+    </section>
+</body>
+<script src="./cheques.js"></script>
+</html>

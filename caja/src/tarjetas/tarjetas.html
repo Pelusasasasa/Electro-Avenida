@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tarjeta</title>
+    <link rel="stylesheet" href="../assets/css/global.css">
+    <link rel="stylesheet" href="./tarjetas.css">
+    <link href="../../node_modules/material-icons/iconfont/material-icons.css" rel="stylesheet">
+</head>
+<body>
+    <section class="encabezado">
+        <main>
+            <label for="buscador">Buscador</label>
+            <input type="text" id="buscador" name="buscador">
+        </main>
+        <h1>Tarjeta Credito</h1>
+        <main class="total">
+            <label for="total">Total</label>
+            <input type="number" disabled name="total" id="total">
+        </main>
+
+        <main>
+            <label for="hoy">Hoy</label>
+            <input type="checkbox" id="hoy" name="hoy">
+        </main>
+
+        <main class="totalResumen none">
+            <label for="totaResumen">Total Resumen</label>
+            <input type="numher" value="0.00" name="totalResumen" id="totalResumen">
+        </main>
+    </section>
+
+    <section class="tabla">
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Tarjeta</th>
+                    <th>Cliente</th>
+                    <th>Importe</th>
+                    <th>Tipo Comp.</th>
+                    <th>Vendedor</th>
+                    <th>Acciones</th>
+                    <th>E</th>
+                </tr>
+            </thead>
+            <tbody class="tbody">
+
+            </tbody>
+        </table>
+    </section>
+    <section class="botones">
+        <button class="agregar">Agregar</button>
+        <button id="sumar">Sumar</button>
+        <button id="exportar">Exportar</button>
+        <button id="eliminarVarios">Eliminar Varios</button>
+        <button class="salir">Salir</button>
+    </section>
+</body>
+<script src="./tarjetas.js"></script>
+</html>
