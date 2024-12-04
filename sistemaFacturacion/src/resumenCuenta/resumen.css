@@ -1,0 +1,125 @@
+.buscador{
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 1fr;
+    margin: 0 .5rem;
+}
+
+.buscador main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buscador #nombreCliente{
+    width: 80%;
+}
+
+.buscador #buscador{
+    width: 30%;
+}
+
+.buscador .imprimir{
+    justify-self: center;
+    margin-bottom: 1rem;
+}
+
+.imagen{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+img{
+    width: 20rem;
+}
+
+body{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.imagen h3,.imagen p{
+    margin: 0;
+    color: black;
+}
+
+.cliente{
+    color: black;
+    background-color: white;
+    padding-bottom: 1rem;
+    padding-left: 2rem;
+}
+
+.cliente p{
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.table{
+    background-color: white;
+    min-height: 50vh;
+    height: auto;
+    overflow: scroll;
+}
+
+@media print{
+    .table{
+        overflow: hidden;
+        min-height: 25vh;
+    }
+}
+
+table thead tr th{
+    border: .1rem solid black;
+}
+
+.saldoActual{
+    padding-top: 1rem;
+    background-color: white;
+    display: flex;
+    justify-content: flex-end;
+    font-weight: bold;
+    padding-right: 2rem;
+    font-size: 2rem;
+}
+
+.saldoActual p{
+    margin: 0;
+    color: black;
+    font-size: 2rem;
+}
+
+.informacion{
+    background-color: white;
+    padding-bottom: 1.5rem;
+    padding-left: 1rem;
+    font-size: 1.5rem;
+}
+
+.informacion p{
+    color: black;
+    margin: 0;
+}
+
+@media print{
+    body{
+        font-weight: bold;
+    }
+    .table{
+        overflow: auto;
+    }
+}
+
+@media (height: 800px){
+    .table{
+        height: 45vh;
+    }
+}
+
+@media(height: 1000px){
+    .table{
+        height: 55vh;
+    }
+}

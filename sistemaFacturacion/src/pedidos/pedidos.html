@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pedidos</title>
+    <link rel="stylesheet" href="./pedidos.css">
+    <link rel="stylesheet" href="../assets/css/globales.css">
+  </head>
+  <body class="hacerPedido">
+    <h1>Hacer un Pedido</h1>
+    <section class="cliente">
+      <main>
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" autofocus value=" " />
+      </main>
+
+      <main>
+        <label for="telefono">Telefono</label>
+        <input type="tel" id="telefono" name="telefono" value=" " />
+      </main>
+    </section>
+
+      <fieldset>
+          <legend>Producto</legend>
+          
+          <section class="contenedorPedidos">
+            <main>
+              <label for="codigo">Codigo</label>
+              <input type="text" placeholder="codigo" id="codigo" name="codigo" />
+            </main>
+
+            <main class="descripcion none">
+              <label for="descripcion">Descripcion</label>
+              <input type="text" id="descripcion" name="descripcion">
+            </main>
+
+            <main class="cantidad none">
+              <label for="cantidad">Cantidad</label>
+              <input type="text" id="cantidad" name="cantidad">
+            </main>
+          </section>
+      </fieldset>
+
+      <section class="table tabla-mas-chica">
+        <table>
+          <thead>
+            <tr>
+              <th>Codigo</th>
+              <th>Cantidad</th>
+              <th>Descripcion</th>
+              <th>Cliente</th>
+              <th>Telefono</th>
+              <th>Marca</th>
+              <th>Provedor</th>
+              <th>Stock</th>
+              <th>Observacion</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </section>
+
+    <section class="botones">
+      <button id="volver">Volver</button>
+      <button class="grabar botonesPedidos-boton">Grabar</button>
+    </section>
+  </body>
+  <script src="./pedidos.js"></script>
+</html>

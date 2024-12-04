@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cargar Tarjeta</title>
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./utilidad.css">
+</head>
+<body class="cargarTarjeta">
+    <h1>Cargar Tarjeta</h1>
+    <section class="inputs">
+        <main class="fecha">
+            <label for="fecha">Fecha</label>
+            <input type="date" name="fecha" id="fecha" autofocus>
+        </main>
+        <main class="tarjetas">
+            <label for="tarjetas">Tarjetas</label>
+            <select name="tarjetas" id="tarjetas"></select>
+        </main>
+        <main class="importe">
+            <label for="importe">Importe</label>
+            <input type="number" name="importe" id="importe">
+        </main>
+        <main>
+            <label for="vendedor">Vendedor</label>
+            <input type="text" disabled name="vendedor" id="vendedor">
+        </main>
+    </section>
+    <section class="botones">
+        <button class="agregar">Agregar</button>
+        <button class="salir">Salir</button>
+    </section>
+</body>
+<script src="./cargarTarjeta.js"></script>
+</html>

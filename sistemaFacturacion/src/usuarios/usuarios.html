@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./usuarios.css">
+  </head>
+  <body class="vendedores">
+    <section class="main">
+      <section class="inputs">
+        <main class="inputUsuario">
+          <label for="nombre">Nombre</label>
+          <input type="text" name="nombre" id="nombre" />
+        </main>
+  
+        <main class="inputUsuario">
+          <label for="codigo">Codigo</label>
+          <input type="text" name="codigo" id="codigo" />
+        </main>
+  
+        <main class="inputUsuario">
+          <label for="acceso">Acceso</label>
+          <input type="text" name="acceso" id="acceso" />
+        </main>
+
+        <main class="inputUsuario">
+          <label for="empresa">Empresa</label>
+          <input type="text" name="empresa" id="empresa" />
+        </main>
+      </section>
+  
+      <section class="botones">
+        <button type="submit" id="enviar">Agregar</button>
+        <button id="guardar" class="none">Guardar</button>
+        <button class="eliminar none">Eliminar</button>
+      </section>
+    </section>
+
+    <ul class="listarUsuarios contenedor"></ul>
+  </body>
+  <script src="./usuarios.js"></script>
+</html>

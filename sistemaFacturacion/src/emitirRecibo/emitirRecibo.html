@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./recibo.css">
+    <title>Emitir recibo</title>
+  </head>
+  <body class="emitirRecibo">
+
+      <section class="cliente">
+        <main class="nombre">
+          <div>
+            <label for="codigo">Cliente</label>
+            <input autofocus type="text" id="codigo" name="codigo" />
+          </div>
+            <div>
+              <label for="nombre">Nombre</label>
+              <input type="text" disabled id="nombre" name="nombre" />
+            </div>
+            <div>
+              <label for="saldo">Saldo</label>
+              <input type="text" id="saldo" disabled name="saldo" placeholder="0.00" />
+            </div>
+            <div class="saldo_p none">
+              <label for="saldo_p">Saldo_P</label>
+              <input type="text" disabled name="saldo_p" id="saldo_p" placeholder="0.00">
+            </div>
+
+        </main>
+
+        <main class="direccion">
+          <div>
+            <label for="direccion">Direccion</label>
+            <input type="text" disabled name="direccion" id="direccion" />
+          </div>
+
+          <div>
+            <label for="localidad">Localidad</label>
+            <input type="text" disabled name="localidad" id="localidad" />
+          </div>
+
+          <div>
+            <label for="fecha">Fecha</label>
+            <input type="date" id="fecha" name="fecha" />
+          </div>
+        </main>
+
+        <main class="cuit">
+          <div>
+            <label for="cond_iva">Cond iva:</label>
+            <input type="text" disabled name="cond_iva" id="cond_iva" />
+          </div>
+
+          <div>
+            <label for="cuit">CUIT:</label>
+            <input type="text" disabled name="cuit" id="cuit" />
+          </div>
+        </main>
+      </section>
+
+      <section class="tabla">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Comprobante</th>
+              <th>Numero</th>
+              <th>Importe</th>
+              <th>Pagado</th>
+              <th>Pagado Actual</th>
+              <th>Saldo</th>
+              <th>Observaciones</th>
+            </tr>
+          </thead>
+          <tbody class="listar"></tbody>
+        </table>
+      </section>
+
+      <section class="pagado">
+        <main class="saldoAFavor">
+          <h3>Saldo a favor</h3>
+          <input type="number" id="saldoAFavor" value="0.00" class="text-right" name="saldoAFavor" />
+        </main>
+
+        <main>
+          <h3 for="valoresRecibidos">Valores Recibido</h3>
+          <input type="text" name="valoresRecibidos" id="valoresRecibidos">
+        </main>
+
+        <main class="total">
+          <h3>Total</h3>
+          <input type="number" placeholder="0.00" id="total" name="total" disabled />
+        </main>
+      </section>
+
+      <section class="botones">
+        <button class="todo">Pagar Todo</button>
+        <button class="cancelar">Cancelar</button>
+        <button class="imprimir">Imprimir</button>
+        <div class="vendedor"></div>
+      </section>
+
+      <div class="alerta none">
+        <div class="spinner"></div>
+        <div class="texto">
+          <p>Generando Recibo!! Aguarde</p>
+        </div>
+      </div>
+  </body>
+  <script src="./emitirRecibo.js"></script>
+</html>

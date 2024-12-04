@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listado de saldo</title>
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./clientes.css">
+  </head>
+  <body class="listadoSaldo">
+    <main class="head">
+      <h1>Listado de Saldos</h1>
+      <h3 class="fecha"></h3>
+    </main>
+    <hr />
+    <div class="botones"><button class="descargar">Descargar Listado</button></div>
+
+    <div class="tabla">
+      <table>
+        <thead>
+          <tr>
+            <th>Codigo</th>
+            <th>Cliente</th>
+            <th>Direccion</th>
+            <th>Cond IVA</th>
+            <th>Telefono</th>
+            <th>Saldo</th>
+            <th class="none saldoP">Saldo P</th>
+          </tr>
+        </thead>
+        <tbody class="tbody"></tbody>
+      </table>
+    </div>
+  </body>
+  <script src="listadoSaldo.js"></script>
+</html>

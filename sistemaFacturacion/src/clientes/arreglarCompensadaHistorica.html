@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="../clientes/clientes.css">
+    <title>ARREGLAR COMPENSADA/HISTORICA</title>
+</head>
+<body class="arreglarCompensada">
+    <h1 class="titulo">Arreglar Compensada</h1>
+    <section class="cliente">
+        <main>
+            <label for="codigo">Codigo</label>
+            <input type="text" autofocus name="codigo" id="codigo">
+        </main>
+        <main>
+            <label for="cliente">Cliente</label>
+            <input type="text" name="cliente" disabled id="cliente">
+        </main>
+    </section>
+    <section class="inputs">
+        <main>
+            <label for="puntoVenta">Punto Venta</label>
+            <input type="number" name="puntoVenta" id="puntoVenta">
+        </main> 
+        <main>            
+            <label for="numero">Numero</label>
+            <input type="number" name="numero" id="numero">
+        </main>
+    </section>
+    <section class="datos">
+        <fieldset>
+            <legend>Datos</legend>
+            <main>
+                <label for="tipoComp">Tipo_Comp</label>
+                <input type="text" name="tipoComp" id="tipoComp">
+            </main>
+            <main>
+                <label for="importe">Importe</label>
+                <input type="number" name="importe" id="importe">
+            </main>
+            <main>
+                <label for="pagado">Pagado</label>
+                <input type="number" name="pagado" id="pagado">
+            </main>
+            <main>
+                <label for="saldo">Saldo</label>
+                <input type="number" name="saldo" id="saldo">
+            </main>
+            <main>
+                <label for="observaciones">Observaciones</label>
+                <input type="text" name="observaciones" id="observaciones">
+            </main>
+        </fieldset>
+        
+    </section>
+    <section class="botones">
+        <button class="modificar">Modificar</button>
+        <button class="salir">Salir</button>
+    </section>
+</body>
+<script src="./arreglarCompensadaHistorica.js"></script>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listado Precio</title>
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./productos.css">
+  </head>
+  <body class="listadoStock">
+    <section class="buscador">
+      <main>
+        <label for="desde">Desde</label>
+        <input type="text" autofocus name="desde" id="desde" />
+      </main>
+
+      <main>
+        <label for="Hasta">Hasta</label>
+        <input type="text" name="hasta" id="hasta" />
+      </main>
+
+      <main class="button">
+        <button class="buscar">Buscar</button>
+      </main>
+    </section>
+
+    <div class="botones">
+      <div class="imprimir">
+        <button>Imprimir</button>
+      </div>
+      <div class="excel">
+        <button>Excel</button>
+      </div>
+    </div>
+
+    <div class="listar">
+      <table>
+        <thead>
+          <tr>
+            <th>Codigo</th>
+            <th>Descripcion</th>
+            <th>Stock</th>
+            <th>Marca</th>
+            <th>Cod. Fabrica</th>
+            <th id="observaciones">Observaciones</th>
+          </tr>
+        </thead>
+        <tbody class="tbody"></tbody>
+      </table>
+    </div>
+    <script src="./listadoStock.js"></script>
+  </body>
+</html>
