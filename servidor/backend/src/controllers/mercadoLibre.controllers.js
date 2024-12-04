@@ -32,4 +32,12 @@ mlCTRL.putForCodigo  = async(req, res) => {
     res.send( mercadolibre );
 };
 
+mlCTRL.deleteForCodigo =  async(req, res) => {
+    const { codigoML } = req.params;
+
+    const publicacion = MercadoLibre.findOneAndDelete({codigoML: codigoML});
+
+    res.send(publicacion)
+};
+
 module.exports = mlCTRL;

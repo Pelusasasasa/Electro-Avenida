@@ -13,10 +13,10 @@ const Variacion = new Schema({
     },
     stock: {
         type: Number,
-        require: true
+        required: true
     },
     publicacion:{
-        type: Schema.types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'MercadoLibre'
     }
 
