@@ -112,7 +112,7 @@ const agregarCheque = () => {
   );
 
   const cheque = {};
-  cheque.f_recibido = new Date();
+  // cheque.f_recibido = new Date();
   cheque.n_cheque = numeroCheque.value;
   cheque.banco = banco.value.toUpperCase();
   cheque.f_cheque = fecha.value;
@@ -170,8 +170,10 @@ const cargarChequesPropios = async (lista) => {
       banderaMP = true;
       await axios.post(`${URL}tarjetas`, tarjeta);
     } else {
-      await axios.put(`${URL}cheques/${cheque.n_cheque}`, cheque, configAxios);
+      console.log(cheque)
+      await axios.put(`${URL}cheques/${cheque.n_cheque}`, cheque);
     }
+    
   });
 };
 
@@ -316,12 +318,7 @@ provedores.addEventListener("change", async (e) => {
 numeroCheque.addEventListener("keypress", async (e) => {
   if (e.keyCode === 13) {
     if (numeroCheque.value !== "") {
-      const cheque = (
-        await axios.get(
-          `${URL}cheques/numero/${numeroCheque.value}`,
-          configAxios
-        )
-      ).data;
+      const cheque = (await axios.get(`${URL}cheques/numero/${numeroCheque.value}`)).data;
       if (cheque && !cheque.entreg_a) {
         const fechaCheque = cheque.f_cheque.slice(0, 10).split("-", 3);
         const option = document.createElement("option");
@@ -399,10 +396,9 @@ aceptar.addEventListener("click", async (e) => {
     if (elem.banco === "MERCADO PAGO"){
       banderaMP = true
     }
-  }
-
-  await cargarChequesPropios(listaCheques);
+  };
   
+  await cargarChequesPropios(listaCheques);
   await cambiarNumeroComprobantePago(document.querySelectorAll("#tbodyComprobante tr"));
 
   await ponerEnComprobantePagos();
@@ -450,12 +446,7 @@ aceptar.addEventListener("click", async (e) => {
 
     for await (let elem of listaCheques) {
       if (elem.banco === "BANCO DE ENTRE RIOS") {
-        await generarMovimientoCaja(
-          elem.f_recibido,
-          "I",
-          elem.n_cheque,
-          elem.banco,
-          "BE",
+        await generarMovimientoCaja(elem.f_recibido,"I",elem.n_cheque,elem.banco,"BE",
           elem.i_cheque,
           elem.entreg_a
         );
