@@ -1,0 +1,58 @@
+h1{
+    text-align: center;
+    margin: 0;
+}
+
+.cliente{
+    display: flex;
+    justify-content: space-around;
+}
+
+.contenedorPedidos{
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 2rem;
+}
+
+.contenedorPedidos  main{
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    width: 100%;
+}
+
+th svg {
+    margin-top: auto;
+    width: 20px;
+}
+
+.table{
+    background-color: white;
+    height: 70vh;
+    overflow: scroll;
+}
+
+.tabla-mas-chica{
+    height: 64vh;
+}
+
+table thead tr th,table tbody tr td{
+    border: .1rem solid black;
+    font-size: 1.4rem;
+}
+
+table thead tr th{
+    font-size: 2.0rem;
+}
+
+.observaciones{
+    width: 100%;
+}
+
+.eliminar{
+    background-color: red !important;
+}
+
+.eliminar td{
+    background-color: red !important;
+}

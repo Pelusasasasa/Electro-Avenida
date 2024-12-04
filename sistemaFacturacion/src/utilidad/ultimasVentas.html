@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimas Ventas</title>
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./utilidad.css">
+</head>
+<body class="utlimasVentas">
+    <section class="header">
+
+        <main>
+            <label for="desde">Desde</label>
+            <input type="date" autofocus name="desde" id="desde">
+        </main>
+        <h1>Ultimas Ventas</h1>
+        <main>
+            <label for="hasta">Hasta</label>
+            <input type="date" name="hasta" id="hasta">
+        </main>
+    </section>
+    <section class="tabla">
+        <table>
+            <thead>
+                <tr>
+                    <th>Hora</th>
+                    <th>Cliente</th>
+                    <th>Tipo Comp</th>
+                    <th>Nro_comp</th>
+                    <th>Importe</th>
+                    <th>Re-Imprimir</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+    <section class="botones">
+        <button class="salir">Salir</button>
+    </section>
+    <section class="alerta none">
+        <main class="spinner"></main>
+        <p class="texto">Aguarde</p>
+    </section>
+</body>
+<script src="./ultimasVentas.js"></script>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ver Prestamos</title>
+    <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="./verPrestamos.css">
+</head>
+<body>
+    <section class="botones">
+        <h1 class="text-center">Lista de Prestamos</h1>
+        <button id="botonFacturar">Facturar</button>
+    </section>
+    <section class="table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Id Cliente</th>
+                    <th>Cliente</th>
+                    <th>Nro Comp</th>
+                    <th>Observaciones</th>
+                    <th>Facturar</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </section>
+
+    <section class="detallesProducto none">
+        <div class="detalleTabla">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cod_Prod</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Stock</th>
+                        <th>Precio Unitario</th>
+                    </tr>
+                </thead>
+                <tbody id="detalle"></tbody>
+            </table>
+        </div>
+    </section>
+</body>
+<script src="./verPrestamos.js"></script>
+</html>

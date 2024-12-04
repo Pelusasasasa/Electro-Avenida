@@ -1,0 +1,140 @@
+.porComprobante .buscador,.porComprobante .elegir,.presupuestos .buscador,.LibroVentas .buscador{
+    display: flex;
+    justify-content: space-around;
+    margin: 1rem;
+}
+
+.LibroVentas .buscador{
+    margin: 0;
+}
+
+.presupuestos h2,.stockNegativo h2,.LibroVentas h2,.stockCero h2{
+    margin: 0;
+}
+
+.porComprobante .listar,.presupuestos .listar,.stockNegativo .listar,.LibroVentas .listar,.buscarVentas .listar,.stockCero .listar{
+    background-color: white;
+    overflow: scroll;
+    height: 78vh;
+}
+
+.porComprobante thead tr th,.presupuestos thead tr th,.stockNegativo thead tr th,.LibroVentas thead tr th,.buscarVentas thead th,.stockCero thead tr th{
+    border: .1rem solid black;
+}
+.porComprobante .tdTotal,.buscarVentas .tdTotal{
+    font-weight: bold;
+    border-bottom: .1rem solid black;
+}
+
+.porComprobante .alerta{
+    color: white;
+    font-size: 2rem;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.porComprobante .spinner{
+    border-top-color: white;
+    border-right-color: white;
+    border-bottom-color: white;
+    height: 5rem;
+    width: 5rem;
+}
+
+.stockNegativo .tbody td,.stockCero .tbody td{
+    border: .1rem solid black;
+}
+
+.LibroVentas table td{
+    white-space: nowrap;
+}
+
+.LibroVentas .buscador main{
+    display: flex;
+    flex-direction: column;
+}
+
+.LibroVentas .botones{
+    gap: 2rem;
+}
+
+.LibroVentas .oscuro{
+    font-weight: bold;
+}
+
+.buscarVentas .seleccionar{
+    display: flex;
+    justify-content: space-around;
+}
+
+.buscarVentas .seleccionar input{
+    transform: scale(1.5);
+}
+
+.buscarVentas .porNumero{
+    display: flex;
+    justify-content: space-around;
+}
+
+.buscarVentas .porNumero > main{
+    display: flex;
+    flex-direction: column;
+}
+
+.buscarVentas .porNumero .numeros main{
+    display: flex;
+}
+
+.buscarVentas .porNumero .numeros main #primerNumero{
+    width: 10rem;
+}
+
+.buscarVentas .porNumero .numeros main #segundoNumero{
+    width: 15rem;
+}
+
+.buscarVentas .buscador{
+    display: flex;
+    justify-content: space-around;
+}
+
+.buscarVentas .buscador div{
+    display: flex;
+    flex-direction: column;
+}
+
+
+.remitos .buscador{
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1.2rem;
+    margin-bottom: 1.6rem;
+}
+
+.remitos .table{
+    height: 85vh;
+    background: white;
+    overflow: scroll;
+}
+
+.remitos .table table{
+    border-collapse: collapse;
+}
+
+.remitos .table table thead tr th{
+    border: .1rem solid black;
+    white-space: nowrap;
+}
+
+.remitos .table table tbody tr td{
+    padding: 0 .3rem;
+    white-space: nowrap;
+}
+
+
+.porComprobante .impresion{
+overflow: hidden;
+}
+
+.porComprobante .impresion table thead th,.porComprobante .impresion table tbody td{
+    font-size: 1.1rem;
+}
