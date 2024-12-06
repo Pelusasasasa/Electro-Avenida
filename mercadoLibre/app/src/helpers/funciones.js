@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+const seller_id = '231090073';
 const client_id = '8351426981367452';
 const aux = 'https://api.mercadolibre.com/';
 const client_secret = 'n03VlrPoBnTyRmGDtDusOQwuu7qaNpHv';
@@ -65,49 +66,6 @@ export const calcularPrecioSujerido = (costo, impuesto) => {
     let precioML = 0;
     precioML = descuentoML + costoEnvio + costoFijo
     return precioML.toFixed(2);
-}
-
-export const obtenerAccessToken = async() => {
-  
-   try {
-     const respuesta = await axios.post(`${aux}oauth/token`, {
-      grant_type: 'refresh_token',
-      client_id,
-      client_secret,
-      redirect_uri,
-      refresh_token,
-      code,
-    },
-    {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-        }
-    }
-);
-    console.log(respuesta.data)
-    console.log(respuesta.data.access_token);
-    return respuesta.data.access_token;
-  } catch (error) {
-    console.error('Error obteniendo el token:', error.response.data);
-  }
-};
-
-export const obtenerInformacionUsuario = async() => {
-    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
-    const autherizacion = numeros.autorizacionML;
-  try {
-    const res = (await axios.get(`${aux}users/me`, {
-      headers:{
-        'Authorization': `Bearer ${autherizacion}`
-      }
-    })).data;
-
-  return res
-  } catch (error) {
-    return 'error'
-  }
 };
 
 export const modificarVariacionProducto = async(codigoML, codigoVaration, precioML, stockML) => {
@@ -166,21 +124,45 @@ export const modificarPrecioYStockPorIdDeProducto = async(codigo, precio, stock)
     }
 };
 
-export const traerCategorias = async() => {
-    const categorias = (await axios.get(`${aux}sites/MLA/categories`)).data;
-
-    return categorias;
+export const obtenerAccessToken = async() => {
+  
+   try {
+     const respuesta = await axios.post(`${aux}oauth/token`, {
+      grant_type: 'refresh_token',
+      client_id,
+      client_secret,
+      redirect_uri,
+      refresh_token,
+      code,
+    },
+    {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        }
+    }
+);
+    return respuesta.data.access_token;
+  } catch (error) {
+    console.error('Error obteniendo el token:', error.response.data);
+  }
 };
 
-export const traerSubCategorias = async(id) => {
-    
-    if (id){
-        const subCategorias = (await axios.get(`${aux}categories/${id}`)).data;
+export const obtenerInformacionUsuario = async() => {
+    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
+    const autherizacion = numeros.autorizacionML;
+  try {
+    const res = (await axios.get(`${aux}users/me`, {
+      headers:{
+        'Authorization': `Bearer ${autherizacion}`
+      }
+    })).data;
 
-        return subCategorias.children_categories;
-    }
-
-    return [];
+  return res
+  } catch (error) {
+    return 'error'
+  }
 };
 
 export const publicarML = async(elem) => {
@@ -206,5 +188,37 @@ export const subirImagenes = async(files) => {
 
     const res = (await axios.post(`${URL}mercadoLibre/imagenes`, files)).data;
     console.log(res)
+};
+
+export const traerConsultas = async() => {
+    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
+    const authorizacion = numeros.autorizacionML;
+    try {
+        const consultas = (await axios.get(`${aux}/questions/search?api_version=4&seller_id=${Selection}`, {
+            headers:{
+                Authorization: `Bearer ${authorizacion}`
+            }
+        }))
+        return consultas
+    } catch (error) {
+        return error
+    }
+};
+
+export const traerCategorias = async() => {
+    const categorias = (await axios.get(`${aux}sites/MLA/categories`)).data;
+
+    return categorias;
+};
+
+export const traerSubCategorias = async(id) => {
+    
+    if (id){
+        const subCategorias = (await axios.get(`${aux}categories/${id}`)).data;
+
+        return subCategorias.children_categories;
+    }
+
+    return [];
 };
 

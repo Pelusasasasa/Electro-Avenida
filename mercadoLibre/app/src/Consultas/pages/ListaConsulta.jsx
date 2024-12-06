@@ -1,5 +1,7 @@
-import React from 'react';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { ConsultaItem } from '../components/ConsultaItem';
+import { getConsultas } from '../../store/consultas/thunks';
 
 const res = {
     "total": 2,
@@ -95,7 +97,14 @@ const res = {
 };
 
 export const ListaConsulta = () => {
-  console.log(res.questions[0])
+  const {active, consultas} = useSelector( state => state.consultas)
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getConsultas())
+  }, [])
+
+  // console.log(res.questions[0])
   return (
     <section className='w-full bg-yellow-500'>
       <h1 className='text-center font-bold text-2xl mb-2'>Consultas de Mercado Libre</h1>
@@ -112,7 +121,7 @@ export const ListaConsulta = () => {
           </thead>
           <tbody>
             {
-              res.questions.map( elem => (
+              consultas.map( elem => (
                 <ConsultaItem {...elem} key={elem.id}/>
               ))
             }
