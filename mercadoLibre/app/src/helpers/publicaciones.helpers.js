@@ -40,6 +40,7 @@ export const traerPublicaciones = async() => {
 export const traerPublicacion = async(id) => {
     const res = (await axios.get(`${URL}mercadoLibre/forCodigo/${id}`)).data;
     const productoRelacionado = (await axios.get(`${URL}productos/${res.codProd}`)).data;
+    console.log(productoRelacionado)
     
     res.costo = productoRelacionado.costodolar !== 0 ? productoRelacionado.costodolar : parseFloat(productoRelacionado.costo);
     res.impuesto = parseFloat(productoRelacionado.impuestos);

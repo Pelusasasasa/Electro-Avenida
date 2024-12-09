@@ -40,7 +40,7 @@ const initialForm = {
 
     imagenes: [],
 
-}
+};
 
 export const PostPublicacion = () => {
     const { active } = useSelector(state => state.productos);

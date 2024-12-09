@@ -14,6 +14,8 @@ export const ponerActivo = (id) => {
         const res = await traerConsulta(id);
 
         dispatch(activar(res));
+
+        return res;
     };
 };
 
@@ -21,7 +23,6 @@ export const responderConsulta = (id, text) => {
 
     return async (dispatch) => {
         const res = await responder(id, text);
-        console.log(res)
 
         dispatch(respondiendoPregunta(res));
     };

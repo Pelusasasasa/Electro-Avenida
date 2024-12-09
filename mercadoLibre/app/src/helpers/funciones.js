@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-const seller_id = '231090073';
 const client_id = '8351426981367452';
 const aux = 'https://api.mercadolibre.com/';
 const client_secret = 'n03VlrPoBnTyRmGDtDusOQwuu7qaNpHv';
@@ -190,21 +189,6 @@ export const subirImagenes = async(files) => {
     console.log(res)
 };
 
-export const traerConsultas = async() => {
-    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
-    const authorizacion = numeros.autorizacionML;
-    try {
-        const consultas = (await axios.get(`${aux}/questions/search?api_version=4&seller_id=${Selection}`, {
-            headers:{
-                Authorization: `Bearer ${authorizacion}`
-            }
-        }))
-        return consultas
-    } catch (error) {
-        return error
-    }
-};
-
 export const traerCategorias = async() => {
     const categorias = (await axios.get(`${aux}sites/MLA/categories`)).data;
 
@@ -222,3 +206,7 @@ export const traerSubCategorias = async(id) => {
     return [];
 };
 
+//Lo usamos para una vez se cargue la aplicacion se pueda actualizar el token
+export const verificarToken = async() => {
+    await axios.get(`${URL}codigoML/verificarAuthorizacion`);
+};
