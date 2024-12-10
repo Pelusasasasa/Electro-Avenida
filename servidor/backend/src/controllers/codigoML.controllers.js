@@ -84,4 +84,16 @@ codigoMLCTRL.verificarAuthorizacion = async(req, res) => {
     };
 };
 
+codigoMLCTRL.subirImagenes = async(req, res) => {
+
+    try {
+        const {url} = (await CodigoML.findOne());
+
+        const aux = (await axios.get(`${url}pictures/items/upload`)).data;
+    } catch (error) {
+        
+    }
+
+};  
+
 module.exports = codigoMLCTRL;
