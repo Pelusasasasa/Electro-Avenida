@@ -38,7 +38,7 @@ export const getPublicaciones = () => {
 export const postPublicaciones = (pro) => {
     return async(dispatch) => {
         const res = await publicarML(pro)
-        console.log(res)
+        
 
         const codProd = res.attributes.find(elem => elem.id === 'SELLER_SKU');
         const publicacion = {};
@@ -50,7 +50,7 @@ export const postPublicaciones = (pro) => {
         publicacion.codProd = codProd.value_name;
 
         const respuesta = await agregarPublicaciones(publicacion);
-        console.log(respuesta)
+
         dispatch( addPublicacion(respuesta) );
     }
 };

@@ -165,13 +165,12 @@ export const obtenerInformacionUsuario = async() => {
 };
 
 export const publicarML = async(elem) => {
-    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
-    const autherizacion = numeros.autorizacionML;
+    const {authorizacion} = (await axios.get(`${URL}codigoML`)).data;
 
     try {
         const res = (await axios.post(`${aux}items`, elem, {
             headers: {
-                'Authorization': `Bearer ${autherizacion}`
+                'Authorization': `Bearer ${authorizacion}`
             }
         })).data;
         return res;
@@ -180,13 +179,6 @@ export const publicarML = async(elem) => {
         return error
         
     }
-};
-
-export const subirImagenes = async(files) => {
-    console.log(files)
-
-    const res = (await axios.post(`${URL}mercadoLibre/imagenes`, files)).data;
-    console.log(res)
 };
 
 export const traerCategorias = async() => {
@@ -209,4 +201,15 @@ export const traerSubCategorias = async(id) => {
 //Lo usamos para una vez se cargue la aplicacion se pueda actualizar el token
 export const verificarToken = async() => {
     await axios.get(`${URL}codigoML/verificarAuthorizacion`);
+};
+
+//Usamos para subir las imagenes y cargarlas en mercado libre
+export const subirImagenes = async(args) => {
+    const formData = new FormData();
+    for(let elem of args) {
+        formData.append('file', elem)
+    }
+
+    const res = (await axios.post(`${URL}codigoML/imagenes`, formData)).data;
+    return res;
 };

@@ -1,6 +1,9 @@
+const axios = require('axios');
+const FormData = require('form-data');
+
 const codigoMLCTRL = {};
 
-const { default: axios } = require('axios');
+
 const CodigoML = require('../models/CodigoML');
 
 codigoMLCTRL.actualizarcodigoML = async(req, res) => {
@@ -85,13 +88,36 @@ codigoMLCTRL.verificarAuthorizacion = async(req, res) => {
 };
 
 codigoMLCTRL.subirImagenes = async(req, res) => {
-
+    const imagenes = req.files;
+    const arregloImagenes = [];
     try {
-        const {url} = (await CodigoML.findOne());
+        const {authorizacion, url} = (await CodigoML.findOne());
 
-        const aux = (await axios.get(`${url}pictures/items/upload`)).data;
-    } catch (error) {
+        // Crea un FormData para enviar el archivo
         
+        for(let elem of imagenes){
+            const formData = new FormData();
+            formData.append('file', elem.buffer, elem.originalname);
+            
+            // Configura los encabezados de la solicitud
+            const headers = {
+                Authorization: `Bearer ${authorizacion}`,
+                ...formData.getHeaders()
+            };
+
+            const imagenSubida = (await axios.post(`${url}pictures/items/upload`, formData,  {headers})).data;
+            console.log(imagenSubida)
+
+            if (imagenSubida) {
+                arregloImagenes.push(imagenSubida);
+            };
+        }
+        
+
+        res.send(arregloImagenes)
+    } catch (error) {
+        console.log(error)
+        res.send(error)
     }
 
 };  

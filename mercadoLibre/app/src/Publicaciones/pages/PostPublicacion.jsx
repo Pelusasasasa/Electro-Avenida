@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
 import { calcularPrecioSujerido, subirImagenes, traerCategorias, traerSubCategorias } from '../../helpers/funciones'
 import { useForm } from '../../hooks/useForm';
@@ -11,6 +12,7 @@ const initialForm = {
     descripcion: '',
     stockSujerido: 0,
     precioSujerido: 0,
+    codBarra: '',
     costoIva: 0,
     precio: 0,
     stock: 0,
@@ -20,8 +22,8 @@ const initialForm = {
     temperaturaLuz: '',
     colorLuz: '',
     potencia: '',
-    tipofuente: '',
-    voltaje2: '',
+    tipofuente: '7387210',
+    voltaje2: '13417945',
     formato: '',
     forma: '',
     lugarMontaje: '',
@@ -44,15 +46,17 @@ const initialForm = {
 
 export const PostPublicacion = () => {
     const { active } = useSelector(state => state.productos);
-    const dispatch = useDispatch()
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const {
          subCategories, subCategories1, voltaje, temperaturaLuz, colorLuz, potencia, tipofuente, voltaje2, formState ,onChanges,
-        onInputChange, codigo, descripcion, marca, costoIva, imagenes, precioSujerido, stockSujerido, precio, stock, categories,
+        onInputChange, codigo, descripcion, codBarra, marca, costoIva, precioSujerido, stockSujerido, precio, stock, categories,
         tipoBateria, formato, forma, lugarMontaje, material, ambiente, capacidadFoco, incluyeFoco, inalamabrico, boton, incluyeControl,
         autoadhesivo, wifi, asistenteVirtual, appInteligente, eficienciaEnerg
         } = useForm(initialForm);
-
+    
+    const [imagenes, setImagenes] = useState(null)
     const [categorias, setCategorias] = useState([]);
     const [subCategorias, setSubCategorias] = useState([]);
     const [subCategorias1, setSubCategorias1] = useState([]);
@@ -113,6 +117,10 @@ export const PostPublicacion = () => {
         });
     };
 
+    const onInputChangeImagenes = (e) => {
+        setImagenes(e.target.files);
+    }
+
     const onInputKeyDown = (e) => {
         if (e.keyCode === 13){
             e.preventDefault();
@@ -124,9 +132,16 @@ export const PostPublicacion = () => {
         e.preventDefault();
         dispatch(saved());
 
+        const res = await subirImagenes(imagenes);
+        const sources = []
+
+        for(let {variations} of res) {
+            sources.push({"source": variations[0].secure_url});
+        };
+
          let producto = {};
          producto.title = formState.descripcion;
-         producto.category_id = formState.subCategories2
+         producto.category_id = formState.subCategories2 ? formState.subCategories2 : formState.subCategories1;
          producto.price = formState.precio;
          producto.currency_id = 'ARS';
          producto.available_quantity = formState.stock;
@@ -143,11 +158,7 @@ export const PostPublicacion = () => {
                  value_name: '3 meses'
              }
          ];
-         producto.pictures = [
-             {
-                 'source': "https://res.cloudinary.com/dyo36foif/image/upload/v1713298195/EA/401-047.png"
-             }
-         ];
+         producto.pictures = sources;
          producto.shipping = {
              mode: 'me2',
              tags: [
@@ -191,22 +202,13 @@ export const PostPublicacion = () => {
                 value_id: eficienciaEnerg ? eficienciaEnerg : "-1",
              },
              {
-                id: 'INCLUDES_BULBS',
-                value_id: incluyeFoco ? "242085" : "242084",
-             },
-             {
                 id: 'INCLUDES_REMOTE_CONTROL',
                 value_id: incluyeControl ? "242085" : "242084",
              },
              {
-                id: 'IS_AUTOADHESIVE',
-                value_id: autoadhesivo ? "242085" : "242084",
+                id: 'GTIN',
+                value_name: codBarra
              },
-             {
-                id: 'IS_WIRELESS',
-                value_id: inalamabrico ? "242085" : "242084",
-             },
-             
              {
                  id: 'MATERIALS',
                  value_name: material
@@ -216,29 +218,9 @@ export const PostPublicacion = () => {
                  value_name: active.cod_fabrica
              },
              {
-                 id: 'MOUNTING_PLACES',
-                 value_name: lugarMontaje
-             },
-             {
-                 id: 'LAMP_FORMAT',
-                 value_id: formato
-             },
-             {
-                id: 'LIGHT_BULBS_CAPACITY',
-                value_name: capacidadFoco
-             },
-             {
                 id: 'LIGHT_COLOR',
                 value_id: colorLuz ? colorLuz : "-1" ,
                 value_name: colorLuz ? colorLuz : null
-             },
-             {
-                id: 'LIGHT_SOURCES_TYPES',
-                value__id: tipofuente ? tipofuente : '-1',
-             },
-             {
-                id: 'SHAPE',
-                value_name: forma
              },
              {
                 "id": "SELLER_SKU",
@@ -267,22 +249,37 @@ export const PostPublicacion = () => {
                 id: 'VOLTAGE',
                 value_name: voltaje
             },
-            {
-                id: 'WITH_PUSH_BUTTON',
-                value_id: boton ? "242085" : "242084"
-            },
+            
             {
                 id: 'WITH_WI_FI',
                 value_id: wifi ? "242085" : "242084"
             }
-         ]
+         ];
+         console.log(formState.subCategories2)
+         if(formState.subCategories2 === 'MLA1588' || formState.subCategories2 === "MLA1586" || formState.subCategorias2 === "MLA1586"){
+            producto.attributes.push(
+                {id: 'INCLUDES_BULBS', value_id: incluyeFoco ? "242085" : "242084"},
+                {id: 'IS_AUTOADHESIVE',value_id: autoadhesivo ? "242085" : "242084",},
+                {id: 'IS_WIRELESS',value_id: inalamabrico ? "242085" : "242084",},
+                {id: 'LAMP_FORMAT', value_id: formato},
+                {id: 'LIGHT_BULBS_CAPACITY', value_name: capacidadFoco },
+                {id: 'LIGHT_SOURCES_TYPES',value__id: tipofuente ? tipofuente : '-1',},
+                {id: 'MOUNTING_PLACES',value_name: lugarMontaje},
+                {id: 'SHAPE', value_name: forma},
+                {id: 'WITH_PUSH_BUTTON',value_id: boton ? "242085" : "242084"},
+            )
+         }
 
-         dispatch( postPublicaciones(producto) )
+        dispatch( postPublicaciones(producto) );
+
+        navigate('/publicaciones/list');
+
+        
     };
 
   return (
     <form className='bg-yellow-600 w-full' onSubmit={agregar}>
-        <section id='header' className='grid grid-cols-[0.5fr_2fr_0.5fr] gap-3 m-2'>
+        <section id='header' className='grid grid-cols-[0.5fr_2fr_0.5fr_0.5fr] gap-3 m-2'>
             <div className='flex flex-col'>
                 <label htmlFor="codigo" className='text-center font-bold '>Codigo</label>
                 <input type="text" name="codigo" id="codigo" className='' autoFocus onChange={onInputChange} onKeyDown={onInputKeyDown} />
@@ -291,6 +288,10 @@ export const PostPublicacion = () => {
             <div className='flex flex-col'>
                 <label htmlFor="descripcion" className='text-center font-bold '>Descripcion</label>
                 <input type="text" name="descripcion" onChange={onInputChange} value={descripcion} id="descripcion" />
+            </div>
+            <div className='flex flex-col'>
+                <label htmlFor="codBarra" className='text-center font-bold '>Codigo Barras</label>
+                <input type="text" name="codBarra" onChange={onInputChange} value={codBarra} id="descripcion" />
             </div>
 
             <div className='flex flex-col'>
@@ -319,7 +320,7 @@ export const PostPublicacion = () => {
             
             <div className='flex flex-col'>
                 <label htmlFor="imagenes" className='text-center font-bold '>Imagenes</label>
-                <input type="file" multiple accept='image/*' name="imagenes" id="imagenes" className='bg-white' value={imagenes} onChange={onInputChange}/>
+                <input type="file" multiple accept='image/*' name="imagenes" id="imagenes" className='bg-white' onChange={onInputChangeImagenes}/>
             </div>
 
             <div className='flex flex-col'>
@@ -407,6 +408,7 @@ export const PostPublicacion = () => {
             <div className='flex flex-col'>
                 <label htmlFor="tipofuente" className='text-center font-bold '>Tipo Fuente</label>
                 <select name="tipofuente" id="tipofuente" value={tipofuente} onChange={onInputChange}>
+                    <option value="null">N/A</option>
                     <option value="7387210">LED</option>
                     <option value="3137301">INCANDESENTE</option>
                 </select>
@@ -415,6 +417,7 @@ export const PostPublicacion = () => {
             <div className='flex flex-col'>
                 <label htmlFor="voltaje2" className='text-center font-bold '>Voltaje 2</label>
                 <select name="voltaje2" id="voltaje2" value={voltaje2} onChange={onInputChange}>
+                    <option value="null">N/A</option>
                     <option value="13417945">220 V</option>
                     <option value="12V">12 V</option>
                 </select>

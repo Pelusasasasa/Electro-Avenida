@@ -1,7 +1,12 @@
 const {Router} = require('express');
-const router = Router();
+const multer = require('multer');
 
-const { actualizarcodigoML, postOne, getCodigoML, verificarAuthorizacion } = require('../controllers/codigoML.controllers');
+const router = Router();
+const storage = multer.memoryStorage()
+const upload = multer({ storage });
+
+const { actualizarcodigoML, postOne, getCodigoML, verificarAuthorizacion, subirImagenes } = require('../controllers/codigoML.controllers');
+
 
 router.route('/')
     .get(getCodigoML)
@@ -9,5 +14,7 @@ router.route('/')
     .put(actualizarcodigoML)
 router.route('/verificarAuthorizacion')
     .get(verificarAuthorizacion)
+router.route('/imagenes')
+    .post(upload.array('file', 10), subirImagenes)
 
 module.exports = router;
