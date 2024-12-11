@@ -65,49 +65,6 @@ export const calcularPrecioSujerido = (costo, impuesto) => {
     let precioML = 0;
     precioML = descuentoML + costoEnvio + costoFijo
     return precioML.toFixed(2);
-}
-
-export const obtenerAccessToken = async() => {
-  
-   try {
-     const respuesta = await axios.post(`${aux}oauth/token`, {
-      grant_type: 'refresh_token',
-      client_id,
-      client_secret,
-      redirect_uri,
-      refresh_token,
-      code,
-    },
-    {
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*'
-        }
-    }
-);
-    console.log(respuesta.data)
-    console.log(respuesta.data.access_token);
-    return respuesta.data.access_token;
-  } catch (error) {
-    console.error('Error obteniendo el token:', error.response.data);
-  }
-};
-
-export const obtenerInformacionUsuario = async() => {
-    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
-    const autherizacion = numeros.autorizacionML;
-  try {
-    const res = (await axios.get(`${aux}users/me`, {
-      headers:{
-        'Authorization': `Bearer ${autherizacion}`
-      }
-    })).data;
-
-  return res
-  } catch (error) {
-    return 'error'
-  }
 };
 
 export const modificarVariacionProducto = async(codigoML, codigoVaration, precioML, stockML) => {
@@ -166,6 +123,64 @@ export const modificarPrecioYStockPorIdDeProducto = async(codigo, precio, stock)
     }
 };
 
+export const obtenerAccessToken = async() => {
+  
+   try {
+     const respuesta = await axios.post(`${aux}oauth/token`, {
+      grant_type: 'refresh_token',
+      client_id,
+      client_secret,
+      redirect_uri,
+      refresh_token,
+      code,
+    },
+    {
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
+        }
+    }
+);
+    return respuesta.data.access_token;
+  } catch (error) {
+    console.error('Error obteniendo el token:', error.response.data);
+  }
+};
+
+export const obtenerInformacionUsuario = async() => {
+    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
+    const autherizacion = numeros.autorizacionML;
+  try {
+    const res = (await axios.get(`${aux}users/me`, {
+      headers:{
+        'Authorization': `Bearer ${autherizacion}`
+      }
+    })).data;
+
+  return res
+  } catch (error) {
+    return 'error'
+  }
+};
+
+export const publicarML = async(elem) => {
+    const {authorizacion} = (await axios.get(`${URL}codigoML`)).data;
+
+    try {
+        const res = (await axios.post(`${aux}items`, elem, {
+            headers: {
+                'Authorization': `Bearer ${authorizacion}`
+            }
+        })).data;
+        return res;
+    } catch (error) {
+        console.log(error)
+        return error
+        
+    }
+};
+
 export const traerCategorias = async() => {
     const categorias = (await axios.get(`${aux}sites/MLA/categories`)).data;
 
@@ -183,28 +198,18 @@ export const traerSubCategorias = async(id) => {
     return [];
 };
 
-export const publicarML = async(elem) => {
-    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
-    const autherizacion = numeros.autorizacionML;
+//Lo usamos para una vez se cargue la aplicacion se pueda actualizar el token
+export const verificarToken = async() => {
+    await axios.get(`${URL}codigoML/verificarAuthorizacion`);
+};
 
-    try {
-        const res = (await axios.post(`${aux}items`, elem, {
-            headers: {
-                'Authorization': `Bearer ${autherizacion}`
-            }
-        })).data;
-        return res;
-    } catch (error) {
-        console.log(error)
-        return error
-        
+//Usamos para subir las imagenes y cargarlas en mercado libre
+export const subirImagenes = async(args) => {
+    const formData = new FormData();
+    for(let elem of args) {
+        formData.append('file', elem)
     }
+
+    const res = (await axios.post(`${URL}codigoML/imagenes`, formData)).data;
+    return res;
 };
-
-export const subirImagenes = async(files) => {
-    console.log(files)
-
-    const res = (await axios.post(`${URL}mercadoLibre/imagenes`, files)).data;
-    console.log(res)
-};
-

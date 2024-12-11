@@ -27,6 +27,10 @@ app.use('/api/crearPdf',require('./routes/pdf'));
 app.use('/api/tipoTarjetas',require('./routes/tipoTarjetas'));
 //Cuenta Corriente provedor
 app.use('/api/ctactePro',require('./routes/ctatePro'));
+//CodigoML
+app.use('/api/codigoML',require('./routes/codigoML.route'));
+//ConsultasML
+app.use('/api/consultasML',require('./routes/consultaML.route'));
 //Cuenta Corriente Compensada
 app.use('/api/cuentaComp',require('./routes/cueCorrComp'));
 //Cuenta Corriente Historica
