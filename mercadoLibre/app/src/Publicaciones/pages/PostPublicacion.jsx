@@ -18,6 +18,7 @@ const initialForm = {
     stock: 0,
     categories: 'MLA1574',
     subCategories: 'MLA1582',
+    subCategories2: '',
     voltaje: '220V',
     temperaturaLuz: '',
     colorLuz: '',
@@ -50,7 +51,7 @@ export const PostPublicacion = () => {
     const navigate = useNavigate();
 
     const {
-         subCategories, subCategories1, voltaje, temperaturaLuz, colorLuz, potencia, tipofuente, voltaje2, formState ,onChanges,
+         subCategories, subCategories1, subCategories2, voltaje, temperaturaLuz, colorLuz, potencia, tipofuente, voltaje2, formState ,onChanges,
         onInputChange, codigo, descripcion, codBarra, marca, costoIva, precioSujerido, stockSujerido, precio, stock, categories,
         tipoBateria, formato, forma, lugarMontaje, material, ambiente, capacidadFoco, incluyeFoco, inalamabrico, boton, incluyeControl,
         autoadhesivo, wifi, asistenteVirtual, appInteligente, eficienciaEnerg
@@ -101,6 +102,10 @@ export const PostPublicacion = () => {
     }, [subCategories1]);
 
     useEffect(() => {
+        console.log(subCategories2)
+    }, [subCategories2]);
+
+    useEffect(() => {
         if (active._id) {
             listarProductoTraido();
         }
@@ -119,7 +124,7 @@ export const PostPublicacion = () => {
 
     const onInputChangeImagenes = (e) => {
         setImagenes(e.target.files);
-    }
+    };
 
     const onInputKeyDown = (e) => {
         if (e.keyCode === 13){
@@ -365,7 +370,7 @@ export const PostPublicacion = () => {
 
             <div className='flex flex-col'>
                 <label htmlFor="subCategories2" className='text-center font-bold '>Sub Categoria 2</label>
-                <select name="subCategories2" id="subCategories2" onChange={onInputChange}>
+                <select name="subCategories2" id="subCategories2" value={subCategories2} onChange={onInputChange} >
                     {subCategorias2.map(elem => (
                         <option key={elem.id} value={elem.id}>{elem.name}</option>
                     ))}
@@ -453,10 +458,14 @@ export const PostPublicacion = () => {
                 <input type="text" name="ambiente" id="ambiente" onChange={onInputChange} value={ambiente} />
             </div>
 
-            <div className='flex flex-col'>
-                <label htmlFor="capacidadFoco" className='text-center font-bold '>Capacidad Foco</label>
-                <input type="number" name="capacidadFoco" id="capacidadFoco" onChange={onInputChange} value={capacidadFoco} />
-            </div>
+            {
+                subCategories2 === 'MLA1586' || subCategories2 === 'MLA1588' || subCategories2 === 'MLA1585'  
+                ? <div className='flex flex-col'>
+                    <label htmlFor="capacidadFoco" className='text-center font-bold '>Capacidad Foco</label>
+                    <input type="number" name="capacidadFoco" id="capacidadFoco" onChange={onInputChange} value={capacidadFoco} />
+                </div>
+                : <></>
+            }
 
             <div className='flex flex-col'>
                 <label htmlFor="asistenteVirtual" className='text-center font-bold '>Asistente Virtual</label>
@@ -473,10 +482,16 @@ export const PostPublicacion = () => {
                 <input type="text" name="eficienciaEnerg" id="eficienciaEnerg" onChange={onInputChange} value={eficienciaEnerg} />
             </div>
 
-            <div className='flex flex-col'>
-                <label htmlFor="incluyeFoco" className='text-center font-bold '>Incluye Foco</label>
-                <input type="checkbox" name="incluyeFoco" id="incluyeFoco" onChange={onInputChange} value={incluyeFoco} />
-            </div>
+            {
+                
+                subCategories2 === 'MLA1586' || subCategories2 === 'MLA1588' || subCategories2 === 'MLA1585'  
+                ? 
+                    <div className='flex flex-col'>
+                        <label htmlFor="incluyeFoco" className='text-center font-bold '>Incluye Foco</label>
+                        <input type="checkbox" name="incluyeFoco" id="incluyeFoco" onChange={onInputChange} value={incluyeFoco} />
+                    </div>
+                : <></>
+            }
             
             <div className='flex flex-col'>
                 <label htmlFor="inalamabrico" className='text-center font-bold '>Es Inalambrico</label>
