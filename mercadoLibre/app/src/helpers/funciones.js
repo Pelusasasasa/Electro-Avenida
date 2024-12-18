@@ -64,6 +64,8 @@ export const calcularPrecioSujerido = (costo, impuesto) => {
 
     let precioML = 0;
     precioML = descuentoML + costoEnvio + costoFijo
+    console.log(precioML)
+    console.log(costo)
     return precioML.toFixed(2);
 };
 
@@ -209,7 +211,7 @@ export const subirImagenes = async(args) => {
     for(let elem of args) {
         formData.append('file', elem)
     }
-
     const res = (await axios.post(`${URL}codigoML/imagenes`, formData)).data;
+    console.log(res)
     return res;
 };

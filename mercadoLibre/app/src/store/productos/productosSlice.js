@@ -8,12 +8,15 @@ export const productosSlice = createSlice({
         productos: []
     },
     reducers: {
+        emptyProducto: (state, action) => {
+            state.active = ''
+        },
         setActive: (state, action) => {
             state.active = action.payload
-        }
+        },
     }
 });
 
 
 // Action creators are generated for each case reducer function
-export const { setActive } = productosSlice.actions;
+export const { emptyProducto, setActive } = productosSlice.actions;

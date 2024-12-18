@@ -114,10 +114,16 @@ codigoMLCTRL.subirImagenes = async(req, res) => {
         }
         
 
-        res.send(arregloImagenes)
+        res.send({
+            arregloImagenes,
+            ok: true
+        })
     } catch (error) {
         console.log(error)
-        res.send(error)
+        res.send({
+            message: error.response.data.message,
+            ok: false
+        })
     }
 
 };  

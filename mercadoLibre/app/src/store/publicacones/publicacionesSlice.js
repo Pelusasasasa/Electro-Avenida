@@ -12,6 +12,7 @@ export const publicacionesSlice = createSlice({
         addPublicacion: (state, action ) =>{
             state.publicaciones.push(action.payload);
             state.isSaving = false;
+            state.active = '';
         },
         deletePublication:(state, action) => {
             state.active = {};
@@ -20,7 +21,7 @@ export const publicacionesSlice = createSlice({
 
         },
         saved: (state, /* action */ ) => {
-            state.isSaving = false
+            state.isSaving = true
         },
         setActive: (state, action) =>{
             state.active = action.payload
