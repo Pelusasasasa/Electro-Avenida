@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {useDispatch, useSelector} from 'react-redux';
-import { calcularPrecioSujerido, subirImagenes, traerCategorias, traerSubCategorias } from '../../helpers/funciones'
+import Swal from 'sweetalert2';
+
+import { calcularPrecioSujerido, subirImagenes, traerCategorias, traerSubCategorias } from '../../helpers/funciones';
 import { useForm } from '../../hooks/useForm';
 import { setProducto } from '../../store/productos/thunks';
 import { Button } from '../../components/Button';
@@ -23,6 +25,7 @@ const initialForm = {
     temperaturaLuz: '',
     colorLuz: '',
     potencia: '',
+    lumenes: 0,
     tipofuente: '7387210',
     voltaje2: '13417945',
     formato: '',
@@ -45,13 +48,14 @@ const initialForm = {
 
 };
 
+
 export const PostPublicacion = () => {
-    const { active } = useSelector(state => state.productos);
+    const { active, isSaving } = useSelector(state => state.productos);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const {
-         subCategories, subCategories1, subCategories2, voltaje, temperaturaLuz, colorLuz, potencia, tipofuente, voltaje2, formState ,onChanges,
+         subCategories, subCategories1, subCategories2, voltaje, temperaturaLuz, colorLuz, potencia, lumenes, tipofuente, voltaje2, formState ,onChanges,
         onInputChange, codigo, descripcion, codBarra, marca, costoIva, precioSujerido, stockSujerido, precio, stock, categories,
         tipoBateria, formato, forma, lugarMontaje, material, ambiente, capacidadFoco, incluyeFoco, inalamabrico, boton, incluyeControl,
         autoadhesivo, wifi, asistenteVirtual, appInteligente, eficienciaEnerg
@@ -62,7 +66,8 @@ export const PostPublicacion = () => {
     const [subCategorias, setSubCategorias] = useState([]);
     const [subCategorias1, setSubCategorias1] = useState([]);
     const [subCategorias2, setSubCategorias2] = useState([]);
-    
+
+    const validacion = subCategories2 === 'MLA1586' || subCategories2 === 'MLA1588' || subCategories2 === 'MLA1585'  
     
     const cargarPagina = async() => {
         //Traemos las categorias de mercado libre, proximamente las vamos a guaradar en la base de datos y traerlas desde ahi
@@ -102,7 +107,6 @@ export const PostPublicacion = () => {
     }, [subCategories1]);
 
     useEffect(() => {
-        console.log(subCategories2)
     }, [subCategories2]);
 
     useEffect(() => {
@@ -115,10 +119,10 @@ export const PostPublicacion = () => {
     const listarProductoTraido = () => {
         onChanges({
             descripcion: active.descripcion,
-            costoIva: (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
+            costoIva: active.costodolar !== 0 ? (parseFloat(active.costodolar) + parseFloat(active.impuestos)) * 1038 :  (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
             stockSujerido: active.stock,
             marca: active.marca,
-            precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos))
+            precioSujerido: calcularPrecioSujerido(active.costodolar !== 0 ? parseFloat(active.costodolar) * 1038 : parseFloat(active.costo), parseFloat(active.impuestos))
         });
     };
 
@@ -135,12 +139,17 @@ export const PostPublicacion = () => {
 
     const agregar = async(e) => {
         e.preventDefault();
-        dispatch(saved());
-
+        await dispatch( await saved());
+        
         const res = await subirImagenes(imagenes);
+        console.log(res)
+        if(!res?.ok){
+            await Swal.fire(res.message, '' ,'error')
+            return
+        }
         const sources = []
 
-        for(let {variations} of res) {
+        for(let {variations} of res.arregloImagenes) {
             sources.push({"source": variations[0].secure_url});
         };
 
@@ -152,7 +161,7 @@ export const PostPublicacion = () => {
          producto.available_quantity = formState.stock;
          producto.buying_mode = 'buy_it_now';
          producto.condition = 'new';
-         producto.listing_type_id = 'gold_special'
+         producto.listing_type_id = 'gold_pro'
          producto.sale_terms = [
              {
                  id: 'WARRANTY_TYPE',
@@ -260,7 +269,12 @@ export const PostPublicacion = () => {
                 value_id: wifi ? "242085" : "242084"
             }
          ];
-         console.log(formState.subCategories2)
+         if(formState.subCategorias1 === 'MLA377395'){
+            producto.attributes.push(
+                {id: 'LUMINOUS_FLUX', value_name: lumenes}
+            )
+         }
+
          if(formState.subCategories2 === 'MLA1588' || formState.subCategories2 === "MLA1586" || formState.subCategorias2 === "MLA1586"){
             producto.attributes.push(
                 {id: 'INCLUDES_BULBS', value_id: incluyeFoco ? "242085" : "242084"},
@@ -276,7 +290,6 @@ export const PostPublicacion = () => {
          }
 
         dispatch( postPublicaciones(producto) );
-
         navigate('/publicaciones/list');
 
         
@@ -411,6 +424,11 @@ export const PostPublicacion = () => {
             </div>
 
             <div className='flex flex-col'>
+                <label htmlFor="lumenes" className='text-center font-bold '>Flujo Luminoso</label>
+                <input type="number" name="lumenes" id="lumenes" onChange={onInputChange} value={lumenes} />
+            </div>
+
+            <div className='flex flex-col'>
                 <label htmlFor="tipofuente" className='text-center font-bold '>Tipo Fuente</label>
                 <select name="tipofuente" id="tipofuente" value={tipofuente} onChange={onInputChange}>
                     <option value="null">N/A</option>
@@ -429,29 +447,45 @@ export const PostPublicacion = () => {
             </div>
 
             
-            <div className='flex flex-col'>
-                <label htmlFor="formato" className='text-center font-bold '>Formato de la lampara</label>
-                <select name="formato" id="formato" value={formato} onChange={onInputChange}>
-                    <option value="null">N/A</option>
-                    <option value="13435240">Colgante</option>
-                    <option value="13685639">Aplique</option>
-                </select>
-            </div>
+            {
+                validacion
+                ?
+                <div className='flex flex-col'>
+                    <label htmlFor="formato" className='text-center font-bold '>Formato de la lampara</label>
+                    <select name="formato" id="formato" value={formato} onChange={onInputChange}>
+                        <option value="null">N/A</option>
+                        <option value="13435240">Colgante</option>
+                        <option value="13685639">Aplique</option>
+                        <option value="13077255">Plafon</option>
+                    </select>
+                </div>
+                : <></>
+            }
 
             <div className='flex flex-col'>
                 <label htmlFor="forma" className='text-center font-bold '>Forma</label>
                 <input type="text" name="forma" id="forma" onChange={onInputChange} value={forma} />
             </div>
 
-            <div className='flex flex-col'>
-                <label htmlFor="lugarMontaje" className='text-center font-bold '>Lugares de montaje</label>
-                <input type="text" name="lugarMontaje" id="lugarMontaje" onChange={onInputChange} value={lugarMontaje} />
-            </div>
+            {
+                validacion
+                ? 
+                <div className='flex flex-col'>
+                    <label htmlFor="lugarMontaje" className='text-center font-bold '>Lugares de montaje</label>
+                    <input type="text" name="lugarMontaje" id="lugarMontaje" onChange={onInputChange} value={lugarMontaje} />
+                </div>
+                : <></>
+            }
 
-            <div className='flex flex-col'>
-                <label htmlFor="material" className='text-center font-bold '>Material</label>
-                <input type="text" name="material" id="material" onChange={onInputChange} value={material} />
-            </div>
+            {
+                validacion
+                ?
+                <div className='flex flex-col'>
+                    <label htmlFor="material" className='text-center font-bold '>Material</label>
+                    <input type="text" name="material" id="material" onChange={onInputChange} value={material} />
+                </div>
+                : <></>
+            }
 
             <div className='flex flex-col'>
                 <label htmlFor="ambiente" className='text-center font-bold '>Ambiente</label>
@@ -459,18 +493,24 @@ export const PostPublicacion = () => {
             </div>
 
             {
-                subCategories2 === 'MLA1586' || subCategories2 === 'MLA1588' || subCategories2 === 'MLA1585'  
+                validacion
                 ? <div className='flex flex-col'>
                     <label htmlFor="capacidadFoco" className='text-center font-bold '>Capacidad Foco</label>
                     <input type="number" name="capacidadFoco" id="capacidadFoco" onChange={onInputChange} value={capacidadFoco} />
                 </div>
                 : <></>
             }
+            
 
-            <div className='flex flex-col'>
-                <label htmlFor="asistenteVirtual" className='text-center font-bold '>Asistente Virtual</label>
-                <input type="text" name="asistenteVirtual" id="asistenteVirtual" onChange={onInputChange} value={asistenteVirtual} />
-            </div>
+            {
+                validacion
+                ? 
+                <div className='flex flex-col'>
+                    <label htmlFor="asistenteVirtual" className='text-center font-bold '>Asistente Virtual</label>
+                    <input type="text" name="asistenteVirtual" id="asistenteVirtual" onChange={onInputChange} value={asistenteVirtual} />
+                </div>
+                : <></>
+            }
 
             <div className='flex flex-col'>
                 <label htmlFor="appInteligente" className='text-center font-bold '>App Inteligente</label>
@@ -484,7 +524,7 @@ export const PostPublicacion = () => {
 
             {
                 
-                subCategories2 === 'MLA1586' || subCategories2 === 'MLA1588' || subCategories2 === 'MLA1585'  
+                validacion
                 ? 
                     <div className='flex flex-col'>
                         <label htmlFor="incluyeFoco" className='text-center font-bold '>Incluye Foco</label>
@@ -492,23 +532,42 @@ export const PostPublicacion = () => {
                     </div>
                 : <></>
             }
-            
-            <div className='flex flex-col'>
-                <label htmlFor="inalamabrico" className='text-center font-bold '>Es Inalambrico</label>
-                <input type="checkbox" name="inalamabrico" id="inalamabrico" onChange={onInputChange} value={inalamabrico} />
-            </div>
-            <div className='flex flex-col'>
-                <label htmlFor="boton" className='text-center font-bold '>Con Boton Pulsador</label>
-                <input type="checkbox" name="boton" id="boton" onChange={onInputChange} value={boton} />
-            </div>
-            <div className='flex flex-col'>
-                <label htmlFor="incluyeControl" className='text-center font-bold '>Incluye Control</label>
-                <input type="checkbox" name="incluyeControl" id="incluyeControl" onChange={onInputChange} value={incluyeControl} />
-            </div>
-            <div className='flex flex-col'>
-                <label htmlFor="autoadhesivo" className='text-center font-bold '>Es Authodesivo</label>
-                <input type="checkbox" name="autoadhesivo" id="autoadhesivo" onChange={onInputChange} value={autoadhesivo} />
-            </div>
+            {
+                validacion
+                ?
+                <div className='flex flex-col'>
+                    <label htmlFor="inalamabrico" className='text-center font-bold '>Es Inalambrico</label>
+                    <input type="checkbox" name="inalamabrico" id="inalamabrico" onChange={onInputChange} value={inalamabrico} />
+                </div>
+                : <></>
+            }
+            {
+                validacion
+                ?
+                <div className='flex flex-col'>
+                    <label htmlFor="boton" className='text-center font-bold '>Con Boton Pulsador</label>
+                    <input type="checkbox" name="boton" id="boton" onChange={onInputChange} value={boton} />
+                </div>
+                : <></>
+            }
+            {
+                validacion
+                ?
+                <div className='flex flex-col'>
+                    <label htmlFor="incluyeControl" className='text-center font-bold '>Incluye Control</label>
+                    <input type="checkbox" name="incluyeControl" id="incluyeControl" onChange={onInputChange} value={incluyeControl} />
+                </div>
+                : <></>
+            }
+            {
+                validacion
+                ?
+                <div className='flex flex-col'>
+                    <label htmlFor="autoadhesivo" className='text-center font-bold '>Es Authodesivo</label>
+                    <input type="checkbox" name="autoadhesivo" id="autoadhesivo" onChange={onInputChange} value={autoadhesivo} />
+                </div>
+                : <></>
+            }
             <div className='flex flex-col'>
                 <label htmlFor="wifi" className='text-center font-bold '>Con Wifi</label>
                 <input type="checkbox" name="wifi" id="wifi" onChange={onInputChange} value={wifi} />
@@ -519,10 +578,13 @@ export const PostPublicacion = () => {
         </section>
 
         <section className='flex justify-around pt-2'>
-            <Button text='Agregar' type='submit'/>
+            <Button text='Agregar' type='submit' disabled={isSaving ? 'disabled' : ''}/>
             <Button text='Salir' />
-            
         </section>
+
+        <div className={`${isSaving ? '' : 'hidden'}`}>
+            <h1>Guardando...</h1>
+        </div>
         
     </form>
   )
