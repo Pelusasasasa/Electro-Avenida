@@ -11,4 +11,4 @@ router.route('/:id')
     .put(modificarPedido)
     .delete(eliminarPedido)
 
-module.exports = router
+module.exports = router;    
