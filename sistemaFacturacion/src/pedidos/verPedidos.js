@@ -42,11 +42,10 @@ let vendedor = getParameterByName("vendedor");
 let pedidos = [];
 
 const filtarPedidos = async (e) => {
-
   if (e.target.value === ""){
     arregloAux = pedidos;
   }else{
-    arregloAux = pedidos.filter( pedido => pedido[filtro.value].includes(e.target.value.toUpperCase()));
+    arregloAux = pedidos.filter( pedido => pedido.codigo[filtro.value].includes(e.target.value.toUpperCase()));
   };
   
   listarPedidos(arregloAux);
@@ -142,9 +141,9 @@ const OrdenarPedidos = (e) => {
       document.getElementById("flechaArribaProvedor").classList.remove("none");
 
       arregloAux.sort((a, b) => {
-        if (a.provedor > b.provedor) {
+        if (a.codigo.provedor > b.codigo.provedor) {
           return 1;
-        } else if (a.provedor < b.provedor) {
+        } else if (a.codigo.provedor < b.codigo.provedor) {
           return -1;
         }
         return 0;
@@ -156,15 +155,15 @@ const OrdenarPedidos = (e) => {
       document.getElementById("flechaArribaProvedor").classList.add("none");
 
       arregloAux.sort((a, b) => {
-        if (a.provedor > b.provedor) {
+        if (a.codigo.provedor > b.codigo.provedor) {
           return -1;
-        } else if (a.provedor < b.provedor) {
+        } else if (a.codigo.provedor < b.codigo.provedor) {
           return 1;
         }
         return 0;
       });
     }
-  }
+  };
 
   if (e.target.parentNode.id === "marca") {
     if (
@@ -176,9 +175,9 @@ const OrdenarPedidos = (e) => {
       console.log(arregloAux)
 
       arregloAux.sort((a, b) => {
-        if (a.marca > b.marca) {
+        if (a.codigo.marca > b.codigo.marca) {
           return 1;
-        } else if (a.marca < b.marca) {
+        } else if (a.codigo.marca < b.codigo.marca) {
           return -1;
         }
         return 0;
@@ -190,9 +189,9 @@ const OrdenarPedidos = (e) => {
       document.getElementById("flechaArribaMarca").classList.add("none");
 
       arregloAux.sort((a, b) => {
-        if (a.marca > b.marca) {
+        if (a.codigo.marca > b.codigo.marca) {
           return -1;
-        } else if (a.marca < b.marca) {
+        } else if (a.codigo.marca < b.codigo.marca) {
           return 1;
         }
         return 0;
@@ -204,12 +203,11 @@ const OrdenarPedidos = (e) => {
   listarPedidos(arregloAux);
 };
 
-function listarPedidos(pedidos) {
+const listarPedidos = (pedidos) => {
   tbody.innerHTML = "";
   
   for (let [index, pedido] of pedidos.entries()) {
     let fecha = new Date(pedido.fecha);
-    const stock = pedido.stock !== undefined ? pedido.stock : 0;
 
     const tr = document.createElement("tr");
     tr.id = pedido._id;
@@ -235,18 +233,19 @@ function listarPedidos(pedidos) {
     tdStock.classList.add("stock");
     tdEstado.classList.add("estado");
 
+    //Desestructuramos el producto que viene con el pedido
+    const {_id, descripcion, marca, stock, provedor} = pedido.codigo ? pedido.codigo : {_id: pedido.codigo, descripcion: '', marca: '', stock: '', provedor: ''};
+
     //valores
-    tdFecha.innerHTML = `${fecha.getUTCDate()}/${
-      fecha.getUTCMonth() + 1
-    }/${fecha.getUTCFullYear()}`;
-    tdCodigo.innerHTML = pedido.codigo;
-    tdProducto.innerHTML = pedido.producto;
+    tdFecha.innerHTML = `${fecha.getUTCDate()}/${fecha.getUTCMonth() + 1}/${fecha.getUTCFullYear()}`;
+    tdCodigo.innerHTML = pedido.codigo ? _id : '999-999';
+    tdProducto.innerHTML = descripcion ? descripcion : pedido.producto;
     tdCantidad.innerHTML = redondear(pedido.cantidad, 2);
     tdCliente.innerHTML = pedido.cliente;
     tdTelefeno.innerHTML = pedido.telefono;
     tdVendedor.innerHTML = pedido.vendedor;
-    tdMarca.innerText = pedido.marca ? pedido.marca : "";
-    tdProvedor.innerText = pedido.provedor ? pedido.provedor : "";
+    tdMarca.innerText = marca;
+    tdProvedor.innerText = provedor;
     tdStock.innerHTML = redondear(stock, 2);
     inputEstado.value = pedido.estadoPedido;
     tdObservacion.innerHTML = pedido.observacion;
@@ -294,6 +293,41 @@ document.addEventListener("keydown", async (e) => {
       behavior: "smooth",
     });
 });
+
+//Eliminar un pedido
+eliminarPedido.addEventListener("click", async (e) => {
+  seleccionado = document.querySelector(".seleccionado");
+  if (seleccionado) {
+    await sweet
+      .fire({
+        title: "Eliminar Pedido",
+        showCancelButton: true,
+        confirmButtonText: "Aceptar",
+      })
+      .then(async ({ isConfirmed }) => {
+        if (isConfirmed) {
+          await axios.delete(
+            `${URL}pedidos/${seleccionado.id}`,
+            {
+              data: {
+                vendedor,
+                maquina: verNombrePc(),
+                pedido: seleccionado.children[2].innerText,
+              },
+            },
+            configAxios
+          );
+          tbody.removeChild(seleccionado);
+          seleccionado = "";
+        }
+      });
+  } else {
+    sweet.fire({ title: "Pedido no seleccionado" });
+  }
+});
+
+//Eliminar Varios Pedidos
+eliminarVarios.addEventListener("click", eliminarVariosPedidos);
 
 tbody.addEventListener("click", (e) => {
   seleccionado && seleccionado.classList.remove("seleccionado");
@@ -378,41 +412,6 @@ tbody.addEventListener("dblclick", async (e) => {
     });
 });
 
-//Eliminar un pedido
-eliminarPedido.addEventListener("click", async (e) => {
-  seleccionado = document.querySelector(".seleccionado");
-  if (seleccionado) {
-    await sweet
-      .fire({
-        title: "Eliminar Pedido",
-        showCancelButton: true,
-        confirmButtonText: "Aceptar",
-      })
-      .then(async ({ isConfirmed }) => {
-        if (isConfirmed) {
-          await axios.delete(
-            `${URL}pedidos/${seleccionado.id}`,
-            {
-              data: {
-                vendedor,
-                maquina: verNombrePc(),
-                pedido: seleccionado.children[2].innerText,
-              },
-            },
-            configAxios
-          );
-          tbody.removeChild(seleccionado);
-          seleccionado = "";
-        }
-      });
-  } else {
-    sweet.fire({ title: "Pedido no seleccionado" });
-  }
-});
-
-//Eliminar Varios Pedidos
-eliminarVarios.addEventListener("click", eliminarVariosPedidos);
-
 thead.addEventListener("click", OrdenarPedidos);
 
 salir.addEventListener("click", (e) => {
@@ -424,7 +423,27 @@ window.addEventListener("load", async (e) => {
   copiar();
 
   pedidos = (await axios.get(`${URL}pedidos`, configAxios)).data;
+
+  for(let elem of pedidos){
+    if(!elem.codigo){
+      elem.codigo = {};
+      elem.codigo._id = '999-999';
+      elem.codigo.marca = '';
+      elem.codigo.provedor = '';
+      elem.codigo.descripcion = '';
+      elem.codigo.stock = 0;
+    }
+
+    if(elem.codigo._id === '999-999'){
+      elem.codigo.marca = '';
+      elem.codigo.provedor = '';
+      elem.codigo.descripcion = elem.producto;
+      elem.codigo.stock = 0;
+    }
+  }
+
   arregloAux = pedidos;
+
   listarPedidos(pedidos);
 });
 

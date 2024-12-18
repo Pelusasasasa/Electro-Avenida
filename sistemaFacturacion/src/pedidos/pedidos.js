@@ -85,10 +85,10 @@ cantidad.addEventListener("keypress", (e) => {
     };
     const valorDeCantidad = cantidad.value === "" ? 0 : cantidad.value;
     mostrarVentas(producto, valorDeCantidad);
-    cantidad.classList.add("none");
+    cantidadMain.classList.add("none");
     cantidad.value = "";
     descripcion.value = "";
-    descripcion.classList.add("none");
+    descripcionMain.classList.add("none");
     codigo.value = "";
     codigo.focus();
   }
@@ -100,7 +100,7 @@ ipcRenderer.on("mando-el-producto", async (e, args) => {
   mostrarVentas(producto, cantidad);
 });
 
-function mostrarVentas(objeto, cantidad) {
+const mostrarVentas = (objeto, cantidad) => {
   const marca = objeto.marca ? objeto.marca : "";
   const codfabrica = objeto.cod_fabrica ? objeto.cod_fabrica : "";
   tbody.innerHTML += `
@@ -117,7 +117,7 @@ function mostrarVentas(objeto, cantidad) {
         <td id=eliminar>Eliminar</td>
         </tr>
     `;
-}
+};
 
 tbody.addEventListener("click", (e) => {
   if (e.target.id === "eliminar") {
@@ -126,9 +126,12 @@ tbody.addEventListener("click", (e) => {
 });
 
 grabar.addEventListener("click", async (e) => {
+  let pedidos = [];
+
   //Mandar Pedido a La Base de Datos
   const trs = document.querySelectorAll("#tbody tr");
-  trs.forEach(async (td) => {
+
+  for(let td of trs){
     const Pedido = {};
     Pedido.fecha = new Date();
     Pedido.codigo = td.children[0].innerText;
@@ -136,22 +139,27 @@ grabar.addEventListener("click", async (e) => {
     Pedido.producto = td.children[2].innerText;
     Pedido.cliente = td.children[3].innerText.toUpperCase();
     Pedido.telefono = td.children[4].innerText;
-    Pedido.marca = td.children[5].innerText;
-    Pedido.provedor = td.children[6].innerText;
-    Pedido.stock = td.children[7].innerText;
     Pedido.observacion = td.children[8].children[0].value.toUpperCase();
     Pedido.vendedor = vendedor;
     Pedido.maquina = verNombrePc();
-    try {
-      await axios.post(`${URL}pedidos`, Pedido, configAxios);
-    } catch (error) {
-      await sweet.fire({
-        title: "No se pudo cargar el pedido",
-      });
-      console.log(error);
-    }
-  });
-  window.location.href = "../index.html";
+
+    let pedidoNuevo = (await axios.post(`${URL}pedidos`, Pedido, configAxios)).data;
+    pedidos.push(pedidoNuevo);
+
+    };
+  
+  if (trs.length === pedidos.length) {
+    await sweet.fire({
+      title: 'Pedidos Guardados',
+      icon: 'success'
+    })
+    window.location.href = "../index.html";
+  }else{
+    await sweet.fire({
+      title: 'Pedidos No Guardados',
+      icon: 'error'
+    })
+  }
 });
 
 //al precionar enter le damos el foco a numero

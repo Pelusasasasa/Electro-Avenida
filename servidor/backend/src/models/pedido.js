@@ -6,20 +6,14 @@ const Pedido = new Schema({
         default: Date.now
     },
     codigo:{
-        type: String,
+        type: Schema.Types.String,
+        ref: 'Producto',
         required: false
     },
     producto:{
-        type: String,
-        required: false
-    },
-    marca:{
-        type:String,
-        required: true
-    },
-    provedor:{
-        type:String,
-        required: true
+        type: 'String',
+        set: val => val.toUpperCase().trim(),
+        default: ''
     },
     cantidad:{
         type: Number,
@@ -27,7 +21,8 @@ const Pedido = new Schema({
     },
     cliente:{
         type: String,
-        default: ""
+        default: "",
+        set: val => val.toUpperCase().trim()
     },
     telefono:{
         type: String,
@@ -35,11 +30,8 @@ const Pedido = new Schema({
     },
     vendedor: {
         type: String,
-        required: false
-    },
-    stock: {
-        type: Number,
-        required: false
+        required: false,
+        set: val => val.toUpperCase().trim()
     },
     estadoPedido: {
         type: String,
