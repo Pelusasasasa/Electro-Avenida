@@ -172,6 +172,12 @@ ipcMain.on('imprimir-recibo',async(e,args)=>{
     
 });
 
+ipcMain.on('imprimir-pedido', async(e, args) => {
+    abrirVentanaImprimir('impresion/pedido.html', 500, 1200, 'noReinician', true);
+
+    await imprimir(args)
+});
+
 //funcion para imprimir presupuesto
 const imprimir = (info)=>{;
     ventanaImprimir.webContents.on('did-finish-load',async function() {
@@ -181,6 +187,7 @@ const imprimir = (info)=>{;
 
 ipcMain.on('imprimir',(e,args)=>{
     const opciones = JSON.parse(args);
+    
     ventanaImprimir.webContents.print(opciones,(success, errorType) => {
         if (success) {
             ventanaPrincipal.focus()

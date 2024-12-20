@@ -3,7 +3,8 @@ const pedidosCTRL = {}
 const Pedidos = require("../models/pedido")
 
 pedidosCTRL.traerPedidos = async(req,res)=>{
-    const pedidos = await Pedidos.find().populate('codigo', ['descripcion', 'marca', 'stock', 'provedor'])
+    const pedidos = await Pedidos.find()
+    .populate('codigo', ['descripcion', 'marca', 'stock', 'provedor'])
     res.send(pedidos)
 };
 
@@ -13,7 +14,7 @@ pedidosCTRL.crearPedido = async(req,res)=>{
 
     try {
         const pedido = new Pedidos(req.body)
-        const pedidoGuardado = await pedido.save()
+        const pedidoGuardado = await (await pedido.save()).populate('codigo', ['descripcion', 'marca', 'stock', 'provedor']);                        
 
         console.log(`Pedido ${req.body.codigo} Guardado por el vendedor ${pedido.vendedor} de la maquina ${req.body.maquina} con la fecha y hora ${new Date().toLocaleString()}`)
         res.send(pedidoGuardado)

@@ -152,7 +152,9 @@ grabar.addEventListener("click", async (e) => {
     await sweet.fire({
       title: 'Pedidos Guardados',
       icon: 'success'
-    })
+    });
+
+    ipcRenderer.send('imprimir-pedido', pedidos);
     window.location.href = "../index.html";
   }else{
     await sweet.fire({
