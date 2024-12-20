@@ -499,7 +499,7 @@ actualizar.addEventListener("click", async (e) => {
           }
           cliente.saldo_p = saldo.toFixed(2);
           await axios.put(`${URL}cuentaHisto/id/${cuentaHistorica.nro_comp}`, cuentaHistorica);
-          await axios.put(`${URL}cuentaComp/numeroYCliente/${comp.nro_comp}${comp.codigontaCompensada.nro_comp}/${cuentaCompensada.codigo}`, cuentaCompensada);
+          await axios.put(`${URL}cuentaComp/numeroYCliente/${cuentaCompensada.nro_comp}/${cuentaCompensada.codigo}`, cuentaCompensada);
           await axios.put(
             `${URL}clientes/${cliente._id}`,
             cliente,
