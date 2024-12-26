@@ -19,6 +19,7 @@ const transferencia = document.getElementById("transferencia");
 
 const total = document.getElementById("total");
 const cobrado = document.getElementById("cobrado");
+const vuelto = document.getElementById("vuelto");
 const descuento = document.getElementById("descuento");
 
 const aceptar = document.getElementById("aceptar");
@@ -128,9 +129,7 @@ aceptar.addEventListener("click", async (e) => {
 
   movimiento.pasado = true;
   const now = new Date();
-  const p = new Date(
-    now.getTime() - now.getTimezoneOffset() * 60000
-  ).toISOString();
+  const p = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
   movimiento.fecha = p;
 
   try {
@@ -144,6 +143,7 @@ aceptar.addEventListener("click", async (e) => {
     total.value = "0.00";
     cobrado.value = "0.00";
     descuento.value = "0.00";
+    vuelto.value = "0.00";
   } catch (error) {
     await sweet.fire({
       title: "No se pudo cargar la factura",
@@ -231,12 +231,14 @@ transferencia.addEventListener("click", async (e) => {
 
 cobrado.addEventListener("keypress", (e) => {
   if (e.keyCode === 13) {
-    if (parseFloat(cobrado.value) !== parseFloat(total.value)) {
-      descuento.value = redondear(
-        parseFloat(cobrado.value) - parseFloat(total.value),
-        2
-      );
-    }
+    vuelto.value =  redondear(parseFloat(cobrado.value) - parseFloat(total.value), 2);
+    vuelto.focus();
+  }
+});
+
+vuelto.addEventListener('keypress', e => {
+  if (e.keyCode === 13){
+    descuento.value =  redondear( parseFloat(cobrado.value) - parseFloat(total.value) - parseFloat(vuelto.value), 2);
     descuento.focus();
   }
 });
@@ -305,4 +307,8 @@ function listarUltimoMovimiento(mov) {
   tr.appendChild(tdVendedor);
 
   tbody.appendChild(tr);
-}
+};
+
+vuelto.addEventListener('focus', e => {
+  vuelto.select();
+});
