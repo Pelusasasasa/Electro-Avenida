@@ -3,13 +3,15 @@ import { publicacionesSlice } from './publicacones'
 import { uiSlice } from './ui'
 import { productosSlice } from './productos/productosSlice';
 import { consultaSlice } from './consultas';
+import { variablesSlice } from './variables';
 
 
 export const store = configureStore({
     reducer: {
+        consultas: consultaSlice.reducer,
+        productos: productosSlice.reducer,
         publicaciones: publicacionesSlice.reducer,
         ui: uiSlice.reducer,
-        productos: productosSlice.reducer,
-        consultas: consultaSlice.reducer
+        variables: variablesSlice.reducer,
     }
 });

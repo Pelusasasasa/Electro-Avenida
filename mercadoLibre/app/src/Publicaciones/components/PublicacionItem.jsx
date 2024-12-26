@@ -3,14 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { activarPublicacion } from '../../store/publicacones';
 
 const gananciaML = 25;
-const porcentajeDescuentoML = 0.54;
-const envio = 28000;
+const porcentajeDescuentoML = 0.65;
+const envio = 30000;
 const primerCostoFijo = 12000;
-const segundoCostoFijo = 28000;
+const segundoCostoFijo = 30000;
 const valorPrimerCostoFijo = 900;
 const valorSegundoCostoFijo = 1800;
 
-export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, stockML, costo, impuesto}) => {
+export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, stockML, costo, costodolar, impuesto}) => {
+    const { dolar } = useSelector(state => state.variables);
     const { active } = useSelector(state => state.publicaciones);
     const dispatch = useDispatch();
 
@@ -27,18 +28,24 @@ export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, st
     };
 
     const calcularPrecioSujerido = () => {
-        const costoFinal = costo + impuesto;
+        const costoFinal = costodolar !== 0 ? (costodolar + impuesto) * dolar  :  costo + impuesto;
         let utilidad = costoFinal + (costoFinal * gananciaML / 100);
         let descuentoML = (utilidad / porcentajeDescuentoML);
+
+       
 
         let costoEnvio = 0;
         let costoFijo = 0;
 
         //Vemos cuanto nos cobran del envio en mercado libre dependiendo de la utilidad
         if (descuentoML > envio){
-            costoEnvio = 6779;
-        }else{
             costoEnvio = 0;
+        }else{
+            if (descuentoML > 5000){
+                costoEnvio = 5802.49;
+            }else{
+                costoEnvio = 9611.99;
+            }
         };
 
          //Vemos cuanto nos descuentan por el costo fijo dependiendo de el valor de la utilidad
@@ -51,6 +58,13 @@ export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, st
          };
 
          let precioML = 0;
+          if (codigoML === 'MLA1984928448'){
+            console.log(descuentoML)
+            console.log('El costo fijo es :', costoFijo)
+            console.log('El costo Envio es :', costoEnvio)
+            console.log('El costo Envio es :', envio)
+        }
+        
          precioML = descuentoML + costoEnvio + costoFijo
          return precioML.toFixed(2);
     }
@@ -60,7 +74,7 @@ export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, st
         <td className='border border-black'>{index + 1}</td>
         <td className='border border-black'>{codigoML}</td>
         <td className='border border-black'>{descripcion}</td>
-        <td className='border border-black'>{(costo + impuesto).toFixed(2)}</td>
+        <td className='border border-black'>{costodolar !== 0 ? ((costodolar + impuesto) * dolar).toFixed(2) : (costo + impuesto).toFixed(2)}</td>
         <td className='border border-black'>{calcularPrecioSujerido()}</td>
         <td className='border border-black'>{precioML.toFixed(2)}</td>
         <td className='border border-black'>{stockML.toFixed(2)}</td>

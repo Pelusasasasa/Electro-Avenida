@@ -3,7 +3,7 @@ import swal from 'sweetalert2';
 
 import { useForm } from '../../hooks/useForm';
 import { actualizarPublicacion } from '../../store/publicacones';
-import { buscarVariacionesProducto, modificarVariacionProducto } from '../../helpers/funciones';
+import { buscarVariacionesProducto, modificarPrecioYStockPorIdDeProducto, modificarVariacionProducto } from '../../helpers/funciones';
 
 
 const initialState = {
@@ -24,10 +24,8 @@ export const Modal = ({closeModal, type}) => {
 
         if(type === 'put'){
             dispatch(actualizarPublicacion(active.codigoML, formState.precioML, formState.stockML))
-
-            const {id} = (await buscarVariacionesProducto(active.codigoML))[0];
             
-            const res = await modificarVariacionProducto(active.codigoML, id, precioML, stockML);
+            const res = await modificarPrecioYStockPorIdDeProducto(active.codigoML, precioML, stockML);
             
             if(res) await swal.fire('Se modifico el producto');
 

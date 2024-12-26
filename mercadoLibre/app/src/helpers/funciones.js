@@ -23,8 +23,7 @@ export const actualizarToken = async() => {
 };
 
 export const buscarVariacionesProducto = async(codigo) => {
-    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
-    const authorizacion = numeros.autorizacionML;
+    const {authorizacion} = (await axios.get(`${URL}codigoML`)).data;
     try {
         const res = (await axios.get(`${aux}items/${codigo}/variations`,{
             headers: {
@@ -94,20 +93,9 @@ export const modificarVariacionProducto = async(codigoML, codigoVaration, precio
 };
 
 export const modificarPrecioYStockPorIdDeProducto = async(codigo, precio, stock) => {
-    const numeros = (await axios.get(`${URL}tipoVenta`)).data;
-    const authorizacion = numeros.autorizacionML;
-    try {
-        // await axios.put(`${aux}items/${codigo}`,
-        //     {
-        //         status: 'paused'
-        //     },
-        //     {
-        //         headers: {
-        //             'Authorization': `Bearer ${authorizacion}`
-        //         }
-        //     }
-        // )
-        const res = (await axios.put(`${aux}items/${codigo}`,
+    const {authorizacion} = (await axios.get(`${URL}codigoML`)).data;
+    try { 
+        const { data } = (await axios.put(`${aux}items/${codigo}`,
             {
                 price: precio,
                 available_quantity: stock
@@ -117,11 +105,10 @@ export const modificarPrecioYStockPorIdDeProducto = async(codigo, precio, stock)
                     'Authorization': `Bearer ${authorizacion}`
                 }
             }
-        )).data;
-        console.log(res.data.response.data)
-        return res;
+        ))
+        return data;
     } catch (error) {
-        console.log(error.response.data)
+        console.log(error)
     }
 };
 
