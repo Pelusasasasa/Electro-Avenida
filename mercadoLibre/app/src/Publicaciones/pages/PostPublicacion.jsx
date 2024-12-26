@@ -43,6 +43,10 @@ const initialForm = {
     asistenteVirtual: '',
     appInteligente: '',
     eficienciaEnerg: '',
+    tipoTecnologia: '',
+    formatoVenta: '',
+    eficienciaEnergetica: '',
+    vidaUtil: '',
 
     imagenes: [],
 
@@ -51,6 +55,7 @@ const initialForm = {
 
 export const PostPublicacion = () => {
     const { active, isSaving } = useSelector(state => state.productos);
+    const { dolar } = useSelector(state => state.variables);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -58,7 +63,7 @@ export const PostPublicacion = () => {
          subCategories, subCategories1, subCategories2, voltaje, temperaturaLuz, colorLuz, potencia, lumenes, tipofuente, voltaje2, formState ,onChanges,
         onInputChange, codigo, descripcion, codBarra, marca, costoIva, precioSujerido, stockSujerido, precio, stock, categories,
         tipoBateria, formato, forma, lugarMontaje, material, ambiente, capacidadFoco, incluyeFoco, inalamabrico, boton, incluyeControl,
-        autoadhesivo, wifi, asistenteVirtual, appInteligente, eficienciaEnerg
+        autoadhesivo, wifi, asistenteVirtual, appInteligente, eficienciaEnerg, tipoTecnologia, formatoVenta, eficienciaEnergetica, vidaUtil
         } = useForm(initialForm);
     
     const [imagenes, setImagenes] = useState(null)
@@ -119,10 +124,10 @@ export const PostPublicacion = () => {
     const listarProductoTraido = () => {
         onChanges({
             descripcion: active.descripcion,
-            costoIva: active.costodolar !== 0 ? (parseFloat(active.costodolar) + parseFloat(active.impuestos)) * 1038 :  (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
+            costoIva: active.costodolar !== 0 ? ((parseFloat(active.costodolar) + parseFloat(active.impuestos)) * dolar).toFixed(2) :  (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
             stockSujerido: active.stock,
             marca: active.marca,
-            precioSujerido: calcularPrecioSujerido(active.costodolar !== 0 ? parseFloat(active.costodolar) * 1038 : parseFloat(active.costo), parseFloat(active.impuestos))
+            precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar))
         });
     };
 
@@ -237,6 +242,10 @@ export const PostPublicacion = () => {
                 value_name: colorLuz ? colorLuz : null
              },
              {
+                id: 'SALE_FORMAT',
+                value_id: formatoVenta ? formatoVenta : "-1",
+             },
+             {
                 "id": "SELLER_SKU",
                 "name": "SKU",
                 "value_id": null,
@@ -256,10 +265,6 @@ export const PostPublicacion = () => {
                 value_id: potencia ? null : "-1"
             },
             {
-                id: 'POWER_SUPPLY_TYPE',
-                value_id: voltaje2 
-            },
-            {
                 id: 'VOLTAGE',
                 value_name: voltaje
             },
@@ -269,12 +274,15 @@ export const PostPublicacion = () => {
                 value_id: wifi ? "242085" : "242084"
             }
          ];
-         if(formState.subCategorias1 === 'MLA377395'){
+
+         if(formState.subCategories1 === 'MLA377395'){
             producto.attributes.push(
-                {id: 'LUMINOUS_FLUX', value_name: lumenes}
+                {id: 'LUMINOUS_FLUX', value_name: `${lumenes} lm`},
+                {id: 'LIGHTING_TECHNOLOGY', value_id: tipoTecnologia},
+                {id: 'ENERGY_EFFICIENCY', value_id: eficienciaEnergetica},
+                {id: 'LIFE_CYCLE', value_name: `${vidaUtil} h`}
             )
          }
-
          if(formState.subCategories2 === 'MLA1588' || formState.subCategories2 === "MLA1586" || formState.subCategorias2 === "MLA1586"){
             producto.attributes.push(
                 {id: 'INCLUDES_BULBS', value_id: incluyeFoco ? "242085" : "242084"},
@@ -286,11 +294,11 @@ export const PostPublicacion = () => {
                 {id: 'MOUNTING_PLACES',value_name: lugarMontaje},
                 {id: 'SHAPE', value_name: forma},
                 {id: 'WITH_PUSH_BUTTON',value_id: boton ? "242085" : "242084"},
+                {id: 'POWER_SUPPLY_TYPE', value_id: voltaje2 },
             )
          }
-
-        dispatch( postPublicaciones(producto) );
-        navigate('/publicaciones/list');
+         dispatch( postPublicaciones(producto) );
+         navigate('/publicaciones/list');
 
         
     };
@@ -318,7 +326,7 @@ export const PostPublicacion = () => {
             </div>
         </section>
 
-        <section id='interno' className='grid grid-cols-3 gap-3 m-2'>
+        <section id='interno' className='grid grid-cols-4 gap-3 m-2'>
             <div className='flex flex-col'>
                 <label htmlFor="costoIva" className='text-center font-bold '>Costo Iva</label>
                 <input type="number" name="costoIva" id="costoIva" disabled className='bg-gray-300' value={costoIva} />
@@ -330,6 +338,13 @@ export const PostPublicacion = () => {
             <div className='flex flex-col'>
                 <label htmlFor="stockSujerido" className='text-center font-bold '>Stock Sujerido</label>
                 <input type="number" name="stockSujerido" id="stockSujerido" className='bg-gray-300' disabled value={stockSujerido}/>
+            </div>
+            <div className='flex flex-col'>
+                <label htmlFor="formatoVenta" className='text-center font-bold '>Formato de Venta</label>
+                <select name="formatoVenta" id="formatoVenta" onChange={onInputChange} value={formatoVenta}>
+                    <option value="-1">N/A</option>
+                    <option value="1359391">Unidad</option>
+                </select>
             </div>
 
         </section>
@@ -429,6 +444,14 @@ export const PostPublicacion = () => {
             </div>
 
             <div className='flex flex-col'>
+                <label htmlFor="tipoTecnologia" className='text-center font-bold '>Tecnologia de iluminación</label>
+                <select name="tipoTecnologia" id="tipoTecnologia" value={tipoTecnologia} onChange={onInputChange}>
+                    <option value="null">N/A</option>
+                    <option value="411127">LED</option>
+                </select>
+            </div>
+            
+            <div className='flex flex-col'>
                 <label htmlFor="tipofuente" className='text-center font-bold '>Tipo Fuente</label>
                 <select name="tipofuente" id="tipofuente" value={tipofuente} onChange={onInputChange}>
                     <option value="null">N/A</option>
@@ -461,6 +484,11 @@ export const PostPublicacion = () => {
                 </div>
                 : <></>
             }
+
+            <div className='flex flex-col'>
+                <label htmlFor="vidaUtil" className='text-center font-bold '>Vida Util</label>
+                <input type="number" name="vidaUtil" id="vidaUtil" onChange={onInputChange} value={vidaUtil} />
+            </div>
 
             <div className='flex flex-col'>
                 <label htmlFor="forma" className='text-center font-bold '>Forma</label>
@@ -511,6 +539,15 @@ export const PostPublicacion = () => {
                 </div>
                 : <></>
             }
+
+            <div className='flex flex-col'>
+                <label htmlFor="appInteligente" className='text-center font-bold '>Eficiencia Energetica</label>
+                <select name="eficienciaEnergetica" id="eficienciaEnergetica" onChange={onInputChange} value={eficienciaEnergetica}>
+                    <option value="-1">N/A</option>
+                    <option value="33344207">A+</option>
+                    <option value="33344208">A</option>
+                </select>
+            </div>
 
             <div className='flex flex-col'>
                 <label htmlFor="appInteligente" className='text-center font-bold '>App Inteligente</label>

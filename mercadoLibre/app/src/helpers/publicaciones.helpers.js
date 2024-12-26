@@ -22,7 +22,8 @@ export const agregarPublicaciones = async(publicacion) => {
     const res = (await axios.post(`${URL}mercadoLibre`, publicacion)).data;
     const productoRelacionado = (await axios.get(`${URL}productos/${res.codProd}`)).data;
     
-    res.costo = productoRelacionado.costodolar !== 0 ? productoRelacionado.costodolar : parseFloat(productoRelacionado.costo);
+    res.costo = parseFloat(productoRelacionado.costo);
+    res.costodolar = parseFloat(productoRelacionado.costodolar);
     res.impuesto = parseFloat(productoRelacionado.impuestos);
     
     return res;
@@ -44,11 +45,13 @@ export const traerPublicaciones = async() => {
 
 export const traerPublicacion = async(id) => {
     const res = (await axios.get(`${URL}mercadoLibre/forCodigo/${id}`)).data;
-    const productoRelacionado = (await axios.get(`${URL}productos/${res.codProd}`)).data;
+    if (res) {
+        const productoRelacionado = (await axios.get(`${URL}productos/${res.codProd}`)).data;
     
-    res.costo = parseFloat(productoRelacionado.costo);
-    res.costodolar = parseFloat(productoRelacionado.costodolar);
-    res.impuesto = parseFloat(productoRelacionado.impuestos);
+        res.costo = parseFloat(productoRelacionado.costo);
+        res.costodolar = parseFloat(productoRelacionado.costodolar);
+        res.impuesto = parseFloat(productoRelacionado.impuestos);
+    }
     
     return res;
 

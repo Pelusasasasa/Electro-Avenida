@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import swal from 'sweetalert2';
 
@@ -13,13 +13,19 @@ export const ListPublicaciones = () => {
 
   const { active, publicaciones } = useSelector( state => state.publicaciones);
   const { isOpenModal } = useSelector(state => state.ui);
+  const [lista, setLista] = useState(publicaciones);
+
 
   const dispatch = useDispatch();
 
   //Sirve para traer las publicaciones por primera vez
   useEffect(() => {
-    dispatch(getPublicaciones())
+    dispatch( getPublicaciones() )
   }, []);
+
+  useEffect(() => {
+    setLista(publicaciones);
+  }, [publicaciones]);
 
   const modificar = async(e) => {
     
@@ -34,13 +40,26 @@ export const ListPublicaciones = () => {
     dispatch(eliminarPublicacion(active.codigoML))
   };
 
+  const handleSearch = (e) => {
+    console.log(e.target.value);
+
+    const aux = publicaciones.filter( elem => elem.descripcion.toLowerCase().includes(e.target.value.toLowerCase()) );
+    setLista(aux);
+
+    
+  }
+
   // const electron = (window).electron;
   return (
     <div className="w-full bg-yellow-500 border-l-gray-500 border pl-1">
       <header>
         <h2 className="text-center text-2xl pb-5">Publicaciones</h2>
+        <div className="flex justify-center mb-2 gap-2">
+          <h3>Buscador</h3>
+          <input type="text" name="buscador" id="buscador" onChange={handleSearch}/>
+        </div>
       </header>
-      <div className="w-full overflow-scroll h-[calc(100vh-120px)] bg-white">
+      <div className="w-full overflow-scroll h-[calc(100vh-150px)] bg-white">
         <table className="w-full">
           <thead>
             <tr>
@@ -55,7 +74,7 @@ export const ListPublicaciones = () => {
           </thead>
           <tbody>
             {
-              publicaciones.map((elem, index) => (
+              lista.map((elem, index) => (
                 <PublicacionItem {...elem} index={index} key={elem._id} />
               ))
             }

@@ -2,7 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { activarPublicacion } from '../../store/publicacones';
 
-const gananciaML = 25;
+const gananciaML = 10;
 const porcentajeDescuentoML = 0.65;
 const envio = 30000;
 const primerCostoFijo = 12000;
@@ -41,10 +41,12 @@ export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, st
         if (descuentoML > envio){
             costoEnvio = 0;
         }else{
-            if (descuentoML > 5000){
-                costoEnvio = 5802.49;
-            }else{
+            if (descuentoML < 16000){
+                costoEnvio = 0;
+            }else if(descuentoML < 37000){
                 costoEnvio = 9611.99;
+            }else{
+                costoEnvio = 4805.99;
             }
         };
 
@@ -58,12 +60,14 @@ export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, st
          };
 
          let precioML = 0;
-          if (codigoML === 'MLA1984928448'){
-            console.log(descuentoML)
-            console.log('El costo fijo es :', costoFijo)
-            console.log('El costo Envio es :', costoEnvio)
-            console.log('El costo Envio es :', envio)
-        }
+        //    if (codigoML === 'MLA1985386570'){
+        //     console.log(costoFinal)
+        //     console.log(utilidad)
+        //     console.log(porcentajeDescuentoML)
+        //      console.log(descuentoML)
+        //      console.log(costoEnvio)
+        //      console.log(costoFijo)
+        //  }
         
          precioML = descuentoML + costoEnvio + costoFijo
          return precioML.toFixed(2);
