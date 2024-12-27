@@ -128,4 +128,26 @@ codigoMLCTRL.subirImagenes = async(req, res) => {
 
 };  
 
+codigoMLCTRL.getOrders = async(req, res) => {
+    const {authorizacion, seller_id, url} = (await CodigoML.findOne());
+
+    try {
+        const ordenes = await axios.get(`${url}orders/search?seller=${seller_id}`, {
+            headers: {
+                Authorization: `Bearer ${authorizacion}`
+            }
+        });
+
+        res.send(ordenes.data.results)
+    } catch (error) {
+        console.log(error)
+        
+        res.status(500).send({
+            message: error.response.data.message,
+            code: error.response.data.code,
+            ok: false
+        })
+    }
+};
+
 module.exports = codigoMLCTRL;

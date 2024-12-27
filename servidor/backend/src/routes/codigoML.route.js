@@ -5,7 +5,8 @@ const router = Router();
 const storage = multer.memoryStorage()
 const upload = multer({ storage });
 
-const { actualizarcodigoML, postOne, getCodigoML, verificarAuthorizacion, subirImagenes } = require('../controllers/codigoML.controllers');
+const { actualizarcodigoML, postOne, getCodigoML, verificarAuthorizacion, subirImagenes, getOrders } = require('../controllers/codigoML.controllers');
+
 
 
 router.route('/')
@@ -16,5 +17,7 @@ router.route('/verificarAuthorizacion')
     .get(verificarAuthorizacion)
 router.route('/imagenes')
     .post(upload.array('file', 10), subirImagenes)
+router.route('/orders')
+    .get(getOrders)
 
 module.exports = router;

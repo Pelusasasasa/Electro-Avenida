@@ -7,13 +7,15 @@ const code = 'TG-670e5faf324be700011ea691-231090073'
 const refresh_token = "TG-670e60957e88f500012c13e8-231090073"
 const redirect_uri = 'https://www.electro-avenida.com.ar/';
 const URL = process.env.REACT_APP_URL;
-const gananciaML = 25;
-const porcentajeDescuentoML = 0.54;
+const gananciaML = 10;
+const porcentajeDescuentoML = 0.65;
 const envio = 28000;
 const primerCostoFijo = 12000;
 const segundoCostoFijo = 28000;
 const valorPrimerCostoFijo = 900;
 const valorSegundoCostoFijo = 1800;
+
+
 
 export const actualizarToken = async() => {
     const numeros = (await axios.get(`${URL}tipoVenta`)).data;
@@ -37,36 +39,48 @@ export const buscarVariacionesProducto = async(codigo) => {
     }
 };
 
-export const calcularPrecioSujerido = (costo, impuesto) => {
-    const costoFinal = costo + impuesto;
-    let utilidad = costoFinal + (costoFinal * gananciaML / 100);
-    let descuentoML = (utilidad / porcentajeDescuentoML);
+export const calcularPrecioSujerido = (costo, impuesto, costodolar, dolar) => {
+        const costoFinal = costodolar !== 0 ? (costodolar + impuesto) * dolar  :  costo + impuesto;
+        let utilidad = costoFinal + (costoFinal * gananciaML / 100);
+        let descuentoML = (utilidad / porcentajeDescuentoML);
 
-    let costoEnvio = 0;
-    let costoFijo = 0;
+        let costoEnvio = 0;
+        let costoFijo = 0;
 
-    //Vemos cuanto nos cobran del envio en mercado libre dependiendo de la utilidad
-    if (descuentoML > envio){
-        costoEnvio = 6779;
-    }else{
-        costoEnvio = 0;
-    };
+        //Vemos cuanto nos cobran del envio en mercado libre dependiendo de la utilidad
+        if (descuentoML > envio){
+            costoEnvio = 0;
+        }else{
+            if (descuentoML < 16000){
+                costoEnvio = 0;
+            }else if(descuentoML < 37000){
+                costoEnvio = 9611.99;
+            }else{
+                costoEnvio = 4805.99;
+            }
+        };
 
-    //Vemos cuanto nos descuentan por el costo fijo dependiendo de el valor de la utilidad
-    if (descuentoML < primerCostoFijo){
-        costoFijo = valorPrimerCostoFijo;
-    }else if(descuentoML < segundoCostoFijo){
-        costoFijo = valorSegundoCostoFijo
-    }else{
-        costoFijo = 0;
-    };
+         //Vemos cuanto nos descuentan por el costo fijo dependiendo de el valor de la utilidad
+         if (descuentoML < primerCostoFijo){
+            costoFijo = valorPrimerCostoFijo;
+         }else if(descuentoML < segundoCostoFijo){
+            costoFijo = valorSegundoCostoFijo
+         }else{
+            costoFijo = 0;
+         };
 
-    let precioML = 0;
-    precioML = descuentoML + costoEnvio + costoFijo
-    console.log(precioML)
-    console.log(costo)
-    return precioML.toFixed(2);
-};
+         let precioML = 0;
+        //    if (codigoML === 'MLA1985386570'){
+        //     console.log(costoFinal)
+        //     console.log(utilidad)
+        //     console.log(porcentajeDescuentoML)
+        //      console.log(descuentoML)
+        //      console.log(costoEnvio)
+        //      console.log(costoFijo)
+        //  }
+         precioML = descuentoML + costoEnvio + costoFijo
+         return precioML.toFixed(2);
+    }
 
 export const modificarVariacionProducto = async(codigoML, codigoVaration, precioML, stockML) => {
     const numeros = (await axios.get(`${URL}tipoVenta`)).data;
