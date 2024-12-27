@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, HashRouter } from 'react-router-dom';
 import { MercadoApp } from './MercadoApp';
 
 import './index.css';
@@ -13,9 +13,17 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-          <MercadoApp/>
-        </BrowserRouter>
+      {
+        process.env.REACT_APP_DEV
+        ?
+          <BrowserRouter>
+            <MercadoApp/>
+          </BrowserRouter >
+        :
+          <HashRouter>
+            <MercadoApp/>
+          </HashRouter >
+      }
     </Provider>
   </React.StrictMode>
 );
