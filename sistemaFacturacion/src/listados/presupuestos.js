@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { configAxios, clickderecho } = require("../funciones");
+const { configAxios, clickderecho, verificarUsuarios } = require("../funciones");
 const { ipcRenderer } = require("electron");
 require("dotenv").config;
 
@@ -171,6 +171,10 @@ async function listarVentas(lista, bodyelegido) {
 
 ipcRenderer.on("editarPresupuesto", async (e, args) => {
   const sweet = require("sweetalert2");
+  const usuario = await verificarUsuarios();
+
+  console.log(usuario);
+
   const { isConfirmed } = await sweet.fire({
     title: "Editar Presupuesto?",
     confirmButtonText: "Aceptar",
@@ -178,6 +182,9 @@ ipcRenderer.on("editarPresupuesto", async (e, args) => {
   });
 
   if (isConfirmed) {
-    await ipcRenderer.send("editarPresupuesto", seleccionado.id);
+    await ipcRenderer.send("editarPresupuesto", {
+      nro_comp: seleccionado.id,
+      usuario: usuario.nombre,
+    });
   }
 });

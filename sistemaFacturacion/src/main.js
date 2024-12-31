@@ -130,7 +130,7 @@ ipcMain.on('abrir-ventana-clientesConSaldo',async(e,args)=>{
 
 //imprivimos una venta ya sea presupuesto o ticket factura
 ipcMain.on('imprimir-venta',async(e,args)=>{
-    const [venta,cliente,condicion,cantidad,tipo,calculo,lista,show] = args;
+    const [venta, cliente, condicion, cantidad, tipo, calculo, lista, show] = args;
     let options
     if (tipo === "Ticket Factura" || tipo === "Factura B" || tipo === "Factura A") {
         options = {
@@ -297,7 +297,7 @@ ipcMain.on('abrir-ventana-tarjeta', (e, args) => {
     abrirVentana(args.path,args.width,args.height,args.reinicio,args.informacion)
 });
 
-ipcMain.on('editarPresupuesto', (e,numero) => {
+ipcMain.on('editarPresupuesto', (e,{nro_comp, usuario}) => {
     nuevaVentana.close();
 
     ventanaPrincipal.loadURL(url.format({
@@ -307,7 +307,7 @@ ipcMain.on('editarPresupuesto', (e,numero) => {
     }));
 
     ventanaPrincipal.once('ready-to-show', () => {
-        ventanaPrincipal.webContents.send('editarPresupuesto', numero);
+        ventanaPrincipal.webContents.send('editarPresupuesto', {nro_comp, usuario});
     });
     
 });
