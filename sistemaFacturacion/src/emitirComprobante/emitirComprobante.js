@@ -1603,19 +1603,21 @@ ipcRenderer.on("informacion", async (e, args) => {
   }
 });
 
-ipcRenderer.on("editarPresupuesto", async (e, numero) => {
+ipcRenderer.on("editarPresupuesto", async (e, {nro_comp, usuario: usr}) => {
+  usuario.innerText = usr;
+  
   await sweet.fire({
     title:
       "Se edita el presupuesto pero se crea uno nuevo, el anterior sigue estando",
   });
   
-  const presupuesto = (await axios.get(`${URL}presupuesto/${numero}`)).data;
+  const presupuesto = (await axios.get(`${URL}presupuesto/${nro_comp}`)).data;
   inputEmpresa.value = presupuesto.empresa;
   const cliente = (
     await axios.get(`${URL}clientes/id/${presupuesto.cliente}`, configAxios)
   ).data;
   const movimientos = (
-    await axios.get(`${URL}movProductos/${numero}/${presupuesto.tipo_comp}`)
+    await axios.get(`${URL}movProductos/${nro_comp}/${presupuesto.tipo_comp}`)
   ).data;
 
 
