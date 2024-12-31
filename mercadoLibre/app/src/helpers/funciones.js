@@ -39,7 +39,7 @@ export const buscarVariacionesProducto = async(codigo) => {
     }
 };
 
-export const calcularPrecioSujerido = (costo, impuesto, costodolar, dolar) => {
+export const calcularPrecioSujerido = (costo, impuesto, costodolar, dolar, cant) => {
         const costoFinal = costodolar !== 0 ? (costodolar + impuesto) * dolar  :  costo + impuesto;
         let utilidad = costoFinal + (costoFinal * gananciaML / 100);
         let descuentoML = (utilidad / porcentajeDescuentoML);
@@ -78,7 +78,7 @@ export const calcularPrecioSujerido = (costo, impuesto, costodolar, dolar) => {
         //      console.log(costoEnvio)
         //      console.log(costoFijo)
         //  }
-         precioML = descuentoML + costoEnvio + costoFijo
+         precioML = (descuentoML + costoEnvio + costoFijo) * cant;
          return precioML.toFixed(2);
     }
 
