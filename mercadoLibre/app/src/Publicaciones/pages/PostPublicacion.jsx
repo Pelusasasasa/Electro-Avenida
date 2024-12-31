@@ -47,6 +47,7 @@ const initialForm = {
     formatoVenta: '',
     eficienciaEnergetica: '',
     vidaUtil: '',
+    cantPack: 1,
 
     imagenes: [],
 
@@ -63,10 +64,11 @@ export const PostPublicacion = () => {
          subCategories, subCategories1, subCategories2, voltaje, temperaturaLuz, colorLuz, potencia, lumenes, tipofuente, voltaje2, formState ,onChanges,
         onInputChange, codigo, descripcion, codBarra, marca, costoIva, precioSujerido, stockSujerido, precio, stock, categories,
         tipoBateria, formato, forma, lugarMontaje, material, ambiente, capacidadFoco, incluyeFoco, inalamabrico, boton, incluyeControl,
-        autoadhesivo, wifi, asistenteVirtual, appInteligente, eficienciaEnerg, tipoTecnologia, formatoVenta, eficienciaEnergetica, vidaUtil
+        autoadhesivo, wifi, asistenteVirtual, appInteligente, eficienciaEnerg, tipoTecnologia, formatoVenta, eficienciaEnergetica, vidaUtil, cantPack
         } = useForm(initialForm);
     
     const [imagenes, setImagenes] = useState(null)
+    const [pack, setPack] = useState(true);
     const [categorias, setCategorias] = useState([]);
     const [subCategorias, setSubCategorias] = useState([]);
     const [subCategorias1, setSubCategorias1] = useState([]);
@@ -115,6 +117,18 @@ export const PostPublicacion = () => {
     }, [subCategories2]);
 
     useEffect(() => {
+        if (formatoVenta === '1359392'){
+            setPack( !pack );
+        }
+    }, [formatoVenta]);
+
+    useEffect(() => {
+        onChanges({
+                precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), parseFloat(cantPack))
+        })
+    }, [cantPack]);
+
+    useEffect(() => {
         if (active._id) {
             listarProductoTraido();
         }
@@ -127,7 +141,7 @@ export const PostPublicacion = () => {
             costoIva: active.costodolar !== 0 ? ((parseFloat(active.costodolar) + parseFloat(active.impuestos)) * dolar).toFixed(2) :  (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
             stockSujerido: active.stock,
             marca: active.marca,
-            precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar))
+            precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), parseFloat(cantPack))
         });
     };
 
@@ -296,11 +310,17 @@ export const PostPublicacion = () => {
                 {id: 'WITH_PUSH_BUTTON',value_id: boton ? "242085" : "242084"},
                 {id: 'POWER_SUPPLY_TYPE', value_id: voltaje2 },
             )
-         }
+         };
+
+         if(!pack){
+            producto.attributes.push({
+                id: 'UNITS_PER_PACK',
+                value_name: cantPack
+            });
+         };
+
          dispatch( postPublicaciones(producto) );
          navigate('/publicaciones/list');
-
-        
     };
 
   return (
@@ -326,7 +346,22 @@ export const PostPublicacion = () => {
             </div>
         </section>
 
-        <section id='interno' className='grid grid-cols-4 gap-3 m-2'>
+        <section className='grid grid-cols-2 gap-3 m-2'>
+            <div className='flex flex-col'>
+                <label htmlFor="formatoVenta" className='text-center font-bold '>Formato de Venta</label>
+                <select name="formatoVenta" id="formatoVenta" onChange={onInputChange} value={formatoVenta}>
+                    <option value="-1">N/A</option>
+                    <option value="1359391">Unidad</option>
+                    <option value="1359392">Pack</option>
+                </select>
+            </div>
+            <div className='flex flex-col'>
+                <label htmlFor="cantPack" className='text-center font-bold '>Unidad</label>
+                <input type="number" className='w-16 self-center' name="cantPack" id="cantPack" value={cantPack} disabled={pack} onChange={onInputChange} />
+            </div>
+        </section>
+
+        <section id='costoIva' className='grid grid-cols-3 gap-3 m-2'>
             <div className='flex flex-col'>
                 <label htmlFor="costoIva" className='text-center font-bold '>Costo Iva</label>
                 <input type="number" name="costoIva" id="costoIva" disabled className='bg-gray-300' value={costoIva} />
@@ -339,13 +374,7 @@ export const PostPublicacion = () => {
                 <label htmlFor="stockSujerido" className='text-center font-bold '>Stock Sujerido</label>
                 <input type="number" name="stockSujerido" id="stockSujerido" className='bg-gray-300' disabled value={stockSujerido}/>
             </div>
-            <div className='flex flex-col'>
-                <label htmlFor="formatoVenta" className='text-center font-bold '>Formato de Venta</label>
-                <select name="formatoVenta" id="formatoVenta" onChange={onInputChange} value={formatoVenta}>
-                    <option value="-1">N/A</option>
-                    <option value="1359391">Unidad</option>
-                </select>
-            </div>
+            
 
         </section>
 
