@@ -399,21 +399,24 @@ const buscarPersonaPorCuit = async (valor) => {
 //funcion que hace que traiga una persona de la afip
 const buscarPersonaPorDNI = async (valor) => {
   const digito = calcularDigitoVerificador("27" + valor);
-  let persona = await afip.RegisterScopeThirteen.getTaxpayerDetails(
-    "27" + valor + digito
-  );
+  let persona = await afip.RegisterScopeThirteen.getTaxpayerDetails("27" + valor + digito);
+  console.log(persona)
+  if (!persona) {
+    console.log("a")
+    const digito = calcularDigitoVerificador("20" + valor);
+    persona = await afip.RegisterScopeThirteen.getTaxpayerDetails("20" + valor + digito);
+  };
 
   if (!persona) {
-    const digito = calcularDigitoVerificador("20" + valor);
-    persona = await afip.RegisterScopeThirteen.getTaxpayerDetails(
-      "20" + valor + digito
-    );
-  }
-
+    console.log("b")
+    const digito = calcularDigitoVerificador("23" + valor);
+    persona = await afip.RegisterScopeThirteen.getTaxpayerDetails("23" + valor + digito);
+  };
+  
   const { nombre, apellido, domicilio } = persona;
 
   const retorno = {
-    nombre: nombre + " " + apellido,
+    nombre: nombre ? nombre : '' + " " + apellido,
     direccion: domicilio[0].direccion,
     localidad: domicilio[0].localidad,
     provincia: domicilio[0].descripcionProvincia,
