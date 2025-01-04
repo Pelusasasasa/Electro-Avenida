@@ -10,7 +10,7 @@ const segundoCostoFijo = 30000;
 const valorPrimerCostoFijo = 900;
 const valorSegundoCostoFijo = 1800;
 
-export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, stockML, costo, costodolar, impuesto}) => {
+export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, stock, stockML, costo, costodolar, impuesto, codProd}) => {
     const { dolar } = useSelector(state => state.variables);
     const { active } = useSelector(state => state.publicaciones);
     const dispatch = useDispatch();
@@ -60,15 +60,6 @@ export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, st
          };
 
          let precioML = 0;
-        //    if (codigoML === 'MLA1985386570'){
-        //     console.log(costoFinal)
-        //     console.log(utilidad)
-        //     console.log(porcentajeDescuentoML)
-        //      console.log(descuentoML)
-        //      console.log(costoEnvio)
-        //      console.log(costoFijo)
-        //  }
-        
          precioML = descuentoML + costoEnvio + costoFijo
          return precioML.toFixed(2);
     }
@@ -77,11 +68,13 @@ export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, st
     <tr id={codigoML} className={`${active.codigoML === codigoML ? 'bg-cyan-300' : 'hover:bg-gray-400' } hover:cursor-pointer` } onClick={activar}>
         <td className='border border-black'>{index + 1}</td>
         <td className='border border-black'>{codigoML}</td>
+        <td className='border border-black text-center'>{codProd}</td>
         <td className='border border-black'>{descripcion}</td>
         <td className='border border-black'>{costodolar !== 0 ? ((costodolar + impuesto) * dolar).toFixed(2) : (costo + impuesto).toFixed(2)}</td>
         <td className='border border-black'>{calcularPrecioSujerido()}</td>
+        <td className='border border-black'>{Math.floor(stock).toFixed(2)}</td>
         <td className='border border-black'>{precioML.toFixed(2)}</td>
-        <td className='border border-black'>{stockML.toFixed(2)}</td>
+        <td className={`border border-black ${Math.floor(stock) < stockML ? 'bg-red-500' : ''}`}>{stockML.toFixed(2)}</td>
     </tr>
   )
 }

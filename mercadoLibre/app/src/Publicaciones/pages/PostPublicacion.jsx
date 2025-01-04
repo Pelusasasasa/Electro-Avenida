@@ -176,6 +176,10 @@ export const PostPublicacion = () => {
             setConstruccion(!construccion);
         };
 
+        if(subCategories2 === 'MLA1588'){
+            setFocos(true);
+        }
+
     }, [subCategories2]);
 
     useEffect(() => {
@@ -326,6 +330,10 @@ export const PostPublicacion = () => {
             {
                 id: 'WITH_WI_FI',
                 value_id: wifi ? "242085" : "242084"
+            },
+            {
+                id: 'UNITS_PER_PACK',
+                value_name: cantPack
             }
          ];
 
@@ -356,7 +364,6 @@ export const PostPublicacion = () => {
                 {id: 'MOUNTING_PLACES',value_name: lugarMontaje},
                 {id: 'SHAPE', value_name: forma},
                 {id: 'WITH_PUSH_BUTTON',value_id: boton ? "242085" : "242084"},
-                {id: 'POWER_SUPPLY_TYPE', value_id: voltaje2 },
                 {id: 'LIGHT_COLOR', value_id: colorLuz ? colorLuz : "-1" , value_name: colorLuz ? colorLuz : null},
 
             )
@@ -395,14 +402,6 @@ export const PostPublicacion = () => {
                 {id: 'WITH_ON_OFF_BUTTON', value_id: botonEncendido},
             )
          }
-
-
-         if(!pack){
-            producto.attributes.push({
-                id: 'UNITS_PER_PACK',
-                value_name: cantPack
-            });
-         };
 
          console.log(producto)
         dispatch( postPublicaciones(producto) );
@@ -601,17 +600,7 @@ export const PostPublicacion = () => {
                     <option value="7387210">LED</option>
                     <option value="3137301">INCANDESENTE</option>
                 </select>
-            </div>
-
-            <div className='flex flex-col'>
-                <label htmlFor="voltaje2" className='text-center font-bold '>Voltaje 2</label>
-                <select name="voltaje2" id="voltaje2" value={voltaje2} onChange={onInputChange}>
-                    <option value="null">N/A</option>
-                    <option value="13417945">220 V</option>
-                    <option value="12V">12 V</option>
-                </select>
-            </div>
-
+            </div>  
             
             {
                 validacion

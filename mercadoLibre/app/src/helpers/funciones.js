@@ -167,6 +167,17 @@ export const obtenerInformacionUsuario = async() => {
   }
 };
 
+export const ordenarLista = (lista) => {
+    
+    lista.sort((a, b) => {
+      if(a.descripcion > b.descripcion) return 1;
+      if(a.descripcion < b.descripcion) return -1;
+      return 0;
+    });
+
+    return aux;
+}
+
 export const publicarML = async(elem) => {
     const {authorizacion} = (await axios.get(`${URL}codigoML`)).data;
 

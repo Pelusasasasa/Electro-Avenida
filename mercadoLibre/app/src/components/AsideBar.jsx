@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { AsideItem } from './AsideItem'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { getConsultas } from '../store/consultas/thunks';
 
 export const AsideBar = () => {
 
   const [sinResponder, setSinResponder] = useState(0);
   const { consultas } = useSelector(state => state.consultas);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getConsultas())
+  },[]);
 
   useEffect(() => {
     setSinResponder(consultas.filter(consulta => consulta.status !== 'ANSWERED').length);
