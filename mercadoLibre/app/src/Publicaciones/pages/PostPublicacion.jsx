@@ -47,7 +47,43 @@ const initialForm = {
     formatoVenta: '',
     eficienciaEnergetica: '',
     vidaUtil: '',
-    cantPack: 1,
+    cantPack: '1',
+
+    //General
+    largo: 0,
+    altura: 0,
+    peso: 0,
+    ancho: 0,
+
+    //Alargues
+    conUSB: '242084',
+    ConProteccionSobreCarga: '242084',
+    ConReduccionDeRuido: '242084',
+    tipoConectores: '',
+    cantidadTomas: 0,
+    corrienteMaxima: 0,
+    largoCable: 0,
+
+    //Emergencia
+    capacidadBateria: 0,
+    tiempoCarga: 0,
+    cantidadLed: 0,
+    incluyePila: '242084',
+    incluyeBateriaRecargable: '242084',
+    autonomiaMaximaHoras: '5146030',
+    lumenesMaximo: '8108101',
+    autonomiaMinimaHoras: '8108820',
+    lumenesminimo: '8110855',
+    tipoMontaje: '3964545',
+    tipoPosicion: '12728631',
+    encendidoAutomatico: '242084',
+    indicadorCarga: '242084',
+    conManija: '242084',
+    botonEncendido: '242084',
+    conSoporteColgar: '242084',
+
+
+
 
     imagenes: [],
 
@@ -63,12 +99,28 @@ export const PostPublicacion = () => {
     const {
          subCategories, subCategories1, subCategories2, voltaje, temperaturaLuz, colorLuz, potencia, lumenes, tipofuente, voltaje2, formState ,onChanges,
         onInputChange, codigo, descripcion, codBarra, marca, costoIva, precioSujerido, stockSujerido, precio, stock, categories,
+
+        altura, largo, peso, ancho,
+
         tipoBateria, formato, forma, lugarMontaje, material, ambiente, capacidadFoco, incluyeFoco, inalamabrico, boton, incluyeControl,
-        autoadhesivo, wifi, asistenteVirtual, appInteligente, eficienciaEnerg, tipoTecnologia, formatoVenta, eficienciaEnergetica, vidaUtil, cantPack
+        autoadhesivo, wifi, asistenteVirtual, appInteligente, eficienciaEnerg, tipoTecnologia, formatoVenta, eficienciaEnergetica, vidaUtil, cantPack,
+
+        conUSB, ConProteccionSobreCarga, ConReduccionDeRuido, tipoConectores, cantidadTomas, corrienteMaxima, largoCable,
+
+        capacidadBateria, tiempoCarga, cantidadLed, incluyePila, incluyeBateriaRecargable, autonomiaMaximaHoras, lumenesMaximo, autonomiaMinimaHoras, lumenesminimo, tipoMontaje, tipoPosicion, encendidoAutomatico, indicadorCarga, conManija, botonEncendido, conSoporteColgar,
+
+        voltajeMaximoEntrada, voltajeMaximoSalida, voltajeMinimoEntrada, voltajeMinimoSalida, potenciaSalida
+        
         } = useForm(initialForm);
     
-    const [imagenes, setImagenes] = useState(null)
+    const [imagenes, setImagenes] = useState(null);
+
     const [pack, setPack] = useState(true);
+    const [construccion, setConstruccion] = useState(false);
+    const [focos, setFocos] = useState(false);
+    const [emergencia, setEmergencia] = useState(false);
+    const [fuentes, setFuentes] = useState(false);
+
     const [categorias, setCategorias] = useState([]);
     const [subCategorias, setSubCategorias] = useState([]);
     const [subCategorias1, setSubCategorias1] = useState([]);
@@ -111,9 +163,35 @@ export const PostPublicacion = () => {
 
     useEffect(() => {
         cargarSubCategories2()
+
+        setFocos(false);
+        setEmergencia(false);
+        setFuentes(false);
+        setConstruccion(false);
+
+        if(subCategories1 === 'MLA377395'){
+            setFocos(true);
+        };
+
+        if(subCategories1 === 'MLA125102'){
+            setEmergencia(true);
+        };
+
+        if(subCategories1 === 'MLA420350'){
+            setFuentes(true);
+        };
+
     }, [subCategories1]);
 
     useEffect(() => {
+        if (subCategories2 === 'MLA411421'){
+            setConstruccion(!construccion);
+        };
+
+        if(subCategories2 === 'MLA1588'){
+            setFocos(true);
+        }
+
     }, [subCategories2]);
 
     useEffect(() => {
@@ -218,30 +296,13 @@ export const PostPublicacion = () => {
                  value_name: formState.marca
              },
              {
-                id: 'COLOR_TEMPERATURE',
-                value_id: temperaturaLuz ? temperaturaLuz : "-1",
-                value_name: temperaturaLuz ? temperaturaLuz : null
-             },
-             {
-                id: 'COMPATIBLE_SMART_APPS',
-                value_id: appInteligente ? appInteligente : "-1",
-             },
-             {
-                id: 'COMPATIBLE_VIRTUAL_ASSISTANTS',
-                value_id: asistenteVirtual ? asistenteVirtual : "-1",
-             },
-             {
-                id: 'ENERGY_EFFICIENCY',
-                value_id: eficienciaEnerg ? eficienciaEnerg : "-1",
-             },
-             {
-                id: 'INCLUDES_REMOTE_CONTROL',
-                value_id: incluyeControl ? "242085" : "242084",
-             },
-             {
                 id: 'GTIN',
                 value_name: codBarra
              },
+             {id: 'HIGH', value_name: `${altura} cm`},
+             {id: 'WIDTH', value_name: `${ancho} cm`},
+             {id: 'LENGTH', value_name: `${largo} cm`},
+             {id: 'WEIGHT', value_name: `${peso} g`},
              {
                  id: 'MATERIALS',
                  value_name: material
@@ -249,11 +310,6 @@ export const PostPublicacion = () => {
              {
                  id: 'MODEL',
                  value_name: active.cod_fabrica
-             },
-             {
-                id: 'LIGHT_COLOR',
-                value_id: colorLuz ? colorLuz : "-1" ,
-                value_name: colorLuz ? colorLuz : null
              },
              {
                 id: 'SALE_FORMAT',
@@ -286,6 +342,10 @@ export const PostPublicacion = () => {
             {
                 id: 'WITH_WI_FI',
                 value_id: wifi ? "242085" : "242084"
+            },
+            {
+                id: 'UNITS_PER_PACK',
+                value_name: cantPack
             }
          ];
 
@@ -294,9 +354,17 @@ export const PostPublicacion = () => {
                 {id: 'LUMINOUS_FLUX', value_name: `${lumenes} lm`},
                 {id: 'LIGHTING_TECHNOLOGY', value_id: tipoTecnologia},
                 {id: 'ENERGY_EFFICIENCY', value_id: eficienciaEnergetica},
-                {id: 'LIFE_CYCLE', value_name: `${vidaUtil} h`}
+                {id: 'LIFE_CYCLE', value_name: `${vidaUtil} h`},
+                {id: 'LIGHT_COLOR', value_id: colorLuz ? colorLuz : "-1" , value_name: colorLuz ? colorLuz : null},
+                {id: 'COLOR_TEMPERATURE', value_id: temperaturaLuz ? temperaturaLuz : "-1", value_name: temperaturaLuz ? temperaturaLuz : null},
+                {id: 'COMPATIBLE_SMART_APPS', value_id: appInteligente ? appInteligente : "-1", },
+                {id: 'COMPATIBLE_VIRTUAL_ASSISTANTS', value_id: asistenteVirtual ? asistenteVirtual : "-1", },
+                {id: 'ENERGY_EFFICIENCY', value_id: eficienciaEnerg ? eficienciaEnerg : "-1", },
+                {id: 'INCLUDES_REMOTE_CONTROL', value_id: incluyeControl ? "242085" : "242084",},
             )
-         }
+         };
+
+         //CATEGORIA DE LAMPARAS
          if(formState.subCategories2 === 'MLA1588' || formState.subCategories2 === "MLA1586" || formState.subCategorias2 === "MLA1586"){
             producto.attributes.push(
                 {id: 'INCLUDES_BULBS', value_id: incluyeFoco ? "242085" : "242084"},
@@ -308,19 +376,48 @@ export const PostPublicacion = () => {
                 {id: 'MOUNTING_PLACES',value_name: lugarMontaje},
                 {id: 'SHAPE', value_name: forma},
                 {id: 'WITH_PUSH_BUTTON',value_id: boton ? "242085" : "242084"},
-                {id: 'POWER_SUPPLY_TYPE', value_id: voltaje2 },
+                {id: 'LIGHT_COLOR', value_id: colorLuz ? colorLuz : "-1" , value_name: colorLuz ? colorLuz : null},
+
             )
          };
 
-         if(!pack){
-            producto.attributes.push({
-                id: 'UNITS_PER_PACK',
-                value_name: cantPack
-            });
+         //CATEGORIA DE ALARGUES
+         if(formState.subCategories2 === 'MLA411421'){
+            producto.attributes.push(
+                {id: 'CABLE_LENGTH', value_name: `${largoCable} m`},
+                {id: 'MAX_CURRENT', value_name: `${corrienteMaxima} A`},
+                {id: 'OUTLETS_NUMBER', value_name: cantidadTomas},
+                {id: 'PORTS_AND_CONNECTORS_TYPES', value_id: tipoConectores},
+                {id: 'WITH_ELECTRICAL_NOISE_REDUCTION', value_id: ConReduccionDeRuido},
+                {id: 'WITH_OVERLOAD_PROTECTION', value_id: ConProteccionSobreCarga},
+                {id: 'WITH_USB', value_id: conUSB},
+            );
          };
 
-         dispatch( postPublicaciones(producto) );
-         navigate('/publicaciones/list');
+         //Categoria de emergencia
+         if(formState.subCategories1 === 'MLA125102'){
+            producto.attributes.push(
+                {id: 'BATTERY_CAPACITY', value_name: `${capacidadBateria} mAh`},
+                {id: 'BATTERY_TYPE', value_id: tipoBateria},
+                {id: 'CHARGING_TIME', value_name: `${tiempoCarga} h`},
+                {id: 'LED_QUANTITY', value_name: cantidadLed},
+                {id: 'INCLUDES_BATTERY', value_id: incluyeBateriaRecargable},
+                {id: 'INCLUDES_BATTERY', value_id: incluyePila},
+                {id: 'MAXIMUM_AUTONOMY', value_id: autonomiaMaximaHoras},
+                {id: 'MINIMUM_AUTONOMY', value_id: autonomiaMinimaHoras},
+                {id: 'MOUNTING_TYPE', value_id: tipoMontaje},
+                // {id: 'POSITION_TYPES', value_id: tipoPosicion},
+                {id: 'AUTOMATIC_IGNITION', value_id: encendidoAutomatico},
+                {id: 'CHARGE_INDICATOR', value_id: indicadorCarga},
+                {id: 'WITH_HANDLE', value_id: conManija},
+                // {id: 'WITH_HANGING_SUPPORT', value_id: conSoporteColgar},
+                {id: 'WITH_ON_OFF_BUTTON', value_id: botonEncendido},
+            )
+         }
+
+         console.log(producto)
+        dispatch( postPublicaciones(producto) );
+        navigate('/publicaciones/list');
     };
 
   return (
@@ -461,12 +558,40 @@ export const PostPublicacion = () => {
                     <option value="4000 K">4000 K</option>
                 </select>
             </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="material" className='text-center font-bold '>Material</label>
+                <input type="text" name="material" id="material" onChange={onInputChange} value={material} />
+            </div>
             
             <div className='flex flex-col'>
                 <label htmlFor="potencia" className='text-center font-bold '>Potencia</label>
                 <input type="number" name="potencia" id="potencia" onChange={onInputChange} value={potencia} />
             </div>
 
+            <div className='flex flex-col'>
+                <label htmlFor="altura" className='text-center font-bold '>Altura</label>
+                <input type="number" name="altura" id="altura" onChange={onInputChange} value={altura} />
+            </div>
+            
+            <div className='flex flex-col'>
+                <label htmlFor="largo" className='text-center font-bold '>Largo</label>
+                <input type="number" name="largo" id="largo" onChange={onInputChange} value={largo} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="ancho" className='text-center font-bold '>Ancho</label>
+                <input type="number" name="ancho" id="ancho" onChange={onInputChange} value={ancho} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="peso" className='text-center font-bold '>Peso</label>
+                <input type="number" name="peso" id="peso" onChange={onInputChange} value={peso} />
+            </div>
+            
+        </section>
+
+        <section id='focos' className={`grid grid-cols-4 gap-3 m-2 ${focos ? '' : 'hidden'}`}>
             <div className='flex flex-col'>
                 <label htmlFor="lumenes" className='text-center font-bold '>Flujo Luminoso</label>
                 <input type="number" name="lumenes" id="lumenes" onChange={onInputChange} value={lumenes} />
@@ -487,17 +612,7 @@ export const PostPublicacion = () => {
                     <option value="7387210">LED</option>
                     <option value="3137301">INCANDESENTE</option>
                 </select>
-            </div>
-
-            <div className='flex flex-col'>
-                <label htmlFor="voltaje2" className='text-center font-bold '>Voltaje 2</label>
-                <select name="voltaje2" id="voltaje2" value={voltaje2} onChange={onInputChange}>
-                    <option value="null">N/A</option>
-                    <option value="13417945">220 V</option>
-                    <option value="12V">12 V</option>
-                </select>
-            </div>
-
+            </div>  
             
             {
                 validacion
@@ -530,16 +645,6 @@ export const PostPublicacion = () => {
                 <div className='flex flex-col'>
                     <label htmlFor="lugarMontaje" className='text-center font-bold '>Lugares de montaje</label>
                     <input type="text" name="lugarMontaje" id="lugarMontaje" onChange={onInputChange} value={lugarMontaje} />
-                </div>
-                : <></>
-            }
-
-            {
-                validacion
-                ?
-                <div className='flex flex-col'>
-                    <label htmlFor="material" className='text-center font-bold '>Material</label>
-                    <input type="text" name="material" id="material" onChange={onInputChange} value={material} />
                 </div>
                 : <></>
             }
@@ -638,9 +743,224 @@ export const PostPublicacion = () => {
                 <label htmlFor="wifi" className='text-center font-bold '>Con Wifi</label>
                 <input type="checkbox" name="wifi" id="wifi" onChange={onInputChange} value={wifi} />
             </div>
-            
+        </section>
 
-            
+        <section id='construccion' className={`grid grid-cols-4 gap-3 m-2 ${construccion ? '' : 'hidden'} `}>
+
+            <div className='flex flex-col'>
+                <label htmlFor="largoCable" className='text-center font-bold '>Largo Del Cable</label>
+                <input type='number' name="largoCable" id="largoCable" value={largoCable} onChange={onInputChange} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="corrienteMaxima" className='text-center font-bold '>Corriente Maxima</label>
+                <input type='number' name="corrienteMaxima" id="corrienteMaxima" value={corrienteMaxima} onChange={onInputChange} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="cantidadTomas" className='text-center font-bold '>Cantidad de Tomas</label>
+                <input type='number' name="cantidadTomas" id="cantidadTomas" value={cantidadTomas} onChange={onInputChange} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="ConProteccionSobreCarga" className='text-center font-bold '>Con Proteccion Sobre Carga</label>
+                <select name="ConProteccionSobreCarga" id="ConProteccionSobreCarga" value={ConProteccionSobreCarga} onChange={onInputChange}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="tipoConectores" className='text-center font-bold '>Tipo Conectores</label>
+                <select name="tipoConectores" id="tipoConectores" value={tipoConectores} onChange={onInputChange}>
+                    <option value="26059155">Espiga Plana</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="ConReduccionDeRuido" className='text-center font-bold '>Con Reduccion de Ruido Electrico</label>
+                <select name="ConReduccionDeRuido" id="ConReduccionDeRuido" value={ConReduccionDeRuido} onChange={onInputChange}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="conUSB" className='text-center font-bold '>Con USB</label>
+                <select name="conUSB" id="conUSB" value={conUSB} onChange={onInputChange}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+        </section>
+
+        <section id='emergencia' className={`grid grid-cols-4 gap-3 m-2 ${emergencia ? '' : 'hidden'} `}>
+
+            <div className='flex flex-col'>
+                <label htmlFor="capacidadBateria" className='text-center font-bold '>Capacidad de bateria</label>
+                <input type='number' name="capacidadBateria" id="capacidadBateria" value={capacidadBateria} onChange={onInputChange} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="tiempoCarga" className='text-center font-bold '>Tiempo de carga de la  bateria</label>
+                <select type='number' name="tiempoCarga" id="tiempoCarga" value={tiempoCarga} onChange={onInputChange} >
+                    <option value="8889386">3 H</option>
+                    <option value="8108820">4 H</option>
+                    <option value="5146030">8 H</option>
+                </ select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="cantidadLed" className='text-center font-bold '>Cantidad de Leds</label>
+                <input type='number' name="cantidadLed" id="cantidadLed" value={cantidadLed} onChange={onInputChange} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="incluyePila" className='text-center font-bold '>Incluye Pila</label>
+                <select name="incluyePila" id="incluyePila" onChange={onInputChange} value={incluyePila}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="incluyeBateriaRecargable" className='text-center font-bold '>Incluye Bateria Recargable</label>
+                <select name="incluyeBateriaRecargable" id="incluyeBateriaRecargable" onChange={onInputChange} value={incluyeBateriaRecargable}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="autonomiaMaximaHoras" className='text-center font-bold '>Autonomia maxima de horas</label>
+                <select name="autonomiaMaximaHoras" id="autonomiaMaximaHoras" onChange={onInputChange} value={autonomiaMaximaHoras}>
+                    <option value="8108820">4 H</option>
+                    <option value="5146030">8 H</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="autonomiaMinimaHoras" className='text-center font-bold '>Autonomia minima de horas</label>
+                <select name="autonomiaMinimaHoras" id="autonomiaMinimaHoras" onChange={onInputChange} value={autonomiaMinimaHoras}>
+                     <option value="8108820">4 H</option>
+                    <option value="5146030">8 H</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="lumenesMaximo" className='text-center font-bold '>Lumenes Maximo</label>
+                <select name="lumenesMaximo" id="lumenesMaximo" onChange={onInputChange} value={lumenesMaximo}>
+                     <option value="8110855">50 LM</option>
+                    <option value="8108101">100 LM</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="lumenesminimo" className='text-center font-bold '>Lumenes minimo</label>
+                <select name="lumenesminimo" id="lumenesminimo" onChange={onInputChange} value={lumenesminimo}>
+                     <option value="8110855">50 LM</option>
+                    <option value="8108101">100 LM</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="tipoMontaje" className='text-center font-bold '>Tipo Montaje</label>
+                <select name="tipoMontaje" id="tipoMontaje" onChange={onInputChange} value={tipoMontaje}>
+                     <option value="3964545">De Pared</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="tipoPosicion" className='text-center font-bold '>Tipo Posicion</label>
+                <select name="tipoPosicion" id="tipoPosicion" onChange={onInputChange} value={tipoPosicion}>
+                     <option value="12728631">Vertical u Horizontal</option>
+                </select>
+            </div>
+
+               <div className='flex flex-col'>
+                    <label htmlFor="encendidoAutomatico" className='text-center font-bold '>Encendido automarico</label>
+                    <select name="encendidoAutomatico" id="encendidoAutomatico" onChange={onInputChange} value={encendidoAutomatico}>
+                        <option value="242084">No</option>
+                        <option value="242085">Si</option>
+                    </select>
+                </div>
+
+               <div className='flex flex-col'>
+                    <label htmlFor="indicadorCarga" className='text-center font-bold '>Indicador de Carga</label>
+                    <select name="indicadorCarga" id="indicadorCarga" onChange={onInputChange} value={indicadorCarga}>
+                        <option value="242084">No</option>
+                        <option value="242085">Si</option>
+                    </select>
+                </div>
+
+               <div className='flex flex-col'>
+                    <label htmlFor="conManija" className='text-center font-bold '>Con Manija</label>
+                    <select name="conManija" id="conManija" onChange={onInputChange} value={conManija}>
+                        <option value="242084">No</option>
+                        <option value="242085">Si</option>
+                    </select>
+                </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="botonEncendido" className='text-center font-bold '>Boton de encendido</label>
+                <select name="botonEncendido" id="botonEncendido" onChange={onInputChange} value={botonEncendido}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="conSoporteColgar" className='text-center font-bold '>Con Soporte para Colgar</label>
+                <select name="conSoporteColgar" id="conSoporteColgar" onChange={onInputChange} value={conSoporteColgar}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+        </section>
+
+        <section id='fuentes' className={`grid grid-cols-4 gap-3 m-2 ${fuentes ? '' : 'hidden'} `}>
+
+            <div className='flex flex-col'>
+                <label htmlFor="voltajeMaximoEntrada" className='text-center font-bold '>Voltaje Maximo de Entrada</label>
+                <select type='number' name="voltajeMaximoEntrada" id="voltajeMaximoEntrada" value={voltajeMaximoEntrada} onChange={onInputChange} >
+                    <option value="18114370">12V</option>
+                    <option value="17195572">220V</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="voltajeMinimoEntrada" className='text-center font-bold '>Voltaje Minimo de Entrada</label>
+                <select type='number' name="voltajeMinimoEntrada" id="voltajeMinimoEntrada" value={voltajeMinimoEntrada} onChange={onInputChange} >
+                    <option value="18114370">12V</option>
+                    <option value="17195572">220V</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="voltajeMaximoSalida" className='text-center font-bold '>Voltaje Maximo de Salida</label>
+                <select type='number' name="voltajeMaximoSalida" id="voltajeMaximoSalida" value={voltajeMaximoSalida} onChange={onInputChange} >
+                    <option value="18114370">12V</option>
+                    <option value="17195572">220V</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="voltajeMinimoSalida" className='text-center font-bold '>Voltaje Minimo de Salida</label>
+                <select type='number' name="voltajeMinimoSalida" id="voltajeMinimoSalida" value={voltajeMinimoSalida} onChange={onInputChange}>
+                    <option value="18114370">12V</option>
+                    <option value="17195572">220V</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="potenciaSalida" className='text-center font-bold '>Voltaje Minimo de Salida</label>
+                <select name="potenciaSalida" id="potenciaSalida" value={potenciaSalida} onChange={onInputChange}>
+                    <option value="2126733">250 W</option>
+                </select>
+            </div>
+
         </section>
 
         <section className='flex justify-around pt-2'>

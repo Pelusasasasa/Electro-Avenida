@@ -8,6 +8,7 @@ import { PublicacionItem } from "../components/PublicacionItem";
 import { Modal } from "../components/Modal";
 import { closeModal, openModal } from "../../store/ui/uiSlice";
 import { Link } from "react-router-dom";
+import { ordenarLista } from "../../helpers/funciones";
 
 export const ListPublicaciones = () => {
 
@@ -24,7 +25,14 @@ export const ListPublicaciones = () => {
   }, []);
 
   useEffect(() => {
-    setLista(publicaciones);
+    let aux = [...publicaciones];
+    aux.sort((a, b) => {
+      if(a.descripcion > b.descripcion) return 1;
+      if(a.descripcion < b.descripcion) return -1;
+      return 0;
+    });
+
+    setLista(aux);
   }, [publicaciones]);
 
   const modificar = async(e) => {
@@ -41,12 +49,16 @@ export const ListPublicaciones = () => {
   };
 
   const handleSearch = (e) => {
-    console.log(e.target.value);
+    let aux = publicaciones.filter( elem => elem.descripcion.toLowerCase().includes(e.target.value.toLowerCase()) );
 
-    const aux = publicaciones.filter( elem => elem.descripcion.toLowerCase().includes(e.target.value.toLowerCase()) );
+    aux.sort((a, b) => {
+      if(a.descripcion > b.descripcion) return 1;
+      if(a.descripcion < b.descripcion) return -1;
+      return 0;
+    });
+
     setLista(aux);
 
-    
   }
 
   // const electron = (window).electron;
@@ -65,9 +77,11 @@ export const ListPublicaciones = () => {
             <tr>
               <th className="border border-black">N° </th>
               <th className="border border-black">Codigo ML</th>
+              <th className="border border-black">Codigo Interno</th>
               <th className="border border-black">Descripcion</th>
               <th className="border border-black">Costo + Iva</th>
               <th className="border border-black">Precio Sujerido</th>
+              <th className="border border-black">Stock Sujerido</th>
               <th className="border border-black">Precio</th>
               <th className="border border-black">Stock</th>
             </tr>

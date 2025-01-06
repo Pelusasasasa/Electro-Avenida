@@ -8,6 +8,9 @@ export const ordenesSlice = createSlice({
         isLoading: false
     },
     reducers: {
+        setActive: (state, { payload }) => {
+            state.active = state.ordenes.find(orden => orden.id == payload);
+        },
         setLoading: (state, /* action */ ) => {
             state.isLoading = true;
         },
@@ -25,4 +28,4 @@ export const ordenesSlice = createSlice({
 
 
 // Action creators are generated for each case reducer function
-export const { clearState, setLoading, setOrdenes } = ordenesSlice.actions;
+export const { clearState, setActive, setLoading, setOrdenes } = ordenesSlice.actions;
