@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { clearState, setLoading, setOrdenes } from "../store/ordenes/ordenesSlice";
+import { clearState, setActive, setLoading, setOrdenes } from "../store/ordenes/ordenesSlice";
 import publicacionesApi from "../api/publicacionesApi";
 
 
@@ -23,7 +23,11 @@ export const useOrdenesStore = () => {
 
     const clearAll = () => {
         dispatch( clearState())
-    }
+    };
+
+    const startActive = (id) => {
+        dispatch( setActive(id) );
+    };
 
     return {
         //* Propiedades
@@ -33,6 +37,7 @@ export const useOrdenesStore = () => {
 
         //* Metodos
         clearAll,
+        startActive,
         startGetOrdenes,
     }
 

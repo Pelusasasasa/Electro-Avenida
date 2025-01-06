@@ -107,7 +107,9 @@ export const PostPublicacion = () => {
 
         conUSB, ConProteccionSobreCarga, ConReduccionDeRuido, tipoConectores, cantidadTomas, corrienteMaxima, largoCable,
 
-        capacidadBateria, tiempoCarga, cantidadLed, incluyePila, incluyeBateriaRecargable, autonomiaMaximaHoras, lumenesMaximo, autonomiaMinimaHoras, lumenesminimo, tipoMontaje, tipoPosicion, encendidoAutomatico, indicadorCarga, conManija, botonEncendido, conSoporteColgar
+        capacidadBateria, tiempoCarga, cantidadLed, incluyePila, incluyeBateriaRecargable, autonomiaMaximaHoras, lumenesMaximo, autonomiaMinimaHoras, lumenesminimo, tipoMontaje, tipoPosicion, encendidoAutomatico, indicadorCarga, conManija, botonEncendido, conSoporteColgar,
+
+        voltajeMaximoEntrada, voltajeMaximoSalida, voltajeMinimoEntrada, voltajeMinimoSalida, potenciaSalida
         
         } = useForm(initialForm);
     
@@ -117,6 +119,7 @@ export const PostPublicacion = () => {
     const [construccion, setConstruccion] = useState(false);
     const [focos, setFocos] = useState(false);
     const [emergencia, setEmergencia] = useState(false);
+    const [fuentes, setFuentes] = useState(false);
 
     const [categorias, setCategorias] = useState([]);
     const [subCategorias, setSubCategorias] = useState([]);
@@ -161,12 +164,21 @@ export const PostPublicacion = () => {
     useEffect(() => {
         cargarSubCategories2()
 
+        setFocos(false);
+        setEmergencia(false);
+        setFuentes(false);
+        setConstruccion(false);
+
         if(subCategories1 === 'MLA377395'){
             setFocos(true);
         };
 
         if(subCategories1 === 'MLA125102'){
             setEmergencia(true);
+        };
+
+        if(subCategories1 === 'MLA420350'){
+            setFuentes(true);
         };
 
     }, [subCategories1]);
@@ -903,6 +915,49 @@ export const PostPublicacion = () => {
                 <select name="conSoporteColgar" id="conSoporteColgar" onChange={onInputChange} value={conSoporteColgar}>
                     <option value="242084">No</option>
                     <option value="242085">Si</option>
+                </select>
+            </div>
+
+        </section>
+
+        <section id='fuentes' className={`grid grid-cols-4 gap-3 m-2 ${fuentes ? '' : 'hidden'} `}>
+
+            <div className='flex flex-col'>
+                <label htmlFor="voltajeMaximoEntrada" className='text-center font-bold '>Voltaje Maximo de Entrada</label>
+                <select type='number' name="voltajeMaximoEntrada" id="voltajeMaximoEntrada" value={voltajeMaximoEntrada} onChange={onInputChange} >
+                    <option value="18114370">12V</option>
+                    <option value="17195572">220V</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="voltajeMinimoEntrada" className='text-center font-bold '>Voltaje Minimo de Entrada</label>
+                <select type='number' name="voltajeMinimoEntrada" id="voltajeMinimoEntrada" value={voltajeMinimoEntrada} onChange={onInputChange} >
+                    <option value="18114370">12V</option>
+                    <option value="17195572">220V</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="voltajeMaximoSalida" className='text-center font-bold '>Voltaje Maximo de Salida</label>
+                <select type='number' name="voltajeMaximoSalida" id="voltajeMaximoSalida" value={voltajeMaximoSalida} onChange={onInputChange} >
+                    <option value="18114370">12V</option>
+                    <option value="17195572">220V</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="voltajeMinimoSalida" className='text-center font-bold '>Voltaje Minimo de Salida</label>
+                <select type='number' name="voltajeMinimoSalida" id="voltajeMinimoSalida" value={voltajeMinimoSalida} onChange={onInputChange}>
+                    <option value="18114370">12V</option>
+                    <option value="17195572">220V</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="potenciaSalida" className='text-center font-bold '>Voltaje Minimo de Salida</label>
+                <select name="potenciaSalida" id="potenciaSalida" value={potenciaSalida} onChange={onInputChange}>
+                    <option value="2126733">250 W</option>
                 </select>
             </div>
 
