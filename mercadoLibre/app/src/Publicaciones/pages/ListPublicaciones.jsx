@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import swal from 'sweetalert2';
 
 import { Button } from "../../components/Button";
-import { eliminarPublicacion, getPublicaciones } from "../../store/publicacones";
+import { actualizarPublicacion, eliminarPublicacion, getPublicaciones } from "../../store/publicacones";
 import { PublicacionItem } from "../components/PublicacionItem";
 import { Modal } from "../components/Modal";
 import { closeModal, openModal } from "../../store/ui/uiSlice";
@@ -40,6 +40,14 @@ export const ListPublicaciones = () => {
     if (!active.codigoML) return await swal.fire('Seleccionar publicacion a modificar');
 
     dispatch( openModal() );
+  };
+
+  const modificarStock = (e) => {
+    for(let elem of publicaciones){
+      dispatch( actualizarPublicacion(elem.codigoML, elem.precioML, Math.floor(elem.stock)));
+
+      swal.fire('Modificacion de Stock', 'Se modifico el stock de todos los productos cargados', 'success')
+    }
   };
 
   const eliminar = async(e) => {
@@ -101,7 +109,8 @@ export const ListPublicaciones = () => {
           <Button text='Agregar' />
           </Link>
         <Button text='Modificar' funcion={modificar}/>
-        <Button text='Eliminar' funcion={eliminar}/>
+        <Button text='Modificar Stock' funcion={modificarStock}/>
+        {/* <Button text='Eliminar' funcion={eliminar}/> */}
       </section>
 
       {isOpenModal && <Modal closeModal={closeModal} type={'put'} precioML={active.precioML} stockML={active.stockML}/>}
