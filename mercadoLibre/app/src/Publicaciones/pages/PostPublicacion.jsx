@@ -188,7 +188,7 @@ export const PostPublicacion = () => {
             setConstruccion(!construccion);
         };
 
-        if(subCategories2 === 'MLA1588'){
+        if(subCategories2 === 'MLA1588' || subCategories2 === 'MLA1586'){
             setFocos(true);
         }
 
@@ -686,12 +686,7 @@ export const PostPublicacion = () => {
             <div className='flex flex-col'>
                 <label htmlFor="appInteligente" className='text-center font-bold '>App Inteligente</label>
                 <input type="text" name="appInteligente" id="appInteligente" onChange={onInputChange} value={appInteligente} />
-            </div>
-
-            <div className='flex flex-col'>
-                <label htmlFor="eficienciaEnerg" className='text-center font-bold '>Eficiencia Energetica</label>
-                <input type="text" name="eficienciaEnerg" id="eficienciaEnerg" onChange={onInputChange} value={eficienciaEnerg} />
-            </div>
+            </div>  
 
             {
                 
