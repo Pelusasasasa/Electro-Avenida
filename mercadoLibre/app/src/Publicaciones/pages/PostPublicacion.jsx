@@ -82,6 +82,14 @@ const initialForm = {
     botonEncendido: '242084',
     conSoporteColgar: '242084',
 
+    //Tira led
+    incluyeControladorColor: '242084',
+    incluyeFuenteAlimentacion: '242084',
+    cantidadDeLedPorMetro: '',
+    tipoLed: '',
+    potenciaPorMetro: '',
+    gradoProteccion: '',
+
 
 
 
@@ -109,17 +117,22 @@ export const PostPublicacion = () => {
 
         capacidadBateria, tiempoCarga, cantidadLed, incluyePila, incluyeBateriaRecargable, autonomiaMaximaHoras, lumenesMaximo, autonomiaMinimaHoras, lumenesminimo, tipoMontaje, tipoPosicion, encendidoAutomatico, indicadorCarga, conManija, botonEncendido, conSoporteColgar,
 
-        voltajeMaximoEntrada, voltajeMaximoSalida, voltajeMinimoEntrada, voltajeMinimoSalida, potenciaSalida
+        voltajeMaximoEntrada, voltajeMaximoSalida, voltajeMinimoEntrada, voltajeMinimoSalida, potenciaSalida,
+
+        incluyeControladorColor, incluyeFuenteAlimentacion, cantidadDeLedPorMetro, tipoLed, potenciaPorMetro, gradoProteccion
         
         } = useForm(initialForm);
     
     const [imagenes, setImagenes] = useState(null);
 
+    //Aca lo que hacemos es usar stados para guardar la informacion de si mostramos cierto contenido o no
     const [pack, setPack] = useState(true);
     const [construccion, setConstruccion] = useState(false);
     const [focos, setFocos] = useState(false);
     const [emergencia, setEmergencia] = useState(false);
     const [fuentes, setFuentes] = useState(false);
+    const [tiraLed, setTiraLed] = useState(false);
+
 
     const [categorias, setCategorias] = useState([]);
     const [subCategorias, setSubCategorias] = useState([]);
@@ -168,6 +181,7 @@ export const PostPublicacion = () => {
         setEmergencia(false);
         setFuentes(false);
         setConstruccion(false);
+        setTiraLed(false);
 
         if(subCategories1 === 'MLA377395'){
             setFocos(true);
@@ -179,6 +193,10 @@ export const PostPublicacion = () => {
 
         if(subCategories1 === 'MLA420350'){
             setFuentes(true);
+        };
+
+        if(subCategories1 === 'MLA388926'){
+            setTiraLed(true);
         };
 
     }, [subCategories1]);
@@ -412,6 +430,17 @@ export const PostPublicacion = () => {
                 {id: 'WITH_HANDLE', value_id: conManija},
                 // {id: 'WITH_HANGING_SUPPORT', value_id: conSoporteColgar},
                 {id: 'WITH_ON_OFF_BUTTON', value_id: botonEncendido},
+            )
+         };
+
+         if(formState.subCategories1 === 'MLA388926'){
+            producto.attributes.push(
+                {id: 'INCLUDES_COLOR_CONTROLLER', value_id: incluyeControladorColor},
+                {id: 'INCLUDES_POWER_SUPPLY', value_id: incluyeFuenteAlimentacion},
+                {id: 'LEDS_PER_METER_NUMBER', value_name: cantidadDeLedPorMetro},
+                {id: 'LED_TYPE', value_name: tipoLed},
+                {id: 'POWER_PER_METER', value_id: potenciaPorMetro},
+                {id: 'PROTECTION_DEGREE', value_name: gradoProteccion}
             )
          }
 
@@ -954,6 +983,50 @@ export const PostPublicacion = () => {
                 <select name="potenciaSalida" id="potenciaSalida" value={potenciaSalida} onChange={onInputChange}>
                     <option value="2126733">250 W</option>
                 </select>
+            </div>
+
+        </section>
+
+        <section id='tiraLed' className={`grid grid-cols-4 gap-3 m-2 ${tiraLed ? '' : 'hidden'} `}>
+
+            <div className='flex flex-col'>
+                <label htmlFor="incluyeControladorColor" className='text-center font-bold '>Incluye Control Remoto Color</label>
+                <select type='number' name="incluyeControladorColor" id="incluyeControladorColor" value={incluyeControladorColor} onChange={onInputChange} >
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="incluyeFuenteAlimentacion" className='text-center font-bold '>Incluye fuente de Alimentacion</label>
+                <select name="incluyeFuenteAlimentacion" id="incluyeFuenteAlimentacion" value={incluyeFuenteAlimentacion} onChange={onInputChange} >
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="cantidadDeLedPorMetro" className='text-center font-bold '>Cantidad de Led Por Metro</label>
+                <input type='number' name="cantidadDeLedPorMetro" id="cantidadDeLedPorMetro" value={cantidadDeLedPorMetro} onChange={onInputChange} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="tipoLed" className='text-center font-bold '>Tipo Led</label>
+                <input type='number' name="tipoLed" id="tipoLed" value={tipoLed} onChange={onInputChange} />
+                
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="potenciaPorMetro" className='text-center font-bold '>Potencia Por Metro</label>
+                <select name="potenciaPorMetro" id="potenciaPorMetro" value={potenciaPorMetro} onChange={onInputChange}>
+                    <option value="154354">30 W</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="gradoProteccion" className='text-center font-bold '>Grado Proteccion</label>
+                <input name="gradoProteccion" id="gradoProteccion" value={gradoProteccion} onChange={onInputChange} />
+                
             </div>
 
         </section>

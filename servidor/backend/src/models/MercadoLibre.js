@@ -34,6 +34,15 @@ const mercadoLibre = new Schema({
     stockML: {
         type: Number,
         required: true
+    },
+    tipoVenta: {
+        type: String,
+        default: 'UNIDAD',
+        set: value => value.toUpperCase().trim()
+    },
+    unidadPack: {
+        type: Number,
+        default: 1
     }
 
 });
