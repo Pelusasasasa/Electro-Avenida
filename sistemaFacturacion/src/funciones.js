@@ -268,13 +268,13 @@ const verCodComp = (tipoComp, condicionIva) => {
       return 9;
     }
   } else if (tipoComp === "Nota Credito") {
-    if (condicionIva === "Inscripto") {
+    if ((condicionIva === "Inscripto") || (conIva.value === 'Monotributista')) {
       return 3;
     } else {
       return 8;
     }
   } else if (tipoComp === "Ticket Factura") {
-    if (conIva.value === "Inscripto") {
+    if ((conIva.value === "Inscripto") || (conIva.value === 'Monotributista')) {
       return 1;
     } else {
       return 6;
