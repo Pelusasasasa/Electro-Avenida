@@ -284,21 +284,12 @@ const ponerEnCuentaCorrienteHistorica = async (venta, valorizado, saldo) => {
 
 const subirAAfip = async (venta, ventaAsociada) => {
   alerta.children[1].innerHTML = "Esperando confirmacion de la afip";
+  const ventaAnterior = await afip.ElectronicBilling.getVoucherInfo(parseFloat(facturaOriginal.value), 5, ventaAsociada.cod_comp);
 
-  const ventaAnterior = await afip.ElectronicBilling.getVoucherInfo(
-    parseFloat(facturaOriginal.value),
-    5,
-    ventaAsociada.cod_comp
-  );
 
-  const fecha = new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
-    .toISOString()
-    .split("T")[0];
+  const fecha = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split("T")[0];
 
-  let ultimoElectronica = await afip.ElectronicBilling.getLastVoucher(
-    5,
-    parseFloat(venta.cod_comp)
-  );
+  let ultimoElectronica = await afip.ElectronicBilling.getLastVoucher(5,parseFloat(venta.cod_comp));
   console.log(ultimoElectronica);
 
   let totalIva105 = 0;
@@ -323,6 +314,7 @@ const subirAAfip = async (venta, ventaAsociada) => {
           parseFloat(objeto.precio_venta) / 1.105);
     }
   });
+
   let data = {
     CantReg: 1,
     CbteTipo: venta.cod_comp,
@@ -365,6 +357,7 @@ const subirAAfip = async (venta, ventaAsociada) => {
       Importe: totalIva21.toFixed(2), // Importe
     });
   }
+  
   const res = await afip.ElectronicBilling.createVoucher(data); //creamos la factura electronica
   alerta.children[1].innerHTML = "Nota de Credito Afip Aceptada";
   const qr = {
@@ -684,13 +677,9 @@ factura.addEventListener("click", async (e) => {
         venta.cant_iva = cant_iva;
 
         //Traemos la venta relacionada con la nota de credito
-        const tipo = conIva.value === "Inscripto" ? "Factura A" : "Factura B";
-        let ventaRelacionada = (
-          await axios.get(
-            `${URL}ventas/factura/${venta.numeroAsociado}/${tipo}/${venta.condIva}`,
-            configAxios
-          )
-        ).data;
+        const tipo = (conIva.value === "Inscripto" || conIva.value === "Monotributista") ? "Factura A" : "Factura B";
+        
+        let ventaRelacionada = (await axios.get(`${URL}ventas/factura/${venta.numeroAsociado}/${tipo}/${venta.condIva}`)).data;
         //subimos a la afip la factura electronica
         let afip = await subirAAfip(venta, ventaRelacionada);
 
