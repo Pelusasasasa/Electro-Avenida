@@ -5,7 +5,7 @@ const MovCaja = require('../models/movCaja');
 movCajaCTRL.post = async(req,res)=>{
     const now = new Date();
     const p = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
-    req.body.fecha = new Date(req.body.fecha.slice(0,10) + "T" + p.slice(11));
+    req.body.fecha = new Date(p.slice(0,10) + "T" + p.slice(11));
     const movCaja = new MovCaja(req.body);
     try {
         await movCaja.save();
