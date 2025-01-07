@@ -11,9 +11,9 @@ export const activarPublicacion = (id) => {
     }
 };
 
-export const actualizarPublicacion = (id, precio, stock) => {
+export const actualizarPublicacion = (id, precio, stock, tipoVenta, unidadPack) => {
     return async(dispatch) => {
-        const res = await modificarPublicacion(id, precio, stock);
+        const res = await modificarPublicacion(id, precio, stock, tipoVenta, unidadPack);
 
         dispatch(putPublicacion(res))
     }

@@ -10,10 +10,14 @@ const segundoCostoFijo = 30000;
 const valorPrimerCostoFijo = 900;
 const valorSegundoCostoFijo = 1800;
 
-export const PublicacionItem = ({index, _id, codigoML, descripcion, precioML, stock, stockML, costo, costodolar, impuesto, codProd}) => {
+export const PublicacionItem = ({codigoML, codProd, costo, costodolar,descripcion, _id, impuesto, index,  precioML, stock, stockML, tipoVenta, unidadPack}) => {
     const { dolar } = useSelector(state => state.variables);
     const { active } = useSelector(state => state.publicaciones);
     const dispatch = useDispatch();
+
+    if(codigoML === 'MLA1470465449'){
+        console.log({tipoVenta, unidadPack})
+    }
 
     const activar = (e) => {
         let id = '';

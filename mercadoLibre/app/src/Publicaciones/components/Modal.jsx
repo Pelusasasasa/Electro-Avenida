@@ -14,16 +14,18 @@ export const Modal = ({closeModal, type}) => {
     const dispatch = useDispatch();
     const { active } = useSelector(state => state.publicaciones);
     initialState.precioML = active.precioML;
-    initialState.stockML = active.stockML
+    initialState.stockML = active.stockML;
+    initialState.tipoVenta = active.tipoVenta;
+    initialState.unidadPack = active.unidadPack;
 
 
-    const {onInputChange, formState, precioML, stockML} = useForm(initialState);
+    const {onInputChange, formState, precioML, stockML, unidadPack, tipoVenta} = useForm(initialState);
 
     const onSubmit = async(e) => {
         e.preventDefault();
 
         if(type === 'put'){
-            dispatch(actualizarPublicacion(active.codigoML, formState.precioML, formState.stockML))
+            dispatch(actualizarPublicacion(active.codigoML, formState.precioML, formState.stockML, formState.tipoVenta, formState.unidadPack));
             
             const res = await modificarPrecioYStockPorIdDeProducto(active.codigoML, precioML, stockML);
             
@@ -47,6 +49,19 @@ export const Modal = ({closeModal, type}) => {
                 <div>
                     <label htmlFor="stock">Stock ML</label>
                     <input type="number" onChange={onInputChange} value={stockML} name="stockML" id="stock" />
+                </div>
+                <div className='flex justify-around'>
+                    <div>
+                        <label htmlFor="tipoVenta">Tipo Venta</label>
+                        <select className='border border-black rounded-xl p-2 cursor-pointer' name="tipoVenta" id="tipoVenta" onChange={onInputChange} value={tipoVenta}>
+                            <option value="UNIDAD">Unidad</option>
+                            <option value="PACK">Pack</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label htmlFor="unidadPack">Cantidad en el Pack</label>
+                        <input type="number" className='text-right' name="unidadPack" id="unidadPack" onChange={onInputChange} value={unidadPack} />
+                    </div>
                 </div>
                 <div className='flex justify-center'>
                     <button type='submit' className={`${type === 'post' ? '' : 'hidden'}`}>Guarda</button>
