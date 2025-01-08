@@ -27,7 +27,7 @@ export const Modal = ({closeModal, type}) => {
         if(type === 'put'){
             dispatch(actualizarPublicacion(active.codigoML, formState.precioML, formState.stockML, formState.tipoVenta, formState.unidadPack));
             
-            const res = await modificarPrecioYStockPorIdDeProducto(active.codigoML, precioML, stockML);
+            const res = await modificarPrecioYStockPorIdDeProducto(active.codigoML, precioML, stockML, tipoVenta, unidadPack);
             
             if(res) await swal.fire('Se modifico el producto');
 

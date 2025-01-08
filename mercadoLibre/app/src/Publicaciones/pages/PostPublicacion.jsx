@@ -233,7 +233,7 @@ export const PostPublicacion = () => {
     
     const listarProductoTraido = () => {
         onChanges({
-            descripcion: active.descripcion,
+            descripcion: active.descripcion.slice(0, 60),
             costoIva: active.costodolar !== 0 ? ((parseFloat(active.costodolar) + parseFloat(active.impuestos)) * dolar).toFixed(2) :  (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
             stockSujerido: active.stock,
             marca: active.marca,
@@ -444,7 +444,6 @@ export const PostPublicacion = () => {
             )
          }
 
-         console.log(producto)
         dispatch( postPublicaciones(producto) );
         navigate('/publicaciones/list');
     };
@@ -463,7 +462,7 @@ export const PostPublicacion = () => {
             </div>
             <div className='flex flex-col'>
                 <label htmlFor="codBarra" className='text-center font-bold '>Codigo Barras</label>
-                <input type="text" name="codBarra" onChange={onInputChange} value={codBarra} id="descripcion" />
+                <input type="text" name="codBarra" onChange={onInputChange} value={codBarra} id="codBarra" />
             </div>
 
             <div className='flex flex-col'>
@@ -575,6 +574,7 @@ export const PostPublicacion = () => {
                     <option value="BLANCO">BLANCO</option>
                     <option value="CALIDO">CALIDO</option>
                     <option value="NEUTRO">NEUTRO</option>
+                    <option value="RGB">RGB</option>
                 </select>
             </div>
 
@@ -1011,7 +1011,7 @@ export const PostPublicacion = () => {
             </div>
 
             <div className='flex flex-col'>
-                <label htmlFor="tipoLed" className='text-center font-bold '>Tipo Led</label>
+                <label htmlFor="tipoLed" className='text-center font-bold '>Tipo Led (5050)</label>
                 <input type='number' name="tipoLed" id="tipoLed" value={tipoLed} onChange={onInputChange} />
                 
             </div>
@@ -1020,6 +1020,7 @@ export const PostPublicacion = () => {
                 <label htmlFor="potenciaPorMetro" className='text-center font-bold '>Potencia Por Metro</label>
                 <select name="potenciaPorMetro" id="potenciaPorMetro" value={potenciaPorMetro} onChange={onInputChange}>
                     <option value="154354">30 W</option>
+                    <option value="154354">48 W</option>
                 </select>
             </div>
 
