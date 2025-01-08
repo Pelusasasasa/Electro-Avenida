@@ -44,7 +44,7 @@ export const ListPublicaciones = () => {
 
   const modificarStock = (e) => {
     for(let elem of publicaciones){
-      dispatch( actualizarPublicacion(elem.codigoML, elem.precioML, Math.floor(elem.stock)));
+      dispatch( actualizarPublicacion(elem.codigoML, elem.precioML, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack)));
 
       swal.fire('Modificacion de Stock', 'Se modifico el stock de todos los productos cargados', 'success')
     }

@@ -35,7 +35,9 @@ export const publicacionesSlice = createSlice({
 
             const aux = state.publicaciones.find(elem => elem.codigoML === payload.codigoML);
             aux.stockML = payload.stockML;
-            aux.precioML = payload.precioML
+            aux.precioML = payload.precioML;
+            aux.tipoVenta = payload.tipoVenta;
+            aux.unidadPack = payload.unidadPack;
         },
         
     }

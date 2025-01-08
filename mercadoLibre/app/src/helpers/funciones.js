@@ -106,13 +106,17 @@ export const modificarVariacionProducto = async(codigoML, codigoVaration, precio
     }
 };
 
-export const modificarPrecioYStockPorIdDeProducto = async(codigo, precio, stock) => {
+export const modificarPrecioYStockPorIdDeProducto = async(codigo, precio, stock, tipoVenta, unidadPack) => {
     const {authorizacion} = (await axios.get(`${URL}codigoML`)).data;
     try { 
         const { data } = (await axios.put(`${aux}items/${codigo}`,
             {
                 price: precio,
-                available_quantity: stock
+                available_quantity: stock,
+                attributes: [
+                    {"id": "SALE_FORMAT", "value_id": tipoVenta === 'UNIDAD' ? "1359391" : "1359392"},
+                    {"id": "UNITS_PER_PACK", "value_name": unidadPack}
+                ]
             },
             {
                 headers: {

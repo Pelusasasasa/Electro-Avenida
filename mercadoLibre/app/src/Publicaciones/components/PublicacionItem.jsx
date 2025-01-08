@@ -15,10 +15,6 @@ export const PublicacionItem = ({codigoML, codProd, costo, costodolar,descripcio
     const { active } = useSelector(state => state.publicaciones);
     const dispatch = useDispatch();
 
-    if(codigoML === 'MLA1470465449'){
-        console.log({tipoVenta, unidadPack})
-    }
-
     const activar = (e) => {
         let id = '';
 
@@ -69,16 +65,16 @@ export const PublicacionItem = ({codigoML, codProd, costo, costodolar,descripcio
     }
     
   return (
-    <tr id={codigoML} className={`${active.codigoML === codigoML ? 'bg-cyan-300' : 'hover:bg-gray-400' } hover:cursor-pointer` } onClick={activar}>
+    <tr id={codigoML} className={`${active.codigoML === codigoML ? 'bg-cyan-300' : 'hover:bg-gray-400' } ${tipoVenta === 'UNIDAD' ? '' : 'bg-green-200'} hover:cursor-pointer` } onClick={activar}>
         <td className='border border-black'>{index + 1}</td>
         <td className='border border-black'>{codigoML}</td>
         <td className='border border-black text-center'>{codProd}</td>
         <td className='border border-black'>{descripcion}</td>
         <td className='border border-black'>{costodolar !== 0 ? ((costodolar + impuesto) * dolar).toFixed(2) : (costo + impuesto).toFixed(2)}</td>
-        <td className='border border-black'>{calcularPrecioSujerido()}</td>
-        <td className='border border-black'>{Math.floor(stock).toFixed(2)}</td>
+        <td className='border border-black'>{tipoVenta === 'UNIDAD' ? calcularPrecioSujerido() : (calcularPrecioSujerido() * unidadPack).toFixed(2) }</td>
+        <td className='border border-black'>{Math.floor(stock / unidadPack).toFixed(2)}</td>
         <td className='border border-black'>{precioML.toFixed(2)}</td>
-        <td className={`border border-black ${Math.floor(stock) < stockML ? 'bg-red-500' : ''}`}>{stockML.toFixed(2)}</td>
+        <td className={`border border-black ${Math.floor(stock / unidadPack) < stockML ? 'bg-red-500' : ''}`}>{stockML.toFixed(2)}</td>
     </tr>
   )
 }
