@@ -220,7 +220,9 @@ export const PostPublicacion = () => {
 
     useEffect(() => {
         onChanges({
-                precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), parseFloat(cantPack))
+                precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), parseFloat(cantPack)),
+                stockSujerido: parseFloat(active.stock / cantPack)
+
         })
     }, [cantPack]);
 
@@ -1019,6 +1021,7 @@ export const PostPublicacion = () => {
             <div className='flex flex-col'>
                 <label htmlFor="potenciaPorMetro" className='text-center font-bold '>Potencia Por Metro</label>
                 <select name="potenciaPorMetro" id="potenciaPorMetro" value={potenciaPorMetro} onChange={onInputChange}>
+                    <option value="154354">15 W</option>
                     <option value="154354">30 W</option>
                     <option value="154354">48 W</option>
                 </select>
