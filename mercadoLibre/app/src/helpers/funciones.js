@@ -193,7 +193,7 @@ export const publicarML = async(elem) => {
         })).data;
         return res;
     } catch (error) {
-        console.log(error)
+        console.log(error.response.data)
         return error
         
     }
