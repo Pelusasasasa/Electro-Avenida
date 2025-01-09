@@ -183,7 +183,7 @@ export const PostPublicacion = () => {
         setConstruccion(false);
         setTiraLed(false);
 
-        if(subCategories1 === 'MLA377395'){
+        if(subCategories1 === 'MLA377395' || subCategories1 === 'MLA373504'){
             setFocos(true);
         };
 
@@ -352,7 +352,6 @@ export const PostPublicacion = () => {
             {
                 id: 'POWER',
                 value_name: potencia ? potencia + ' W' : null,
-                value_id: potencia ? null : "-1"
             },
             {
                 id: 'VOLTAGE',
@@ -369,7 +368,7 @@ export const PostPublicacion = () => {
             }
          ];
 
-         if(formState.subCategories1 === 'MLA377395'){
+         if(formState.subCategories1 === 'MLA377395' || formState.subCategories1 === 'MLA373504'){
             producto.attributes.push(
                 {id: 'LUMINOUS_FLUX', value_name: `${lumenes} lm`},
                 {id: 'LIGHTING_TECHNOLOGY', value_id: tipoTecnologia},
@@ -383,6 +382,13 @@ export const PostPublicacion = () => {
                 {id: 'INCLUDES_REMOTE_CONTROL', value_id: incluyeControl ? "242085" : "242084",},
             )
          };
+
+         //CATEGORIAS REFLECTORES
+         if(formState.subCategories1 === 'MLA373504'){
+            producto.attributes.push(
+                {id: 'LIGHT_BULB_TYPE', value_name: tipoTecnologia },
+            );
+         }
 
          //CATEGORIA DE LAMPARAS
          if(formState.subCategories2 === 'MLA1588' || formState.subCategories2 === "MLA1586" || formState.subCategorias2 === "MLA1586"){
@@ -445,9 +451,11 @@ export const PostPublicacion = () => {
                 {id: 'PROTECTION_DEGREE', value_name: gradoProteccion}
             )
          }
-
+        
+        console.log(producto)
+        
         dispatch( postPublicaciones(producto) );
-        navigate('/publicaciones/list');
+        navigate('/publicaciones/list'); 
     };
 
   return (
@@ -685,14 +693,10 @@ export const PostPublicacion = () => {
                 <input type="text" name="ambiente" id="ambiente" onChange={onInputChange} value={ambiente} />
             </div>
 
-            {
-                validacion
-                ? <div className='flex flex-col'>
+                <div className='flex flex-col'>
                     <label htmlFor="capacidadFoco" className='text-center font-bold '>Capacidad Foco</label>
                     <input type="number" name="capacidadFoco" id="capacidadFoco" onChange={onInputChange} value={capacidadFoco} />
                 </div>
-                : <></>
-            }
             
 
             {
@@ -952,6 +956,7 @@ export const PostPublicacion = () => {
                 <label htmlFor="voltajeMaximoEntrada" className='text-center font-bold '>Voltaje Maximo de Entrada</label>
                 <select type='number' name="voltajeMaximoEntrada" id="voltajeMaximoEntrada" value={voltajeMaximoEntrada} onChange={onInputChange} >
                     <option value="18114370">12V</option>
+                    <option value="">110V</option>
                     <option value="17195572">220V</option>
                 </select>
             </div>
@@ -960,6 +965,7 @@ export const PostPublicacion = () => {
                 <label htmlFor="voltajeMinimoEntrada" className='text-center font-bold '>Voltaje Minimo de Entrada</label>
                 <select type='number' name="voltajeMinimoEntrada" id="voltajeMinimoEntrada" value={voltajeMinimoEntrada} onChange={onInputChange} >
                     <option value="18114370">12V</option>
+                    <option value="">110V</option>
                     <option value="17195572">220V</option>
                 </select>
             </div>
@@ -981,8 +987,10 @@ export const PostPublicacion = () => {
             </div>
 
             <div className='flex flex-col'>
-                <label htmlFor="potenciaSalida" className='text-center font-bold '>Voltaje Minimo de Salida</label>
+                <label htmlFor="potenciaSalida" className='text-center font-bold '>Potencia maxima de Salida</label>
                 <select name="potenciaSalida" id="potenciaSalida" value={potenciaSalida} onChange={onInputChange}>
+                    <option value="">120 W</option>
+                    <option value="">150 W</option>
                     <option value="2126733">250 W</option>
                 </select>
             </div>
