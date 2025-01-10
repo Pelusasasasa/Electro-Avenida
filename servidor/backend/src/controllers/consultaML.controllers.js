@@ -7,21 +7,23 @@ const codigoML = require('../models/CodigoML');
 consultasCTRL.responderConsulta = async(req, res) => {
     const {authorizacion, seller_id, url} = await codigoML.findOne();
     const { id }  = req.params;
-    const text = req.body;
-
+    const {text} = req.body;
     try {
-        const consulta = (await axios.post(`${url}/answers`,{
-            headers:{
-                Authorization: `Bearer ${authorizacion}`
-            },
-        },
+        const consulta = (await axios.post(`${url}answers`,
         {
             "question_id": id,
-            text
-        })).data;
+            text: text
+        },
+        {
+            headers:{
+                'Authorization': `Bearer ${authorizacion}`
+            },
+        }
+        )).data;
         res.status(201).send(consulta);
     } catch (error) {
-        res.status(500).send({error: error.message});
+        console.log(error.response.data)
+        res.status(500).send({error: error.response.data});
     }
 };
 

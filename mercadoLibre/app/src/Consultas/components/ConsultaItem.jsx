@@ -41,7 +41,7 @@ export const ConsultaItem = ({id, date_created, text, item_id ,status}) => {
         });
 
 
-        dispatch(responderConsulta(active.id ,res));
+        dispatch(responderConsulta(active.id, res));
 
         
     };
