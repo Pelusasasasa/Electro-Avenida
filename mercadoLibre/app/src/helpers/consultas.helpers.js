@@ -2,7 +2,7 @@ import axios from "axios";
 const URL = process.env.REACT_APP_URL;
 
 export const responder = async(id, res) => {
-    const consulta = (await axios.post(`${URL}consultasML/forId/${id}`, res)).data;
+    const consulta = (await axios.post(`${URL}consultasML/forId/${id}`, {text: res.value})).data;
     return consulta;
 };
 
