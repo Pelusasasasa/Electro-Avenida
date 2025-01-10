@@ -145,6 +145,7 @@ const listar = async(tarjetas)=>{
     .sort((a,b)=>{
         return a.tarjeta>b.tarjeta ? 1 : -1;
     });
+    total = 0;
 
     tbody.innerHTML = "";
     for await(let tarjeta of tarjetas){
