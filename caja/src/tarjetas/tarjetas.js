@@ -145,11 +145,19 @@ const listar = async(tarjetas)=>{
     .sort((a,b)=>{
         return a.tarjeta>b.tarjeta ? 1 : -1;
     });
+    total = 0;
 
     tbody.innerHTML = "";
     for await(let tarjeta of tarjetas){
         const tr = document.createElement('tr');
         tr.id = tarjeta._id;
+
+        const pagado = (new Date().getTime() < new Date(tarjeta.fechaPago).getTime());
+
+        if(pagado){
+            tr.classList.add('border-red');
+            tr.classList.add('border-2');
+        }
 
         const tdFecha = document.createElement('td');
         const tdTarjeta = document.createElement('td');

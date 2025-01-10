@@ -16,6 +16,7 @@ const efectivo = document.getElementById("efectivo");
 const cheque = document.getElementById("cheque");
 const tarjeta = document.getElementById("tarjeta");
 const transferencia = document.getElementById("transferencia");
+const ml = document.getElementById("ml");
 
 const total = document.getElementById("total");
 const cobrado = document.getElementById("cobrado");
@@ -51,6 +52,78 @@ window.addEventListener("load", async (e) => {
   movimientos = (await axios.get(`${URL}movCajas/forPased`, configAxios)).data;
   listar(movimientos);
 });
+
+const cobrarML = async (e) => {
+  if(seleccionado){
+    const {isConfirmed, value} = await sweet.fire({
+      title: 'Precio Tarjeta',
+      html: `
+        <div class='flex gap-2 flex-col'>
+          <input type="number" id="cobradoML"/>
+          <input type="date" id="fechaML"/>
+        </div>
+      `,
+      didOpen: () => {
+        document.getElementById('cobradoML').value = seleccionado.children[5].innerText;
+        document.getElementById('fechaML').value = seleccionado.children[0].innerText.split('/', 3).reverse().join('-');
+      },
+      preConfirm: () => {
+        const cobradoML = document.getElementById('cobradoML').value;
+        const fechaML = document.getElementById('fechaML').value;
+
+        return {cobradoML, fechaML};
+      },
+      confirmButtonText: 'Aceptar',
+      showCancelButton: true
+    });
+
+    if (seleccionado) {
+      const egreso = {};
+
+      egreso.tMov = "E";
+      egreso.fecha = new Date();
+      egreso.nro_comp = seleccionado.children[4].innerText;
+      egreso.desc = seleccionado.children[2].innerText + ' MERCADO LIBRE GASTOS';
+      egreso.idCuenta = "ML";
+      egreso.pasado = true;   
+      egreso.imp = (parseFloat(seleccionado.children[5].innerText) - parseFloat(value.cobradoML)).toFixed(2);
+      egreso.cuenta = "MERCADO LIBRE";
+      egreso.vendedor = seleccionado.children[6].innerText;
+      egreso.codigo = seleccionado.children[1].innerText;
+      egreso.cliente = seleccionado.children[2].innerText;
+  
+      try {
+        await axios.post(`${URL}movCajas`, egreso);
+      } catch (error) {
+        console.log(error);
+        await sweet.fire({
+          title: "No se pudo cargar el descuento en caja",
+        });
+      }
+
+    const tarjeta = {} ;
+    const now = new Date();
+    const fechaArgentina = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+
+    tarjeta.fecha = fechaArgentina;
+    tarjeta.tarjeta = 'MERCADO PAGO'
+    tarjeta.imp = seleccionado.children[5].innerText = "" ? 0 : parseFloat(seleccionado.children[5].innerText) - parseFloat(egreso.imp);
+    tarjeta.cliente = seleccionado.children[2].innerText;
+    tarjeta.vendedor =  seleccionado.children[6].innerText;
+    tarjeta.tipo = "Tarjeta";
+    tarjeta.tipo_comp =  seleccionado.children[3].innerText;
+    tarjeta.fechaPago = value.fechaML;
+
+    try {
+      await axios.post(`${URL}tarjetas`, tarjeta);
+    } catch (error) {
+      console.log(error)
+    }
+
+    aceptar.click();
+  }
+
+  }}
 
 const listar = async (lista) => {
   tbody.innerHTML = "";
@@ -162,6 +235,24 @@ efectivo.addEventListener("click", (e) => {
   }
 });
 
+cheque.addEventListener("click", (e) => {
+  if (seleccionado) {
+    ipcRenderer.send("abrir-ventana", {
+      path: "cheques/agregar-modificarCheques.html",
+      width: 500,
+      height: 600,
+      cerrarVentana: true,
+      informacionAgregar: {
+        cliente: seleccionado.children[2].innerText,
+        vendedor: seleccionado.children[6].innerText,
+        imp: parseFloat(seleccionado.children[5].innerText),
+      },
+    });
+  }
+});
+
+ml.addEventListener('click', cobrarML);
+
 tarjeta.addEventListener("click", (e) => {
   if (seleccionado) {
     ipcRenderer.send("abrir-ventana", {
@@ -179,22 +270,6 @@ tarjeta.addEventListener("click", (e) => {
   }
 });
 
-cheque.addEventListener("click", (e) => {
-  if (seleccionado) {
-    ipcRenderer.send("abrir-ventana", {
-      path: "cheques/agregar-modificarCheques.html",
-      width: 500,
-      height: 600,
-      cerrarVentana: true,
-      informacionAgregar: {
-        cliente: seleccionado.children[2].innerText,
-        vendedor: seleccionado.children[6].innerText,
-        imp: parseFloat(seleccionado.children[5].innerText),
-      },
-    });
-  }
-});
-
 transferencia.addEventListener("click", async (e) => {
   if (seleccionado) {
     const egreso = {};
@@ -204,12 +279,14 @@ transferencia.addEventListener("click", async (e) => {
     egreso.desc = seleccionado.children[2].innerText;
     egreso.idCuenta = "DEP";
     egreso.pasado = true;
+
     const { value } = await sweet.fire({
       title: "Importe",
       input: "text",
       inputValue: seleccionado.children[5].innerText,
       confirmButtonText: "Aceptar",
     });
+
     egreso.imp = value;
     egreso.cuenta = "DEPOSITO BANCO ENTRE RIOS";
     egreso.vendedor = seleccionado.children[6].innerText;
@@ -253,6 +330,7 @@ cobrado.addEventListener("focus", (e) => {
   cobrado.select();
 });
 
+
 descuento.addEventListener("focus", (e) => {
   descuento.select();
 });
@@ -265,6 +343,10 @@ ipcRenderer.on("recibir-informacion", (e, args) => {
   }
 });
 
+ml.addEventListener('click', e => {
+  console.log("a")
+})
+
 salir.addEventListener("click", (e) => {
   location.href = "../index.html";
 });
@@ -272,7 +354,12 @@ salir.addEventListener("click", (e) => {
 document.addEventListener("keydown", (e) => {
   if (e.keyCode === 27) {
     location.href = "../index.html";
+  };
+
+  if(e.keyCode === 120){
+    ml.parentElement.classList.toggle('none');
   }
+
 });
 
 function listarUltimoMovimiento(mov) {

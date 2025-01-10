@@ -101,3 +101,23 @@ tbody tr:hover{
 .tooltip{
   display: none;
 }
+
+.flex{
+  display: flex;
+}
+
+.flex-col{
+  flex-direction: column;
+}
+
+.gap-2{
+  gap: 2rem;
+}
+
+.border-red{
+  border: .1rem solid red;
+}
+
+.border-2{
+  border-width: .2rem;
+}
