@@ -13,6 +13,7 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
+    "empacar": "electron-packager . --platform=win32 --arch=x64 --icon=LogoCaja.ico",
     "lint": "echo \"No linting configured\""
   },
   "keywords": [],
