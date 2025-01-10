@@ -130,6 +130,11 @@ const listar = async (lista) => {
   for await (let elem of lista) {
     const tr = document.createElement("tr");
     tr.id = elem._id;
+    
+    elem.imp = elem.imp.toLocaleString("de-DE",{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
 
     const tdFecha = document.createElement("td");
     const tdCodigo = document.createElement("td");
@@ -145,7 +150,7 @@ const listar = async (lista) => {
     tdCliente.innerHTML = elem.cliente;
     tdComprob.innerHTML = elem.cuenta;
     tdNumero.innerHTML = elem.nro_comp;
-    tdImporte.innerHTML = elem.imp.toFixed(2);
+    tdImporte.innerHTML = elem.imp;
     tdVendedor.innerHTML = elem.vendedor;
 
     tdImporte.classList.add("text-right");
