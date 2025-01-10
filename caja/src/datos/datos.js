@@ -15,6 +15,7 @@ const salir = document.querySelector('.salir');
 
 
 let cuentas = [];
+let index = 1;
 
 const listar = (cuenta)=>{
     codigo.value =cuenta.cod;
@@ -106,8 +107,8 @@ guardar.addEventListener('click',async e=>{
 })
 
 proximo.addEventListener('click',e=>{
-    const index = cuentas.findIndex(cuenta => cuenta.cod === codigo.value);
-    if (cuentas[index+1] !== undefined) {
-        listar(cuentas[index+1]);
-    }
+    console.log(cuentas)
+    listar(cuentas[index]);
+    index++;
+    
 });

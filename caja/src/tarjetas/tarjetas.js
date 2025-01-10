@@ -151,6 +151,13 @@ const listar = async(tarjetas)=>{
         const tr = document.createElement('tr');
         tr.id = tarjeta._id;
 
+        const pagado = (new Date().getTime() < new Date(tarjeta.fechaPago).getTime());
+
+        if(pagado){
+            tr.classList.add('border-red');
+            tr.classList.add('border-2');
+        }
+
         const tdFecha = document.createElement('td');
         const tdTarjeta = document.createElement('td');
         const tdCliente = document.createElement('td');

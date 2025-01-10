@@ -2,17 +2,11 @@ function getParameterByName(name) {
   name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
   var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
     results = regex.exec(location.search);
-  return results === null
-    ? ""
-    : decodeURIComponent(results[1].replace(/\+/g, " "));
+  return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 
 const axios = require("axios");
-const {
-  cerrarVentana,
-  configAxios,
-  clickderecho,
-} = require("../assets/js/globales");
+const {cerrarVentana,configAxios,clickderecho,} = require("../assets/js/globales");
 require("dotenv").config();
 const URL = process.env.URL;
 
@@ -66,12 +60,7 @@ window.addEventListener("load", async (e) => {
     select.value = getParameterByName("codProv");
   }
 
-  cuentas = (
-    await axios.get(
-      `${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`,
-      configAxios
-    )
-  ).data;
+  cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
   listarCuentas(cuentas);
 
   const provedor = provedores.find(

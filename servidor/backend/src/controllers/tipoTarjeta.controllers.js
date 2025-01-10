@@ -13,4 +13,15 @@ tipoCTRL.getsAll = async(req,res)=>{
     res.send(tipos);
 }
 
+tipoCTRL.deleteByName = async(req, res) => {
+    const {nombre} = req.params;
+    console.log(nombre)
+    const borrado = await Tipo.findOneAndDelete({nombre: nombre});
+
+    res.send(borrado)
+
+
+
+}
+
 module.exports = tipoCTRL;

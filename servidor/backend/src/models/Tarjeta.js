@@ -22,6 +22,10 @@ const Tarjeta = new Schema({
         type:Number,
         default:0.0
     },
+    fechaPago:{
+        type: Date,
+        default: Date.now
+    },
     vendedor:String
 });
 
