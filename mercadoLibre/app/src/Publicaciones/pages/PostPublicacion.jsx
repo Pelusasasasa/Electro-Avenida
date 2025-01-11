@@ -90,6 +90,11 @@ const initialForm = {
     potenciaPorMetro: '',
     gradoProteccion: '',
 
+    //Proyectores
+    instalacionProyector: '',
+    sensorMovimiento: '242084',
+    resistenteAlAgua: '242084',
+
 
 
 
@@ -119,7 +124,9 @@ export const PostPublicacion = () => {
 
         voltajeMaximoEntrada, voltajeMaximoSalida, voltajeMinimoEntrada, voltajeMinimoSalida, potenciaSalida,
 
-        incluyeControladorColor, incluyeFuenteAlimentacion, cantidadDeLedPorMetro, tipoLed, potenciaPorMetro, gradoProteccion
+        incluyeControladorColor, incluyeFuenteAlimentacion, cantidadDeLedPorMetro, tipoLed, potenciaPorMetro, gradoProteccion,
+
+        instalacionProyector, sensorMovimiento, resistenteAlAgua,
         
         } = useForm(initialForm);
     
@@ -132,6 +139,7 @@ export const PostPublicacion = () => {
     const [emergencia, setEmergencia] = useState(false);
     const [fuentes, setFuentes] = useState(false);
     const [tiraLed, setTiraLed] = useState(false);
+    const [proyector, setProyector] = useState(false);
 
 
     const [categorias, setCategorias] = useState([]);
@@ -182,6 +190,7 @@ export const PostPublicacion = () => {
         setFuentes(false);
         setConstruccion(false);
         setTiraLed(false);
+        setProyector(false);
 
         if(subCategories1 === 'MLA377395' || subCategories1 === 'MLA373504'){
             setFocos(true);
@@ -197,6 +206,10 @@ export const PostPublicacion = () => {
 
         if(subCategories1 === 'MLA388926'){
             setTiraLed(true);
+        };
+
+        if(subCategories1 === 'MLA373504'){
+            setProyector(true);
         };
 
     }, [subCategories1]);
@@ -391,6 +404,9 @@ export const PostPublicacion = () => {
                 {id: 'LIFE_CYCLE', value_name: `${vidaUtil} h`},
                 {id: 'LIGHT_COLOR', value_id: colorLuz ? colorLuz : "-1" , value_name: colorLuz ? colorLuz : null},
                 {id: 'COLOR_TEMPERATURE', value_id: temperaturaLuz ? temperaturaLuz : "-1", value_name: temperaturaLuz ? temperaturaLuz : null},
+                {id: 'FLOOD_LIGHT_MOUNTING', value_name: instalacionProyector},
+                {id: 'WITH_MOTION_SENSOR', value_id: sensorMovimiento},
+                {id: 'IS_WATERPROOF', value_id: resistenteAlAgua},
             );
          }
 
@@ -1044,6 +1060,33 @@ export const PostPublicacion = () => {
                 <input name="gradoProteccion" id="gradoProteccion" value={gradoProteccion} onChange={onInputChange} />
                 
             </div>
+
+        </section>
+
+        <section id='proyector' className={`grid grid-cols-4 gap-3 m-2 ${proyector ? '' : 'hidden'} `}>
+
+            <div className='flex flex-col'>
+                <label htmlFor="instalacionProyector" className='text-center font-bold '>Modo De Instalacion (MONTABLE)</label>
+                <input type='text' name="instalacionProyector" id="instalacionProyector" value={instalacionProyector} onChange={onInputChange} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="sensorMovimiento" className='text-center font-bold '>Sensor de Movimiento</label>
+                <select name="sensorMovimiento" id="sensorMovimiento" value={sensorMovimiento} onChange={onInputChange}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="resistenteAlAgua" className='text-center font-bold '>Resistente al Agua</label>
+                <select name="resistenteAlAgua" id="resistenteAlAgua" value={resistenteAlAgua} onChange={onInputChange}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+        
 
         </section>
 
