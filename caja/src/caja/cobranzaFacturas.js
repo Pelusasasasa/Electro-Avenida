@@ -336,7 +336,7 @@ cobrado.addEventListener("keypress", (e) => {
 
 vuelto.addEventListener('keypress', e => {
   if (e.keyCode === 13){
-    descuento.value =  redondear( parseFloat(cobrado.value) - parseFloat(total.value) - parseFloat(vuelto.value), 2);
+    descuento.value =  redondear( parseFloat(cobrado.value) - parseFloat(total.value), 2);
     descuento.focus();
   }
 });
