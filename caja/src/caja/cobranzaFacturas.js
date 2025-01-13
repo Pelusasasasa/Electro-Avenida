@@ -55,6 +55,9 @@ window.addEventListener("load", async (e) => {
 
 const cobrarML = async (e) => {
   if(seleccionado){
+    let aux = seleccionado.children[5].innerHTML.replace('.','');
+    aux = aux.replace(',', '.');
+
     const {isConfirmed, value} = await sweet.fire({
       title: 'Precio Tarjeta',
       html: `
@@ -64,7 +67,7 @@ const cobrarML = async (e) => {
         </div>
       `,
       didOpen: () => {
-        document.getElementById('cobradoML').value = seleccionado.children[5].innerText;
+        document.getElementById('cobradoML').value = aux;
         document.getElementById('fechaML').value = seleccionado.children[0].innerText.split('/', 3).reverse().join('-');
       },
       preConfirm: () => {
@@ -86,7 +89,7 @@ const cobrarML = async (e) => {
       egreso.desc = seleccionado.children[2].innerText + ' MERCADO LIBRE GASTOS';
       egreso.idCuenta = "ML";
       egreso.pasado = true;   
-      egreso.imp = (parseFloat(seleccionado.children[5].innerText) - parseFloat(value.cobradoML)).toFixed(2);
+      egreso.imp = (aux - parseFloat(value.cobradoML)).toFixed(2);
       egreso.cuenta = "MERCADO LIBRE";
       egreso.vendedor = seleccionado.children[6].innerText;
       egreso.codigo = seleccionado.children[1].innerText;
@@ -107,7 +110,7 @@ const cobrarML = async (e) => {
 
     tarjeta.fecha = fechaArgentina;
     tarjeta.tarjeta = 'MERCADO PAGO'
-    tarjeta.imp = seleccionado.children[5].innerText = "" ? 0 : parseFloat(seleccionado.children[5].innerText) - parseFloat(egreso.imp);
+    tarjeta.imp = aux = "" ? 0 : parseFloat(aux) - parseFloat(egreso.imp);
     tarjeta.cliente = seleccionado.children[2].innerText;
     tarjeta.vendedor =  seleccionado.children[6].innerText;
     tarjeta.tipo = "Tarjeta";
@@ -180,6 +183,9 @@ tbody.addEventListener("click", (e) => {
 
 aceptar.addEventListener("click", async (e) => {
   const movimiento = movimientos.find((mov) => mov._id === seleccionado.id);
+  let aux = movimiento.imp.replace('.', '');
+  aux = aux.replace(',', '.');
+
   //Lo que hacemos es cargar un descuento a Movimiento de Caja
   if (parseFloat(descuento.value) !== 0 && descuento.value) {
     const mov = {};
@@ -196,7 +202,7 @@ aceptar.addEventListener("click", async (e) => {
     mov.cliente = movimiento.cliente;
 
     try {
-      await axios.post(`${URL}movCajas`, mov, configAxios);
+      await axios.post(`${URL}movCajas`, mov);
     } catch (error) {
       console.log(error);
       await sweet.fire({
@@ -205,23 +211,21 @@ aceptar.addEventListener("click", async (e) => {
     }
   }
 
+  movimiento.imp = aux;
   movimiento.pasado = true;
   const now = new Date();
   const p = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
   movimiento.fecha = p;
 
   try {
-    await axios.put(
-      `${URL}movCajas/id/${movimiento._id}`,
-      movimiento,
-      configAxios
-    );
-    movimientos = movimientos.filter((mov) => mov._id !== seleccionado.id);
-    tbody.removeChild(seleccionado);
-    total.value = "0.00";
-    cobrado.value = "0.00";
-    descuento.value = "0.00";
-    vuelto.value = "0.00";
+    await axios.put(`${URL}movCajas/id/${movimiento._id}`,movimiento);
+
+      movimientos = movimientos.filter((mov) => mov._id !== seleccionado.id);
+      tbody.removeChild(seleccionado);
+      total.value = "0.00";
+      cobrado.value = "0.00";
+      descuento.value = "0.00";
+      vuelto.value = "0.00";
   } catch (error) {
     await sweet.fire({
       title: "No se pudo cargar la factura",
@@ -234,7 +238,10 @@ aceptar.addEventListener("click", async (e) => {
 
 efectivo.addEventListener("click", (e) => {
   if (seleccionado) {
-    total.value = seleccionado.children[5].innerHTML;
+    let aux = seleccionado.children[5].innerHTML.replace('.','');
+    aux = aux.replace(',', '.');
+
+    total.value = aux;
     cobrado.value = total.value;
     cobrado.focus();
   }
@@ -242,6 +249,9 @@ efectivo.addEventListener("click", (e) => {
 
 cheque.addEventListener("click", (e) => {
   if (seleccionado) {
+    let aux = seleccionado.children[5].innerHTML.replace('.','');
+    aux = aux.replace(',', '.');
+
     ipcRenderer.send("abrir-ventana", {
       path: "cheques/agregar-modificarCheques.html",
       width: 500,
@@ -250,7 +260,7 @@ cheque.addEventListener("click", (e) => {
       informacionAgregar: {
         cliente: seleccionado.children[2].innerText,
         vendedor: seleccionado.children[6].innerText,
-        imp: parseFloat(seleccionado.children[5].innerText),
+        imp: parseFloat(aux),
       },
     });
   }
@@ -260,6 +270,9 @@ ml.addEventListener('click', cobrarML);
 
 tarjeta.addEventListener("click", (e) => {
   if (seleccionado) {
+    let aux = seleccionado.children[5].innerHTML.replace('.','');
+    aux = aux.replace(',', '.');
+
     ipcRenderer.send("abrir-ventana", {
       path: "tarjetas/agregarTarjeta.html",
       width: 500,
@@ -268,7 +281,7 @@ tarjeta.addEventListener("click", (e) => {
       informacionAgregar: {
         cliente: seleccionado.children[2].innerText,
         vendedor: seleccionado.children[6].innerText,
-        imp: parseFloat(seleccionado.children[5].innerText),
+        imp: parseFloat(aux),
         tipo: seleccionado.children[3].innerText,
       },
     });
@@ -285,10 +298,13 @@ transferencia.addEventListener("click", async (e) => {
     egreso.idCuenta = "DEP";
     egreso.pasado = true;
 
+    let aux = seleccionado.children[5].innerHTML.replace('.','');
+    aux = aux.replace(',', '.');
+
     const { value } = await sweet.fire({
       title: "Importe",
       input: "text",
-      inputValue: seleccionado.children[5].innerText,
+      inputValue: aux,
       confirmButtonText: "Aceptar",
     });
 
@@ -299,7 +315,7 @@ transferencia.addEventListener("click", async (e) => {
     egreso.cliente = seleccionado.children[2].innerText;
 
     try {
-      await axios.post(`${URL}movCajas`, egreso, configAxios);
+      await axios.post(`${URL}movCajas`, egreso);
     } catch (error) {
       console.log(error);
       await sweet.fire({
@@ -347,10 +363,6 @@ ipcRenderer.on("recibir-informacion", (e, args) => {
     aceptar.click();
   }
 });
-
-ml.addEventListener('click', e => {
-  console.log("a")
-})
 
 salir.addEventListener("click", (e) => {
   location.href = "../index.html";
