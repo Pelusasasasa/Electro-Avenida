@@ -8,7 +8,6 @@ import { PublicacionItem } from "../components/PublicacionItem";
 import { Modal } from "../components/Modal";
 import { closeModal, openModal } from "../../store/ui/uiSlice";
 import { Link } from "react-router-dom";
-import { ordenarLista } from "../../helpers/funciones";
 
 export const ListPublicaciones = () => {
 

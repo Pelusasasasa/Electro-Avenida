@@ -73,7 +73,7 @@ export const PublicacionItem = ({codigoML, codProd, costo, costodolar,descripcio
         <td className='border border-black'>{costodolar !== 0 ? ((costodolar + impuesto) * dolar).toFixed(2) : (costo + impuesto).toFixed(2)}</td>
         <td className='border border-black'>{tipoVenta === 'UNIDAD' ? calcularPrecioSujerido() : (calcularPrecioSujerido() * unidadPack).toFixed(2) }</td>
         <td className='border border-black'>{Math.floor(stock / unidadPack).toFixed(2)}</td>
-        <td className='border border-black'>{precioML}</td>
+        <td className={`border border-black ${tipoVenta === 'UNIDAD' ? calcularPrecioSujerido() > precioML ? 'bg-red-500' : '' : calcularPrecioSujerido( ) * unidadPack > precioML ? 'bg-red-500' : '' }`}>{precioML}</td>
         <td className={`border border-black ${Math.floor(stock / unidadPack) < stockML ? 'bg-red-500' : ''}`}>{stockML}</td>
     </tr>
   )
