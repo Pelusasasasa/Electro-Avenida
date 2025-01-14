@@ -8,11 +8,13 @@ import { PublicacionItem } from "../components/PublicacionItem";
 import { Modal } from "../components/Modal";
 import { closeModal, openModal } from "../../store/ui/uiSlice";
 import { Link } from "react-router-dom";
+import { calcularPrecioSujerido, modificarPrecioYStockPorIdDeProducto } from "../../helpers/funciones";
 
 export const ListPublicaciones = () => {
 
   const { active, publicaciones } = useSelector( state => state.publicaciones);
   const { isOpenModal } = useSelector(state => state.ui);
+  const { dolar } = useSelector(state => state.variables);
   const [lista, setLista] = useState(publicaciones);
 
 
@@ -41,12 +43,15 @@ export const ListPublicaciones = () => {
     dispatch( openModal() );
   };
 
-  const modificarStock = (e) => {
+  const modificarStockyPrecio = async(e) => {
     for(let elem of publicaciones){
-      dispatch( actualizarPublicacion(elem.codigoML, elem.precioML, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack)));
-
-      swal.fire('Modificacion de Stock', 'Se modifico el stock de todos los productos cargados', 'success')
+      
+      let precioActualizado = Math.ceil(calcularPrecioSujerido(elem.costo, elem.costodolar, elem.impuesto, parseFloat(dolar), elem.tipoVenta, elem.unidadPack))
+      dispatch( actualizarPublicacion(elem.codigoML, precioActualizado, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack)));
+      await modificarPrecioYStockPorIdDeProducto(elem.codigoML, precioActualizado, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack), elem.tipoVenta, elem.unidadPack);
     }
+
+    await swal.fire('Modificacion de Stock', 'Se modifico el stock de todos los productos cargados', 'success')
   };
 
   const eliminar = async(e) => {
@@ -108,7 +113,8 @@ export const ListPublicaciones = () => {
           <Button text='Agregar' />
           </Link>
         <Button text='Modificar' funcion={modificar}/>
-        <Button text='Modificar Stock' funcion={modificarStock}/>
+        <Button text='Modificar Stock y Precio' funcion={modificarStockyPrecio}/>
+    
         {/* <Button text='Eliminar' funcion={eliminar}/> */}
       </section>
 
