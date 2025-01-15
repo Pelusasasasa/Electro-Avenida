@@ -32,8 +32,10 @@ export const publicacionesSlice = createSlice({
         putPublicacion: (state, {payload}) => {
             state.active.precioML = payload.precioML;
             state.active.stockML = payload.stockML;
+            state.active.descripcion = payload.descripcion;
 
             const aux = state.publicaciones.find(elem => elem.codigoML === payload.codigoML);
+            aux.descripcion = payload.descripcion;
             aux.stockML = payload.stockML;
             aux.precioML = payload.precioML;
             aux.tipoVenta = payload.tipoVenta;

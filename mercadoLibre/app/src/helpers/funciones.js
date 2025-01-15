@@ -39,48 +39,56 @@ export const buscarVariacionesProducto = async(codigo) => {
     }
 };
 
-export const calcularPrecioSujerido = (costo, impuesto, costodolar, dolar, cant) => {
-        const costoFinal = costodolar !== 0 ? (costodolar + impuesto) * dolar  :  costo + impuesto;
+export const calcularPrecioSujerido = (costo, costodolar, impuesto, dolar, tipoVenta, unidadPack) => {
+    const costoFinal = costodolar !== 0 ? (costodolar + impuesto) * dolar  :  costo + impuesto;
         let utilidad = costoFinal + (costoFinal * gananciaML / 100);
-        let descuentoML = (utilidad / porcentajeDescuentoML);
+        utilidad = tipoVenta === 'UNIDAD' ? utilidad : utilidad * unidadPack;
 
-        let costoEnvio = 0;
-        let costoFijo = 0;
+        //Variables para el calculo
+        const comisionPorcentual = 13.5 / 100; //13.5%
+        const adicionalPorcentual = 8 / 100; //3%
+        const costoEnvio = 4805.99;
 
-        //Vemos cuanto nos cobran del envio en mercado libre dependiendo de la utilidad
-        if (descuentoML > envio){
-            costoEnvio = 0;
-        }else{
-            if (descuentoML < 16000){
-                costoEnvio = 0;
-            }else if(descuentoML < 37000){
-                costoEnvio = 9611.99;
-            }else{
-                costoEnvio = 4805.99;
+        //Rango Inicial para calcular el preico publicado
+        let precioPublicado = utilidad;
+
+        while(true){
+
+            //Determinacion del costo fijo segun el rango de preico
+            let costoFijo = 0;
+
+            if (precioPublicado < 12000){
+                costoFijo = 900;
+            }else if( precioPublicado <= 30000){
+                costoFijo = 1800;
+            };
+
+            // Si el precio es mayor a 30,000, se suma el costo del envío
+            const aplicaEnvioGratis = precioPublicado > 30000;
+            const costoEnvioFinal = aplicaEnvioGratis ? costoEnvio : 0;
+
+            // Cálculo de la comisión porcentual y adicional
+            const comision = precioPublicado * comisionPorcentual;
+            const adicional = precioPublicado * adicionalPorcentual;
+
+            // Cálculo del costo total
+            const costoTotal = comision + adicional + costoFijo + costoEnvioFinal;
+
+            // Calcular el monto recibido con el precio actual
+            const montoRecibido = precioPublicado - costoTotal;
+
+            // Si el monto recibido está cerca del monto deseado, terminamos
+            if (Math.abs(montoRecibido - utilidad) < 0.01) {
+                break;
             }
-        };
 
-         //Vemos cuanto nos descuentan por el costo fijo dependiendo de el valor de la utilidad
-         if (descuentoML < primerCostoFijo){
-            costoFijo = valorPrimerCostoFijo;
-         }else if(descuentoML < segundoCostoFijo){
-            costoFijo = valorSegundoCostoFijo
-         }else{
-            costoFijo = 0;
-         };
+            // Ajustar el precio publicado
+            precioPublicado += (utilidad - montoRecibido) / 2;   
+        }
 
-         let precioML = 0;
-        //    if (codigoML === 'MLA1985386570'){
-        //     console.log(costoFinal)
-        //     console.log(utilidad)
-        //     console.log(porcentajeDescuentoML)
-        //      console.log(descuentoML)
-        //      console.log(costoEnvio)
-        //      console.log(costoFijo)
-        //  }
-         precioML = (descuentoML + costoEnvio + costoFijo) * cant;
-         return precioML.toFixed(2);
-    }
+        // Resultado detallado
+    return precioPublicado.toFixed(2);
+};
 
 export const modificarVariacionProducto = async(codigoML, codigoVaration, precioML, stockML) => {
     const numeros = (await axios.get(`${URL}tipoVenta`)).data;
@@ -106,11 +114,11 @@ export const modificarVariacionProducto = async(codigoML, codigoVaration, precio
     }
 };
 
-export const modificarPrecioYStockPorIdDeProducto = async(codigo, precio, stock, tipoVenta, unidadPack) => {
+export const modificarPrecioYStockPorIdDeProducto = async(codigo, descripcion, precio, stock, tipoVenta, unidadPack) => {
     const {authorizacion} = (await axios.get(`${URL}codigoML`)).data;
     try { 
         const { data } = (await axios.put(`${aux}items/${codigo}`,
-            {
+            {   
                 price: precio,
                 available_quantity: stock,
                 attributes: [

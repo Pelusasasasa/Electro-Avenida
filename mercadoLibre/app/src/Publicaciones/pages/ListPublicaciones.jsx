@@ -3,18 +3,20 @@ import { useDispatch, useSelector } from "react-redux";
 import swal from 'sweetalert2';
 
 import { Button } from "../../components/Button";
-import { actualizarPublicacion, eliminarPublicacion, getPublicaciones } from "../../store/publicacones";
+import { actualizarPublicacion, eliminarPublicacion, getPublicaciones, saved } from "../../store/publicacones";
 import { PublicacionItem } from "../components/PublicacionItem";
 import { Modal } from "../components/Modal";
 import { closeModal, openModal } from "../../store/ui/uiSlice";
 import { Link } from "react-router-dom";
-import { ordenarLista } from "../../helpers/funciones";
+import { calcularPrecioSujerido, modificarPrecioYStockPorIdDeProducto } from "../../helpers/funciones";
 
 export const ListPublicaciones = () => {
 
-  const { active, publicaciones } = useSelector( state => state.publicaciones);
+  const { active, publicaciones, isSaving } = useSelector( state => state.publicaciones);
   const { isOpenModal } = useSelector(state => state.ui);
+  const { dolar } = useSelector(state => state.variables);
   const [lista, setLista] = useState(publicaciones);
+  const [saving, setSaving] = useState(false);
 
 
   const dispatch = useDispatch();
@@ -42,12 +44,19 @@ export const ListPublicaciones = () => {
     dispatch( openModal() );
   };
 
-  const modificarStock = (e) => {
-    for(let elem of publicaciones){
-      dispatch( actualizarPublicacion(elem.codigoML, elem.precioML, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack)));
+  const modificarStockyPrecio = async(e) => {
+    dispatch( saved() );
+    setSaving(true);
 
-      swal.fire('Modificacion de Stock', 'Se modifico el stock de todos los productos cargados', 'success')
-    }
+    for(let elem of publicaciones){
+      let precioActualizado = Math.ceil(calcularPrecioSujerido(elem.costo, elem.costodolar, elem.impuesto, parseFloat(dolar), elem.tipoVenta, elem.unidadPack))
+      dispatch( actualizarPublicacion(elem.codigoML, precioActualizado, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack)));
+      await modificarPrecioYStockPorIdDeProducto(elem.codigoML, precioActualizado, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack), elem.tipoVenta, elem.unidadPack);
+    };
+
+    setSaving(false);
+    await swal.fire('Modificacion de Stock', 'Se modifico el stock de todos los productos cargados', 'success')
+
   };
 
   const eliminar = async(e) => {
@@ -109,11 +118,16 @@ export const ListPublicaciones = () => {
           <Button text='Agregar' />
           </Link>
         <Button text='Modificar' funcion={modificar}/>
-        <Button text='Modificar Stock' funcion={modificarStock}/>
+        <Button text='Modificar Stock y Precio' funcion={modificarStockyPrecio}/>
+    
         {/* <Button text='Eliminar' funcion={eliminar}/> */}
       </section>
 
       {isOpenModal && <Modal closeModal={closeModal} type={'put'} precioML={active.precioML} stockML={active.stockML}/>}
+      {saving && <div className="flex justify-center items-center h-screen absolute bg-opacity-80 bg-black gap-10 top-0 w-full">
+          <div className='w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin'></div>
+          <p className="text-white font-bold text-3xl">Aguarde Un Momento!</p>        
+        </div>}
     </div>
   )
 }
