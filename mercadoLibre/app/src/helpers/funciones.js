@@ -114,11 +114,11 @@ export const modificarVariacionProducto = async(codigoML, codigoVaration, precio
     }
 };
 
-export const modificarPrecioYStockPorIdDeProducto = async(codigo, precio, stock, tipoVenta, unidadPack) => {
+export const modificarPrecioYStockPorIdDeProducto = async(codigo, descripcion, precio, stock, tipoVenta, unidadPack) => {
     const {authorizacion} = (await axios.get(`${URL}codigoML`)).data;
     try { 
         const { data } = (await axios.put(`${aux}items/${codigo}`,
-            {
+            {   
                 price: precio,
                 available_quantity: stock,
                 attributes: [

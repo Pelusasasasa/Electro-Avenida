@@ -8,7 +8,8 @@ import { buscarVariacionesProducto, modificarPrecioYStockPorIdDeProducto, modifi
 
 const initialState = {
     precioML: '',
-    stockML: ''
+    stockML: '',
+    descripcion: ''
 };
 export const Modal = ({closeModal, type}) => {
     const dispatch = useDispatch();
@@ -17,17 +18,18 @@ export const Modal = ({closeModal, type}) => {
     initialState.stockML = active.stockML;
     initialState.tipoVenta = active.tipoVenta;
     initialState.unidadPack = active.unidadPack;
+    initialState.descripcion = active.descripcion;
 
 
-    const {onInputChange, formState, precioML, stockML, unidadPack, tipoVenta} = useForm(initialState);
+    const {onInputChange, formState, descripcion, precioML, stockML, unidadPack, tipoVenta} = useForm(initialState);
 
     const onSubmit = async(e) => {
         e.preventDefault();
 
         if(type === 'put'){
-            dispatch(actualizarPublicacion(active.codigoML, formState.precioML, formState.stockML, formState.tipoVenta, formState.unidadPack));
+            dispatch(actualizarPublicacion(active.codigoML, formState.descripcion, formState.precioML, formState.stockML, formState.tipoVenta, formState.unidadPack));
             
-            const res = await modificarPrecioYStockPorIdDeProducto(active.codigoML, precioML, stockML, tipoVenta, unidadPack);
+            const res = await modificarPrecioYStockPorIdDeProducto(active.codigoML, descripcion, precioML, stockML, tipoVenta, unidadPack);
             
             if(res) await swal.fire('Se modifico el producto');
 
@@ -42,6 +44,10 @@ export const Modal = ({closeModal, type}) => {
         <div className='modal-content'>
             <h2 className='text-center text-2xl mb-2'>Modificar Publicacion</h2>
             <form onSubmit={onSubmit}>
+                <div>
+                    <label htmlFor="descripcion">Descripcion</label>
+                    <input type="text" name='descripcion' onChange={onInputChange} value={descripcion} id="descripcion" />
+                </div>
                 <div>
                     <label htmlFor="precio">Precio ML</label>
                     <input type="number" name='precioML' onChange={onInputChange} value={precioML} id="precio" />
