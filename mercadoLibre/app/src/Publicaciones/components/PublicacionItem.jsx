@@ -73,7 +73,7 @@ export const PublicacionItem = ({codigoML, codProd, costo, costodolar,descripcio
     };
     
   return (
-    <tr id={codigoML} className={`${active.codigoML === codigoML ? 'bg-cyan-300' : 'hover:bg-gray-400' } ${tipoVenta === 'UNIDAD' ? '' : 'bg-green-200'} hover:cursor-pointer` } onClick={activar}>
+    <tr id={codigoML} className={`${active.codigoML === codigoML ? 'bg-cyan-300' : tipoVenta === 'UNIDAD' ? 'hover:bg-gray-300' : 'bg-green-200' }  hover:cursor-pointer` } onClick={activar}>
         <td className='border border-black'>{index + 1}</td>
         <td className='border border-black'>{codigoML}</td>
         <td className='border border-black text-center'>{codProd}</td>
