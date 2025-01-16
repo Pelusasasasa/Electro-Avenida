@@ -232,17 +232,14 @@ export const PostPublicacion = () => {
     }, [formatoVenta]);
 
     useEffect(() => {
-        if(active.codigoML){
+        if(active._id){
              onChanges({
-                    descripcion: active.descripcion?.slice(0, 60),
-                    precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), parseFloat(cantPack), formatoVenta),
-                    costoIva: active.costodolar !== 0 ? ((parseFloat(active.costodolar) + parseFloat(active.impuestos)) * dolar).toFixed(2) :  (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
+                    precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), formatoVenta, parseFloat(cantPack)),
                     stockSujerido: parseFloat(active.stock / cantPack),
-                    marca: active.marca,
             })
         }
 
-    }, []);
+    }, [cantPack]);
 
     useEffect(() => {
         if (active._id) {
@@ -257,7 +254,7 @@ export const PostPublicacion = () => {
             costoIva: active.costodolar !== 0 ? ((parseFloat(active.costodolar) + parseFloat(active.impuestos)) * dolar).toFixed(2) :  (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
             stockSujerido: active.stock,
             marca: active.marca,
-            precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), parseFloat(cantPack), formatoVenta)
+            precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), formatoVenta, parseFloat(cantPack))
         });
     };
 
@@ -388,14 +385,13 @@ export const PostPublicacion = () => {
          if(formState.subCategories1 === 'MLA377395'){
             producto.attributes.push(
                 {id: 'LUMINOUS_FLUX', value_name: `${lumenes} lm`},
-                {id: 'LIGHTING_TECHNOLOGY', value_id: tipoTecnologia},
+                {id: 'LIGHTING_TECHNOLOGY', value_name: tipoTecnologia},
                 {id: 'ENERGY_EFFICIENCY', value_id: eficienciaEnergetica},
                 {id: 'LIFE_CYCLE', value_name: `${vidaUtil} h`},
                 {id: 'LIGHT_COLOR', value_id: colorLuz ? colorLuz : "-1" , value_name: colorLuz ? colorLuz : null},
                 {id: 'COLOR_TEMPERATURE', value_id: temperaturaLuz ? temperaturaLuz : "-1", value_name: temperaturaLuz ? temperaturaLuz : null},
                 {id: 'COMPATIBLE_SMART_APPS', value_id: appInteligente ? appInteligente : "-1", },
                 {id: 'COMPATIBLE_VIRTUAL_ASSISTANTS', value_id: asistenteVirtual ? asistenteVirtual : "-1", },
-                {id: 'ENERGY_EFFICIENCY', value_id: eficienciaEnerg ? eficienciaEnerg : "-1", },
                 {id: 'INCLUDES_REMOTE_CONTROL', value_id: incluyeControl ? "242085" : "242084",},
             )
          };
@@ -477,6 +473,7 @@ export const PostPublicacion = () => {
          };
         
         dispatch( postPublicaciones(producto) );
+        console.log(producto)
         navigate('/publicaciones/list'); 
     };
 
