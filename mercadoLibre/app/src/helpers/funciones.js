@@ -40,6 +40,7 @@ export const buscarVariacionesProducto = async(codigo) => {
 };
 
 export const calcularPrecioSujerido = (costo = 0, costodolar = 0, impuesto, dolar, tipoVenta, unidadPack) => {
+    console.log({costo, costodolar, impuesto, dolar, tipoVenta, unidadPack});
     const costoFinal = costodolar !== 0 ? (costodolar + impuesto) * dolar  :  costo + impuesto;
         let utilidad = costoFinal + (costoFinal * gananciaML / 100);
         utilidad = tipoVenta === 'UNIDAD' ? utilidad : utilidad * unidadPack;
