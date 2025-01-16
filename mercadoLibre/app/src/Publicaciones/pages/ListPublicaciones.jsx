@@ -17,6 +17,7 @@ export const ListPublicaciones = () => {
   const { dolar } = useSelector(state => state.variables);
   const [lista, setLista] = useState(publicaciones);
   const [saving, setSaving] = useState(false);
+  const [cont, setCont] = useState(0);
 
 
   const dispatch = useDispatch();
@@ -50,11 +51,14 @@ export const ListPublicaciones = () => {
 
     for(let elem of publicaciones){
       let precioActualizado = Math.ceil(calcularPrecioSujerido(elem.costo, elem.costodolar, elem.impuesto, parseFloat(dolar), elem.tipoVenta, elem.unidadPack))
-      dispatch( actualizarPublicacion(elem.codigoML, precioActualizado, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack)));
+      dispatch( actualizarPublicacion(elem.codigoML, elem.descripcion, precioActualizado, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack)));
       await modificarPrecioYStockPorIdDeProducto(elem.codigoML, precioActualizado, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack), elem.tipoVenta, elem.unidadPack);
+    
+      setCont((prev) => prev + 1);
     };
 
     setSaving(false);
+    setCont(0);
     await swal.fire('Modificacion de Stock', 'Se modifico el stock de todos los productos cargados', 'success')
 
   };
@@ -126,7 +130,7 @@ export const ListPublicaciones = () => {
       {isOpenModal && <Modal closeModal={closeModal} type={'put'} precioML={active.precioML} stockML={active.stockML}/>}
       {saving && <div className="flex justify-center items-center h-screen absolute bg-opacity-80 bg-black gap-10 top-0 w-full">
           <div className='w-12 h-12 border-4 border-t-transparent border-white rounded-full animate-spin'></div>
-          <p className="text-white font-bold text-3xl">Aguarde Un Momento!</p>        
+          <p className="text-white font-bold text-3xl">Aguarde Un Momento! { cont } / {publicaciones.length}</p>        
         </div>}
     </div>
   )

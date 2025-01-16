@@ -39,7 +39,7 @@ export const buscarVariacionesProducto = async(codigo) => {
     }
 };
 
-export const calcularPrecioSujerido = (costo, costodolar, impuesto, dolar, tipoVenta, unidadPack) => {
+export const calcularPrecioSujerido = (costo = 0, costodolar = 0, impuesto, dolar, tipoVenta, unidadPack) => {
     const costoFinal = costodolar !== 0 ? (costodolar + impuesto) * dolar  :  costo + impuesto;
         let utilidad = costoFinal + (costoFinal * gananciaML / 100);
         utilidad = tipoVenta === 'UNIDAD' ? utilidad : utilidad * unidadPack;
@@ -114,7 +114,7 @@ export const modificarVariacionProducto = async(codigoML, codigoVaration, precio
     }
 };
 
-export const modificarPrecioYStockPorIdDeProducto = async(codigo, descripcion, precio, stock, tipoVenta, unidadPack) => {
+export const modificarPrecioYStockPorIdDeProducto = async(codigo,  precio, stock, tipoVenta, unidadPack) => {
     const {authorizacion} = (await axios.get(`${URL}codigoML`)).data;
     try { 
         const { data } = (await axios.put(`${aux}items/${codigo}`,

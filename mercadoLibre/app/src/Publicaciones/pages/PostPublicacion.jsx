@@ -110,7 +110,7 @@ export const PostPublicacion = () => {
     const navigate = useNavigate();
 
     const {
-         subCategories, subCategories1, subCategories2, voltaje, temperaturaLuz, colorLuz, potencia, lumenes, tipofuente, voltaje2, formState ,onChanges,
+         subCategories, subCategories1, subCategories2, voltaje, temperaturaLuz, colorLuz, potencia, lumenes, tipofuente, voltaje2, formState , onChanges,
         onInputChange, codigo, descripcion, codBarra, marca, costoIva, precioSujerido, stockSujerido, precio, stock, categories,
 
         altura, largo, peso, ancho,
@@ -148,7 +148,7 @@ export const PostPublicacion = () => {
     const [subCategorias2, setSubCategorias2] = useState([]);
 
     const validacion = subCategories2 === 'MLA1586' || subCategories2 === 'MLA1588' || subCategories2 === 'MLA1585'  
-    
+
     const cargarPagina = async() => {
         //Traemos las categorias de mercado libre, proximamente las vamos a guaradar en la base de datos y traerlas desde ahi
         let res = await traerCategorias();
@@ -232,12 +232,17 @@ export const PostPublicacion = () => {
     }, [formatoVenta]);
 
     useEffect(() => {
-        onChanges({
-                precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), parseFloat(cantPack)),
-                stockSujerido: parseFloat(active.stock / cantPack)
+        if(active.codigoML){
+             onChanges({
+                    descripcion: active.descripcion?.slice(0, 60),
+                    precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), parseFloat(cantPack), formatoVenta),
+                    costoIva: active.costodolar !== 0 ? ((parseFloat(active.costodolar) + parseFloat(active.impuestos)) * dolar).toFixed(2) :  (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
+                    stockSujerido: parseFloat(active.stock / cantPack),
+                    marca: active.marca,
+            })
+        }
 
-        })
-    }, [cantPack]);
+    }, []);
 
     useEffect(() => {
         if (active._id) {
@@ -252,7 +257,7 @@ export const PostPublicacion = () => {
             costoIva: active.costodolar !== 0 ? ((parseFloat(active.costodolar) + parseFloat(active.impuestos)) * dolar).toFixed(2) :  (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
             stockSujerido: active.stock,
             marca: active.marca,
-            precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), parseFloat(cantPack))
+            precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), parseFloat(cantPack), formatoVenta)
         });
     };
 
@@ -272,7 +277,6 @@ export const PostPublicacion = () => {
         await dispatch( await saved());
         
         const res = await subirImagenes(imagenes);
-        console.log(res)
         if(!res?.ok){
             await Swal.fire(res.message, '' ,'error')
             return
@@ -470,9 +474,7 @@ export const PostPublicacion = () => {
                 {id: 'POWER_PER_METER', value_id: potenciaPorMetro},
                 {id: 'PROTECTION_DEGREE', value_name: gradoProteccion}
             )
-         }
-        
-        console.log(producto)
+         };
         
         dispatch( postPublicaciones(producto) );
         navigate('/publicaciones/list'); 
