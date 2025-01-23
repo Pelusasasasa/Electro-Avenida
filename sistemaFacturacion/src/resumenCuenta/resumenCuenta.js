@@ -158,7 +158,7 @@ function listarVentas(ventas, situacion, saldoAnterior, saldoAnterior_P) {
   if (situacion === "negro") {
     aux = "Presupuesto";
   } else {
-    cliente.cond_iva === "Inscripto"
+    (cliente.cond_iva === "Inscripto" || cliente.cond_iva === "Monotributista" )
       ? (aux = "Factura A")
       : (aux = "Factura B");
   }
