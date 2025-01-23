@@ -127,6 +127,10 @@ export const PostPublicacion = () => {
         incluyeControladorColor, incluyeFuenteAlimentacion, cantidadDeLedPorMetro, tipoLed, potenciaPorMetro, gradoProteccion,
 
         instalacionProyector, sensorMovimiento, resistenteAlAgua,
+
+        tipoBateriaLinterna, alcanceProyeccion, cantidadBaterias, tamanioBateria, diametro, colorLinterna, potenciaLinterna, tipoLinterna, incluyePilaLinterna, resistenteAlPolvo, esRecargable, cantidadModosLuz, duracionMaxima, tipoAlimentacion
+
+        
         
         } = useForm(initialForm);
     
@@ -140,6 +144,7 @@ export const PostPublicacion = () => {
     const [fuentes, setFuentes] = useState(false);
     const [tiraLed, setTiraLed] = useState(false);
     const [proyector, setProyector] = useState(false);
+    const [linterna, setLinterna] = useState(false);
 
 
     const [categorias, setCategorias] = useState([]);
@@ -191,6 +196,7 @@ export const PostPublicacion = () => {
         setConstruccion(false);
         setTiraLed(false);
         setProyector(false);
+        setLinterna(false);
 
         if(subCategories1 === 'MLA377395' || subCategories1 === 'MLA373504'){
             setFocos(true);
@@ -215,12 +221,21 @@ export const PostPublicacion = () => {
     }, [subCategories1]);
 
     useEffect(() => {
+
+        setConstruccion(false);
+        setFocos(false);
+        setLinterna(false);
+
         if (subCategories2 === 'MLA411421'){
             setConstruccion(!construccion);
         };
 
         if(subCategories2 === 'MLA1588' || subCategories2 === 'MLA1586'){
             setFocos(true);
+        }
+
+        if(subCategories2 === 'MLA434342'){
+            setLinterna(true)
         }
 
     }, [subCategories2]);
@@ -471,6 +486,27 @@ export const PostPublicacion = () => {
                 {id: 'PROTECTION_DEGREE', value_name: gradoProteccion}
             )
          };
+
+         //Categoria de Linterna
+         if(formState.subCategories2 === 'MLA434342'){
+            producto.attributes.push(
+                {id: 'BATTERY_TYPE', value_id: tipoBateriaLinterna},
+                {id: 'BEAM_DISTANCE', value_name: `${alcanceProyeccion} m`},
+                {id: 'CELL_BATTERIES_NUMBER_REQUIRED', value_name: cantidadBaterias},
+                {id: 'CELL_BATTERY_SIZE', value_name: tamanioBateria},
+                {id: 'DIAMETER', value_name: `${diametro} cm`},
+                {id: 'FLASHLIGHT_COLOR', value_id: colorLinterna},
+                {id: 'FLASHLIGHT_POWER_IN_LUMENS', value_name: `${potencia} lm`},
+                {id: 'FLASHLIGHT_TYPE', value_name: tipoLinterna},
+                {id: 'INCLUDES_CELL_BATTERIES', value_id: incluyePilaLinterna},
+                {id: 'IS_DUST_RESISTANT', value_id: resistenteAlPolvo},
+                {id: 'IS_RECHARGEABLE', value_id: esRecargable},
+                {id: 'IS_WATERPROOF', value_id: resistenteAlAgua},
+                {id: 'LIGHT_SWITCH_MODES_NUMBER', value_name: cantidadModosLuz},
+                {id: 'MAX_RUNTIME', value_name: duracionMaxima},
+                {id: 'POWER_SUPPLY_TYPE', value_name: tipoAlimentacion}
+            )
+         }
         
         dispatch( postPublicaciones(producto) );
         console.log(producto)
@@ -1085,6 +1121,103 @@ export const PostPublicacion = () => {
                 </select>
             </div>
 
+        
+
+        </section>
+
+        <section id='linterna' className={`grid grid-cols-4 gap-3 m-2 ${linterna ? '' : 'hidden'} `}>
+
+            <div className='flex flex-col'>
+                <label htmlFor="tipoBateriaLinterna" className='text-center font-bold '>Tipo de bateria (AAA)</label>
+                <select name="tipoBateriaLinterna" id="tipoBateriaLinterna" value={tipoBateriaLinterna} onChange={onInputChange}>
+                    <option value="6073399">AAA</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="alcanceProyeccion" className='text-center font-bold '>Tipo de bateria (AAA)</label>
+                <input type="text" name="alcanceProyeccion" id="alcanceProyeccion" onChange={onInputChange} value={alcanceProyeccion} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="cantidadBaterias" className='text-center font-bold '>Cantidad de Baterias</label>
+                <input type="text" name="cantidadBaterias" id="cantidadBaterias" onChange={onInputChange} value={cantidadBaterias} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="tamanioBateria" className='text-center font-bold '>Tamaño de las Baterias</label>
+                <input type="text" name="tamanioBateria" id="tamanioBateria" onChange={onInputChange} value={tamanioBateria} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="diametro" className='text-center font-bold '>Diametro</label>
+                <input type="text" name="diametro" id="diametro" onChange={onInputChange} value={diametro} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="colorLinterna" className='text-center font-bold '>Color de la linterna</label>
+                <select name="colorLinterna" id="colorLinterna" value={colorLinterna} onChange={onInputChange}>
+                    <option value="6073399">Negro</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="potenciaLinterna" className='text-center font-bold '>Potencia de la Linterna</label>
+                <input type="text" name="potenciaLinterna" id="potenciaLinterna" onChange={onInputChange} value={potenciaLinterna} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="tipoLinterna" className='text-center font-bold '>Tipo de Linterna</label>
+                <input type="text" name="tipoLinterna" id="tipoLinterna" onChange={onInputChange} value={tipoLinterna} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="incluyePilaLinterna" className='text-center font-bold '>Diametro</label>
+                <select name="incluyePilaLinterna" id="incluyePilaLinterna" value={incluyePilaLinterna} onChange={onInputChange}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="resistenteAlPolvo" className='text-center font-bold '>Es Resistente al Polvo</label>
+                <select name="resistenteAlPolvo" id="resistenteAlPolvo" value={resistenteAlPolvo} onChange={onInputChange}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="esRecargable" className='text-center font-bold '>Es Recargable</label>
+                <select name="esRecargable" id="esRecargable" value={esRecargable} onChange={onInputChange}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+
+            <div className='flex flex-col'>
+                <label htmlFor="resistenteAlAgua" className='text-center font-bold '>Es Resistente Al Agua</label>
+                <select name="resistenteAlAgua" id="resistenteAlAgua" value={resistenteAlAgua} onChange={onInputChange}>
+                    <option value="242084">No</option>
+                    <option value="242085">Si</option>
+                </select>
+            </div>
+
+           <div className='flex flex-col'>
+                <label htmlFor="cantidadModosLuz" className='text-center font-bold '>Cantidad de modos de luz</label>
+                <input type="text" name="cantidadModosLuz" id="cantidadModosLuz" onChange={onInputChange} value={cantidadModosLuz} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="duracionMaxima" className='text-center font-bold '>Duracion Maxima</label>
+                <input type="text" name="duracionMaxima" id="duracionMaxima" onChange={onInputChange} value={duracionMaxima} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="tipoAlimentacion" className='text-center font-bold '>Tipo de Alimentacion</label>
+                <input type="text" name="tipoAlimentacion" id="tipoAlimentacion" onChange={onInputChange} value={tipoAlimentacion} />
+            </div>
         
 
         </section>
