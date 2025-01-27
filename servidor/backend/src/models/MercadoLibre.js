@@ -27,6 +27,10 @@ const mercadoLibre = new Schema({
         type: String,
         default: ""
     },
+    utilidad: {
+        type: Number,
+        default: 0
+    },
     precioML: {
         type: Number,
         required: true
