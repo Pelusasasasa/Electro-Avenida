@@ -4,7 +4,7 @@ import { activarPublicacion } from '../../store/publicacones';
 
 const gananciaML = 10;
 
-export const PublicacionItem = ({codigoML, codProd, costo, costodolar,descripcion, _id, impuesto, index,  precioML, stock, stockML, tipoVenta, unidadPack}) => {
+export const PublicacionItem = ({codigoML, codProd, costo, costodolar,descripcion, _id, impuesto, index, utilidad,  precioML, stock, stockML, tipoVenta, unidadPack}) => {
     const { dolar } = useSelector(state => state.variables);
     const { active } = useSelector(state => state.publicaciones);
     const dispatch = useDispatch();
@@ -23,8 +23,9 @@ export const PublicacionItem = ({codigoML, codProd, costo, costodolar,descripcio
 
     const calcularPrecioSujerido = () => {
         const costoFinal = costodolar !== 0 ? (costodolar + impuesto) * dolar  :  costo + impuesto;
-        let utilidad = costoFinal + (costoFinal * gananciaML / 100);
-        utilidad = tipoVenta === 'UNIDAD' ? utilidad : utilidad * unidadPack;
+        let ganancia = costoFinal + (costoFinal * gananciaML / 100);
+        let utilidadPlus = ganancia + (ganancia * utilidad / 100);
+        utilidadPlus = tipoVenta === 'UNIDAD' ? utilidadPlus : utilidadPlus * unidadPack;
 
         //Variables para el calculo
         const comisionPorcentual = 13.5 / 100; //13.5%
@@ -32,7 +33,7 @@ export const PublicacionItem = ({codigoML, codProd, costo, costodolar,descripcio
         const costoEnvio = 4805.99;
 
         //Rango Inicial para calcular el preico publicado
-        let precioPublicado = utilidad;
+        let precioPublicado = utilidadPlus;
 
         while(true){
 
@@ -60,12 +61,12 @@ export const PublicacionItem = ({codigoML, codProd, costo, costodolar,descripcio
             const montoRecibido = precioPublicado - costoTotal;
 
             // Si el monto recibido está cerca del monto deseado, terminamos
-            if (Math.abs(montoRecibido - utilidad) < 0.01) {
+            if (Math.abs(montoRecibido - utilidadPlus) < 0.01) {
                 break;
             }
 
             // Ajustar el precio publicado
-            precioPublicado += (utilidad - montoRecibido) / 2;   
+            precioPublicado += (utilidadPlus - montoRecibido) / 2;   
         }
 
         // Resultado detallado
@@ -79,6 +80,7 @@ export const PublicacionItem = ({codigoML, codProd, costo, costodolar,descripcio
         <td className='border border-black text-center'>{codProd}</td>
         <td className='border border-black'>{descripcion}</td>
         <td className='border border-black'>{costodolar !== 0 ? ((costodolar + impuesto) * dolar).toFixed(2) : (costo + impuesto).toFixed(2)}</td>
+        <td className='border border-black'>{utilidad}</td>
         <td className='border border-black'>{calcularPrecioSujerido()}</td>
         <td className='border border-black'>{Math.floor(stock / unidadPack).toFixed(2)}</td>
         <td className={`border border-black ${calcularPrecioSujerido() > precioML ? 'bg-red-500' : '' }`}>{precioML.toFixed(2)}</td>

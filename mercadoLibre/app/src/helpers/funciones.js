@@ -39,11 +39,11 @@ export const buscarVariacionesProducto = async(codigo) => {
     }
 };
 
-export const calcularPrecioSujerido = (costo = 0, costodolar = 0, impuesto, dolar, tipoVenta, unidadPack) => {
-    console.log({costo, costodolar, impuesto, dolar, tipoVenta, unidadPack});
+export const calcularPrecioSujerido = (costo = 0, costodolar = 0, impuesto, dolar, tipoVenta, unidadPack, utilidad) => {
     const costoFinal = costodolar !== 0 ? (costodolar + impuesto) * dolar  :  costo + impuesto;
-        let utilidad = costoFinal + (costoFinal * gananciaML / 100);
-        utilidad = tipoVenta === 'UNIDAD' ? utilidad : utilidad * unidadPack;
+        let ganancia = costoFinal + (costoFinal * gananciaML / 100);
+        let utilidadPlus = ganancia + (ganancia * utilidad / 100);
+        utilidad = tipoVenta === 'UNIDAD' ? utilidadPlus : utilidadPlus * unidadPack;
 
         //Variables para el calculo
         const comisionPorcentual = 13.5 / 100; //13.5%
@@ -51,7 +51,7 @@ export const calcularPrecioSujerido = (costo = 0, costodolar = 0, impuesto, dola
         const costoEnvio = 4805.99;
 
         //Rango Inicial para calcular el preico publicado
-        let precioPublicado = utilidad;
+        let precioPublicado = utilidadPlus;
 
         while(true){
 

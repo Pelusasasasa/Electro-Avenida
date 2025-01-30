@@ -11,9 +11,9 @@ export const activarPublicacion = (id) => {
     }
 };
 
-export const actualizarPublicacion = (id, descripcion, precio, stock, tipoVenta, unidadPack) => {
+export const actualizarPublicacion = (id, descripcion, precio, stock, tipoVenta, unidadPack, utilidad) => {
     return async(dispatch) => {
-        const res = await modificarPublicacion(id, descripcion, precio, stock, tipoVenta, unidadPack);
+        const res = await modificarPublicacion(id, descripcion, precio, stock, tipoVenta, unidadPack, utilidad);
         dispatch(putPublicacion(res))
     }
 };
@@ -37,8 +37,6 @@ export const getPublicaciones = () => {
 export const postPublicaciones = (pro) => {
     return async(dispatch) => {
         const res = await publicarML(pro)
-        
-
         const codProd = res.attributes.find(elem => elem.id === 'SELLER_SKU');
         const publicacion = {};
         publicacion.codigoML = res.id;
@@ -47,6 +45,7 @@ export const postPublicaciones = (pro) => {
         publicacion.stockML = res.available_quantity;
         publicacion.categoria = res.category_id;
         publicacion.codProd = codProd.value_name;
+        publicacion.utilidad = res.utilidad;
 
         const respuesta = await agregarPublicaciones(publicacion);
 

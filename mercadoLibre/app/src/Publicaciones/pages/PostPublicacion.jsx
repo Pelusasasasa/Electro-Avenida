@@ -48,6 +48,7 @@ const initialForm = {
     eficienciaEnergetica: '',
     vidaUtil: '',
     cantPack: '1',
+    utilidad: 0.00,
 
     //General
     largo: 0,
@@ -95,6 +96,13 @@ const initialForm = {
     sensorMovimiento: '242084',
     resistenteAlAgua: '242084',
 
+    //Fotocontrol
+    colorCarcasa: '',
+    materialCarcasa: '',
+    tipoFotocontrol: '',
+    ambientesRecomendados: '',
+    voltajeFotocontrol: '',
+
 
 
 
@@ -111,7 +119,7 @@ export const PostPublicacion = () => {
 
     const {
          subCategories, subCategories1, subCategories2, voltaje, temperaturaLuz, colorLuz, potencia, lumenes, tipofuente, voltaje2, formState , onChanges,
-        onInputChange, codigo, descripcion, codBarra, marca, costoIva, precioSujerido, stockSujerido, precio, stock, categories,
+        onInputChange, codigo, descripcion, codBarra, marca, costoIva, precioSujerido, stockSujerido, precio, stock, categories, utilidad,
 
         altura, largo, peso, ancho,
 
@@ -128,7 +136,9 @@ export const PostPublicacion = () => {
 
         instalacionProyector, sensorMovimiento, resistenteAlAgua,
 
-        tipoBateriaLinterna, alcanceProyeccion, cantidadBaterias, tamanioBateria, diametro, colorLinterna, potenciaLinterna, tipoLinterna, incluyePilaLinterna, resistenteAlPolvo, esRecargable, cantidadModosLuz, duracionMaxima, tipoAlimentacion
+        tipoBateriaLinterna, alcanceProyeccion, cantidadBaterias, tamanioBateria, diametro, colorLinterna, potenciaLinterna, tipoLinterna, incluyePilaLinterna, resistenteAlPolvo, esRecargable, cantidadModosLuz, duracionMaxima, tipoAlimentacion,
+
+        colorCarcasa, materialCarcasa, tipoFotocontrol, ambientesRecomendados, voltajeFotocontrol
 
         
         
@@ -145,6 +155,7 @@ export const PostPublicacion = () => {
     const [tiraLed, setTiraLed] = useState(false);
     const [proyector, setProyector] = useState(false);
     const [linterna, setLinterna] = useState(false);
+    const [fotocontroles, setFotocontroles] = useState(false);
 
 
     const [categorias, setCategorias] = useState([]);
@@ -197,6 +208,7 @@ export const PostPublicacion = () => {
         setTiraLed(false);
         setProyector(false);
         setLinterna(false);
+        setFotocontroles(false);
 
         if(subCategories1 === 'MLA377395' || subCategories1 === 'MLA373504'){
             setFocos(true);
@@ -217,6 +229,10 @@ export const PostPublicacion = () => {
         if(subCategories1 === 'MLA373504'){
             setProyector(true);
         };
+
+        if(subCategories1 === 'MLA434732'){
+            setFotocontroles(true);
+        }
 
     }, [subCategories1]);
 
@@ -249,12 +265,21 @@ export const PostPublicacion = () => {
     useEffect(() => {
         if(active._id){
              onChanges({
-                    precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), formatoVenta, parseFloat(cantPack)),
+                    precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), formatoVenta, parseFloat(cantPack), utilidad),
                     stockSujerido: parseFloat(active.stock / cantPack),
             })
         }
 
     }, [cantPack]);
+
+    useEffect(() => {
+        if(active._id){
+            onChanges({
+                    precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), formatoVenta, parseFloat(cantPack), utilidad),
+                    stockSujerido: parseFloat(active.stock / cantPack),
+            })
+        };
+    }, [utilidad])
 
     useEffect(() => {
         if (active._id) {
@@ -269,7 +294,7 @@ export const PostPublicacion = () => {
             costoIva: active.costodolar !== 0 ? ((parseFloat(active.costodolar) + parseFloat(active.impuestos)) * dolar).toFixed(2) :  (parseFloat(active.costo) + parseFloat(active.impuestos)).toFixed(2),
             stockSujerido: active.stock,
             marca: active.marca,
-            precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), formatoVenta, parseFloat(cantPack))
+            precioSujerido: calcularPrecioSujerido(parseFloat(active.costo), parseFloat(active.impuestos), active.costodolar, parseFloat(dolar), formatoVenta, parseFloat(cantPack), utilidad)
         });
     };
 
@@ -305,6 +330,7 @@ export const PostPublicacion = () => {
          producto.price = formState.precio;
          producto.currency_id = 'ARS';
          producto.available_quantity = formState.stock;
+         producto.utilidad = utilidad;
          producto.buying_mode = 'buy_it_now';
          producto.condition = 'new';
          producto.listing_type_id = 'gold_special'
@@ -506,6 +532,16 @@ export const PostPublicacion = () => {
                 {id: 'MAX_RUNTIME', value_name: duracionMaxima},
                 {id: 'POWER_SUPPLY_TYPE', value_name: tipoAlimentacion}
             )
+         };
+
+         if(formState.subCategories1 === 'MLA434732'){
+            producto.attributes.push(
+                {id: 'HOUSING_COLOR', value_name: colorCarcasa},
+                {id: 'HOUSING_MATERIAL', value_name: materialCarcasa},
+                {id: 'PHOTOCONTROL_TYPE', value_name: tipoFotocontrol},
+                {id: 'RECOMMENDED_AMBIENTS', value_name: ambientesRecomendados},
+                {id: 'VOLTAJE', value_name: voltajeFotocontrol}
+            )
          }
         
         dispatch( postPublicaciones(producto) );
@@ -536,7 +572,13 @@ export const PostPublicacion = () => {
             </div>
         </section>
 
-        <section className='grid grid-cols-2 gap-3 m-2'>
+        <section className='grid grid-cols-3 gap-3 m-2'>
+
+            <div className='flex flex-col'>
+                <label htmlFor="utilidad" className='text-center font-bold '>Utilidad</label>
+                <input type="number" className='self-center' name="utilidad" id="utilidad" value={utilidad} onChange={onInputChange} />
+            </div>
+
             <div className='flex flex-col'>
                 <label htmlFor="formatoVenta" className='text-center font-bold '>Formato de Venta</label>
                 <select name="formatoVenta" id="formatoVenta" onChange={onInputChange} value={formatoVenta}>
@@ -549,6 +591,7 @@ export const PostPublicacion = () => {
                 <label htmlFor="cantPack" className='text-center font-bold '>Unidad</label>
                 <input type="number" className='w-16 self-center' name="cantPack" id="cantPack" value={cantPack} disabled={pack} onChange={onInputChange} />
             </div>
+
         </section>
 
         <section id='costoIva' className='grid grid-cols-3 gap-3 m-2'>
@@ -1219,6 +1262,34 @@ export const PostPublicacion = () => {
                 <input type="text" name="tipoAlimentacion" id="tipoAlimentacion" onChange={onInputChange} value={tipoAlimentacion} />
             </div>
         
+
+        </section>
+
+        <section id='fotocontroles' className={`grid grid-cols-4 gap-3 m-2 ${fotocontroles ? '' : 'hiddne'}`}>
+            <div className='flex flex-col'>
+                <label htmlFor="colorCarcasa" className='text-center font-bold '>Color de la carcasa</label>
+                <input type="text" name="colorCarcasa" id="colorCarcasa" onChange={onInputChange} value={colorCarcasa} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="materialCarcasa" className='text-center font-bold '>Material de la carcasa</label>
+                <input type="text" name="materialCarcasa" id="materialCarcasa" onChange={onInputChange} value={materialCarcasa} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="tipoFotocontrol" className='text-center font-bold '>Tipo de fotocontrol</label>
+                <input type="text" name="tipoFotocontrol" id="tipoFotocontrol" onChange={onInputChange} value={tipoFotocontrol} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="ambientesRecomendados" className='text-center font-bold '>Ambientes Recomendados</label>
+                <input type="text" name="ambientesRecomendados" id="ambientesRecomendados" onChange={onInputChange} value={ambientesRecomendados} />
+            </div>
+
+            <div className='flex flex-col'>
+                <label htmlFor="voltajeFotocontrol" className='text-center font-bold '>Voltaje del fotocontrol</label>
+                <input type="text" name="voltajeFotocontrol" id="voltajeFotocontrol" onChange={onInputChange} value={voltajeFotocontrol} />
+            </div>
 
         </section>
 
