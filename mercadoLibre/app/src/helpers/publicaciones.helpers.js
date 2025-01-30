@@ -7,17 +7,18 @@ export const deleteOnePublicacion = async(codigoML) => {
     return res
 };
 
-export const modificarPublicacion = async(id, descripcion, precio, stock, tipoVenta, unidadPack) => {
+export const modificarPublicacion = async(id, descripcion, precio, stock, tipoVenta, unidadPack, utilidad) => {
 
     const res = (await axios.put(`${URL}mercadoLibre/forCodigo/${id}`,{
             descripcion,
             precioML: precio,
             stockML: stock,
             unidadPack,
-            tipoVenta
+            tipoVenta,
+            utilidad
     }));
 
-    return res.data
+    return res.data;
 
 };
 

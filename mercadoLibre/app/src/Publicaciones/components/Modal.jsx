@@ -19,15 +19,16 @@ export const Modal = ({closeModal, type}) => {
     initialState.tipoVenta = active.tipoVenta;
     initialState.unidadPack = active.unidadPack;
     initialState.descripcion = active.descripcion;
+    initialState.utilidad = active.utilidad;
 
 
-    const {onInputChange, formState, descripcion, precioML, stockML, unidadPack, tipoVenta} = useForm(initialState);
+    const {onInputChange, formState, descripcion, utilidad, precioML, stockML, unidadPack, tipoVenta} = useForm(initialState);
 
     const onSubmit = async(e) => {
         e.preventDefault();
 
         if(type === 'put'){
-            dispatch(actualizarPublicacion(active.codigoML, formState.descripcion, formState.precioML, formState.stockML, formState.tipoVenta, formState.unidadPack));
+            dispatch(actualizarPublicacion(active.codigoML, formState.descripcion, formState.precioML, formState.stockML, formState.tipoVenta, formState.unidadPack, formState.utilidad));
             
             const res = await modificarPrecioYStockPorIdDeProducto(active.codigoML, precioML, stockML, tipoVenta, unidadPack);
             
@@ -47,6 +48,10 @@ export const Modal = ({closeModal, type}) => {
                 <div>
                     <label htmlFor="descripcion">Descripcion</label>
                     <input type="text" name='descripcion' onChange={onInputChange} value={descripcion} id="descripcion" />
+                </div>
+                <div>
+                    <label htmlFor="utilidad">Utilidad</label>
+                    <input type="number" name='utilidad' onChange={onInputChange} value={utilidad} id="utilidad" />
                 </div>
                 <div>
                     <label htmlFor="precio">Precio ML</label>

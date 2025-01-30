@@ -50,7 +50,7 @@ export const ListPublicaciones = () => {
     setSaving(true);
 
     for(let elem of publicaciones){
-      let precioActualizado = Math.ceil(calcularPrecioSujerido(elem.costo, elem.costodolar, elem.impuesto, parseFloat(dolar), elem.tipoVenta, elem.unidadPack))
+      let precioActualizado = Math.ceil(calcularPrecioSujerido(elem.costo, elem.costodolar, elem.impuesto, parseFloat(dolar), elem.tipoVenta, elem.unidadPack, elem.utilidad))
       dispatch( actualizarPublicacion(elem.codigoML, elem.descripcion, precioActualizado, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack)));
       await modificarPrecioYStockPorIdDeProducto(elem.codigoML, precioActualizado, Math.floor(elem.tipoVenta === 'UNIDAD' ? elem.stock : elem.stock / elem.unidadPack), elem.tipoVenta, elem.unidadPack);
     
@@ -101,6 +101,7 @@ export const ListPublicaciones = () => {
               <th className="border border-black">Codigo Interno</th>
               <th className="border border-black">Descripcion</th>
               <th className="border border-black">Costo + Iva</th>
+              <th className="border border-black">Utilidad</th>
               <th className="border border-black">Precio Sujerido</th>
               <th className="border border-black">Stock Sujerido</th>
               <th className="border border-black">Precio</th>
