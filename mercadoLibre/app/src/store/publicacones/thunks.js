@@ -34,7 +34,7 @@ export const getPublicaciones = () => {
     };
 };
 
-export const postPublicaciones = (pro) => {
+export const postPublicaciones = (pro, utilidad) => {
     return async(dispatch) => {
         const res = await publicarML(pro)
         const codProd = res.attributes.find(elem => elem.id === 'SELLER_SKU');
@@ -45,7 +45,7 @@ export const postPublicaciones = (pro) => {
         publicacion.stockML = res.available_quantity;
         publicacion.categoria = res.category_id;
         publicacion.codProd = codProd.value_name;
-        publicacion.utilidad = res.utilidad;
+        publicacion.utilidad = utilidad;
 
         const respuesta = await agregarPublicaciones(publicacion);
 
