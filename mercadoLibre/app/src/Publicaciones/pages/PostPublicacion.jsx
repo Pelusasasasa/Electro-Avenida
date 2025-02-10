@@ -330,7 +330,6 @@ export const PostPublicacion = () => {
          producto.price = formState.precio;
          producto.currency_id = 'ARS';
          producto.available_quantity = formState.stock;
-         producto.utilidad = utilidad;
          producto.buying_mode = 'buy_it_now';
          producto.condition = 'new';
          producto.listing_type_id = 'gold_special'
@@ -544,7 +543,7 @@ export const PostPublicacion = () => {
             )
          }
         
-        dispatch( postPublicaciones(producto) );
+        dispatch( postPublicaciones(producto, utilidad) );
         console.log(producto)
         navigate('/publicaciones/list'); 
     };
@@ -1265,7 +1264,7 @@ export const PostPublicacion = () => {
 
         </section>
 
-        <section id='fotocontroles' className={`grid grid-cols-4 gap-3 m-2 ${fotocontroles ? '' : 'hiddne'}`}>
+        <section id='fotocontroles' className={`grid grid-cols-4 gap-3 m-2 ${fotocontroles ? '' : 'hidden'}`}>
             <div className='flex flex-col'>
                 <label htmlFor="colorCarcasa" className='text-center font-bold '>Color de la carcasa</label>
                 <input type="text" name="colorCarcasa" id="colorCarcasa" onChange={onInputChange} value={colorCarcasa} />
