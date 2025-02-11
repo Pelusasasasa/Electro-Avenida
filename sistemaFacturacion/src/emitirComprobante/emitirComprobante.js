@@ -1822,9 +1822,7 @@ async function traerProductosPrestamo(arreglo) {
 
 //funcion que busca en la afip a una persona
 buscarAfip.addEventListener("click", async (e) => {
-  let cliente = (
-    await axios.get(`${URL}clientes/cuit/${dnicuit.value}`, configAxios)
-  ).data;
+  let cliente = ( await axios.get(`${URL}clientes/cuit/${dnicuit.value}`)).data;
   if (cliente !== "") {
     await ponerInputsClientes(cliente);
   } else {
