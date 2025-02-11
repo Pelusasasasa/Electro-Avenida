@@ -402,9 +402,9 @@ const buscarPersonaPorDNI = async (valor) => {
   let persona = await afip.RegisterScopeThirteen.getTaxpayerDetails("27" + valor + digito);
   console.log(persona)
   if (!persona) {
-    console.log("a")
     const digito = calcularDigitoVerificador("20" + valor);
     persona = await afip.RegisterScopeThirteen.getTaxpayerDetails("20" + valor + digito);
+    console.log(persona)
   };
 
   if (!persona) {
@@ -416,7 +416,7 @@ const buscarPersonaPorDNI = async (valor) => {
   const { nombre, apellido, domicilio } = persona;
 
   const retorno = {
-    nombre: nombre ? nombre : '' + " " + apellido,
+    nombre: (nombre ? nombre : '') + " " + apellido,
     direccion: domicilio[0].direccion,
     localidad: domicilio[0].localidad,
     provincia: domicilio[0].descripcionProvincia,
