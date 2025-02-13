@@ -183,7 +183,7 @@ tbody.addEventListener("click", (e) => {
 
 aceptar.addEventListener("click", async (e) => {
   const movimiento = movimientos.find((mov) => mov._id === seleccionado.id);
-  let aux = movimiento.imp.replace('.', '');
+  let aux = movimiento.imp.replace(/\./g,'');
   aux = aux.replace(',', '.');
 
   //Lo que hacemos es cargar un descuento a Movimiento de Caja
@@ -238,7 +238,8 @@ aceptar.addEventListener("click", async (e) => {
 
 efectivo.addEventListener("click", (e) => {
   if (seleccionado) {
-    let aux = seleccionado.children[5].innerHTML.replace('.','');
+    let aux = seleccionado.children[5].innerHTML.replace(/\./g,'');
+    console.log(aux)
     aux = aux.replace(',', '.');
 
     total.value = aux;
@@ -249,7 +250,7 @@ efectivo.addEventListener("click", (e) => {
 
 cheque.addEventListener("click", (e) => {
   if (seleccionado) {
-    let aux = seleccionado.children[5].innerHTML.replace('.','');
+    let aux = seleccionado.children[5].innerHTML.replace(/\./g,'');
     aux = aux.replace(',', '.');
 
     ipcRenderer.send("abrir-ventana", {
@@ -270,7 +271,7 @@ ml.addEventListener('click', cobrarML);
 
 tarjeta.addEventListener("click", (e) => {
   if (seleccionado) {
-    let aux = seleccionado.children[5].innerHTML.replace('.','');
+    let aux = seleccionado.children[5].innerHTML.replace(/\./g,'');
     aux = aux.replace(',', '.');
 
     ipcRenderer.send("abrir-ventana", {
@@ -298,7 +299,7 @@ transferencia.addEventListener("click", async (e) => {
     egreso.idCuenta = "DEP";
     egreso.pasado = true;
 
-    let aux = seleccionado.children[5].innerHTML.replace('.','');
+    let aux = seleccionado.children[5].innerHTML.replace(/\./g,'');
     aux = aux.replace(',', '.');
 
     const { value } = await sweet.fire({
@@ -322,7 +323,7 @@ transferencia.addEventListener("click", async (e) => {
         title: "No se pudo cargar el descuento en caja",
       });
     }
-
+    efectivo.click();
     aceptar.click();
   }
 });
