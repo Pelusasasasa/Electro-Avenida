@@ -68,7 +68,7 @@ app.use('/api/tarjetas',require('./routes/tarjetas'));
 //Tipo Ventas
 app.use('/api/tipoVenta',require('./routes/tipoVenta'));
 //Ultimos
-app.use('/api/ultimos',require('./routes/ultimos'));
+app.use('/api/ultimos',require('./routes/ultimos.routes'));
 //Usuarios
 app.use('/api/usuarios',require('./routes/usuarios'))
 //Vales

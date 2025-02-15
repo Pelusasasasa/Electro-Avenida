@@ -1,14 +1,10 @@
-const axios = require("axios");
-const {
-  redondear,
-  cerrarVentana,
-  configAxios,
-} = require("../assets/js/globales");
+import { get, post, put } from "axios";
+import { redondear, cerrarVentana, configAxios } from "../assets/js/globales";
 require("dotenv").config();
 const URL = process.env.URL;
 
-const sweet = require("sweetalert2");
-const { ipcRenderer } = require("electron/renderer");
+import { fire } from "sweetalert2";
+import { ipcRenderer } from "electron/renderer";
 
 const tbody = document.querySelector("tbody");
 
@@ -31,8 +27,7 @@ let subSeleccionado;
 let movimientos;
 
 setInterval(async () => {
-  let movimientosAux = (await axios.get(`${URL}movCajas/forPased`, configAxios))
-    .data;
+  let movimientosAux = (await get(`${URL}movCajas/forPased`)).data;
 
   if (movimientos.length > movimientosAux.length) {
     listar(movimientosAux);
@@ -49,7 +44,7 @@ setInterval(async () => {
 }, 2000);
 
 window.addEventListener("load", async (e) => {
-  movimientos = (await axios.get(`${URL}movCajas/forPased`, configAxios)).data;
+  movimientos = (await get(`${URL}movCajas/forPased`, configAxios)).data;
   listar(movimientos);
 });
 
@@ -58,7 +53,7 @@ const cobrarML = async (e) => {
     let aux = seleccionado.children[5].innerHTML.replace('.','');
     aux = aux.replace(',', '.');
 
-    const {isConfirmed, value} = await sweet.fire({
+    const {isConfirmed, value} = await fire({
       title: 'Precio Tarjeta',
       html: `
         <div class='flex gap-2 flex-col'>
@@ -96,10 +91,10 @@ const cobrarML = async (e) => {
       egreso.cliente = seleccionado.children[2].innerText;
   
       try {
-        await axios.post(`${URL}movCajas`, egreso);
+        await post(`${URL}movCajas`, egreso);
       } catch (error) {
         console.log(error);
-        await sweet.fire({
+        await fire({
           title: "No se pudo cargar el descuento en caja",
         });
       }
@@ -118,7 +113,7 @@ const cobrarML = async (e) => {
     tarjeta.fechaPago = value.fechaML;
 
     try {
-      await axios.post(`${URL}tarjetas`, tarjeta);
+      await post(`${URL}tarjetas`, tarjeta);
     } catch (error) {
       console.log(error)
     }
@@ -202,10 +197,10 @@ aceptar.addEventListener("click", async (e) => {
     mov.cliente = movimiento.cliente;
 
     try {
-      await axios.post(`${URL}movCajas`, mov);
+      await post(`${URL}movCajas`, mov);
     } catch (error) {
       console.log(error);
-      await sweet.fire({
+      await fire({
         title: "No se pudo cargar el descuento en caja",
       });
     }
@@ -218,7 +213,7 @@ aceptar.addEventListener("click", async (e) => {
   movimiento.fecha = p;
 
   try {
-    await axios.put(`${URL}movCajas/id/${movimiento._id}`,movimiento);
+    await put(`${URL}movCajas/id/${movimiento._id}`,movimiento);
 
       movimientos = movimientos.filter((mov) => mov._id !== seleccionado.id);
       tbody.removeChild(seleccionado);
@@ -227,7 +222,7 @@ aceptar.addEventListener("click", async (e) => {
       descuento.value = "0.00";
       vuelto.value = "0.00";
   } catch (error) {
-    await sweet.fire({
+    await fire({
       title: "No se pudo cargar la factura",
     });
     console.log(error);
@@ -302,7 +297,7 @@ transferencia.addEventListener("click", async (e) => {
     let aux = seleccionado.children[5].innerHTML.replace(/\./g,'');
     aux = aux.replace(',', '.');
 
-    const { value } = await sweet.fire({
+    const { value } = await fire({
       title: "Importe",
       input: "text",
       inputValue: aux,
@@ -316,10 +311,10 @@ transferencia.addEventListener("click", async (e) => {
     egreso.cliente = seleccionado.children[2].innerText;
 
     try {
-      await axios.post(`${URL}movCajas`, egreso);
+      await post(`${URL}movCajas`, egreso);
     } catch (error) {
       console.log(error);
-      await sweet.fire({
+      await fire({
         title: "No se pudo cargar el descuento en caja",
       });
     }
@@ -385,6 +380,11 @@ function listarUltimoMovimiento(mov) {
 
   tr.id = mov._id;
 
+    mov.imp = mov.imp.toLocaleString("de-DE",{
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    })
+
   const tdFecha = document.createElement("td");
   const tdCodigo = document.createElement("td");
   const tdCliente = document.createElement("td");
@@ -400,7 +400,7 @@ function listarUltimoMovimiento(mov) {
   tdCliente.innerText = mov.cliente;
   tdComprob.innerText = mov.cuenta;
   tdNumero.innerText = mov.nro_comp;
-  tdImporte.innerText = mov.imp.toFixed(2);
+  tdImporte.innerText = mov.imp;
   tdVendedor.innerText = mov.vendedor;
 
   tr.appendChild(tdFecha);

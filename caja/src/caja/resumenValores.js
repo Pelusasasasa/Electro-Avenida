@@ -75,7 +75,7 @@ const confirmarCambios = async(e) => {
         ultimos.maleta = maleta.value === "" ? 0 : maleta.value;
     
         try {
-            await axios.put(`${URL}ultimos`,ultimos,configAxios);
+            await axios.post(`${URL}ultimos`,ultimos);
             window.close();
         } catch (error) {
             console.log(error)
@@ -162,8 +162,13 @@ ipcRenderer.on('recibir-informacion',async (e,args)=>{
     
         totalVales.value = redondear(parseFloat(valesCobrar.value) + parseFloat(personal.value) + parseFloat(incobrable.value) + parseFloat(tarjetasCobrar.value) + parseFloat(facturasCobrar.value),2);
         ultimos = (await axios.get(`${URL}ultimos`,configAxios)).data;
-    
-        ponerValores(ultimos);
+
+        if (ultimos.ok) {
+            ponerValores(ultimos.ultimo);    
+        }else{
+            await sweet.fire(ultimos.msg)
+        }
+        
 });
 
 document.addEventListener('keyup',async e=>{
