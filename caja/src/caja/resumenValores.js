@@ -46,8 +46,8 @@ let total = 0;
 
 
 const cambiarTotales = (input)=>{
-    ultimos[input.id] = parseFloat(input.value)
-    ponerValores(ultimos);
+    ultimos.ultimo[input.id] = parseFloat(input.value)
+    ponerValores(ultimos.ultimo);
 };
 
 const confirmarCambios = async(e) => {
