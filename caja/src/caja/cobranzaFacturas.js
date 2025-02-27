@@ -1,10 +1,10 @@
-import { get, post, put } from "axios";
-import { redondear, cerrarVentana, configAxios } from "../assets/js/globales";
+const axios = require("axios");
+const { redondear, cerrarVentana, configAxios } = require("../assets/js/globales");
 require("dotenv").config();
 const URL = process.env.URL;
 
-import { fire } from "sweetalert2";
-import { ipcRenderer } from "electron/renderer";
+const { fire } = require("sweetalert2");
+const { ipcRenderer } = require("electron");
 
 const tbody = document.querySelector("tbody");
 
@@ -27,7 +27,7 @@ let subSeleccionado;
 let movimientos;
 
 setInterval(async () => {
-  let movimientosAux = (await get(`${URL}movCajas/forPased`)).data;
+  let movimientosAux = (await axios.get(`${URL}movCajas/forPased`)).data;
 
   if (movimientos.length > movimientosAux.length) {
     listar(movimientosAux);
@@ -44,7 +44,7 @@ setInterval(async () => {
 }, 2000);
 
 window.addEventListener("load", async (e) => {
-  movimientos = (await get(`${URL}movCajas/forPased`, configAxios)).data;
+  movimientos = (await axios.get(`${URL}movCajas/forPased`, configAxios)).data;
   listar(movimientos);
 });
 
@@ -91,7 +91,7 @@ const cobrarML = async (e) => {
       egreso.cliente = seleccionado.children[2].innerText;
   
       try {
-        await post(`${URL}movCajas`, egreso);
+        await axios.post(`${URL}movCajas`, egreso);
       } catch (error) {
         console.log(error);
         await fire({
@@ -113,7 +113,7 @@ const cobrarML = async (e) => {
     tarjeta.fechaPago = value.fechaML;
 
     try {
-      await post(`${URL}tarjetas`, tarjeta);
+      await axios.post(`${URL}tarjetas`, tarjeta);
     } catch (error) {
       console.log(error)
     }
@@ -197,7 +197,7 @@ aceptar.addEventListener("click", async (e) => {
     mov.cliente = movimiento.cliente;
 
     try {
-      await post(`${URL}movCajas`, mov);
+      await axios.post(`${URL}movCajas`, mov);
     } catch (error) {
       console.log(error);
       await fire({
@@ -213,7 +213,7 @@ aceptar.addEventListener("click", async (e) => {
   movimiento.fecha = p;
 
   try {
-    await put(`${URL}movCajas/id/${movimiento._id}`,movimiento);
+    await axios.put(`${URL}movCajas/id/${movimiento._id}`,movimiento);
 
       movimientos = movimientos.filter((mov) => mov._id !== seleccionado.id);
       tbody.removeChild(seleccionado);
@@ -311,7 +311,7 @@ transferencia.addEventListener("click", async (e) => {
     egreso.cliente = seleccionado.children[2].innerText;
 
     try {
-      await post(`${URL}movCajas`, egreso);
+      await axios.post(`${URL}movCajas`, egreso);
     } catch (error) {
       console.log(error);
       await fire({
