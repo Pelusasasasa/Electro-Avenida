@@ -44,7 +44,7 @@ app.use('/api/difCaja',require('./routes/difCaja'));
 //Mercado Libre
 app.use('/api/mercadoLibre', require('./routes/MercadoLibre.route'))
 //movCaja
-app.use('/api/movCajas',require('./routes/movCaja'));
+app.use('/api/movCajas',require('./routes/movCaja.routes'));
 //Movimiento de productos
 app.use('/api/movProductos',require('./routes/movProductos'))
 //Pedidos
@@ -64,7 +64,7 @@ app.use('/api/remitos',require('./routes/remito'));
 //rubros
 app.use('/api/rubros',require('./routes/rubros'));
 //tipo Tarjetas
-app.use('/api/tarjetas',require('./routes/tarjetas'));
+app.use('/api/tarjetas',require('./routes/tarjetas.routes'));
 //Tipo Ventas
 app.use('/api/tipoVenta',require('./routes/tipoVenta'));
 //Ultimos
