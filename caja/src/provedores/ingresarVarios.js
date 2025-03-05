@@ -57,16 +57,19 @@ const listarProvedores = (lista) => {
 };
 
 aceptar.addEventListener("click", async (e) => {
+  const provedorTexto = select.options[select.selectedIndex].text;
+
   const cuenta = {};
+
   cuenta.tipo_comp = concepto.value.toUpperCase();
   cuenta.codProv = select.value;
-  cuenta.nro_comp =
-    puntoVenta.value.padStart(4, "0") + "-" + nro_comp.value.padStart(8, "0");
-  cuenta.provedor = select.innerText;
+  cuenta.nro_comp = puntoVenta.value.padStart(4, '0') + '-' + nro_comp.value.padStart(8, '0');
+  puntoVenta.value.padStart(4, "0") + "-" + nro_comp.value.padStart(8, "0");
+  cuenta.provedor = provedorTexto;
   cuenta.fecha = fecha.value;
   cuenta.debe = debe.value;
   cuenta.haber = haber.value;
-  cuenta.saldo = saldo.value;
+  cuenta.saldo = parseFloat(saldo.value) + parseFloat(debe.value) - parseFloat(haber.value);
   cuenta.observaciones = observaciones.value;
 
   sumarSaldoProvedor(cuenta);
@@ -83,16 +86,10 @@ aceptar.addEventListener("click", async (e) => {
 });
 
 const sumarSaldoProvedor = async () => {
-  let provedor = (
-    await axios.get(`${URL}provedor/codigo/${select.value}`, configAxios)
-  ).data;
-  provedor.saldo = saldo.value;
+  let provedor = (await axios.get(`${URL}provedor/codigo/${select.value}`)).data;
+    provedor.saldo = saldo.value;
   try {
-    await axios.put(
-      `${URL}provedor/codigo/${provedor.codigo}`,
-      provedor,
-      configAxios
-    );
+    await axios.put(`${URL}provedor/codigo/${provedor.codigo}`,provedor);
   } catch (error) {
     sweet.fire({
       title: "No se pudo modificar el saldo del provedor",
@@ -197,4 +194,14 @@ document.addEventListener("keyup", (e) => {
   if (e.keyCode === 27) {
     window.close();
   }
+});
+
+//Cuando modificamos el debe
+haber.addEventListener('change', (e) => {
+  saldo.value = (parseFloat(saldoActual.value) + parseFloat(debe.value) - parseFloat(haber.value)).toFixed(2);
+});
+
+//Cuando modificamos el haber
+debe.addEventListener('change', (e) => {
+  saldo.value = (parseFloat(saldoActual.value) + parseFloat(debe.value) - parseFloat(haber.value)).toFixed(2);
 });
