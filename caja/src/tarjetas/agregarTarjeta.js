@@ -133,9 +133,17 @@ importe.addEventListener('focus',e=>{
 
 aceptar.addEventListener('click',async e=>{
     const tarjeta = {} ;
+    const [year, month, day] = fecha.value.split('-', 3);
+
     const now = new Date();
-    const fechaArgentina = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
-    tarjeta.fecha = fechaArgentina;
+
+    const hours = now.getHours();
+    const minuts = now.getMinutes();
+    const seconds = now.getSeconds();
+    
+    const fechaActual = new Date(year, month - 1, day, hours, minuts, seconds);
+
+    tarjeta.fecha = fechaActual
     tarjeta.tarjeta = selectTarjeta.value;
     tarjeta.imp = importe.value = "" ? 0 : importe.value;
     tarjeta.cliente = cliente.value.toUpperCase();
@@ -157,8 +165,9 @@ aceptar.addEventListener('click',async e=>{
     importe.focus();
     }else{
         try {
-            await axios.post(`${URL}tarjetas`,tarjeta,configAxios);
-            await ipcRenderer.send('enviar-info-ventana-principal',tarjeta);
+            const { data } = await axios.post(`${URL}tarjetas`,tarjeta,configAxios);
+
+            await ipcRenderer.send('enviar-info-ventana-principal', data.tarjeta);
             if (cerrar) {
                 window.close();
             }else{

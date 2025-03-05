@@ -111,25 +111,36 @@ window.addEventListener("load", async (e) => {
 
 aceptar.addEventListener("click", async (e) => {
   if (tipoMovimiento.value === "") {
+
     await alerta("Seleccionar un tipo de movimiento");
     tipoMovimiento.focus();
+
   } else if (parseFloat(importe.value) === 0) {
+
     await alerta("Poner Importe distinto de cero");
     importe.focus();
+
   } else {
+
     const movimientoCaja = {};
-    const date = fecha.value.split("-", 3);
-    movimientoCaja.fecha = new Date(date[0], date[1] - 1, date[2], "15");
+    const [year, month, day] = fecha.value.split('-', 3);
+    const now = new Date();
+
+    const hours = now.getHours();
+    const minuts = now.getMinutes();
+    const seconds = now.getSeconds();
+
+    const fechaActual = new Date(year, month - 1, day, hours, minuts, seconds);
+
+    movimientoCaja.fecha = fechaActual;
     movimientoCaja.imp = importe.value;
-    movimientoCaja.cuenta = document.querySelector(
-      "option[value = " + tipoCuenta.value + "]"
-    ).innerHTML;
+    movimientoCaja.cuenta = document.querySelector("option[value = " + tipoCuenta.value + "]").innerHTML;
     movimientoCaja.idCuenta = tipoCuenta.value;
     movimientoCaja.desc = descripcion.value.toUpperCase();
     movimientoCaja.tMov = tipoMovimiento.value;
-    movimientoCaja.nro_comp =
-      punto.value.padStart(4, "0") + "-" + numero.value.padStart(8, "0");
+    movimientoCaja.nro_comp = punto.value.padStart(4, "0") + "-" + numero.value.padStart(8, "0");
     movimientoCaja.pasado = true;
+
     try {
       await axios.post(`${URL}movCajas`, movimientoCaja, configAxios);
       // window.close();

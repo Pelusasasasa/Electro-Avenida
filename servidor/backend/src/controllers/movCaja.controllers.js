@@ -3,9 +3,19 @@ const movCajaCTRL = {};
 const MovCaja = require('../models/movCaja');
 
 movCajaCTRL.post = async(req,res)=>{
-    const now = new Date();
-    const p = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
-    req.body.fecha = new Date(p.slice(0,10) + "T" + p.slice(11));
+
+    //Si no trae una fecha ponemos la fecha actual y sino la fecha con la que traiga
+
+    if(!req.body.fecha){
+        const now = new Date();
+        const p = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+        req.body.fecha = new Date(p.slice(0,10) + "T" + p.slice(11));
+    }else{
+        const fecha = new Date(req.body.fecha);
+        req.body.fecha = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000).toISOString();
+    };
+
+
     const movCaja = new MovCaja(req.body);
     try {
         await movCaja.save();
@@ -15,7 +25,7 @@ movCajaCTRL.post = async(req,res)=>{
     }
     console.log(`Movimiento de caja ${req.body.desc} cargado por el vendedor ${req.body.vendedor} en la maquina ${req.body.maquina} con la hora ${(new Date()).toLocaleString()}`);
     res.send(`Moviemiento de caja Cargado`);
-}
+};
 
 movCajaCTRL.getAll = async(req,res)=>{
     const movCajas = await MovCaja.find();

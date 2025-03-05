@@ -3,11 +3,30 @@ const tarjetaCTRL = {};
 const Tarjeta = require('../models/Tarjeta');
 
 tarjetaCTRL.post = async(req,res)=>{
-    const now = new Date();
-    req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+
+   try {
+     if( !req.body.fecha ){
+        const now = new Date();
+        req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+    }else{
+        const fecha = new Date(req.body.fecha);
+        req.body.fecha = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000).toISOString();
+    };
+
     const tarjeta = new Tarjeta(req.body);
     await tarjeta.save();
-    res.send(`Tarjeta Con el importe ${req.body.imp} de ${req.body.tarjeta} Cargada`)
+    
+    res.send({
+        ok: true,
+        tarjeta
+    })
+   } catch (error) {
+    console.log(error)
+    res.status(500).json({
+        ok: false,
+        msg: 'Hable Con el administrador'
+    })
+   }
 }
 
 tarjetaCTRL.getAll = async(req,res)=>{

@@ -270,51 +270,57 @@ eliminarVarios.addEventListener('click',async e=>{
 });
 
 ipcRenderer.on('recibir-informacion',(e,args)=>{
-    const tr = document.createElement('tr');
 
-    const tdFecha = document.createElement('td');
-    const tdTarjeta = document.createElement('td');
-    const tdCliente = document.createElement('td');
-    const tdImporte = document.createElement('td');
-    const tdTipo = document.createElement('td');
-    const tdVendedor = document.createElement('td');    
-    const tdAcciones = document.createElement('td');
-    const tdEliminarVarios = document.createElement('td');
+    tarjetas.push(args);
+    listar(tarjetas)
 
-    const auxFecha = args.fecha.slice(0,10).split('-',3);
-    tdFecha.innerText = `${auxFecha[2]}/${auxFecha[1]}/${auxFecha[0]}`;
-    tdTarjeta.innerText = args.tarjeta;
-    tdCliente.innerText = args.cliente;
-    tdImporte.innerText = parseFloat(args.imp).toFixed(2);
-    tdTipo.innerText = args.tipo_comp.toUpperCase();
-    tdVendedor.innerText = args.vendedor;
-    tdAcciones.innerHTML = `
-            <div id=edit class=tool>
-                <span class=material-icons>edit</span>
-            </div>
-            <div id=delete class=tool>
-                <span class=material-icons>delete</span>
-            </div>
-        `
-    tdEliminarVarios.innerHTML = `
-        <div class="divEliminarVarios">
-            <input type="checkbox" class="eliminarVarios" name="hoy">
-        </div>
-        `
+    // const [year, month, day] = new Date(args.fecha).toISOString().slice(0,10).split('-', 3);
+    // const tr = document.createElement('tr');
 
-        tdAcciones.classList.add('acciones');
-        total += parseFloat(args.imp);
-        totalInput.value = total.toFixed(2);
+    // const tdFecha = document.createElement('td');
+    // const tdTarjeta = document.createElement('td');
+    // const tdCliente = document.createElement('td');
+    // const tdImporte = document.createElement('td');
+    // const tdTipo = document.createElement('td');
+    // const tdVendedor = document.createElement('td');    
+    // const tdAcciones = document.createElement('td');
+    // const tdEliminarVarios = document.createElement('td');
 
-    tr.appendChild(tdFecha);
-    tr.appendChild(tdTarjeta);
-    tr.appendChild(tdCliente);
-    tr.appendChild(tdImporte);
-    tr.appendChild(tdImporte);
-    tr.appendChild(tdTipo)
-    tr.appendChild(tdVendedor);
-    tr.appendChild(tdAcciones);
-    tr.appendChild(tdEliminarVarios);
+    // // const auxFecha = args.fecha.slice(0,10).split('-',3);
+    // tdFecha.innerText = `${day}/${month}/${year}`;
+    // console.log(tdFecha)
+    // tdTarjeta.innerText = args.tarjeta;
+    // tdCliente.innerText = args.cliente;
+    // tdImporte.innerText = parseFloat(args.imp).toFixed(2);
+    // tdTipo.innerText = args.tipo_comp.toUpperCase();
+    // tdVendedor.innerText = args.vendedor;
+    // tdAcciones.innerHTML = `
+    //         <div id=edit class=tool>
+    //             <span class=material-icons>edit</span>
+    //         </div>
+    //         <div id=delete class=tool>
+    //             <span class=material-icons>delete</span>
+    //         </div>
+    //     `
+    // tdEliminarVarios.innerHTML = `
+    //     <div class="divEliminarVarios">
+    //         <input type="checkbox" class="eliminarVarios" name="hoy">
+    //     </div>
+    //     `
 
-    tbody.appendChild(tr)
+    //     tdAcciones.classList.add('acciones');
+    //     total += parseFloat(args.imp);
+    //     totalInput.value = total.toFixed(2);
+
+    // tr.appendChild(tdFecha);
+    // tr.appendChild(tdTarjeta);
+    // tr.appendChild(tdCliente);
+    // tr.appendChild(tdImporte);
+    // tr.appendChild(tdImporte);
+    // tr.appendChild(tdTipo)
+    // tr.appendChild(tdVendedor);
+    // tr.appendChild(tdAcciones);
+    // tr.appendChild(tdEliminarVarios);
+
+    // tbody.appendChild(tr)
 })
