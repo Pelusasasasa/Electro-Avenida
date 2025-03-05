@@ -131,7 +131,7 @@ const listarCuentas = (lista) => {
     tdImp.innerHTML = cuenta.nro_comp;
     tdDebe.innerHTML = cuenta.debe.toFixed(2);
     tdHaber.innerHTML = cuenta.haber.toFixed(2);
-    tdSaldo.innerHTML = cuenta.saldo.toFixed(2);
+    tdSaldo.innerHTML = cuenta.saldo ? cuenta.saldo.toFixed(2) : 'null';
     tdComPago.innerHTML = cuenta.com_pago;
     (tdObservaciones.innerHTML = cuenta.observaciones
       ? cuenta.observaciones

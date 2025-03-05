@@ -3,7 +3,7 @@ const { redondear, cerrarVentana, configAxios } = require("../assets/js/globales
 require("dotenv").config();
 const URL = process.env.URL;
 
-const { fire } = require("sweetalert2");
+const { fire, default: Swal } = require("sweetalert2");
 const { ipcRenderer } = require("electron");
 
 const tbody = document.querySelector("tbody");
@@ -297,7 +297,7 @@ transferencia.addEventListener("click", async (e) => {
     let aux = seleccionado.children[5].innerHTML.replace(/\./g,'');
     aux = aux.replace(',', '.');
 
-    const { value } = await fire({
+    const { value } = await Swal.fire({
       title: "Importe",
       input: "text",
       inputValue: aux,
