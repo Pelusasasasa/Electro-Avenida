@@ -14,74 +14,74 @@ const cheques = document.querySelector('.cheques');
 const tarjetas = document.querySelector('.tarjetas');
 const cajaGeneral = document.querySelector('.cajaGeneral');
 
-document.addEventListener('keyup',e=>{
+document.addEventListener('keyup', e => {
     if (e.keyCode === 112) {
         location.href = 'compras/ingresoFacturas.html';
-    }else if(e.keyCode === 113){
+    } else if (e.keyCode === 113) {
         location.href = 'provedores/emitirPago.html';
-    }else if(e.keyCode === 114){
+    } else if (e.keyCode === 114) {
         const options = {
-            path:"provedores/cuentaCorriente.html",
-            width:1200,
-            height:1000
+            path: "provedores/cuentaCorriente.html",
+            width: 1200,
+            height: 800
         };
-    
-        ipcRenderer.send('abrir-ventana',options);
-    }else if(e.keyCode === 115){
+
+        ipcRenderer.send('abrir-ventana', options);
+    } else if (e.keyCode === 115) {
         location.href = 'cheques/cheques.html';
-    }else if(e.keyCode === 116){
+    } else if (e.keyCode === 116) {
         location.href = 'tarjetas/tarjetas.html';
-    }else if(e.keyCode === 117){
+    } else if (e.keyCode === 117) {
         const options = {
             path: "caja/informeCaja.html",
-            width:1200,
-            height:1200
+            width: 1200,
+            height: 1200
         };
-    
-        ipcRenderer.send('abrir-ventana',options);
+
+        ipcRenderer.send('abrir-ventana', options);
     };
 
 });
 
-ingresarFacturas.addEventListener('click',()=>{
+ingresarFacturas.addEventListener('click', () => {
     location.href = 'compras/ingresoFacturas.html';
 });
 
-emitirPago.addEventListener('click',()=>{
+emitirPago.addEventListener('click', () => {
     location.href = 'provedores/emitirPago.html';
 });
 
-cuentaCorriente.addEventListener('click',()=>{
+cuentaCorriente.addEventListener('click', () => {
     const options = {
-        path:"provedores/cuentaCorriente.html",
-        width:1200,
-        height:1000
+        path: "provedores/cuentaCorriente.html",
+        width: 1300,
+        height: 800
     };
 
-    ipcRenderer.send('abrir-ventana',options);
+    ipcRenderer.send('abrir-ventana', options);
 });
 
-cheques.addEventListener('click',e=>{
+cheques.addEventListener('click', e => {
     location.href = 'cheques/cheques.html';
 });
 
-tarjetas.addEventListener('click',e=>{
+tarjetas.addEventListener('click', e => {
     location.href = 'tarjetas/tarjetas.html';
 });
 
-cajaGeneral.addEventListener('click',e=>{
+cajaGeneral.addEventListener('click', e => {
     const options = {
         path: "caja/informeCaja.html",
-        width:1200,
-        height:1200
+        width: 1300,
+        height: 750
     };
 
-    ipcRenderer.send('abrir-ventana',options);
+    ipcRenderer.send('abrir-ventana', options);
 });
 
-ipcRenderer.on('fechas',async e=>{
+ipcRenderer.on('fechas', async e => {
     sweet.fire({
-        html:`<section class=fechas>
+        html: `<section class=fechas>
                 <main>
                     <label for="desde">Desde</label>
                     <input type="date" id="desde" name="desde" />
@@ -91,17 +91,17 @@ ipcRenderer.on('fechas',async e=>{
                 <input type="date" id="hasta" name="hasta" />
             </main>
               </section>`,
-        confirmButtonText:"Aceptar",
-        showCancelButton:true,
-    }).then(({isConfirmed})=>{
+        confirmButtonText: "Aceptar",
+        showCancelButton: true,
+    }).then(({ isConfirmed }) => {
         if (isConfirmed) {
-            ipcRenderer.send('abrir-ventana',{
-                path:"caja/resumenValores.html",
-                width:1200,
-                height:1000,
-                informacion:{
-                    desde:desde.value,
-                    hasta:hasta.value
+            ipcRenderer.send('abrir-ventana', {
+                path: "caja/resumenValores.html",
+                width: 1200,
+                height: 1000,
+                informacion: {
+                    desde: desde.value,
+                    hasta: hasta.value
                 }
             });
         }
@@ -111,18 +111,18 @@ ipcRenderer.on('fechas',async e=>{
     primeroDelMes('desde')
 });
 
-ipcRenderer.on('fecha',(e,args)=>{
+ipcRenderer.on('fecha', (e, args) => {
     sweet.fire({
-        html:"<input id='fecha' type='date'>",
-        title:"Hasta Fecha",
-        confirmButtonText:"Aceptar",
-        showCancelButton:true,
-    }).then(({isConfirmed})=>{
+        html: "<input id='fecha' type='date'>",
+        title: "Hasta Fecha",
+        confirmButtonText: "Aceptar",
+        showCancelButton: true,
+    }).then(({ isConfirmed }) => {
         if (isConfirmed) {
-            ipcRenderer.send('abrir-ventana',{
-                path:"datos/listaSaldo.html",
-                width:1200,
-                height:1200
+            ipcRenderer.send('abrir-ventana', {
+                path: "datos/listaSaldo.html",
+                width: 1200,
+                height: 1200
             })
         }
     })
@@ -130,21 +130,21 @@ ipcRenderer.on('fecha',(e,args)=>{
     fechaHoy('fecha')
 });
 
-ipcRenderer.on('saldoInicial',async (e,args)=>{
-    const numeros = (await axios.get(`${URL}tipoVenta`,configAxios)).data;
+ipcRenderer.on('saldoInicial', async (e, args) => {
+    const numeros = (await axios.get(`${URL}tipoVenta`, configAxios)).data;
     const saldo = numeros["saldo Inicial"];
     sweet.fire({
-        title:"Saldo Inicial",
-        html:`<input id='saldoInicial' value=${saldo} type:number>`,
-        confirmButtonText:"Guardar",
-        showCancelButton:true,
-    }).then(async ({isConfirmed,value})=>{
+        title: "Saldo Inicial",
+        html: `<input id='saldoInicial' value=${saldo} type:number>`,
+        confirmButtonText: "Guardar",
+        showCancelButton: true,
+    }).then(async ({ isConfirmed, value }) => {
         const saldoNuevo = parseFloat(document.getElementById('saldoInicial').value)
         if (isConfirmed && saldoNuevo !== saldo) {
             numeros["saldo Inicial"] = saldoNuevo
             try {
                 console.log(numeros)
-                await axios.put(`${URL}tipoVenta`,numeros,configAxios)
+                await axios.put(`${URL}tipoVenta`, numeros, configAxios)
             } catch (error) {
                 console.log(error)
             }
@@ -152,7 +152,7 @@ ipcRenderer.on('saldoInicial',async (e,args)=>{
     });
 });
 
-const fechaHoy = (id)=>{
+const fechaHoy = (id) => {
     const input = document.getElementById(id);
 
     const now = new Date();
@@ -161,13 +161,13 @@ const fechaHoy = (id)=>{
     let year = now.getFullYear();
 
     month = month === 13 ? 1 : month;
-    date = date < 10 ? `0${date}` : date ;
-    month = month < 10 ? `0${month}` : month ;
+    date = date < 10 ? `0${date}` : date;
+    month = month < 10 ? `0${month}` : month;
 
     input.value = `${year}-${month}-${date}`;
 };
 
-const primeroDelMes = (id)=>{
+const primeroDelMes = (id) => {
     const input = document.getElementById(id);
 
     const now = new Date();
@@ -175,89 +175,89 @@ const primeroDelMes = (id)=>{
     let year = now.getFullYear();
 
     month = month === 13 ? 1 : month;
-    month = month < 10 ? `0${month}` : month ;
+    month = month < 10 ? `0${month}` : month;
 
     input.value = `${year}-${month}-01`;
 }
 
-ipcRenderer.on('modificar',async e=>{
+ipcRenderer.on('modificar', async e => {
     await reingresarContraseña();
 });
 
-ipcRenderer.on('reordenarSaldo',async e=>{
+ipcRenderer.on('reordenarSaldo', async e => {
     let select = "";
-    const provedores = (await axios.get(`${URL}provedor`,configAxios)).data;
-    provedores.sort((a,b)=>{
-        if (a.provedor>b.provedor) {
+    const provedores = (await axios.get(`${URL}provedor`, configAxios)).data;
+    provedores.sort((a, b) => {
+        if (a.provedor > b.provedor) {
             return 1
-        }else if(a.provedor < b.provedor){
+        } else if (a.provedor < b.provedor) {
             return -1
         }
         return 0
     });
-    for(let provedor of provedores){
+    for (let provedor of provedores) {
         const option = document.createElement('option');
         option.value = provedor._id;
         option.text = provedor.provedor;
         select += `<option value="${provedor.codigo}">${provedor.provedor}</option>`;
     }
     await sweet.fire({
-        title:"Provedores",
-        html:`
+        title: "Provedores",
+        html: `
             <select name="provedores" autofocus id="provedores">
             ${select}
             </select>
         `,
-        showCancelButton:true,
-        confirmButtonText:"Aceptar",
-    }).then(async({isConfirmed})=>{
+        showCancelButton: true,
+        confirmButtonText: "Aceptar",
+    }).then(async ({ isConfirmed }) => {
         if (isConfirmed) {
             reodernarSaldos();
         }
     });
 });
 
-const reingresarContraseña = async()=>{ 
+const reingresarContraseña = async () => {
     let retorno = false
     await sweet.fire({
-        title:"Contraseña",
-        input:"password",
-        confirmButtonText:"Aceptar",
-        showCancelButton:true
-    }).then(async({isConfirmed,value})=>{
+        title: "Contraseña",
+        input: "password",
+        confirmButtonText: "Aceptar",
+        showCancelButton: true
+    }).then(async ({ isConfirmed, value }) => {
         if (isConfirmed && value === "54321") {
             location.href = './caja/modificar.html';
-        }else if(isConfirmed && value !== "54321"){
+        } else if (isConfirmed && value !== "54321") {
             await sweet.fire({
-                title:"Contraseña Incorrecta"
+                title: "Contraseña Incorrecta"
             })
             reingresarContraseña();
         }
     });
 };
 
-async function reodernarSaldos(){
+async function reodernarSaldos() {
     const codigo = document.getElementById('provedores').value;
-    const cuentas = (await axios.get(`${URL}ctactePro/codigo/${codigo}`,configAxios)).data;
+    const cuentas = (await axios.get(`${URL}ctactePro/codigo/${codigo}`, configAxios)).data;
 
-    cuentas.sort((a,b)=>{
-        if (a.fecha>b.fecha) {
+    cuentas.sort((a, b) => {
+        if (a.fecha > b.fecha) {
             return 1
-        }else if (a.fecha<b.fecha) {
+        } else if (a.fecha < b.fecha) {
             return -1
         }
         return 0
     });
     let saldo = 0;
-    
-    for await(let cuenta of cuentas){
-        saldo =  parseFloat(redondear(saldo + cuenta.debe,2));
-        saldo = parseFloat(redondear(saldo - cuenta.haber,2));
+
+    for await (let cuenta of cuentas) {
+        saldo = parseFloat(redondear(saldo + cuenta.debe, 2));
+        saldo = parseFloat(redondear(saldo - cuenta.haber, 2));
         cuenta.saldo = saldo;
-        await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta,configAxios);
+        await axios.put(`${URL}ctactePro/id/${cuenta._id}`, cuenta, configAxios);
     };
     sweet.fire({
-        title:"Saldo reodenado",
-        icon:"success"
+        title: "Saldo reodenado",
+        icon: "success"
     });
 }
