@@ -3,7 +3,7 @@ const { redondear, cerrarVentana, configAxios } = require("../assets/js/globales
 require("dotenv").config();
 const URL = process.env.URL;
 
-const { fire, default: Swal } = require("sweetalert2");
+const Swal = require("sweetalert2");
 const { ipcRenderer } = require("electron");
 
 const tbody = document.querySelector("tbody");
@@ -49,11 +49,11 @@ window.addEventListener("load", async (e) => {
 });
 
 const cobrarML = async (e) => {
-  if(seleccionado){
-    let aux = seleccionado.children[5].innerHTML.replace('.','');
+  if (seleccionado) {
+    let aux = seleccionado.children[5].innerHTML.replace('.', '');
     aux = aux.replace(',', '.');
 
-    const {isConfirmed, value} = await fire({
+    const { isConfirmed, value } = await Swal.fire({
       title: 'Precio Tarjeta',
       html: `
         <div class='flex gap-2 flex-col'>
@@ -69,7 +69,7 @@ const cobrarML = async (e) => {
         const cobradoML = document.getElementById('cobradoML').value;
         const fechaML = document.getElementById('fechaML').value;
 
-        return {cobradoML, fechaML};
+        return { cobradoML, fechaML };
       },
       confirmButtonText: 'Aceptar',
       showCancelButton: true
@@ -83,53 +83,54 @@ const cobrarML = async (e) => {
       egreso.nro_comp = seleccionado.children[4].innerText;
       egreso.desc = seleccionado.children[2].innerText + ' MERCADO LIBRE GASTOS';
       egreso.idCuenta = "ML";
-      egreso.pasado = true;   
+      egreso.pasado = true;
       egreso.imp = (aux - parseFloat(value.cobradoML)).toFixed(2);
       egreso.cuenta = "MERCADO LIBRE";
       egreso.vendedor = seleccionado.children[6].innerText;
       egreso.codigo = seleccionado.children[1].innerText;
       egreso.cliente = seleccionado.children[2].innerText;
-  
+
       try {
         await axios.post(`${URL}movCajas`, egreso);
       } catch (error) {
         console.log(error);
-        await fire({
+        await Swal.fire({
           title: "No se pudo cargar el descuento en caja",
         });
       }
 
-    const tarjeta = {} ;
-    const now = new Date();
-    const fechaArgentina = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+      const tarjeta = {};
+      const now = new Date();
+      const fechaArgentina = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
 
-    tarjeta.fecha = fechaArgentina;
-    tarjeta.tarjeta = 'MERCADO PAGO'
-    tarjeta.imp = aux = "" ? 0 : parseFloat(aux) - parseFloat(egreso.imp);
-    tarjeta.cliente = seleccionado.children[2].innerText;
-    tarjeta.vendedor =  seleccionado.children[6].innerText;
-    tarjeta.tipo = "Tarjeta";
-    tarjeta.tipo_comp =  seleccionado.children[3].innerText;
-    tarjeta.fechaPago = value.fechaML;
+      tarjeta.fecha = fechaArgentina;
+      tarjeta.tarjeta = 'MERCADO PAGO'
+      tarjeta.imp = aux = "" ? 0 : parseFloat(aux) - parseFloat(egreso.imp);
+      tarjeta.cliente = seleccionado.children[2].innerText;
+      tarjeta.vendedor = seleccionado.children[6].innerText;
+      tarjeta.tipo = "Tarjeta";
+      tarjeta.tipo_comp = seleccionado.children[3].innerText;
+      tarjeta.fechaPago = value.fechaML;
 
-    try {
-      await axios.post(`${URL}tarjetas`, tarjeta);
-    } catch (error) {
-      console.log(error)
+      try {
+        await axios.post(`${URL}tarjetas`, tarjeta);
+      } catch (error) {
+        console.log(error)
+      }
+
+      aceptar.click();
     }
 
-    aceptar.click();
   }
-
-  }}
+}
 
 const listar = async (lista) => {
   tbody.innerHTML = "";
   for await (let elem of lista) {
     const tr = document.createElement("tr");
     tr.id = elem._id;
-    
-    elem.imp = elem.imp.toLocaleString("de-DE",{
+
+    elem.imp = elem.imp.toLocaleString("de-DE", {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2
     })
@@ -178,7 +179,7 @@ tbody.addEventListener("click", (e) => {
 
 aceptar.addEventListener("click", async (e) => {
   const movimiento = movimientos.find((mov) => mov._id === seleccionado.id);
-  let aux = movimiento.imp.replace(/\./g,'');
+  let aux = movimiento.imp.replace(/\./g, '');
   aux = aux.replace(',', '.');
 
   //Lo que hacemos es cargar un descuento a Movimiento de Caja
@@ -200,7 +201,7 @@ aceptar.addEventListener("click", async (e) => {
       await axios.post(`${URL}movCajas`, mov);
     } catch (error) {
       console.log(error);
-      await fire({
+      await Swal.fire({
         title: "No se pudo cargar el descuento en caja",
       });
     }
@@ -213,16 +214,16 @@ aceptar.addEventListener("click", async (e) => {
   movimiento.fecha = p;
 
   try {
-    await axios.put(`${URL}movCajas/id/${movimiento._id}`,movimiento);
+    await axios.put(`${URL}movCajas/id/${movimiento._id}`, movimiento);
 
-      movimientos = movimientos.filter((mov) => mov._id !== seleccionado.id);
-      tbody.removeChild(seleccionado);
-      total.value = "0.00";
-      cobrado.value = "0.00";
-      descuento.value = "0.00";
-      vuelto.value = "0.00";
+    movimientos = movimientos.filter((mov) => mov._id !== seleccionado.id);
+    tbody.removeChild(seleccionado);
+    total.value = "0.00";
+    cobrado.value = "0.00";
+    descuento.value = "0.00";
+    vuelto.value = "0.00";
   } catch (error) {
-    await fire({
+    await Swal.fire({
       title: "No se pudo cargar la factura",
     });
     console.log(error);
@@ -233,7 +234,7 @@ aceptar.addEventListener("click", async (e) => {
 
 efectivo.addEventListener("click", (e) => {
   if (seleccionado) {
-    let aux = seleccionado.children[5].innerHTML.replace(/\./g,'');
+    let aux = seleccionado.children[5].innerHTML.replace(/\./g, '');
     console.log(aux)
     aux = aux.replace(',', '.');
 
@@ -245,7 +246,7 @@ efectivo.addEventListener("click", (e) => {
 
 cheque.addEventListener("click", (e) => {
   if (seleccionado) {
-    let aux = seleccionado.children[5].innerHTML.replace(/\./g,'');
+    let aux = seleccionado.children[5].innerHTML.replace(/\./g, '');
     aux = aux.replace(',', '.');
 
     ipcRenderer.send("abrir-ventana", {
@@ -266,7 +267,7 @@ ml.addEventListener('click', cobrarML);
 
 tarjeta.addEventListener("click", (e) => {
   if (seleccionado) {
-    let aux = seleccionado.children[5].innerHTML.replace(/\./g,'');
+    let aux = seleccionado.children[5].innerHTML.replace(/\./g, '');
     aux = aux.replace(',', '.');
 
     ipcRenderer.send("abrir-ventana", {
@@ -294,7 +295,7 @@ transferencia.addEventListener("click", async (e) => {
     egreso.idCuenta = "DEP";
     egreso.pasado = true;
 
-    let aux = seleccionado.children[5].innerHTML.replace(/\./g,'');
+    let aux = seleccionado.children[5].innerHTML.replace(/\./g, '');
     aux = aux.replace(',', '.');
 
     const { value } = await Swal.fire({
@@ -314,7 +315,7 @@ transferencia.addEventListener("click", async (e) => {
       await axios.post(`${URL}movCajas`, egreso);
     } catch (error) {
       console.log(error);
-      await fire({
+      await Swal.fire({
         title: "No se pudo cargar el descuento en caja",
       });
     }
@@ -325,14 +326,14 @@ transferencia.addEventListener("click", async (e) => {
 
 cobrado.addEventListener("keypress", (e) => {
   if (e.keyCode === 13) {
-    vuelto.value =  redondear(parseFloat(cobrado.value) - parseFloat(total.value), 2);
+    vuelto.value = redondear(parseFloat(cobrado.value) - parseFloat(total.value), 2);
     vuelto.focus();
   }
 });
 
 vuelto.addEventListener('keypress', e => {
-  if (e.keyCode === 13){
-    descuento.value =  redondear(  parseFloat(total.value) + parseFloat(vuelto.value) - parseFloat(cobrado.value), 2);
+  if (e.keyCode === 13) {
+    descuento.value = redondear(parseFloat(total.value) + parseFloat(vuelto.value) - parseFloat(cobrado.value), 2);
     descuento.focus();
   }
 });
@@ -353,7 +354,7 @@ descuento.addEventListener("focus", (e) => {
 });
 
 ipcRenderer.on("recibir-informacion", (e, args) => {
-  if (args.tipo === "Tarjeta") {
+  if (args.tarjeta) {
     aceptar.click();
   } else if (args === "Cheque cargado") {
     aceptar.click();
@@ -369,7 +370,7 @@ document.addEventListener("keydown", (e) => {
     location.href = "../index.html";
   };
 
-  if(e.keyCode === 120){
+  if (e.keyCode === 120) {
     ml.parentElement.classList.toggle('none');
   }
 
@@ -380,10 +381,10 @@ function listarUltimoMovimiento(mov) {
 
   tr.id = mov._id;
 
-    mov.imp = mov.imp.toLocaleString("de-DE",{
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    })
+  mov.imp = mov.imp.toLocaleString("de-DE", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })
 
   const tdFecha = document.createElement("td");
   const tdCodigo = document.createElement("td");
