@@ -8,7 +8,8 @@
     "dev": "nodemon src/index.js",
     "package": "electron-forge package",
     "make": "electron-forge make",
-    "publish": "electron-forge publish"
+    "publish": "electron-forge publish",
+    "empacar": "electron-packager . --platform=win32 --arch=x64 --icon=Logo.ico"
   },
   "repository": {
     "type": "git",
