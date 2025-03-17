@@ -1,30 +1,30 @@
-const {model,Schema} = require('mongoose')
+const { model, Schema } = require('mongoose')
 
 const Pedido = new Schema({
-    fecha:{
+    fecha: {
         type: Date,
         default: Date.now
     },
-    codigo:{
+    codigo: {
         type: Schema.Types.String,
         ref: 'Producto',
         required: false
     },
-    producto:{
+    producto: {
         type: 'String',
         set: val => val.toUpperCase().trim(),
         default: ''
     },
-    cantidad:{
+    cantidad: {
         type: Number,
         default: 0
     },
-    cliente:{
+    cliente: {
         type: String,
         default: "",
         set: val => val.toUpperCase().trim()
     },
-    telefono:{
+    telefono: {
         type: String,
         default: ""
     },
@@ -34,14 +34,14 @@ const Pedido = new Schema({
         set: val => val.toUpperCase().trim()
     },
     estadoPedido: {
-        type: String,
-        default: "Sin Pedir"
+        type: Number,
+        default: 0
     },
-    observacion:{
-     type:String,
-     default:""       
+    observacion: {
+        type: String,
+        default: ""
     }
 })
 
 
-module.exports = model('Pedido',Pedido) 
+module.exports = model('Pedido', Pedido) 

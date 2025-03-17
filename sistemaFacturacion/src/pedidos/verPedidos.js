@@ -42,41 +42,38 @@ let vendedor = getParameterByName("vendedor");
 let pedidos = [];
 
 const filtarPedidos = async (e) => {
-  if (e.target.value === ""){
+  if (e.target.value === "") {
     arregloAux = pedidos;
-  }else{
-    arregloAux = pedidos.filter( pedido => pedido.codigo[filtro.value].includes(e.target.value.toUpperCase()));
+  } else {
+    arregloAux = pedidos.filter(pedido => pedido.codigo[filtro.value].includes(e.target.value.toUpperCase()));
   };
-  
+
   listarPedidos(arregloAux);
 };
 
 async function eliminarVariosPedidos() {
   const pedidosAEliminar = document.querySelectorAll(".eliminar");
-  await sweet
-    .fire({
-      title: "Eliminar Varios pedidos?",
-      showCancelButton: true,
-      confirmButtonText: "Aceptar",
-    })
-    .then(async ({ isConfirmed }) => {
-      if (isConfirmed) {
-        for await (let elem of pedidosAEliminar) {
-          await axios.delete(
-            `${URL}pedidos/${elem.id}`,
-            {
-              data: {
-                vendedor,
-                maquina: verNombrePc(),
-                pedido: elem.children[2].innerText,
-              },
+  await sweet.fire({
+    title: "Eliminar Varios pedidos?",
+    showCancelButton: true,
+    confirmButtonText: "Aceptar",
+  }).then(async ({ isConfirmed }) => {
+    if (isConfirmed) {
+      for await (let elem of pedidosAEliminar) {
+        await axios.delete(
+          `${URL}pedidos/${elem.id}`,
+          {
+            data: {
+              vendedor,
+              maquina: verNombrePc(),
+              pedido: elem.children[2].innerText,
             },
-            configAxios
-          );
-          tbody.removeChild(elem);
-        }
+          },
+        );
+        tbody.removeChild(elem);
       }
-    });
+    }
+  });
 }
 
 function clickderecho(e) {
@@ -205,7 +202,7 @@ const OrdenarPedidos = (e) => {
 
 const listarPedidos = (pedidos) => {
   tbody.innerHTML = "";
-  
+
   for (let [index, pedido] of pedidos.entries()) {
     let fecha = new Date(pedido.fecha);
 
@@ -222,19 +219,14 @@ const listarPedidos = (pedidos) => {
     const tdMarca = document.createElement("td");
     const tdProvedor = document.createElement("td");
     const tdStock = document.createElement("td");
-    const tdEstado = document.createElement("td");
     const tdObservacion = document.createElement("td");
-    const inputEstado = document.createElement("input");
 
     //clases
     tdCantidad.classList.add("cantidad");
-    inputEstado.id = `estadoPedido${index}`;
-    inputEstado.setAttribute("disabled", "");
     tdStock.classList.add("stock");
-    tdEstado.classList.add("estado");
 
     //Desestructuramos el producto que viene con el pedido
-    const {_id, descripcion, marca, stock, provedor} = pedido.codigo ? pedido.codigo : {_id: pedido.codigo, descripcion: '', marca: '', stock: '', provedor: ''};
+    const { _id, descripcion, marca, stock, provedor } = pedido.codigo ? pedido.codigo : { _id: pedido.codigo, descripcion: '', marca: '', stock: '', provedor: '' };
 
     //valores
     tdFecha.innerHTML = `${fecha.getUTCDate()}/${fecha.getUTCMonth() + 1}/${fecha.getUTCFullYear()}`;
@@ -247,10 +239,7 @@ const listarPedidos = (pedidos) => {
     tdMarca.innerText = marca;
     tdProvedor.innerText = provedor;
     tdStock.innerHTML = redondear(stock, 2);
-    inputEstado.value = pedido.estadoPedido;
     tdObservacion.innerHTML = pedido.observacion;
-
-    tdEstado.appendChild(inputEstado);
 
     tr.appendChild(tdFecha);
     tr.appendChild(tdCodigo);
@@ -263,7 +252,6 @@ const listarPedidos = (pedidos) => {
     tr.appendChild(tdProvedor);
     tr.appendChild(tdStock);
     tr.appendChild(tdObservacion);
-    tr.appendChild(tdEstado);
 
     tbody.appendChild(tr);
   }
@@ -362,19 +350,8 @@ tbody.addEventListener("click", (e) => {
     //hacemos que se seleccione todo el input
     inputSeleccionado.select();
   }
+})
 
-  //se ejecuta cuando escribimos en el input
-  inputSeleccionado.addEventListener("keyup", async (e) => {
-    pedidoIdentificado.estadoPedido = e.target.value;
-    pedidoIdentificado.maquina = verNombrePc();
-    pedidoIdentificado.vendedorQueModifico = vendedor;
-    await axios.put(
-      `${URL}pedidos/${pedidoIdentificado._id}`,
-      pedidoIdentificado,
-      configAxios
-    );
-  });
-});
 
 tbody.addEventListener("dblclick", async (e) => {
   await sweet
@@ -424,8 +401,8 @@ window.addEventListener("load", async (e) => {
 
   pedidos = (await axios.get(`${URL}pedidos`, configAxios)).data;
 
-  for(let elem of pedidos){
-    if(!elem.codigo){
+  for (let elem of pedidos) {
+    if (!elem.codigo) {
       elem.codigo = {};
       elem.codigo._id = '999-999';
       elem.codigo.marca = '';
@@ -434,7 +411,7 @@ window.addEventListener("load", async (e) => {
       elem.codigo.stock = 0;
     }
 
-    if(elem.codigo._id === '999-999'){
+    if (elem.codigo._id === '999-999') {
       elem.codigo.marca = '';
       elem.codigo.provedor = '';
       elem.codigo.descripcion = elem.producto;
@@ -452,8 +429,21 @@ ipcRenderer.on("seleccionarParaEliminar", (e) => {
   seleccionado.classList.add("eliminar");
 });
 
+//Cuando un pedido pasa al estado de pedido
+ipcRenderer.on('seleccionarPedido', async (e) => {
+  const pedidoIdentificado = arregloAux.find(elem => elem._id === seleccionado.id);
+
+  pedidoIdentificado.estadoPedido = 1;
+  pedidoIdentificado.maquina = verNombrePc();
+  pedidoIdentificado.vendedorQueModifico = vendedor;
+
+
+
+  // await axios.put(`${URL}pedidos/${pedidoIdentificado._id}`, pedidoIdentificado);
+});
+
 //Abrimos una modal con input para poder cambiar la observacion de los pedidos
-ipcRenderer.on('cambiarObservacion', async() => {
+ipcRenderer.on('cambiarObservacion', async () => {
   const { isConfirmed, value } = await sweet.fire({
     title: `Cambiar Observacion del pedido`,
     showCancelButton: true,
@@ -462,7 +452,7 @@ ipcRenderer.on('cambiarObservacion', async() => {
     inputValue: seleccionado.children[10].innerText
   });
 
-  if (isConfirmed){
+  if (isConfirmed) {
     const pedido = (await axios.get(`${URL}pedidos/${seleccionado.id}`)).data;
 
     pedido.observacion = value.toUpperCase().trim();
