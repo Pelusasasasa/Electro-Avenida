@@ -11,17 +11,33 @@
 </head>
 
 <body class="contenedor-verPedidos">
-  <h1>Lista de pedido</h1>
-  <header class="flex justify-center item-center gap-2">
-    <select name="filtro" id="filtro" class="p-1 mt-2">
-      <option value="_id">Codigo</option>
-      <option value="descripcion" selected>Producto</option>
-      <option value="marca">Marca</option>
-      <option value="provedor">Provedor</option>
-    </select>
-    <div class="flex justify-center flex-col mt-1 mb-1">
-      <label for="buscador" class="text-center">Buscador</label>
-      <input type="text" name="buscador" id="buscador" placeholder="Buscando..." class="p-1">
+  <header class="flex justify-center gap-2 item-center">
+
+    <div class="flex flex-col justify-center item-center gap-2 ml-auto">
+      <h1>Lista de pedido</h1>
+      <div class="flex gap-2 justify-center item-center">
+        <select name="filtro" id="filtro" class="p-1 mt-2">
+          <option value="_id">Codigo</option>
+          <option value="descripcion" selected>Producto</option>
+          <option value="marca">Marca</option>
+          <option value="provedor">Provedor</option>
+        </select>
+        <div class="flex justify-center flex-col mt-1 mb-1">
+          <label for="buscador" class="text-center">Buscador</label>
+          <input type="text" name="buscador" id="buscador" placeholder="Buscando..." class="p-1">
+        </div>
+      </div>
+    </div>
+
+    <div class="ml-auto flex gap-2 justify-center">
+      <div>
+        <p class="cuadrados bg-white-before">Sin Pedir</p>
+        <p class="cuadrados bg-green-before">Pedido</p>
+      </div>
+      <div>
+        <p class="cuadrados bg-yellow-before">Sin Stock</p>
+        <p class="cuadrados bg-red-before">Seleccionado para Eliminar</p>
+      </div>
     </div>
   </header>
   <div class="table">
