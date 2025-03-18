@@ -1,20 +1,20 @@
-h1{
+h1 {
     text-align: center;
     margin: 0;
 }
 
-.cliente{
+.cliente {
     display: flex;
     justify-content: space-around;
 }
 
-.contenedorPedidos{
+.contenedorPedidos {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     gap: 2rem;
 }
 
-.contenedorPedidos  main{
+.contenedorPedidos main {
     display: flex;
     flex-direction: column;
     margin: 0 auto;
@@ -26,33 +26,42 @@ th svg {
     width: 20px;
 }
 
-.table{
+.table {
     background-color: white;
     height: 70vh;
     overflow: scroll;
 }
 
-.tabla-mas-chica{
+.tabla-mas-chica {
     height: 64vh;
 }
 
-table thead tr th,table tbody tr td{
+table thead tr th,
+table tbody tr td {
     border: .1rem solid black;
     font-size: 1.4rem;
 }
 
-table thead tr th{
+table thead tr th {
     font-size: 2.0rem;
 }
 
-.observaciones{
+.observaciones {
     width: 100%;
 }
 
-.eliminar{
+.eliminar {
     background-color: red !important;
 }
 
-.eliminar td{
+.eliminar td {
     background-color: red !important;
+}
+
+.cuadrados::before {
+    content: "";
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    margin-right: 1rem;
 }
