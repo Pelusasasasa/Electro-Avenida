@@ -1,7 +1,7 @@
-const { ipcRenderer,clipboard } = require("electron");
+const { ipcRenderer, clipboard } = require("electron");
 
 const axios = require('axios');
-const { copiar,redondear, configAxios } = require("../assets/js/globales");
+const { copiar, redondear, configAxios } = require("../assets/js/globales");
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -32,37 +32,37 @@ let aux = 0;
 const now = new Date();
 let date = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
 
-hoy.addEventListener('change',e=>{
-    if(hoy.checked){
-        const tarjetasHoy = tarjetas.filter(tarjeta => tarjeta.fecha.slice(0,10) === date.slice(0,10));
+hoy.addEventListener('change', e => {
+    if (hoy.checked) {
+        const tarjetasHoy = tarjetas.filter(tarjeta => tarjeta.fecha.slice(0, 10) === date.slice(0, 10));
         total = 0;
         listar(tarjetasHoy);
-    }else{
+    } else {
         total = 0;
         listar(tarjetas);
     }
 });
 
-window.addEventListener('load',async e=>{
+window.addEventListener('load', async e => {
     copiar();
-    tarjetas = (await axios.get(`${URL}tarjetas`,configAxios)).data;
+    tarjetas = (await axios.get(`${URL}tarjetas`, configAxios)).data;
     listar(tarjetas);
 });
 
-buscador.addEventListener('keyup',e=>{
+buscador.addEventListener('keyup', e => {
     listar(tarjetas.filter(tarjeta => tarjeta.tarjeta.startsWith(buscador.value.toUpperCase())))
 });
 
-agregar.addEventListener('click',e=>{
-    ipcRenderer.send('abrir-ventana',{
-        path:"./tarjetas/agregarTarjeta.html",
-        width:500,
-        height:550,
-        reinicio:false
+agregar.addEventListener('click', e => {
+    ipcRenderer.send('abrir-ventana', {
+        path: "./tarjetas/agregarTarjeta.html",
+        width: 500,
+        height: 550,
+        reinicio: false
     });
 });
 
-tbody.addEventListener('click',async e=>{
+tbody.addEventListener('click', async e => {
     if (e.target.nodeName !== "TBODY") {
         seleccionado && seleccionado.classList.remove('seleccionado')
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
@@ -70,23 +70,23 @@ tbody.addEventListener('click',async e=>{
         if (e.target.nodeName === "TD") {
             seleccionado = e.target.parentNode;
             subSeleccionado = e.target;
-        }else if(e.target.nodeName === "DIV"){
+        } else if (e.target.nodeName === "DIV") {
             seleccionado = e.target.parentNode.parentNode;
             subSeleccionado = e.target.parentNode;
-        }else if(e.target.nodeName === "SPAN"){
+        } else if (e.target.nodeName === "SPAN") {
             seleccionado = e.target.parentNode.parentNode.parentNode;
             subSeleccionado = e.target.parentNode.parentNode
-        }else if(e.target.nodeName === "INPUT"){
+        } else if (e.target.nodeName === "INPUT") {
             seleccionado = e.target.parentNode.parentNode.parentNode;
             subSeleccionado = e.target.parentNode.parentNode;
             if (e.target.checked) {
                 aux += parseFloat(seleccionado.children[3].innerText);
-            }else{
+            } else {
                 aux -= parseFloat(seleccionado.children[3].innerText);
             }
             totalResumen.parentNode.classList.remove('none')
-            totalResumen.value = redondear(aux,2);
-            
+            totalResumen.value = redondear(aux, 2);
+
             totalResumen.value === "0.00" && totalResumen.parentNode.classList.add('none');
         }
         seleccionado.classList.add('seleccionado');
@@ -95,66 +95,66 @@ tbody.addEventListener('click',async e=>{
 
         if (e.target.innerHTML === "delete") {
             await sweet.fire({
-                title:"Seguro que quiere eliminar",
-                showCancelButton:true,
+                title: "Seguro que quiere eliminar",
+                showCancelButton: true,
                 confirmButtonText: "Aceptar"
-            }).then(async ({isConfirmed})=>{
+            }).then(async ({ isConfirmed }) => {
                 if (isConfirmed) {
                     try {
-                        totalInput.value = redondear(parseFloat(totalInput.value) - parseFloat(seleccionado.children[2].innerHTML),2)
-                        await axios.delete(`${URL}tarjetas/id/${seleccionado.id}`,configAxios);
+                        totalInput.value = redondear(parseFloat(totalInput.value) - parseFloat(seleccionado.children[2].innerHTML), 2)
+                        await axios.delete(`${URL}tarjetas/id/${seleccionado.id}`, configAxios);
                         tbody.removeChild(seleccionado)
                     } catch (error) {
                         await sweet.fire({
-                            title:"No se pudo borrar"
+                            title: "No se pudo borrar"
                         });
                     }
                 }
             });
-        }else if (e.target.innerHTML === "edit") {
-            ipcRenderer.send('abrir-ventana',{
-                path:"./tarjetas/agregarTarjeta.html",
-                width:500,
-                height:550,
-                reinicio:true,
+        } else if (e.target.innerHTML === "edit") {
+            ipcRenderer.send('abrir-ventana', {
+                path: "./tarjetas/agregarTarjeta.html",
+                width: 500,
+                height: 550,
+                reinicio: true,
                 informacion: seleccionado.id
             });
         }
     }
 });
 
-salir.addEventListener('click',e=>{
+salir.addEventListener('click', e => {
     location.href = '../index.html';
 });
 
-document.addEventListener('keyup',e=>{
+document.addEventListener('keyup', e => {
     if (e.key === "Escape") {
         location.href = '../index.html';
     }
 });
 
-const listar = async(tarjetas)=>{
-    tarjetas.sort((a,b)=>{
-        if (a.fecha>b.fecha) {
+const listar = async (tarjetas) => {
+    tarjetas.sort((a, b) => {
+        if (a.fecha > b.fecha) {
             return -1;
-        }else if(a.fecha<b.fecha){
+        } else if (a.fecha < b.fecha) {
             return 1;
         }
         return 0;
     })
-    .sort((a,b)=>{
-        return a.tarjeta>b.tarjeta ? 1 : -1;
-    });
+        .sort((a, b) => {
+            return a.tarjeta > b.tarjeta ? 1 : -1;
+        });
     total = 0;
 
     tbody.innerHTML = "";
-    for await(let tarjeta of tarjetas){
+    for await (let tarjeta of tarjetas) {
         const tr = document.createElement('tr');
         tr.id = tarjeta._id;
 
         const pagado = (new Date().getTime() < new Date(tarjeta.fechaPago).getTime());
 
-        if(pagado){
+        if (pagado) {
             tr.classList.add('border-red');
             tr.classList.add('border-2');
         }
@@ -168,8 +168,8 @@ const listar = async(tarjetas)=>{
         const tdAcciones = document.createElement('td');
         const tdEliminarVarios = document.createElement('td');
 
-        const fecha = tarjeta.fecha.slice(0,10).split('-',3);
-        const hora = tarjeta.fecha.slice(11,19).split(':',3);
+        const fecha = tarjeta.fecha.slice(0, 10).split('-', 3);
+        const hora = tarjeta.fecha.slice(11, 19).split(':', 3);
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]} - ${hora[0]}:${hora[1]}:${hora[2]}`;
         tdTarjeta.innerHTML = tarjeta.tarjeta;
         tdCliente.innerHTML = tarjeta.cliente
@@ -207,31 +207,31 @@ const listar = async(tarjetas)=>{
     totalInput.value = total.toFixed(2);
 };
 
-sumar.addEventListener('click',e=>{
-    if(seleccionado){
+sumar.addEventListener('click', e => {
+    if (seleccionado) {
         let tarjetaSumar = seleccionado.children[1].innerHTML;
         let total = 0;
-        tarjetas.forEach(tarjeta=>{
-            if(tarjeta.tarjeta ===  tarjetaSumar){
+        tarjetas.forEach(tarjeta => {
+            if (tarjeta.tarjeta === tarjetaSumar) {
                 total += tarjeta.imp;
             }
-        }) 
+        })
         sweet.fire({
-            title:`Total de tarjeta ${tarjetaSumar}: $${total}`
+            title: `Total de tarjeta ${tarjetaSumar}: $${total}`
         })
     };
 });
 
-exportar.addEventListener('click',async e=>{
+exportar.addEventListener('click', async e => {
     let path = await ipcRenderer.invoke('elegirPath');
     let wb = XLSX.utils.book_new();
-    
+
     let extencion = "xlsx";
 
-    tarjetas.forEach(tarjeta=>{
+    tarjetas.forEach(tarjeta => {
         delete tarjeta._id;
         delete tarjeta.__v;
-        const fecha = tarjeta.fecha.slice(0,10).split('-',3)
+        const fecha = tarjeta.fecha.slice(0, 10).split('-', 3)
         tarjeta.fecha = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
     });
 
@@ -243,33 +243,33 @@ exportar.addEventListener('click',async e=>{
 
     let newWs = XLSX.utils.json_to_sheet(tarjetas);
 
-    XLSX.utils.book_append_sheet(wb,newWs,'Tarjetas');
-    XLSX.writeFile(wb,path + "." + extencion);
+    XLSX.utils.book_append_sheet(wb, newWs, 'Tarjetas');
+    XLSX.writeFile(wb, path + "." + extencion);
 });
 
-eliminarVarios.addEventListener('click',async e=>{
+eliminarVarios.addEventListener('click', async e => {
     const inputs = document.querySelectorAll('tr td input[type=checkbox]');
     await sweet.fire({
-        title:"Elimiar varias tarjetas?",
-        showCancelButton:true,
-        confirmButtonText:"Aceptar"
-    }).then(async({isConfirmed})=>{
-       if (isConfirmed) {
-        for await(let input of inputs){
-            if (input.checked) {
-                await axios.delete(`${URL}tarjetas/id/${input.id}`,configAxios);
-                tbody.removeChild(input.parentNode.parentNode.parentNode);
-                totalResumen.value = "0.00";
-                aux = 0;
-                totalResumen.parentNode.classList.add('none'); 
-            }
-        };
-       } 
+        title: "Elimiar varias tarjetas?",
+        showCancelButton: true,
+        confirmButtonText: "Aceptar"
+    }).then(async ({ isConfirmed }) => {
+        if (isConfirmed) {
+            for await (let input of inputs) {
+                if (input.checked) {
+                    await axios.delete(`${URL}tarjetas/id/${input.id}`, configAxios);
+                    tbody.removeChild(input.parentNode.parentNode.parentNode);
+                    totalResumen.value = "0.00";
+                    aux = 0;
+                    totalResumen.parentNode.classList.add('none');
+                }
+            };
+        }
     });
-    
+
 });
 
-ipcRenderer.on('recibir-informacion',(e,args)=>{
+ipcRenderer.on('recibir-informacion', (e, args) => {
 
     tarjetas.push(args);
     listar(tarjetas)
@@ -323,4 +323,4 @@ ipcRenderer.on('recibir-informacion',(e,args)=>{
     // tr.appendChild(tdEliminarVarios);
 
     // tbody.appendChild(tr)
-})
+});
