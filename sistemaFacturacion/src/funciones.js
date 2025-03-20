@@ -96,6 +96,30 @@ const recorrerFlechas = async (e) => {
   // });
 };
 
+const fechaUTC = (dato) => {
+  const fecha = new Date(`${dato}T00:00:00.000Z`);
+
+  const ahora = new Date();
+  const hours = ahora.getUTCHours();
+  const minuts = ahora.getUTCMinutes();
+  const seconds = ahora.getUTCSeconds();
+
+  fecha.setUTCHours(hours, minuts, seconds);
+
+  const fechaUTC = new Date(
+    Date.UTC(
+      fecha.getFullYear(),
+      fecha.getMonth(),
+      fecha.getDate(),
+      fecha.getHours(),
+      fecha.getMinutes(),
+      fecha.getSeconds()
+    )
+  );
+
+  return fechaUTC;
+}
+
 //Para abrir todas las ventanas
 function abrirVentana(
   texto,
@@ -173,7 +197,7 @@ function abrirVentana(
     nuevaVentana.on("close", function (event) {
       nuevaVentana = null;
     });
-    nuevaVentana.on("ready-to-show", () => {});
+    nuevaVentana.on("ready-to-show", () => { });
     nuevaVentana.setMenuBarVisibility(false);
   } else if (texto === "emitirComprobante/emitirComprobante.html") {
     nuevaVentanaDos = new BrowserWindow({
@@ -233,7 +257,7 @@ function abrirVentana(
     nuevaVentana.on("close", () => {
       nuevaVentana = null;
     });
-}
+};
 
 const inputOptions = new Promise((resolve) => {
   setTimeout(() => {
@@ -412,7 +436,7 @@ const buscarPersonaPorDNI = async (valor) => {
     const digito = calcularDigitoVerificador("23" + valor);
     persona = await afip.RegisterScopeThirteen.getTaxpayerDetails("23" + valor + digito);
   };
-  
+
   const { nombre, apellido, domicilio } = persona;
 
   const retorno = {
@@ -673,25 +697,26 @@ async function verProductoConCero(lista) {
 }
 
 module.exports = {
-  redondear,
   abrirVentana,
-  copiar,
-  recorrerFlechas,
-  inputOptions,
-  cerrarVentana,
   botonesSalir,
-  subirAAfip,
-  verCodComp,
-  ultimasFacturas,
-  verificarUsuarios,
-  ponerEnCuentaCorrienteCompensada,
-  generarMovimientoCaja,
-  verTipoPago,
-  verEstadoServidorAfip,
-  configAxios,
-  verNombrePc,
+  cerrarVentana,
   clickderecho,
+  configAxios,
+  copiar,
+  fechaUTC,
+  generarMovimientoCaja,
+  inputOptions,
+  ponerEnCuentaCorrienteCompensada,
   ponerNotificaciones,
+  recorrerFlechas,
+  redondear,
+  subirAAfip,
+  ultimasFacturas,
+  verCodComp,
+  verEstadoServidorAfip,
+  verificarUsuarios,
+  verNombrePc,
+  verTipoPago,
 
   //Emitircomprobante
   verProductoConCero,

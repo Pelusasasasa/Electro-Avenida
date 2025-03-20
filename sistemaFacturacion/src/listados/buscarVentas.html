@@ -1,98 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Informe por Comprobante</title>
-    <link rel="stylesheet" href="../assets/css/globales.css" />
-    <link rel="stylesheet" href="./listados.css" />
-  </head>
-  <body class="buscarVentas">
-    <div class="seleccionar">
-      <div class="numero">
-        <label for="porNumero">Por Numero</label>
-        <input type="radio" id="porNumero" checked name="seleccionar" />
-      </div>
 
-      <div class="razon">
-        <label for="razonSocial">Por Razon Social</label>
-        <input type="radio" id="razonSocial" name="seleccionar" />
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informe por Comprobante</title>
+  <!-- <link rel="stylesheet" href="../assets/css/globales.css" /> -->
+  <link href="../output.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <div class="seleccionar mt-1 flex justify-around">
+    <div class="numero">
+      <label for="porNumero">Por Numero</label>
+      <input type="radio" id="porNumero" name="seleccionar" />
     </div>
 
-    <section class="porNumero">
-      <main class="numeros">
-        <label for="">Numero</label>
-        <main>
-          <input type="number" value="0000" id="primerNumero" />
-          <input
-            type="number"
-            name="hasta"
-            id="segundoNumero"
-            value="00000000"
-          />
-        </main>
+    <div class="razon">
+      <label for="razonSocial">Por Razon Social</label>
+      <input type="radio" id="razonSocial" checked name="seleccionar" />
+    </div>
+  </div>
+
+  <section class="porNumero none flex">
+    <main class="numeros">
+      <label for="">Numero</label>
+      <main>
+        <input type="number" value="0000" id="primerNumero" />
+        <input type="number" name="hasta" id="segundoNumero" value="00000000" />
       </main>
+    </main>
 
-      <main class="tipoComp">
-        <label for="tipoComp">Tipo Comprobante</label>
-        <select name="tipoComp" id="tipoComp">
-          <option value="presupuesto">Presupuesto</option>
-          <option value="recibo">Recibo</option>
-          <option value="factura">Factura</option>
-        </select>
-      </main>
+    <main class="tipoComp">
+      <label for="tipoComp">Tipo Comprobante</label>
+      <select name="tipoComp" id="tipoComp">
+        <option value="presupuesto">Presupuesto</option>
+        <option value="recibo">Recibo</option>
+        <option value="factura">Factura</option>
+      </select>
+    </main>
 
-      <main class="codComp">
-        <label for="codComp">Codigo Comprobante</label>
-        <select name="codComp" id="codComp">
-          <option value="1">Factura A</option>
-          <option value="3">Nota Credito A</option>
-          <option value="6">Factura B</option>
-          <option value="8">Nota Credito B</option>
-        </select>
-      </main>
-    </section>
+    <main class="codComp">
+      <label for="codComp">Codigo Comprobante</label>
+      <select name="codComp" id="codComp">
+        <option value="1">Factura A</option>
+        <option value="3">Nota Credito A</option>
+        <option value="6">Factura B</option>
+        <option value="8">Nota Credito B</option>
+      </select>
+    </main>
+  </section>
 
-    <div class="buscador">
-      <div class="nombre none">
-        <label for="razon">Razon social</label>
-        <input type="text" id="razon" name="razon" />
-      </div>
+  <div class="buscador flex justify-around mb-2">
 
-      <div class="desde none">
-        <label for="desde">Desde</label>
-        <input type="date" autofocus name="desde" id="desde" />
-      </div>
-
-      <div class="hasta none">
-        <label for="Hasta">Hasta</label>
-        <input type="date" name="hasta" id="hasta" />
-      </div>
+    <div class="nombre flex flex-col gap-1 mt-1">
+      <label class="text-2xl" for="razon">Razon social</label>
+      <input type="text" id="razon" name="razon" placeholder="Nombre" class="border-gray-500 border p-1" />
     </div>
 
-    <div>
-      <button class="buscar">Buscar</button>
+    <div class="desde flex flex-col gap-1">
+      <label for="desde" class="text-2xl">Desde</label>
+      <input type="date" autofocus name="desde" id="desde" class="p-1 border border-gray-200" />
     </div>
 
-    <div class="listar">
-      <table>
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Codigo</th>
-            <th>Descripcion</th>
-            <th>Nro Comp</th>
-            <th>Cantidad</th>
-            <th>Precio</th>
-            <th>Total</th>
-            <th>Tipo Pago</th>
-          </tr>
-        </thead>
-        <tbody class="tbody"></tbody>
-      </table>
+    <div class="hasta flex flex-col gap-1">
+      <label for="Hasta" class="text-2xl">Hasta</label>
+      <input type="date" name="hasta" class="p-1 border-gray-200 border" id="hasta" />
     </div>
-    <script src="./buscarVentas.js"></script>
-  </body>
+  </div>
+
+  <div class="listar bg-white h-[50rem] h-50 overflow-scroll border">
+    <table>
+      <thead>
+        <tr class="bg-slate-400 p-2">
+          <th class="border border-black">Fecha</th>
+          <th class="border border-black">Codigo</th>
+          <th class="border border-black">Descripcion</th>
+          <th class="border border-black">Nro Comp</th>
+          <th class="border border-black">Cantidad</th>
+          <th class="border border-black">Precio</th>
+          <th class="border border-black">Total</th>
+          <th class="border border-black">Tipo</th>
+        </tr>
+      </thead>
+      <tbody class="tbody"></tbody>
+    </table>
+  </div>
+
+  <script src="./buscarVentas.js"></script>
+</body>
+
 </html>
