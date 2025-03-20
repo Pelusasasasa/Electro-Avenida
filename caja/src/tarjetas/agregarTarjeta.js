@@ -4,7 +4,8 @@ require('dotenv').config();
 const URL = process.env.URL;
 const sweet = require('sweetalert2');
 
-const { redondear, cerrarVentana, configAxios } = require('../assets/js/globales');
+const { redondear, cerrarVentana, configAxios, fechaUTC } = require('../assets/js/globales');
+const { addListener } = require('node-notifier');
 
 const selectTarjeta = document.querySelector('#tarjeta');
 const selectVendedor = document.querySelector('#vendedor');
@@ -133,17 +134,8 @@ importe.addEventListener('focus', e => {
 
 aceptar.addEventListener('click', async e => {
     const tarjeta = {};
-    const [year, month, day] = fecha.value.split('-', 3);
 
-    const now = new Date();
-
-    const hours = now.getHours();
-    const minuts = now.getMinutes();
-    const seconds = now.getSeconds();
-
-    const fechaActual = new Date(year, month - 1, day, hours, minuts, seconds);
-
-    tarjeta.fecha = fechaActual
+    tarjeta.fecha = fechaUTC(fecha.value).toISOString();
     tarjeta.tarjeta = selectTarjeta.value;
     tarjeta.imp = importe.value = "" ? 0 : importe.value;
     tarjeta.cliente = cliente.value.toUpperCase();
@@ -186,11 +178,13 @@ aceptar.addEventListener('click', async e => {
 
 modificar.addEventListener('click', async e => {
     const tarjeta = {};
-    tarjeta.fecha = fecha.value;
+
+    tarjeta.fecha = fechaUTC(fecha.value).toISOString();
     tarjeta.tarjeta = selectTarjeta.value;
     tarjeta.imp = redondear(importe.value, 2);
     tarjeta.vendedor = selectVendedor.value;
     tarjeta.cliente = cliente.value;
+
     try {
         await axios.put(`${URL}tarjetas/id/${modificar.id}`, tarjeta, configAxios);
         window.close();
