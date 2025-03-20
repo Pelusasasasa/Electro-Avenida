@@ -52,7 +52,7 @@ app.use('/api/pedidos', require('./routes/pedidos.routes'));
 //Prestamos
 app.use('/api/prestamos', require('./routes/prestamo'));
 //Presupuesto
-app.use('/api/presupuesto', require('./routes/presupuesto'))
+app.use('/api/presupuesto', require('./routes/presupuesto.routes'))
 //Productos
 app.use('/api/productos', require('./routes/productos'))
 //Provedor
@@ -76,6 +76,6 @@ app.use('/api/vales', require('./routes/vale'));
 //Variaciones
 app.use('/api/variacion', require('./routes/variacion.route'));
 //Ventas
-app.use('/api/ventas', require('./routes/ventas'))
+app.use('/api/ventas', require('./routes/ventas.routes'))
 
 module.exports = app

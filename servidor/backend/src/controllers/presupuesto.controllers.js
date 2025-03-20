@@ -46,6 +46,7 @@ PresupuestoCTRL.entreFechasConId = async(req,res)=> {
         ]})
     res.send(ventaARetornar)
 }
+
 PresupuestoCTRL.entreFechasConCliente = async(req,res) => {
     const {idCliente,desde,hasta} = req.params;
     const VentaAretornar = await Presupuesto.find({
@@ -57,12 +58,40 @@ PresupuestoCTRL.entreFechasConCliente = async(req,res) => {
     res.send(VentaAretornar);
 };
 
-
 PresupuestoCTRL.borrarPresupuesto = async(req,res) =>{
     const {id} = req.params;
     await Presupuesto.findOneAndDelete({nro_comp:id});
     res.send(`Presupuesto ${id} eliminado`)
 
-}
+};
+
+PresupuestoCTRL.entreFechasConRazon = async(req, res) => {
+    const { razon, desde, hasta} = req.params;
+
+    const re = new RegExp(razon, 'i');
+
+    try {
+            const presupuestos = await Presupuesto.find({
+        $and:
+        [
+            {nombreCliente: {$regex: re}},
+            {fecha:{$gte: new Date(desde + "T00:00:00.000Z")}},
+            {fecha:{$lte: new Date(hasta + "T23:59:59.000Z")}}
+        ]
+    });
+
+        res.status(200).json({
+            ok: true,
+            presupuestos
+        });
+    } catch (error) {
+        console.log(error)
+
+        res.status(500).json({
+            ok: false,
+            msg: 'Hablar con el administrador'
+        })
+    }
+};
 
 module.exports = PresupuestoCTRL

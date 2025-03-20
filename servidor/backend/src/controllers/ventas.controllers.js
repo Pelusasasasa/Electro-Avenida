@@ -107,4 +107,33 @@ ventasCTRL.traerVentaUnica = async(req,res)=>{
     res.send(venta[0]);
 };
 
+ventasCTRL.entreFechasConRazon = async(req, res) => {
+    const { razon, desde, hasta} = req.params;
+
+    const re = new RegExp(razon, 'i');
+
+    try {
+            const ventas = await Ventas.find({
+        $and:
+        [
+            {nombreCliente: {$regex: re}},
+            {fecha:{$gte: new Date(desde + "T00:00:00.000Z")}},
+            {fecha:{$lte: new Date(hasta + "T23:59:59.000Z")}}
+        ]
+    });
+
+        res.status(200).json({
+            ok: true,
+            ventas
+        });
+    } catch (error) {
+        console.log(error)
+
+        res.status(500).json({
+            ok: false,
+            msg: 'Hablar con el administrador'
+        })
+    }
+};
+
 module.exports = ventasCTRL;
