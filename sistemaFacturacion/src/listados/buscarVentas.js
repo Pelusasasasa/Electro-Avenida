@@ -6,10 +6,11 @@ const URL = process.env.URL;
 
 const seleccion = document.querySelectorAll('input[name="seleccionar"]');
 const seleccionar = document.querySelector(".seleccionar");
+
 const primerNumero = document.querySelector("#primerNumero");
 const segundoNumero = document.querySelector("#segundoNumero");
 const nombre = document.querySelector(".nombre");
-const razon = document.querySelector("#razon");
+const razon = document.getElementById("razon");
 const tbody = document.querySelector(".tbody");
 let seleccionado = document.querySelector("#porNumero");
 
@@ -28,6 +29,22 @@ if (mes < 10) {
 }
 
 const fechaDeHoy = `${hoy.getFullYear()}-${mes}-${dia}`;
+const buscar = document.querySelector(".buscar");
+const desde = document.querySelector("#desde");
+const hasta = document.querySelector("#hasta");
+
+let ventas = [];
+let cliente;
+
+const buscarVentaPorRazon = async (razon) => {
+  try {
+    const { data } = await axios.get(`${URL}ventas/forRazonSocial`, razon);
+
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 seleccionar.addEventListener("click", (e) => {
   seleccion.forEach((e) => {
@@ -60,7 +77,6 @@ seleccionar.addEventListener("click", (e) => {
   }
 });
 
-const buscar = document.querySelector(".buscar");
 buscar.addEventListener("click", async (e) => {
   if (seleccionado.id === "porNumero") {
     let venta;
@@ -105,7 +121,6 @@ buscar.addEventListener("click", async (e) => {
   }
 });
 
-let cliente;
 const traerVenta = async (venta) => {
   if (venta !== "") {
     cliente = await buscarCliente(venta.cliente);
@@ -153,9 +168,6 @@ const buscarCliente = async (id) => {
   return cliente;
 };
 
-const desde = document.querySelector("#desde");
-const hasta = document.querySelector("#hasta");
-let ventas = [];
 async function traerTodasLasVentas(lista) {
   let retornar = [];
   const desdeFecha = desde.value;
@@ -173,7 +185,7 @@ async function traerTodasLasVentas(lista) {
       listarVentas(venta);
     }
   }
-}
+};
 
 const mostrarFecha = (string) => {
   const ponerFecha = new Date(string);
@@ -209,3 +221,9 @@ primerNumero.addEventListener("focus", (e) => {
 segundoNumero.addEventListener("focus", (e) => {
   segundoNumero.select();
 });
+
+razon.addEventListener('keypress', e => {
+  if(e.keyCode === 13){
+    buscarVentaPorRazon(e.target.value);
+  }
+})
