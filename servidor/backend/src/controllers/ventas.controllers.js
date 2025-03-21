@@ -89,7 +89,7 @@ ventasCTRL.traerTicket = async (req, res) => {
 
 ventasCTRL.traerVentas = async (req, res) => {
     const { id } = req.params;
-    const venta = await Ventas.findOne({ nro_comp: id });
+    const venta = await Ventas.find({ nro_comp: id });
     res.send(venta)
 };
 
