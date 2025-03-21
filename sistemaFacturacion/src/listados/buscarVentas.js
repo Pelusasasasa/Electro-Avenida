@@ -47,6 +47,13 @@ const buscarVentaPorRazon = async (razon) => {
   }
 };
 
+const traerVentasPorNumero = async () => {
+  const numero = `${primerNumero.value.padStart(4, '0')}-${segundoNumero.value.padStart(8, '0')}`;
+  const { data: ventas } = await axios.get(`${URL}ventas/${numero}`);
+
+  listarVentas([...ventas])
+};
+
 const cargarPagina = async () => {
   const ahora = new Date().toLocaleString().slice(0, 9).split('/');
   desde.value = `${ahora[2].padStart(4, '0')}-${ahora[1].padStart(2, '0')}-${ahora[0].padStart(2, '0')}`;
@@ -194,7 +201,7 @@ primerNumero.addEventListener("keypress", (e) => {
 
 segundoNumero.addEventListener("keypress", (e) => {
   if (e.key === "Enter") {
-    buscar.focus();
+    traerVentasPorNumero();
   }
 });
 
@@ -206,6 +213,7 @@ seleccionar.addEventListener("click", (e) => {
   seleccion.forEach((e) => {
     e.checked && (seleccionado = e);
   });
+
   const desde = document.querySelector(".desde");
   const hasta = document.querySelector(".hasta");
   const hastafecha = document.querySelector("#hasta");
@@ -214,11 +222,11 @@ seleccionar.addEventListener("click", (e) => {
   desdeFecha.value = fechaDeHoy;
   hastafecha.value = fechaDeHoy;
 
-  const numeros = document.querySelector(".numeros");
+  const porNumero = document.querySelector(".porNumero");
 
   if (seleccionado.id === "razonSocial") {
 
-    numeros.classList.add("none");
+    porNumero.classList.add("none");
     desde.classList.remove("none");
     hasta.classList.remove("none");
     nombre.classList.remove("none");
@@ -227,7 +235,7 @@ seleccionar.addEventListener("click", (e) => {
 
   } else {
 
-    numeros.classList.remove("none");
+    porNumero.classList.remove("none");
     desde.classList.add("none");
     hasta.classList.add("none");
     nombre.classList.add("none");

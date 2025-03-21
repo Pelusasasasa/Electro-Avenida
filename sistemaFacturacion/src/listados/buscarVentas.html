@@ -24,36 +24,19 @@
     </div>
   </div>
 
-  <section class="porNumero none flex">
-    <main class="numeros">
-      <label for="">Numero</label>
-      <main>
-        <input type="number" value="0000" id="primerNumero" />
-        <input type="number" name="hasta" id="segundoNumero" value="00000000" />
+  <section id="porNumero" class="porNumero flex justify-center mt-2 mb-2">
+
+    <main class="numeros flex flex-col gap-1">
+      <label class="text-2xl" for="">Numero</label>
+      <main class="gap-4 flex">
+        <input type="number" value="0000" id="primerNumero" class="p-1 border" />
+        <input type="number" name="hasta" id="segundoNumero" value="00000000" class="p-1 border" />
       </main>
     </main>
 
-    <main class="tipoComp">
-      <label for="tipoComp">Tipo Comprobante</label>
-      <select name="tipoComp" id="tipoComp">
-        <option value="presupuesto">Presupuesto</option>
-        <option value="recibo">Recibo</option>
-        <option value="factura">Factura</option>
-      </select>
-    </main>
-
-    <main class="codComp">
-      <label for="codComp">Codigo Comprobante</label>
-      <select name="codComp" id="codComp">
-        <option value="1">Factura A</option>
-        <option value="3">Nota Credito A</option>
-        <option value="6">Factura B</option>
-        <option value="8">Nota Credito B</option>
-      </select>
-    </main>
   </section>
 
-  <div class="buscador flex justify-around mb-2">
+  <div class="buscador none flex justify-around mb-2">
 
     <div class="nombre flex flex-col gap-1 mt-1">
       <label class="text-2xl" for="razon">Razon social</label>
