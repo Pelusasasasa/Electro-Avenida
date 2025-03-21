@@ -171,16 +171,14 @@ const mostrarVentas = (objeto, cantidad) => {
         <td>${objeto._id}</td>
         <td>${objeto.descripcion}</td>
         <td class="text-end" >${(objeto.iva === "R" ? 10.5 : 21).toFixed(
-          2
-        )}</td>
-        <td class="text-end">${
-          objeto.oferta ? objeto.precioOferta.toFixed(2) : objeto.precio_venta
-        }</td>
-        <td class="text-end">${
-          objeto.oferta
-            ? (objeto.precioOferta * cantidad).toFixed(2)
-            : (parseFloat(objeto.precio_venta) * cantidad).toFixed(2)
-        }</td>
+    2
+  )}</td>
+        <td class="text-end">${objeto.oferta ? objeto.precioOferta.toFixed(2) : objeto.precio_venta
+    }</td>
+        <td class="text-end">${objeto.oferta
+      ? (objeto.precioOferta * cantidad).toFixed(2)
+      : (parseFloat(objeto.precio_venta) * cantidad).toFixed(2)
+    }</td>
         </tr>
     `;
   objeto.identificadorTabla = `${id}`;
@@ -289,7 +287,7 @@ const subirAAfip = async (venta, ventaAsociada) => {
 
   const fecha = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split("T")[0];
 
-  let ultimoElectronica = await afip.ElectronicBilling.getLastVoucher(5,parseFloat(venta.cod_comp));
+  let ultimoElectronica = await afip.ElectronicBilling.getLastVoucher(5, parseFloat(venta.cod_comp));
   console.log(ultimoElectronica);
 
   let totalIva105 = 0;
@@ -357,7 +355,7 @@ const subirAAfip = async (venta, ventaAsociada) => {
       Importe: totalIva21.toFixed(2), // Importe
     });
   }
-  
+
   const res = await afip.ElectronicBilling.createVoucher(data); //creamos la factura electronica
   alerta.children[1].innerHTML = "Nota de Credito Afip Aceptada";
   const qr = {
@@ -662,7 +660,7 @@ factura.addEventListener("click", async (e) => {
               parseFloat(producto.objeto.precio_venta) -
               (parseFloat(producto.objeto.precio_venta) *
                 parseFloat(descuento.value)) /
-                100;
+              100;
             producto.objeto.precio_venta =
               producto.objeto.precio_venta.toFixed(2);
           }
@@ -678,7 +676,7 @@ factura.addEventListener("click", async (e) => {
 
         //Traemos la venta relacionada con la nota de credito
         const tipo = (conIva.value === "Inscripto" || conIva.value === "Monotributista") ? "Factura A" : "Factura B";
-        
+
         let ventaRelacionada = (await axios.get(`${URL}ventas/factura/${venta.numeroAsociado}/${tipo}/${venta.condIva}`)).data;
         //subimos a la afip la factura electronica
         let afip = await subirAAfip(venta, ventaRelacionada);

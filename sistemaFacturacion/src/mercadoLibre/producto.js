@@ -1,5 +1,5 @@
 require('dotenv').config();
-const URL = process.env.URL ;
+const URL = process.env.URL;
 const URLML = 'https://api.mercadolibre.com/';
 
 const axios = require('axios');
@@ -21,16 +21,16 @@ const salir = document.getElementById('salir');
 let producto = {};
 let tipo = 'agregar'
 
-ipcRenderer.on('informacion',async (e, args) => {
+ipcRenderer.on('informacion', async (e, args) => {
     tipo = args;
 
     //obtenerAccessToken()
 
-    if (tipo === 'agregar'){
+    if (tipo === 'agregar') {
         console.log(modificar)
         modificar.classList.add('none');
         //obtenerAccessToken()
-    }else{
+    } else {
         agregar.classList.add('none');
 
         const ml = (await axios.get(`${URL}mercadoLibre/forCodigo/${args}`)).data;
@@ -42,9 +42,9 @@ ipcRenderer.on('informacion',async (e, args) => {
     }
 });
 
-const agregarML = async() => {
+const agregarML = async () => {
     const elem = {};
-    
+
     elem.codigoML = codigoML.value;
     elem.codProd = codigoInterno.value;
     elem.descripcion = descripcion.value;
@@ -52,7 +52,7 @@ const agregarML = async() => {
     elem.stockML = stockML.value;
 
     const res = (await axios.post(`${URL}mercadoLibre`, elem)).data;
-    
+
     window.close();
 };
 
@@ -60,7 +60,7 @@ const listarProducto = (elem) => {
     descripcion.value = elem.descripcion;
 };
 
-const modificarML = async() => {
+const modificarML = async () => {
     const producto = {};
 
     producto.codigoML = codigoML.value;
@@ -74,12 +74,12 @@ const modificarML = async() => {
 
     if (productoML.variations.length !== 0) {
         let variaciones = await buscarVariacionesProducto(autherizacion, codigoML.value);
-        
-        for(let elem of variaciones) {
+
+        for (let elem of variaciones) {
             elem.price = producto.precioML;
             elem.available_quantity = producto.stockML;
 
-            
+
         };
     };
     await modificarPrecioYStockPorIdDeProducto(autherizacion, b.variations[0].user_product_id, precioML.value, stockML.value);
@@ -93,13 +93,13 @@ agregar.addEventListener('click', agregarML);
 modificar.addEventListener('click', modificarML);
 
 codigoML.addEventListener('keypress', e => {
-    if (e.keyCode === 13){
+    if (e.keyCode === 13) {
         codigoInterno.focus();
     };
 });
 
 codigoInterno.addEventListener('keypress', async e => {
-    if (e.keyCode === 13){
+    if (e.keyCode === 13) {
         producto = (await axios.get(`${URL}productos/${codigoInterno.value}`)).data;
         listarProducto(producto);
 
@@ -108,19 +108,19 @@ codigoInterno.addEventListener('keypress', async e => {
 });
 
 descripcion.addEventListener('keypress', e => {
-    if (e.keyCode === 13){
+    if (e.keyCode === 13) {
         precioML.focus();
     };
 });
 
 precioML.addEventListener('keypress', e => {
-    if (e.keyCode === 13){
+    if (e.keyCode === 13) {
         stockML.focus();
     };
 });
 
 stockML.addEventListener('keypress', e => {
-    if (e.keyCode === 13){
+    if (e.keyCode === 13) {
         agregar.focus();
     };
 });

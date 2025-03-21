@@ -7,15 +7,15 @@ const hasta = document.getElementById('hasta');
 
 let movs = [];
 
-const getMovs = async() => {
+const getMovs = async () => {
     movs = (await axios.get(`${URL}movProductos/forDate/${desde.value}/${hasta.value}`)).data;
     listarMovs(movs);
 };
 
-const listarMovs = async() => {
+const listarMovs = async () => {
     const tbody = document.getElementById('tbody');
 
-    for (let elem of movs){
+    for (let elem of movs) {
         const tr = document.createElement('tr');
         tr.id = elem._id;
 
@@ -47,7 +47,7 @@ const listarMovs = async() => {
     }
 }
 
-window.addEventListener('load',async e=>{
+window.addEventListener('load', async e => {
     desde.value = new Date().toISOString().slice(0, 10);
     hasta.value = new Date().toISOString().slice(0, 10);
     desde.focus();
@@ -55,13 +55,13 @@ window.addEventListener('load',async e=>{
     getMovs()
 });
 
-desde.addEventListener('keypress',e=>{
+desde.addEventListener('keypress', e => {
     if (e.keyCode === 13) {
         hasta.focus();
     }
 });
 
-hasta.addEventListener('keypress',e=>{
+hasta.addEventListener('keypress', e => {
     if (e.keyCode === 13) {
         getMovs();
     }

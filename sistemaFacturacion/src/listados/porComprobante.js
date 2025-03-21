@@ -209,11 +209,10 @@ async function listarVentas(lista) {
       totalRecibos += venta.precioFinal;
     }
     tbody.innerHTML += `
-        <tr class="total"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class=tdTotal>${
-          venta.tipo_comp === "Nota Credito"
-            ? (parseFloat(venta.precioFinal) * -1).toFixed(2)
-            : parseFloat(venta.precioFinal).toFixed(2)
-        }</td></tr>`;
+        <tr class="total"><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class=tdTotal>${venta.tipo_comp === "Nota Credito"
+        ? (parseFloat(venta.precioFinal) * -1).toFixed(2)
+        : parseFloat(venta.precioFinal).toFixed(2)
+      }</td></tr>`;
   }
 
   tbody.innerHTML += `

@@ -133,12 +133,12 @@ costoDolares.addEventListener("blur", (e) => {
 costoTotal.addEventListener("focus", (e) => {
   costoPesos.value === "" || parseFloat(costoPesos.value) === 0
     ? (ivaImp.value = parseFloat(
-        ((parseFloat(costoDolares.value) * valorTasaIva) / 100).toFixed(2)
-      ))
+      ((parseFloat(costoDolares.value) * valorTasaIva) / 100).toFixed(2)
+    ))
     : (ivaImp.value = (
-        (parseFloat(costoPesos.value) * valorTasaIva) /
-        100
-      ).toFixed(2));
+      (parseFloat(costoPesos.value) * valorTasaIva) /
+      100
+    ).toFixed(2));
   costoT = parseFloat(ivaImp.value);
   let costoP = 0;
   if (costoPesos.value === "" || parseFloat(costoPesos.value) === 0) {

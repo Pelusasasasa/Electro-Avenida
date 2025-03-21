@@ -173,11 +173,11 @@ listar.addEventListener("click", (e) => {
       listar.nro_comp === seleccionado.id &&
         mostrarDetalles(listar.nro_comp, listar.tipo_comp);
     });
-    
-    if (seleccionado.children[3].innerText != '0.10'){
+
+    if (seleccionado.children[3].innerText != '0.10') {
       botonFacturar.disabled = false;
       facturarVarios.disabled = false;
-    }else{
+    } else {
       botonFacturar.disabled = true;
       facturarVarios.disabled = true;
     }
@@ -186,7 +186,7 @@ listar.addEventListener("click", (e) => {
 
 //Si ponemos algo en observaciones que se nos guarde en la cuenta compensada
 listar.addEventListener("keyup", async (e) => {
-  
+
   if (e.keyCode === 9 || e.keyCode === 40 || e.keyCode === 38) {
     seleccionado = e.target.parentNode.parentNode;
     subSeleccionado = e.target.parentNode;
@@ -370,17 +370,15 @@ async function mostrarDetalles(id, tipo, vendedor) {
         <tr id=${seleccionado.id} class="detalle">
             <td>${codProd}</td>
             <td>${descripcion}</td>
-            <td>${
-              tipo_comp === "Nota Credito"
-                ? ingreso.toFixed(2)
-                : egreso.toFixed(2)
-            }</td>
+            <td>${tipo_comp === "Nota Credito"
+          ? ingreso.toFixed(2)
+          : egreso.toFixed(2)
+        }</td>
             <td>${precio_unitario.toFixed(2)}</td>
-            <td>${
-              tipo_comp === "Nota Credito"
-                ? (ingreso * precio_unitario * -1).toFixed(2)
-                : (egreso * precio_unitario).toFixed(2)
-            }</td>
+            <td>${tipo_comp === "Nota Credito"
+          ? (ingreso * precio_unitario * -1).toFixed(2)
+          : (egreso * precio_unitario).toFixed(2)
+        }</td>
             <td>${vendedor}</td>
         </tr>
         `;
@@ -421,11 +419,11 @@ actualizar.addEventListener("click", async (e) => {
       producto = producto
         ? producto
         : {
-            precio_venta: movimiento.precio_unitario,
-            descripcion: movimiento.descripcion,
-            _id: movimiento.codProd,
-            marca: "",
-          };
+          precio_venta: movimiento.precio_unitario,
+          descripcion: movimiento.descripcion,
+          _id: movimiento.codProd,
+          marca: "",
+        };
       let aux = producto.oferta
         ? producto.precioOferta
         : parseFloat(producto.precio_venta);
@@ -470,10 +468,10 @@ actualizar.addEventListener("click", async (e) => {
 
     ipcRenderer.send("imprimir-venta", [venta, cliente, false, 1, "imprimir-comprobante", "valorizado", movimientos, true]);
     sweet.fire({
-        title: "Grabar Importe",
-        showCancelButton: true,
-        confirmButtonText: "Aceptar",
-      })
+      title: "Grabar Importe",
+      showCancelButton: true,
+      confirmButtonText: "Aceptar",
+    })
       .then(async ({ isConfirmed }) => {
         if (isConfirmed) {
           for await (let movProducto of movimientos) {
@@ -572,57 +570,58 @@ botonFacturar.addEventListener("click", () => {
 });
 
 facturarVarios.addEventListener("click", async (e) => {
-    //Pedimos contraseña para ver si es un vendedor
-    const { isConfirmed, value } = await sweet.fire({
-      title: "Contraseña",
-      input: "password",
-      showCancelButton: true,
-      confirmButtonText: "Aceptar",
-    });
+  //Pedimos contraseña para ver si es un vendedor
+  const { isConfirmed, value } = await sweet.fire({
+    title: "Contraseña",
+    input: "password",
+    showCancelButton: true,
+    confirmButtonText: "Aceptar",
+  });
 
-    if (isConfirmed && value !== "") {
-      let vendedor = (await axios.get(`${URL}usuarios/${value}`, configAxios)).data;
-      
-      let cuentas = listaCompensada;
-      let htmlCuentas = "";
-      
-      for (let cuenta of cuentas) {
-        if (cuenta.tipo_comp === "Presupuesto") {
-         htmlCuentas += `
+  if (isConfirmed && value !== "") {
+    let vendedor = (await axios.get(`${URL}usuarios/${value}`, configAxios)).data;
+
+    let cuentas = listaCompensada;
+    let htmlCuentas = "";
+
+    for (let cuenta of cuentas) {
+      if (cuenta.tipo_comp === "Presupuesto") {
+        htmlCuentas += `
               <div>
                   <input type="checkbox" id="${cuenta.nro_comp}" name="${cuenta.nro_comp}"/>
                   <label for="${cuenta.nro_comp}">${cuenta.nro_comp}</label>
               </div>`;
-      }};
-
-      if (vendedor !== "") {
-          const {isConfirmed} = await sweet.fire({
-              title: "Facturar Varios",
-              html: htmlCuentas,
-              confirmButtonText: "Aceptar",
-              showCancelButton: true,
-          });
-        
-          if (isConfirmed) {
-            const inputscheckeados = document.querySelectorAll(
-              "input[type=checkbox]"
-            );
-
-            let value = [];
-                
-            inputscheckeados.forEach((elem) => {
-                elem.checked && value.push(elem.id);
-            });
-
-            ipcRenderer.send("facturar_varios", [
-              vendedor.nombre,
-              value,
-              vendedor.empresa,
-              codigoCliente.value,
-            ]);
-          }
-      };
+      }
     };
+
+    if (vendedor !== "") {
+      const { isConfirmed } = await sweet.fire({
+        title: "Facturar Varios",
+        html: htmlCuentas,
+        confirmButtonText: "Aceptar",
+        showCancelButton: true,
+      });
+
+      if (isConfirmed) {
+        const inputscheckeados = document.querySelectorAll(
+          "input[type=checkbox]"
+        );
+
+        let value = [];
+
+        inputscheckeados.forEach((elem) => {
+          elem.checked && value.push(elem.id);
+        });
+
+        ipcRenderer.send("facturar_varios", [
+          vendedor.nombre,
+          value,
+          vendedor.empresa,
+          codigoCliente.value,
+        ]);
+      }
+    };
+  };
 });
 
 //Ponemos los datos del cliente en los inputs y traemos las compensadas e historicas

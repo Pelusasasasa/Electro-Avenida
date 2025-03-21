@@ -73,19 +73,19 @@ tbody.addEventListener("click", async (e) => {
     if (seleccionado.children[2].innerText === "Recibos") {
       const recibo = recibos.find((elem) => elem.nro_comp === seleccionado.id);
       const cliente = (await axios.get(`${URL}clientes/${recibo.cliente}`, configAxios)).data[0];
-      ipcRenderer.send("imprimir-recibo", [recibo,cliente,recibo.comprobantes,"Recibos",]);
-      }else if(seleccionado.children[2].innerText === "Presupuesto"){
+      ipcRenderer.send("imprimir-recibo", [recibo, cliente, recibo.comprobantes, "Recibos",]);
+    } else if (seleccionado.children[2].innerText === "Presupuesto") {
 
-        const presupuesto = presupuestos.find((elem) => elem.nro_comp === seleccionado.id);
-        const cliente = (await axios.get(`${URL}clientes/id/${presupuesto.cliente}`)).data;
-        const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${presupuesto.nro_comp}/${presupuesto.tipo_comp}/${presupuesto.cliente}`)).data;
-        ipcRenderer.send('imprimir-venta', [presupuesto, cliente, false, 1, 'Ticket Factura', , movimientos, true]);
+      const presupuesto = presupuestos.find((elem) => elem.nro_comp === seleccionado.id);
+      const cliente = (await axios.get(`${URL}clientes/id/${presupuesto.cliente}`)).data;
+      const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${presupuesto.nro_comp}/${presupuesto.tipo_comp}/${presupuesto.cliente}`)).data;
+      ipcRenderer.send('imprimir-venta', [presupuesto, cliente, false, 1, 'Ticket Factura', , movimientos, true]);
 
-      } else {
+    } else {
 
-        const venta = ventas.find((elem) => elem.nro_comp === seleccionado.id);
-        console.log(venta)
-        const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
+      const venta = ventas.find((elem) => elem.nro_comp === seleccionado.id);
+      console.log(venta)
+      const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
 
       const afip = {
         QR: venta.qr ? JSON.parse(venta.qr) : "",
@@ -123,7 +123,7 @@ const listar = async (listaVentas, listaRecibos, listaPresupuesto) => {
     tdHora.innerHTML = `${hora[0]}:${hora[1]}:${hora[2]}`;
     tdCliente.innerHTML = venta.nombreCliente ? venta.nombreCliente : venta.cliente;
     tdTipo.innerHTML =
-    venta.tipo_comp === "Recibos" ? "Recibos" : verTipoComp(venta.cod_comp);
+      venta.tipo_comp === "Recibos" ? "Recibos" : verTipoComp(venta.cod_comp);
     tdNumero.innerHTML = venta.nro_comp;
     tdImporte.innerHTML = venta.precioFinal.toFixed(2);
 
@@ -152,7 +152,7 @@ const verTipoComp = (numero) => {
     return "Nota Credito A";
   } else if (numero === 8) {
     return "Nota Credito B";
-  }else{
+  } else {
     return "Presupuesto"
   }
   return undefined;

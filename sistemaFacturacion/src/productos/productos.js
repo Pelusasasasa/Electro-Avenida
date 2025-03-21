@@ -451,9 +451,9 @@ ingresarMov.addEventListener("click", async (e) => {
   if (seleccionado) {
     vendedor
       ? ipcRenderer.send("abrir-ventana-movimiento-producto", [
-          seleccionado.id,
-          vendedor,
-        ])
+        seleccionado.id,
+        vendedor,
+      ])
       : sweet.fire({ title: "Contraseña Incorrecta" });
   } else {
     await sweet.fire({

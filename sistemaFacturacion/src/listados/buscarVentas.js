@@ -50,8 +50,9 @@ const buscarVentaPorRazon = async (razon) => {
 const traerVentasPorNumero = async () => {
   const numero = `${primerNumero.value.padStart(4, '0')}-${segundoNumero.value.padStart(8, '0')}`;
   const { data: ventas } = await axios.get(`${URL}ventas/${numero}`);
-
-  listarVentas([...ventas])
+  console.log(URL);
+  console.log(ventas);
+  // listarVentas([...ventas])
 };
 
 const cargarPagina = async () => {

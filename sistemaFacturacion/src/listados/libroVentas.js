@@ -120,17 +120,17 @@ const ventasTraidas = async (ventas) => {
             <td></td>
             <td>TOTAL MENSUAL</td>
             <td>${(
-              totalGlobalGravado21Factura - totalGlobalGravado21Nota
-            ).toFixed(2)}</td>
+      totalGlobalGravado21Factura - totalGlobalGravado21Nota
+    ).toFixed(2)}</td>
             <td>${(totalGlobalIva21Factura - totalGlobalIva21Nota).toFixed(
-              2
-            )}</td>
+      2
+    )}</td>
             <td>${(
-              totalGlobalGravado105Factura - totalGlobalGravado105Nota
-            ).toFixed(2)}</td>
+      totalGlobalGravado105Factura - totalGlobalGravado105Nota
+    ).toFixed(2)}</td>
             <td>${(totalGlobalIva105Factura - totalGlobalIva105Nota).toFixed(
-              2
-            )}</td>
+      2
+    )}</td>
             <td>${(totalGlobalFactura - totalGlobalNota).toFixed(2)}</td>
         </tr>
 
@@ -177,25 +177,25 @@ const ventasTraidas = async (ventas) => {
             <td></td>
             <td></td>
             <td class="borde">${(
-              totalGlobalGravado105Factura +
-              totalGlobalGravado21Factura -
-              totalGlobalGravado105Nota -
-              totalGlobalGravado21Nota
-            ).toFixed(2)}</td>
+      totalGlobalGravado105Factura +
+      totalGlobalGravado21Factura -
+      totalGlobalGravado105Nota -
+      totalGlobalGravado21Nota
+    ).toFixed(2)}</td>
             <td class="borde">${(
-              totalGlobalIva21Factura - totalGlobalIva21Nota
-            ).toFixed(2)}</td>
+      totalGlobalIva21Factura - totalGlobalIva21Nota
+    ).toFixed(2)}</td>
             <td class="borde">${(
-              totalGlobalIva105Factura - totalGlobalIva105Nota
-            ).toFixed(2)}</td>
+      totalGlobalIva105Factura - totalGlobalIva105Nota
+    ).toFixed(2)}</td>
             <td class="borde">${(
-              totalGlobalGravado105Factura +
-              totalGlobalGravado21Factura -
-              totalGlobalGravado105Nota -
-              totalGlobalGravado21Nota +
-              (totalGlobalIva21Factura - totalGlobalIva21Nota) +
-              (totalGlobalIva105Factura - totalGlobalIva105Nota)
-            ).toFixed(2)}</td>
+      totalGlobalGravado105Factura +
+      totalGlobalGravado21Factura -
+      totalGlobalGravado105Nota -
+      totalGlobalGravado21Nota +
+      (totalGlobalIva21Factura - totalGlobalIva21Nota) +
+      (totalGlobalIva105Factura - totalGlobalIva105Nota)
+    ).toFixed(2)}</td>
         </tr>
     `;
   buscar.removeAttribute("disabled");
@@ -244,9 +244,8 @@ const listar = async (ventas, diaVentaAnterior) => {
                 <td>${day}/${month}/${year}</td>
                 <td class = "inicio">${venta.nombreCliente.slice(0, 18)}</td>
                 <td class = "inicio">${cond_iva}</td>
-                <td class = "inicio">${
-                  venta.dnicuit ? venta.dnicuit : "00000000"
-                }</td>
+                <td class = "inicio">${venta.dnicuit ? venta.dnicuit : "00000000"
+      }</td>
                 <td class = "inicio">${venta.tipo_comp}</td>
                 <td>${venta.nro_comp}</td>
                 <td class = "final">${gravado21}</td>
