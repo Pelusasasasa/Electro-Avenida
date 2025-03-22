@@ -4,7 +4,7 @@ const Pedidos = require("../models/pedido")
 
 pedidosCTRL.traerPedidos = async (req, res) => {
     const pedidos = await Pedidos.find()
-        .populate('codigo', ['descripcion', 'marca', 'stock', 'provedor'])
+        .populate('codigo', ['descripcion', 'marca', 'stock', 'provedor', 'codFabrica'])
     res.send(pedidos)
 };
 
