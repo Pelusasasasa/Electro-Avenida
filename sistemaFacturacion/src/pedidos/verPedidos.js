@@ -248,6 +248,7 @@ const listarPedidos = (pedidos) => {
     const tdFecha = document.createElement("td");
     const tdCodigo = document.createElement("td");
     const tdProducto = document.createElement("td");
+    const tdCodFabrica = document.createElement("td");
     const tdCantidad = document.createElement("td");
     const tdCliente = document.createElement("td");
     const tdTelefeno = document.createElement("td");
@@ -262,12 +263,14 @@ const listarPedidos = (pedidos) => {
     tdStock.classList.add("stock");
 
     //Desestructuramos el producto que viene con el pedido
-    const { _id, descripcion, marca, stock, provedor } = pedido.codigo ? pedido.codigo : { _id: pedido.codigo, descripcion: '', marca: '', stock: '', provedor: '' };
+    const { _id, descripcion, marca, stock, provedor, cod_fabrica } = pedido.codigo ? pedido.codigo : { _id: pedido.codigo, descripcion: '', marca: '', stock: '', provedor: '' };
+
 
     //valores
     tdFecha.innerHTML = `${fecha.getUTCDate()}/${fecha.getUTCMonth() + 1}/${fecha.getUTCFullYear()}`;
     tdCodigo.innerHTML = pedido.codigo ? _id : '999-999';
     tdProducto.innerHTML = descripcion ? descripcion : pedido.producto;
+    tdCodFabrica.innerText = cod_fabrica ? cod_fabrica : '';
     tdCantidad.innerHTML = redondear(pedido.cantidad, 2);
     tdCliente.innerHTML = pedido.cliente;
     tdTelefeno.innerHTML = pedido.telefono;
@@ -280,6 +283,7 @@ const listarPedidos = (pedidos) => {
     tr.appendChild(tdFecha);
     tr.appendChild(tdCodigo);
     tr.appendChild(tdProducto);
+    tr.appendChild(tdCodFabrica);
     tr.appendChild(tdCantidad);
     tr.appendChild(tdCliente);
     tr.appendChild(tdTelefeno);
