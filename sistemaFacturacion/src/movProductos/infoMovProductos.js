@@ -44,9 +44,8 @@ ipcRenderer.on("datos-movimiento-producto", async (e, args) => {
     tdPrecioUnitario.classList.add("text-end");
     tdTotal.classList.add("text-end");
 
-    tdFecha.innerHTML = `${fecha.getUTCDate()}/${
-      fecha.getUTCMonth() + 1
-    }/${fecha.getUTCFullYear()}`;
+    tdFecha.innerHTML = `${fecha.getUTCDate()}/${fecha.getUTCMonth() + 1
+      }/${fecha.getUTCFullYear()}`;
     tdcodCliente.innerHTML = movProducto.codCliente;
     tdCliente.innerHTML = movProducto.cliente;
     tdTipoComp.innerHTML = movProducto.tipo_comp;

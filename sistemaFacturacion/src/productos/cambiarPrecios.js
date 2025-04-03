@@ -240,10 +240,10 @@ const llenarListaNueva = async (lista) => {
       tdPorcentaje.innerText =
         parseFloat(tr.children[4].innerText) !== 0
           ? (
-              ((elem.precio_venta - parseFloat(tr.children[4].innerText)) /
-                parseFloat(tr.children[4].innerText)) *
-              100
-            ).toFixed(2) + "%"
+            ((elem.precio_venta - parseFloat(tr.children[4].innerText)) /
+              parseFloat(tr.children[4].innerText)) *
+            100
+          ).toFixed(2) + "%"
           : "0.00%";
       tdCodigoFabrica.innerText = elem.cod_fabrica;
 

@@ -94,8 +94,8 @@ const listarVentasCanceladas = async (venta) => {
                 <td>${objeto.descripcion}</td>
                 <td>${cantidad}</td>
                 <td class = "total">${(cantidad * objeto.precio_venta).toFixed(
-                  2
-                )}</td>
+      2
+    )}</td>
                 <td class="vendedor">${vendedor.slice(0, 3)}</td>
                 <td>${hora}:${minutos}:${segundos}</td>
 

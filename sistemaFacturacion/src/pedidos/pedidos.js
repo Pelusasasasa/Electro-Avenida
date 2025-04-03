@@ -131,7 +131,7 @@ grabar.addEventListener("click", async (e) => {
   //Mandar Pedido a La Base de Datos
   const trs = document.querySelectorAll("#tbody tr");
 
-  for(let td of trs){
+  for (let td of trs) {
     const Pedido = {};
     Pedido.fecha = new Date();
     Pedido.codigo = td.children[0].innerText;
@@ -146,8 +146,8 @@ grabar.addEventListener("click", async (e) => {
     let pedidoNuevo = (await axios.post(`${URL}pedidos`, Pedido, configAxios)).data;
     pedidos.push(pedidoNuevo);
 
-    };
-  
+  };
+
   if (trs.length === pedidos.length) {
     await sweet.fire({
       title: 'Pedidos Guardados',
@@ -156,7 +156,7 @@ grabar.addEventListener("click", async (e) => {
 
     ipcRenderer.send('imprimir-pedido', pedidos);
     window.location.href = "../index.html";
-  }else{
+  } else {
     await sweet.fire({
       title: 'Pedidos No Guardados',
       icon: 'error'

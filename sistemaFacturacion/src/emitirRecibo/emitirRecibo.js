@@ -493,17 +493,17 @@ const hacerRecibo = async () => {
     alerta.children[1].children[0].innerHTML = "Imprimiendo Recibo";
     recibo.tipo_comp === "Recibos_P"
       ? await ipcRenderer.send("imprimir-recibo", [
-          recibo,
-          cliente,
-          arregloParaImprimir,
-          recibo.tipo_comp,
-        ])
+        recibo,
+        cliente,
+        arregloParaImprimir,
+        recibo.tipo_comp,
+      ])
       : await ipcRenderer.send("imprimir-recibo", [
-          recibo,
-          cliente,
-          arregloParaImprimir,
-          recibo.tipo_comp,
-        ]);
+        recibo,
+        cliente,
+        arregloParaImprimir,
+        recibo.tipo_comp,
+      ]);
     //Mandar Recibo para que se guarde como pdf
     recibo.tipo_comp === "Recibos" &&
       (alerta.children[1].children[0].innerHTML = "Guardando Recibo Como PDF");
@@ -545,12 +545,12 @@ const modificarVentasConpensadas = async (lista) => {
         venta.pagado =
           tr.children[5].children[0].value !== ""
             ? parseFloat(
-                redondear(
-                  parseFloat(tr.children[4].innerHTML) +
-                    parseFloat(tr.children[5].children[0].value),
-                  2
-                )
+              redondear(
+                parseFloat(tr.children[4].innerHTML) +
+                parseFloat(tr.children[5].children[0].value),
+                2
               )
+            )
             : parseFloat(venta.pagado);
         venta.pagado =
           venta.tipo_comp === "Nota Credito"
@@ -619,8 +619,8 @@ async function saldoPagado(e) {
   e.target.value === "" && (e.target.value = "0.00");
   tr.children[6].innerText = redondear(
     parseFloat(tr.children[3].innerText) -
-      parseFloat(tr.children[4].innerText) -
-      parseFloat(e.target.value),
+    parseFloat(tr.children[4].innerText) -
+    parseFloat(e.target.value),
     2
   );
 

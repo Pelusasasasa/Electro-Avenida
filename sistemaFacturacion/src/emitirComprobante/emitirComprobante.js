@@ -387,23 +387,20 @@ function mostrarVentas(objeto, cantidad) {
     : objeto.precio_venta * cantidad;
   total.value = redondear(Preciofinal, 2);
   resultado.innerHTML += `
-        <tr id=${id} class=${
-    objeto.stock <= 0 || objeto.precio_venta <= 0 ? "tdRojo" : ""
-  } >
+        <tr id=${id} class=${objeto.stock <= 0 || objeto.precio_venta <= 0 ? "tdRojo" : ""
+    } >
         <td class="tdEnd">${cantidad.toFixed(2)}</td>
         <td>${objeto._id}</td>
         <td>${objeto.descripcion} ${objeto.marca}</td>
         <td class="tdEnd">${(objeto.iva === "R" ? 10.5 : 21).toFixed(2)}</td>
-        <td class="tdEnd">${
-          objeto.oferta
-            ? objeto.precioOferta.toFixed(2)
-            : parseFloat(objeto.precio_venta).toFixed(2)
-        }</td>
-        <td class="tdEnd">${
-          objeto.oferta
-            ? (objeto.precioOferta * cantidad).toFixed(2)
-            : (parseFloat(objeto.precio_venta) * cantidad).toFixed(2)
-        }</td>
+        <td class="tdEnd">${objeto.oferta
+      ? objeto.precioOferta.toFixed(2)
+      : parseFloat(objeto.precio_venta).toFixed(2)
+    }</td>
+        <td class="tdEnd">${objeto.oferta
+      ? (objeto.precioOferta * cantidad).toFixed(2)
+      : (parseFloat(objeto.precio_venta) * cantidad).toFixed(2)
+    }</td>
         </tr>
     `;
   objeto.identificadorTabla = `${id}`;
@@ -645,9 +642,8 @@ async function movimientoProducto(
 ) {
   let movProducto = {};
   movProducto.codProd = objeto._id;
-  movProducto.descripcion = `${objeto.descripcion} ${
-    objeto.marca ? objeto.marca : ""
-  } ${objeto.cod_fabrica ? objeto.cod_fabrica : ""}`;
+  movProducto.descripcion = `${objeto.descripcion} ${objeto.marca ? objeto.marca : ""
+    } ${objeto.cod_fabrica ? objeto.cod_fabrica : ""}`;
   movProducto.codCliente = idCliente;
   movProducto.cliente = cliente;
   movProducto.comprobante = tipoVenta;
@@ -833,7 +829,7 @@ presupuesto.addEventListener("click", async (e) => {
           parseFloat(producto.objeto.precio_venta) -
           (parseFloat(producto.objeto.precio_venta) *
             parseFloat(descuento.value)) /
-            100;
+          100;
         producto.objeto.precio_venta = producto.objeto.precio_venta.toFixed(2);
       }
     }
@@ -1208,13 +1204,13 @@ ticketFactura.addEventListener("click", async (e) => {
                   parseFloat(producto.objeto.precioOferta) -
                   (parseFloat(producto.objeto.precioOferta) *
                     parseFloat(descuento.value)) /
-                    100;
+                  100;
               } else {
                 producto.objeto.precio_venta =
                   parseFloat(producto.objeto.precio_venta) -
                   (parseFloat(producto.objeto.precio_venta) *
                     parseFloat(descuento.value)) /
-                    100;
+                  100;
               }
               producto.objeto.precio_venta =
                 producto.objeto.precio_venta.toFixed(2);
@@ -1603,14 +1599,14 @@ ipcRenderer.on("informacion", async (e, args) => {
   }
 });
 
-ipcRenderer.on("editarPresupuesto", async (e, {nro_comp, usuario: usr}) => {
+ipcRenderer.on("editarPresupuesto", async (e, { nro_comp, usuario: usr }) => {
   usuario.innerText = usr;
-  
+
   await sweet.fire({
     title:
       "Se edita el presupuesto pero se crea uno nuevo, el anterior sigue estando",
   });
-  
+
   const presupuesto = (await axios.get(`${URL}presupuesto/${nro_comp}`)).data;
   inputEmpresa.value = presupuesto.empresa;
   const cliente = (
@@ -1626,12 +1622,12 @@ ipcRenderer.on("editarPresupuesto", async (e, {nro_comp, usuario: usr}) => {
   for (let mov of movimientos) {
     let producto = {};
 
-    if (mov.codProd === '999-999'){
+    if (mov.codProd === '999-999') {
       producto.descripcion = mov.descripcion;
       producto._id = mov.codProd;
       producto.precio_venta = mov.precio_unitario;
       producto.marca = mov.marca ? mov.marca : '';
-    }else{
+    } else {
       producto = (await axios.get(`${URL}productos/${mov.codProd}`, configAxios)).data;
     };
     await mostrarVentas(producto, mov.egreso);
@@ -1822,7 +1818,7 @@ async function traerProductosPrestamo(arreglo) {
 
 //funcion que busca en la afip a una persona
 buscarAfip.addEventListener("click", async (e) => {
-  let cliente = ( await axios.get(`${URL}clientes/cuit/${dnicuit.value}`)).data;
+  let cliente = (await axios.get(`${URL}clientes/cuit/${dnicuit.value}`)).data;
   if (cliente !== "") {
     await ponerInputsClientes(cliente);
   } else {

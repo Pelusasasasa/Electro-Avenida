@@ -60,7 +60,7 @@ aceptar.addEventListener("click", async (e) => {
     venta.tipo_comp === "Recibos_P" || venta.tipo_comp === "recibos"
       ? venta.comprobantes
       : (await axios.get(`${URL}movProductos/${comprobante}/${tipoVenta}`))
-          .data;
+        .data;
 
   if (venta.tipo_comp === "Recibos_P" || venta.tipo_comp === "recibos") {
     ipcRenderer.send("imprimir-recibo", [

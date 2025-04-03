@@ -13,7 +13,7 @@ let vendedor;
 let acceso;
 let empresa;
 
-const { verEstadoServidorAfip, configAxios,  verificarUsuarios,  ponerNotificaciones,} = require("./funciones");
+const { verEstadoServidorAfip, configAxios, verificarUsuarios, ponerNotificaciones, } = require("./funciones");
 
 const notificaciones = require("node-notifier");
 
@@ -61,8 +61,8 @@ const clientes = document.querySelector(".clientes");
 const flecha = document.querySelector(".flecha");
 const salir = document.querySelector(".salir");
 
-const apretarTecla = async(e) => {
-  if (e.keyCode === 120){
+const apretarTecla = async (e) => {
+  if (e.keyCode === 120) {
     const a = validacionUsuario('mercadoLibre/mercadoLibre.html');
     console.log(a)
   }

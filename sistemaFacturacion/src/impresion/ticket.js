@@ -96,8 +96,8 @@ async function infoComprobante(venta) {
   total.innerHTML = parseFloat(venta.precioFinal).toFixed(2);
   tipoVenta.innerHTML =
     venta.tipo_pago !== "CC" ||
-    venta.cliente === "M122" ||
-    venta.cliente === "A029"
+      venta.cliente === "M122" ||
+      venta.cliente === "A029"
       ? `Contado: ${parseFloat(venta.precioFinal).toFixed(2)}`
       : "Cuenta Corriente";
 
@@ -121,24 +121,21 @@ async function listar(venta, afip, opciones) {
           : objeto.precio_venta;
         listaProductos.innerHTML += `
                     <div class="cantidad">
-                        <p>${cantidad}/${
-          venta.condIva === "Inscripto" || venta.condIva === "Monotributista"
+                        <p>${cantidad}/${venta.condIva === "Inscripto" || venta.condIva === "Monotributista"
             ? (precio / iva).toFixed(2)
             : precio
-        }</p>
-                        <p class=iva>${
-                          objeto.iva === "N" ? "(21.00)" : "(10.50)"
-                        }</p>
+          }</p>
+                        <p class=iva>${objeto.iva === "N" ? "(21.00)" : "(10.50)"
+          }</p>
                         <p></p>
                     </div>
                     <div class="descripcionProducto">
                         <p>${objeto.descripcion.slice(0, 27)}</p>
-                        <p>${
-                          venta.condIva === "Inscripto" ||
-                          venta.condIva === "Monotributista"
-                            ? ((precio / iva) * cantidad).toFixed(2)
-                            : (precio * cantidad).toFixed(2)
-                        }</p>
+                        <p>${venta.condIva === "Inscripto" ||
+            venta.condIva === "Monotributista"
+            ? ((precio / iva) * cantidad).toFixed(2)
+            : (precio * cantidad).toFixed(2)
+          }</p>
                     </div>
                 `;
       }
@@ -170,28 +167,25 @@ async function listaMovimientos(movimientos) {
       const ivaAux = iva === "N" ? 1.21 : 1.105;
       listaProductos.innerHTML += `
                     <div class="cantidad">
-                        <p>${
-                          tipo_comp === "Nota Credito"
-                            ? ingreso / ivaAux.toFixed(2)
-                            : egreso.toFixed(2)
-                        }
-                        /${
-                          venta.condIva === "Inscripto" ||
-                          venta.condIva === "Monotributista"
-                            ? (precio_unitario / ivaAux).toFixed(2)
-                            : precio_unitario.toFixed(2)
-                        }</p>
+                        <p>${tipo_comp === "Nota Credito"
+          ? ingreso / ivaAux.toFixed(2)
+          : egreso.toFixed(2)
+        }
+                        /${venta.condIva === "Inscripto" ||
+          venta.condIva === "Monotributista"
+          ? (precio_unitario / ivaAux).toFixed(2)
+          : precio_unitario.toFixed(2)
+        }</p>
                         <p class=iva>${iva === "N" ? "(21.00)" : "(10.50)"}</p>
                         <p></p>
                     </div>
                     <div class="descripcionProducto">
                         <p>${descripcion.slice(0, 27)}</p>
-                        <p>${
-                          venta.condIva === "Inscripto" ||
-                          venta.condIva === "Monotributista"
-                            ? ((precio_unitario / ivaAux) * egreso).toFixed(2)
-                            : (precio_unitario * egreso).toFixed(2)
-                        }</p>
+                        <p>${venta.condIva === "Inscripto" ||
+          venta.condIva === "Monotributista"
+          ? ((precio_unitario / ivaAux) * egreso).toFixed(2)
+          : (precio_unitario * egreso).toFixed(2)
+        }</p>
                     </div>
                 `;
     }

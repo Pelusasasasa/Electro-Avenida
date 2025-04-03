@@ -9,7 +9,7 @@ const segundoCostoFijo = 28000;
 const valorPrimerCostoFijo = 900;
 const valorSegundoCostoFijo = 1800;
 
-const { devolveDireccion, obtenerInformacionUsuario, buscarIDDeProductoPorSKU,buscarMilItems, buscarinfoProductoPorId, modificarPrecioPorIdDeProducto, modificarPrecioYStockPorIdDeProducto, filtrarPorTitle, obtenerAccessToken } = require('./helpers');
+const { devolveDireccion, obtenerInformacionUsuario, buscarIDDeProductoPorSKU, buscarMilItems, buscarinfoProductoPorId, modificarPrecioPorIdDeProducto, modificarPrecioYStockPorIdDeProducto, filtrarPorTitle, obtenerAccessToken } = require('./helpers');
 const { ipcRenderer } = require('electron');
 const URL = process.env.URL;
 
@@ -38,36 +38,36 @@ const tbody = document.getElementById('tbody');
 let publicaciones = [];
 
 const calcularPrecioSujerido = (product, dolar) => {
-    let conIva = product.costodolar !== 0 ? parseFloat(product.impuestos) + product.costodolar * dolar : parseFloat(product.costo) + parseFloat(product.impuestos);
-    let total = parseFloat((conIva).toFixed(2));
-    let precioML = 0;
+  let conIva = product.costodolar !== 0 ? parseFloat(product.impuestos) + product.costodolar * dolar : parseFloat(product.costo) + parseFloat(product.impuestos);
+  let total = parseFloat((conIva).toFixed(2));
+  let precioML = 0;
 
-    let utilidad  = total + (total * gananciaML / 100);
-    let descuentoML = (utilidad / porcentajeDescuentoML) - utilidad;
-    let costoEnvio = 0;
-    let costoFijo = 0;
+  let utilidad = total + (total * gananciaML / 100);
+  let descuentoML = (utilidad / porcentajeDescuentoML) - utilidad;
+  let costoEnvio = 0;
+  let costoFijo = 0;
 
-    //Vemos cuanto nos cobran del envio en mercado libre dependiendo de la utilidad
-    if (utilidad > envio){
-      costoEnvio = 6779
-    }else{
-      costoEnvio = 0;
-    };
+  //Vemos cuanto nos cobran del envio en mercado libre dependiendo de la utilidad
+  if (utilidad > envio) {
+    costoEnvio = 6779
+  } else {
+    costoEnvio = 0;
+  };
 
-    //Vemos cuanto nos descuentan por el costo fijo dependiendo de el valor de la utilidad
-    if (utilidad < primerCostoFijo){
-      costoFijo = valorPrimerCostoFijo;
-    }else if (utilidad < segundoCostoFijo){
-      costoFijo = valorSegundoCostoFijo;
-    }else{
-      costoFijo = 0;
-    };
+  //Vemos cuanto nos descuentan por el costo fijo dependiendo de el valor de la utilidad
+  if (utilidad < primerCostoFijo) {
+    costoFijo = valorPrimerCostoFijo;
+  } else if (utilidad < segundoCostoFijo) {
+    costoFijo = valorSegundoCostoFijo;
+  } else {
+    costoFijo = 0;
+  };
 
-    precioML = utilidad + descuentoML + costoEnvio + costoFijo;
-    return precioML.toFixed(2);
+  precioML = utilidad + descuentoML + costoEnvio + costoFijo;
+  return precioML.toFixed(2);
 };
 
-const cargarPagina = async() => {
+const cargarPagina = async () => {
   const numeros = (await axios.get(`${URL}tipoVenta`)).data;
   autorizacion = numeros.autorizacionML;
 
@@ -78,7 +78,7 @@ const cargarPagina = async() => {
     autorizacion = numeros.autorizacionML
     await axios.put(`${URL}tipoVenta`, numeros);
   }
-  
+
 
   publicaciones = (await axios.get(`${URL}mercadoLibre`)).data;
   console.log(publicaciones)
@@ -86,7 +86,7 @@ const cargarPagina = async() => {
 };
 
 const clickEnTBody = (e) => {
-  if (e.target.nodeName === 'TD'){
+  if (e.target.nodeName === 'TD') {
     seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
 
@@ -98,7 +98,7 @@ const clickEnTBody = (e) => {
   }
 };
 
-const deleteProduct = async(e) => {
+const deleteProduct = async (e) => {
   if (seleccionado) {
     const res = (await axios.delete(`${URL}mercadoLibre/forCodigo/${seleccionado.id}`)).data;
     tbody.removeChild(seleccionado)
@@ -106,11 +106,11 @@ const deleteProduct = async(e) => {
   };
 };
 
-const handleSearch = async(text) => {
+const handleSearch = async (text) => {
   productos = [];
   const ids = await filtrarPorTitle(id, autherizacion, text);
-  
-  for await(let id of ids.results){
+
+  for await (let id of ids.results) {
     const pro = await buscarinfoProductoPorId(autherizacion, id);
     productos.push(pro);
   };
@@ -118,23 +118,23 @@ const handleSearch = async(text) => {
   listarProductos(productos);
 };
 
-const listarProductos = async(lista) => {
+const listarProductos = async (lista) => {
   tbody.innerHTML = '';
 
-  lista.sort( (a,b) => {
-    if (a.descripcion < b.descripcion){
+  lista.sort((a, b) => {
+    if (a.descripcion < b.descripcion) {
       return -1;
     };
 
-    if (a.descripcion > b.descripcion){
+    if (a.descripcion > b.descripcion) {
       return 1;
     };
 
     return 0;
   });
 
-  for await(let elem of lista){
-    
+  for await (let elem of lista) {
+
     const tr = document.createElement('tr');
     tr.id = elem.codigoML;
 
@@ -148,14 +148,14 @@ const listarProductos = async(lista) => {
 
     const dolar = (await axios.get(`${URL}tipoVenta`)).data.dolar;
     const pro = (await axios.get(`${URL}productos/${elem.codProd}`)).data;
-    const costoIva = pro.costodolar === 0 ? (parseFloat(pro.costo) + parseFloat(pro.impuestos) ) : ((pro.costodolar + (pro.costodolar * parseFloat(pro.impuestos) / 100)) * dolar);
+    const costoIva = pro.costodolar === 0 ? (parseFloat(pro.costo) + parseFloat(pro.impuestos)) : ((pro.costodolar + (pro.costodolar * parseFloat(pro.impuestos) / 100)) * dolar);
     const precio = calcularPrecioSujerido(pro, dolar);
     tdPrecio.innerText = precio;
     tdCostoIva.innerText = costoIva.toFixed(2);
     tdStock.innerText = pro.stock;
 
     tdCodigo.innerText = elem.codigoML;
-    tdDescripcion.innerText = elem.descripcion.slice(0,35).toUpperCase();
+    tdDescripcion.innerText = elem.descripcion.slice(0, 35).toUpperCase();
     tdPrecioML.innerText = elem.precioML.toFixed(2);
     tdStockML.innerText = elem.stockML.toFixed(2);
 
@@ -189,7 +189,7 @@ const listarProductos = async(lista) => {
   }
 };
 
-const producto = async(e) => {
+const producto = async (e) => {
   ipcRenderer.send('abrir-ventana-argumentos', {
     path: 'mercadoLibre/producto.html',
     width: 1200,
@@ -203,8 +203,8 @@ const producto = async(e) => {
 // eliminar.addEventListener('click', deleteProduct);
 tbody.addEventListener('click', clickEnTBody);
 
-buscador.addEventListener('keypress',async e => {
-  if(e.keyCode === 13){
+buscador.addEventListener('keypress', async e => {
+  if (e.keyCode === 13) {
     await handleSearch(e.target.value);
   }
 });
@@ -212,7 +212,7 @@ buscador.addEventListener('keypress',async e => {
 window.addEventListener('load', cargarPagina);
 
 document.addEventListener('keyup', e => {
-  if (e.keyCode === 27){
+  if (e.keyCode === 27) {
     location.href = '../index.html';
   }
 });

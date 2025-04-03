@@ -158,7 +158,7 @@ function listarVentas(ventas, situacion, saldoAnterior, saldoAnterior_P) {
   if (situacion === "negro") {
     aux = "Presupuesto";
   } else {
-    (cliente.cond_iva === "Inscripto" || cliente.cond_iva === "Monotributista" )
+    (cliente.cond_iva === "Inscripto" || cliente.cond_iva === "Monotributista")
       ? (aux = "Factura A")
       : (aux = "Factura B");
   }
@@ -187,11 +187,11 @@ function listarVentas(ventas, situacion, saldoAnterior, saldoAnterior_P) {
   listaAux =
     situacion === "negro"
       ? listaAux.filter(
-          (venta) => venta.tipo_comp !== "Recibos_P" || venta.haber !== 0
-        )
+        (venta) => venta.tipo_comp !== "Recibos_P" || venta.haber !== 0
+      )
       : listaAux.filter(
-          (venta) => venta.tipo_comp !== "Recibos" || venta.haber !== 0
-        );
+        (venta) => venta.tipo_comp !== "Recibos" || venta.haber !== 0
+      );
   listaAux.forEach((venta) => {
     const fecha = venta.fecha.slice(0, 10).split("-", 3);
     const dia = fecha[2];
@@ -217,12 +217,10 @@ function listarVentas(ventas, situacion, saldoAnterior, saldoAnterior_P) {
                     <td>${dia}/${mes}/${anio}</td>
                     <td>${comprobante}</td>
                     <td>${venta.nro_comp}</td>
-                    <td class=text-end>${
-                      venta.debe === 0.0 ? "" : venta.debe.toFixed(2)
-                    }</td>
-                    <td class=text-end>${
-                      venta.haber === 0.0 ? "" : venta.haber.toFixed(2)
-                    }</td>
+                    <td class=text-end>${venta.debe === 0.0 ? "" : venta.debe.toFixed(2)
+      }</td>
+                    <td class=text-end>${venta.haber === 0.0 ? "" : venta.haber.toFixed(2)
+      }</td>
                     <td class=text-end>${venta.saldo.toFixed(2)}</td>
                 </tr>
             `;

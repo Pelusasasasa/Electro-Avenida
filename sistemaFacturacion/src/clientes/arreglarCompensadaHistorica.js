@@ -112,8 +112,7 @@ async function modificarCompensada() {
   });
   if (isConfirmed) {
     await axios.put(
-      `${URL}cuentaComp/numeroYCliente/${
-        compensada.nro_comp
+      `${URL}cuentaComp/numeroYCliente/${compensada.nro_comp
       }/${codigo.value.toUpperCase()}`,
       compensada,
       configAxios
