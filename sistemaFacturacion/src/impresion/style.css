@@ -1,14 +1,14 @@
-@page{
+@page {
     margin: 0;
 }
 
-body{
+body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
-    Arial, sans-serif;
+        Arial, sans-serif;
     font-size: 1.4rem;
     margin-right: 2rem;
 }
-  
+
 html {
     box-sizing: border-box;
     font-size: 62.5%;
@@ -20,40 +20,43 @@ html {
     box-sizing: inherit;
 }
 
-.w-10{
+.w-10 {
     width: 18rem;
 }
-.ticket .w-12{  
+
+.ticket .w-12 {
     width: 12rem;
 }
-.logo{
+
+.logo {
     display: flex;
     justify-content: center;
 }
 
-.ticket .container{
+.ticket .container {
     margin-right: 1rem;
 }
 
-.ticket .infoFactura{
+.ticket .infoFactura {
     display: flex;
     flex-direction: column;
     justify-content: start;
     align-items: flex-start;
 }
 
-.ticket .factura,.ticket .fecha{
+.ticket .factura,
+.ticket .fecha {
     display: flex;
     justify-content: space-around;
     width: 100%;
 }
 
-.ticket .infoProducto div{
+.ticket .infoProducto div {
     display: flex;
     justify-content: space-between;
 }
 
-.ticket .afip{
+.ticket .afip {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -61,91 +64,97 @@ html {
     margin-bottom: 2rem;
 }
 
-.ticket .afipCae{
+.ticket .afipCae {
     display: flex;
     justify-content: space-around;
     width: 100%;
 }
 
-.ticket .cae,.venciCae{
+.ticket .cae,
+.venciCae {
     display: flex;
     flex-direction: column;
 }
 
-.texto-final{
+.texto-final {
     text-align: end;
 }
-.texto-grande{
+
+.texto-grande {
     font-size: 1.5rem;
 }
-.texto-bold{
+
+.texto-bold {
     font-weight: bold;
 }
 
-.texto-center{
-    text-align: center  ;
+.texto-center {
+    text-align: center;
 }
 
-.texto-normal{
+.texto-normal {
     font-weight: normal;
 }
 
-.ticket p{
+.ticket p {
     margin: 0;
 }
 
-.ticket .discriminadorIva{
+.ticket .discriminadorIva {
     margin: 2rem 0;
 }
 
-.ticket .discriminadorIva .margin-1-t{
+.ticket .discriminadorIva .margin-1-t {
     margin-top: 1rem;
 }
 
-.ticket .cantidad,.ticket .descripcionProducto,.ticket .discriminadorIva div{
+.ticket .cantidad,
+.ticket .descripcionProducto,
+.ticket .discriminadorIva div {
     display: flex;
     justify-content: space-between;
 }
 
-.ticket .cantidad p{
+.ticket .cantidad p {
     width: 100%;
     font-size: 1.2rem;
 }
 
-.ticket .descripcionProducto p{
+.ticket .descripcionProducto p {
     font-size: 1.2rem;
 }
-.ticket .cantidad .iva{
+
+.ticket .cantidad .iva {
     text-align: center;
 }
 
-.ticket .recibo{
+.ticket .recibo {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
 }
 
-.ticket .recibo p:nth-child(2){
+.ticket .recibo p:nth-child(2) {
     text-align: center;
 }
 
-.ticket .recibo p:nth-child(3){
+.ticket .recibo p:nth-child(3) {
     text-align: end;
 }
 
-.ticket .version{
+.ticket .version {
     font-size: 1rem;
     padding: 2rem 0;
 }
 
-.ticket .none{
+.ticket .none {
     display: none;
 }
 
-.presupuesto{
+.presupuesto {
     margin: 2rem 5rem;
 }
 
-.presupuesto .informacion .tipoFactura{
+.presupuesto .informacion .tipoFactura {
     border: .1rem solid black;
     width: initial;
     justify-self: center;
@@ -156,111 +165,121 @@ html {
     font-weight: bold;
 }
 
-.presupuesto .informacion,.presupuesto .cliente{
+.presupuesto .informacion,
+.presupuesto .cliente {
     display: flex;
     flex-direction: column;
     border: .1rem solid black;
 }
 
-.presupuesto .informacion main,.presupuesto .cliente main{
+.presupuesto .informacion main,
+.presupuesto .cliente main {
     margin: auto 2rem;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
 }
 
-.presupuesto .informacion main,.presupuesto .cliente .nombre{
+.presupuesto .informacion main,
+.presupuesto .cliente .nombre {
     grid-template-columns: 3fr 1fr 1fr;
 }
 
-.presupuesto #marina{
+.presupuesto #marina {
     grid-template-columns: 1fr 2fr 1fr;
 }
 
-.presupuesto .informacion .img{
+.presupuesto .informacion .img {
     display: flex;
     justify-content: space-around;
 }
 
-.presupuesto .informacion .img p:first-child{
+.presupuesto .informacion .img p:first-child {
     margin-right: auto;
 }
 
-.presupuesto .informacion .img p:last-child{
+.presupuesto .informacion .img p:last-child {
     margin-right: auto;
 }
-.presupuesto .informacion p{
+
+.presupuesto .informacion p {
     margin: .3rem;
 }
 
-svg{
+svg {
     width: 1rem;
 }
 
-.presupuesto .tabla{
-    min-height: 25vh;
+.presupuesto .tabla {
+    min-height: 23vh;
     height: auto;
 }
 
-.presupuesto table{
+.presupuesto table {
     width: 100%;
     border-collapse: collapse;
 }
-.presupuesto .cliente p,.presupuesto .cliente h4{
+
+.presupuesto .cliente p,
+.presupuesto .cliente h4 {
     margin: 0;
 }
 
-.presupuesto table thead tr{
+.presupuesto table thead tr {
     border: .1rem solid black;
 }
 
-.presupuesto #atencion{
+.presupuesto #atencion {
     font-weight: bold;
 }
 
-.presupuesto #atencion p{
+.presupuesto #atencion p {
     margin: 0;
 }
 
-.presupuesto .precios{
+.presupuesto .precios {
     display: flex;
     border: .1rem solid black;
     justify-content: space-around;
     align-items: center;
 }
 
-.presupuesto .precios .total{
+.presupuesto .precios .total {
     font-size: 2rem;
 }
 
-.presupuesto .precios p{
+.presupuesto .precios p {
     margin: 1rem;
 }
 
-.negrita{
+.negrita {
     font-weight: bold;
 }
 
-.none{
+.none {
     display: none;
 }
 
-.ticketRecibo .infoPrincipal p,.ticketRecibo .infoFactura p{
+.ticketRecibo .infoPrincipal p,
+.ticketRecibo .infoFactura p {
     margin: 0.5rem auto;
 }
 
-.ticketRecibo .listaComprobantes div{
+.ticketRecibo .listaComprobantes div {
     display: flex;
     justify-content: space-around;
 }
 
-.ticketRecibo .listaComprobantes div p,.ticketRecibo .listaComprobantes div h3{
+.ticketRecibo .listaComprobantes div p,
+.ticketRecibo .listaComprobantes div h3 {
     margin: 0.5rem auto;
 }
 
-.ticketRecibo .fecha p,.ticketRecibo .cliente p{
+.ticketRecibo .fecha p,
+.ticketRecibo .cliente p {
     font-weight: bold;
 }
 
-.ticketRecibo .fecha p span,.ticketRecibo .cliente p span{
+.ticketRecibo .fecha p span,
+.ticketRecibo .cliente p span {
     font-weight: normal;
 }
