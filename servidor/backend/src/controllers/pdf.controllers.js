@@ -120,7 +120,7 @@ pdfCTRL.crearPdf = async (req, res) => {
     //afip
     if (venta.tipo_comp !== "Recibos") {
         html = html.replace('{{image}}', img);
-        html = venta.condIva === 'ConsumidorFinal' ? html.replace('{{ivaConsumidor}}', (venta.iva105 + venta.iva21).toFixed(2)) : html.replace('{{ivaConsumidor}}', '');
+        html = venta.condIva === 'Consumidor Final' ? html.replace('{{ivaConsumidor}}', "IVA Contenido: $" + (venta.iva105 + venta.iva21).toFixed(2)) : html.replace('{{ivaConsumidor}}', '');
         html = html.replace('{{cae}}', cae);
         html = html.replace('{{vencimientoCae}}', vencimientoCae);
     } else {
