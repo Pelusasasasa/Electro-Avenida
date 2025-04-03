@@ -1,53 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PDF</title>
-   <!-- <link rel="stylesheet" href="../views/pdf.css"> -->
+    <!-- <link rel="stylesheet" href="../views/pdf.css"> -->
     <style>
-        html{
+        html {
             zoom: 0.8;
         }
-        header{
+
+        header {
             border: .2rem solid black;
             display: -webkit-box;
             -webkit-box-pack: justify;
             padding: 1.5rem;
         }
 
-        header p{
+        header p {
             font-weight: bold;
         }
 
-        header span{
+        header span {
             font-weight: 100;
         }
 
-        .tipoFactura div{
+        .tipoFactura div {
             border: .2rem solid black;
         }
 
-        .tipoFactura h2{
+        .tipoFactura h2 {
             text-align: center;
             font-size: 2rem;
         }
 
-        .tipoFactura h2,.tipoFactura p{
+        .tipoFactura h2,
+        .tipoFactura p {
             padding: 0;
             margin: 0;
         }
 
-        .cliente{
+        .cliente {
             border: .2rem solid black;
         }
 
-        .cliente section{
+        .cliente section {
             display: -webkit-box;
         }
 
-        .cliente section p{
+        .cliente section p {
             font-weight: bold;
             margin-left: 1rem;
             margin-right: 6rem;
@@ -56,64 +59,68 @@
             padding: .5rem;
         }
 
-        .cliente section span{
+        .cliente section span {
             font-weight: 100;
         }
 
-        .productos{
+        .productos {
             height: auto;
-            min-height:30rem;
+            min-height: 30rem;
         }
-        .productos table{
+
+        .productos table {
             width: 100%;
             border-collapse: collapse;
         }
 
-        .productos table thead tr{
+        .productos table thead tr {
             background-color: lightgray;
         }
 
-        .productos table thead td{
+        .productos table thead td {
             border: .2rem solid black;
             text-align: center;
             font-weight: bold;
         }
 
-        .productos table tbody .izquierda{
+        .productos table tbody .izquierda {
             text-align: end;
         }
 
-        .totales{
+        .totales {
             border: .2rem solid black;
             display: -webkit-box;
             -webkit-box-pack: justify;
             padding: 2rem;
         }
-        .totales p{
+
+        .totales p {
             font-weight: bold;
             padding: 0;
             margin: 0;
         }
 
-        .qr{
+        .qr {
             display: -webkit-box;
             -webkit-box-pack: justify;
             padding: 2rem;
         }
 
-        .importeTotal{
+        .importeTotal {
             font-size: 1.6rem;
             font-weight: bold;
         }
 
-        img{
+        img {
             width: 60%;
         }
-        .none{
+
+        .none {
             display: none;
         }
     </style>
 </head>
+
 <body>
     <header>
         <div class="izquierdo">
@@ -157,7 +164,7 @@
                 <tr>
                     {{codigo}}
                     {{productoServicio}}
-                    {{cantidad}} 
+                    {{cantidad}}
                     {{medida}}
                     {{precioU}}
                     {{subtotal}}
@@ -169,8 +176,8 @@
                 {{trs}}
             </tbody>
         </table>
-    </main> 
-    <main class="totales"> 
+    </main>
+    <main class="totales">
         <div>
             <img src="{{image}}" alt="" />
         </div>
@@ -178,6 +185,8 @@
         <div class="cae">
             <p>CAE Nº: <span>{{cae}}</span></p>
             <p>Fecha de Vto. de CAE: <span>{{vencimientoCae}}</span></p>
+            <p>Regimen de Transparencia Fiscal Al consumidor</p>
+            <p>IVA Contenido: $ <span>{{ivaConsumidor}}</span></p>
         </div>
 
         <div>
@@ -186,9 +195,10 @@
             {{subtotal}}
             {{iva21}}
             {{iva105}}
-            <p class='importeTotal'>Importe Total: $      <span>{{precioFinal}}</span></p>
+            <p class='importeTotal'>Importe Total: $ <span>{{precioFinal}}</span></p>
         </div>
     </main>
 </body>
 <script src="../views/pdf.js"></script>
+
 </html>
