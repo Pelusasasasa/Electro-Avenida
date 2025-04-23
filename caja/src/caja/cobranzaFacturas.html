@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,6 +9,7 @@
     <link rel="stylesheet" href="../assets/css/global.css">
     <link rel="stylesheet" href="./caja.css">
 </head>
+
 <body class="cobtranzaFacturas">
     <section class="tabla">
         <table>
@@ -26,20 +28,20 @@
         </table>
     </section>
     <section class="inputs">
-        <main class="radio">
-            <div>
+        <main class="radio h-fit">
+            <div class="pt-1">
                 <label for="efectivo">Efectivo</label>
                 <input type="radio" name="tipo" id="efectivo">
             </div>
-            <div>
+            <div class="pt-1">
                 <label for="cheque">Cheque</label>
                 <input type="radio" name="tipo" id="cheque">
             </div>
-            <div>
+            <div class="pt-1">
                 <label for="tarjeta">Tarjeta</label>
                 <input type="radio" name="tipo" id="tarjeta">
             </div>
-            <div>
+            <div class="pt-1">
                 <label for="transferencia">Transferencia</label>
                 <input type="radio" name="tipo" id="transferencia">
             </div>
@@ -48,24 +50,32 @@
                 <input type="radio" name="tipo" id="ml">
             </div>
         </main>
-        <main>
-            <label for="total">Total</label>
-            <input type="number" class="text-right" value="0.00" disabled name="total" id="total">
-        </main>
-        <main>
-            <label for="cobrado">Cobrado</label>
-            <input type="number" class="text-right" value="0.00" name="cobrado" id="cobrado">
-        </main>
 
-        <main>
-            <label for="vuelto">Vuelto</label>
-            <input type="number" class="text-right" value="0.00" name="vuelto" id="vuelto">
-        </main>
+        <div class="grid grid-columns-3">
+            <main>
+                <label for="total">Total</label>
+                <input type="number" class="text-right" value="0.00" disabled name="total" id="total">
+            </main>
+            <main>
+                <label for="cobrado">Cobrado</label>
+                <input type="number" class="text-right" value="0.00" name="cobrado" id="cobrado">
+            </main>
 
-        <main>
-            <label for="descuento">Descuento</label>
-            <input type="number" class="text-right" value="0.00" name="descuento" id="descuento">
-        </main>
+            <main>
+                <label for="recibido">Recibido</label>
+                <input type="number" class="text-right" value="0.00" name="recibido" id="recibido">
+            </main>
+
+            <main>
+                <label for="vuelto">Vuelto</label>
+                <input type="number" class="text-right" value="0.00" name="vuelto" id="vuelto">
+            </main>
+
+            <main>
+                <label for="descuento">Descuento</label>
+                <input type="number" class="text-right" value="0.00" name="descuento" id="descuento">
+            </main>
+        </div>
     </section>
     <section class="botones">
         <button id="aceptar">Aceptar</button>
@@ -73,4 +83,5 @@
     </section>
     <script src="./cobranzaFacturas.js"></script>
 </body>
+
 </html>
