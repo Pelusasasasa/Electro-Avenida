@@ -16,6 +16,7 @@ const ml = document.getElementById("ml");
 
 const total = document.getElementById("total");
 const cobrado = document.getElementById("cobrado");
+const recibido = document.getElementById("recibido");
 const vuelto = document.getElementById("vuelto");
 const descuento = document.getElementById("descuento");
 
@@ -326,14 +327,22 @@ transferencia.addEventListener("click", async (e) => {
 
 cobrado.addEventListener("keypress", (e) => {
   if (e.keyCode === 13) {
-    vuelto.value = redondear(parseFloat(cobrado.value) - parseFloat(total.value), 2);
+    recibido.focus();
+    recibido.select();
+  }
+});
+
+recibido.addEventListener('keypress', e => {
+  if (e.keyCode === 13) {
+    vuelto.value = redondear(parseFloat(recibido.value) - parseFloat(cobrado.value), 2)
     vuelto.focus();
+    vuelto.select();
   }
 });
 
 vuelto.addEventListener('keypress', e => {
   if (e.keyCode === 13) {
-    descuento.value = redondear(parseFloat(total.value) + parseFloat(vuelto.value) - parseFloat(cobrado.value), 2);
+    descuento.value = redondear((parseFloat(recibido.value) - parseFloat(vuelto.value) - parseFloat(total.value)), 2);
     descuento.focus();
   }
 });
