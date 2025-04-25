@@ -42,33 +42,7 @@ hasta.value = date;
 let seleccionado = "";
 let subSeleccionado = "";
 
-window.addEventListener("load", async (e) => {
-  cerrarVentana();
 
-  provedores = (await axios.get(`${URL}provedor`, configAxios)).data;
-  provedores.sort((a, b) => {
-    if (a.provedor < b.provedor) {
-      return -1;
-    } else if (a.provedor > b.provedor) {
-      return 1;
-    }
-    return 0;
-  });
-  await listarProvedores(provedores);
-
-  if (getParameterByName("codProv")) {
-    select.value = getParameterByName("codProv");
-  }
-
-  cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
-  listarCuentas(cuentas);
-
-  const provedor = provedores.find(
-    (provedor) => provedor.codigo === select.value
-  );
-  saldo.value = provedor.saldo.toFixed(2);
-  codigo.value = provedor.codigo.padStart(4, "0");
-});
 
 ipcRenderer.on("eliminarCuentaCorriente", async () => {
   if (!seleccionado) {
@@ -112,7 +86,6 @@ const listarCuentas = (lista) => {
   lista.forEach((cuenta) => {
     const tr = document.createElement("tr");
     tr.id = cuenta._id;
-
     const fecha = cuenta.fecha.slice(0, 10).split("-", 3);
     const tdFecha = document.createElement("td");
     const tdConcepto = document.createElement("td");
@@ -131,7 +104,7 @@ const listarCuentas = (lista) => {
     tdImp.innerHTML = cuenta.nro_comp;
     tdDebe.innerHTML = cuenta.debe.toFixed(2);
     tdHaber.innerHTML = cuenta.haber.toFixed(2);
-    tdSaldo.innerHTML = cuenta.saldo ? cuenta.saldo.toFixed(2) : 'null';
+    tdSaldo.innerHTML = cuenta?.saldo?.toFixed(2);
     tdComPago.innerHTML = cuenta.com_pago;
     (tdObservaciones.innerHTML = cuenta.observaciones
       ? cuenta.observaciones
@@ -239,4 +212,32 @@ desde.addEventListener("keypress", async (e) => {
 
 tbody.addEventListener("contextmenu", (e) => {
   clickderecho(e, "cuentaCorrienteProvedores");
+});
+
+window.addEventListener("load", async (e) => {
+  cerrarVentana();
+
+  provedores = (await axios.get(`${URL}provedor`, configAxios)).data;
+  provedores.sort((a, b) => {
+    if (a.provedor < b.provedor) {
+      return -1;
+    } else if (a.provedor > b.provedor) {
+      return 1;
+    }
+    return 0;
+  });
+  await listarProvedores(provedores);
+
+  if (getParameterByName("codProv")) {
+    select.value = getParameterByName("codProv");
+  }
+
+  cuentas = (await axios.get(`${URL}ctactePro/traerPorProvedorYDesde/${select.value}/${desde.value}`)).data;
+  listarCuentas(cuentas);
+
+  const provedor = provedores.find(
+    (provedor) => provedor.codigo === select.value
+  );
+  saldo.value = provedor.saldo.toFixed(2);
+  codigo.value = provedor.codigo.padStart(4, "0");
 });
