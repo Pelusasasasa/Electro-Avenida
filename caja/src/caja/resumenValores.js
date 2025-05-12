@@ -19,7 +19,6 @@ const guardado = document.querySelector('#guardado');
 const uno = document.querySelector('#uno');
 const cambioCaja = document.querySelector('#cambioCaja');
 const cajaMañana = document.querySelector('#cajaMañana');
-const ceroCincuenta = document.querySelector('#ceroCincuenta');
 const maleta = document.querySelector('#maleta');
 
 const valesCobrar = document.getElementById('valesCobrar');
@@ -71,7 +70,6 @@ const confirmarCambios = async(e) => {
         ultimos.uno = uno.value === "" ? 0 : uno.value;
         ultimos.cambioCaja = cambioCaja.value === "" ? 0 : cambioCaja.value;
         ultimos.cajaMañana = cajaMañana.value === "" ? 0 : cajaMañana.value;
-        ultimos.ceroCincuenta = ceroCincuenta.value === "" ? 0 : ceroCincuenta.value;
         ultimos.maleta = maleta.value === "" ? 0 : maleta.value;
     
         try {
@@ -85,13 +83,14 @@ const confirmarCambios = async(e) => {
 };
 
 const modificarCambio = () => {
-    const cienInput = parseFloat(cien.value);
-    const cincuentaInput = parseFloat(cincuenta.value);
-    const veinteInput = parseFloat(veinte.value);
-    const diezInput = parseFloat(diez.value);
-    const monedaInput = parseFloat(monedas.value);
+    const milInput = parseFloat(cien.value);
+    const quinientosInput = parseFloat(cincuenta.value);
+    const doscientosInput = parseFloat(veinte.value);
+    const cienInput = parseFloat(diez.value);
+    const cincuentaInput = parseFloat(uno.value)
+    const cambioInput = parseFloat(monedas.value);
     
-    cambio.value = redondear(cienInput + cincuentaInput + veinteInput + diezInput + monedaInput,2);
+    cambio.value = redondear(milInput + quinientosInput + doscientosInput + cienInput + cincuentaInput + cambioInput,2);
 };
 
 const ponerValores = (obj) =>{
@@ -108,10 +107,9 @@ const ponerValores = (obj) =>{
         uno.value = obj.uno.toFixed(2);
         cambioCaja.value = obj.cambioCaja.toFixed(2);
         cajaMañana.value = obj.cajaMañana.toFixed(2);
-        ceroCincuenta.value = obj.ceroCincuenta.toFixed(2);
         maleta.value = obj.maleta.toFixed(2);
 
-        totalValesCheques += (obj.efectivoCaja + obj.cheques + obj.cien + obj.cincuenta + obj.veinte + obj.diez + obj.monedas + obj.guardado + obj.uno + obj.cambioCaja + obj.cajaMañana + obj.ceroCincuenta + obj.maleta);
+        totalValesCheques += (obj.efectivoCaja + obj.cheques + obj.cien + obj.cincuenta + obj.veinte + obj.diez + obj.monedas + obj.guardado + obj.uno + obj.cambioCaja + obj.cajaMañana + obj.maleta);
         chequesEfectivo.value = redondear(totalValesCheques,2);
 
         valesEfectivo.value = redondear(parseFloat(chequesEfectivo.value) + parseFloat(totalVales.value),2);
@@ -209,6 +207,12 @@ veinte.addEventListener('keypress',e=>{
 
 diez.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
+        uno.focus();
+    };
+});
+
+uno.addEventListener('keypress',e=>{
+    if (e.keyCode === 13) {
         monedas.focus();
     };
 });
@@ -221,15 +225,11 @@ monedas.addEventListener('keypress',e=>{
 
 guardado.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
-       uno.focus();
+        cambioCaja.focus();
     };
 });
 
-uno.addEventListener('keypress',e=>{
-    if (e.keyCode === 13) {
-       cambioCaja.focus();
-    };
-});
+
 
 cambioCaja.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
@@ -238,12 +238,6 @@ cambioCaja.addEventListener('keypress',e=>{
 });
 
 cajaMañana.addEventListener('keypress',e=>{
-    if (e.keyCode === 13) {
-       ceroCincuenta.focus();
-    };
-});
-
-ceroCincuenta.addEventListener('keypress',e=>{
     if (e.keyCode === 13) {
        maleta.focus();
     };
@@ -281,6 +275,11 @@ diez.addEventListener('change',e=>{
     modificarCambio();
 });
 
+uno.addEventListener('change',e=>{
+    cambiarTotales(e.target);
+    modificarCambio();
+});
+
 monedas.addEventListener('change',e=>{
     cambiarTotales(e.target);
     modificarCambio();
@@ -290,19 +289,13 @@ guardado.addEventListener('change',e=>{
     cambiarTotales(e.target)
 });
 
-uno.addEventListener('change',e=>{
-    cambiarTotales(e.target)
-});
+
 
 cambioCaja.addEventListener('change',e=>{
     cambiarTotales(e.target)
 });
 
 cajaMañana.addEventListener('change',e=>{
-    cambiarTotales(e.target)
-});
-
-ceroCincuenta.addEventListener('change',e=>{
     cambiarTotales(e.target)
 });
 

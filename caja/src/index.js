@@ -217,12 +217,6 @@ const templateMenu = [
           ventanaPrincipal.webContents.send('fechas');
         }
       },
-      {
-        label: "Diferencia de Caja",
-        click() {
-          abrirVentana('caja/difCaja.html', 600, 550)
-        }
-      }
     ]
   },
   {
