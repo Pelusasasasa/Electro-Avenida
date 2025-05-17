@@ -76,9 +76,7 @@ traerSaldo();
 
 const descargar = document.querySelector(".descargar");
 descargar.addEventListener("click", async (e) => {
-  console.log("a");
   let path = await ipcRenderer.invoke("elegirPath");
-  console.log(path);
   let extencion = "xlsx";
   let wb = XLSX.utils.book_new();
   extencion = path.split(".")[1] ? path.split(".")[1] : extencion;
