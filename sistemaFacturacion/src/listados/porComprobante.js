@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { configAxios } = require("../funciones");
+const { ipcRenderer } = require("electron");
 require("dotenv").config;
 const URL = process.env.URL;
 
@@ -20,7 +21,7 @@ mes = mes < 10 ? `0${mes}` : mes;
 const fechaDeHoy = `${hoy.getFullYear()}-${mes}-${dia}`;
 const contado = document.querySelector(".contado");
 const cteCorriente = document.querySelector(".cteCorriente");
-const imprimir = document.querySelector(".imprimir");
+const exportar = document.getElementById('exportar');
 const desde = document.querySelector("#desde");
 const hasta = document.querySelector("#hasta");
 desde.value = fechaDeHoy;
@@ -32,22 +33,10 @@ window.addEventListener("load", async (e) => {
   contado.classList.add("seleccionado");
 
   const desdefecha = new Date(desde.value);
-  let tickets = (
-    await axios.get(`${URL}ventas/${desdefecha}/${hasta.value}`, configAxios)
-  ).data;
-  let presupuesto = (
-    await axios.get(
-      `${URL}presupuesto/${desdefecha}/${hasta.value}`,
-      configAxios
-    )
-  ).data;
-  let recibos = (
-    await axios.get(
-      `${URL}recibos/getbetweenDates/${desdefecha}/${hasta.value}`,
-      configAxios
-    )
-  ).data;
-  ventas = [...tickets, ...presupuesto];
+  let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hasta.value}`)).data;
+  let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hasta.value}`)).data;
+  let recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hasta.value}`)).data;
+  ventas = [...tickets, ...presupuesto, ...recibos];
   const ventasContado = ventas.filter((venta) => venta.tipo_pago == "CD");
 
   listarVentas([...recibos, ...ventasContado]);
@@ -86,7 +75,14 @@ contado.addEventListener("click", listarContado);
 
 cteCorriente.addEventListener("click", listarCuentaCorriente);
 
-imprimir.addEventListener("click", imprimirVentas);
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    window.close();
+  }
+});
+
+exportar.addEventListener("click", imprimirVentas);
 
 async function listarVentas(lista) {
   divAlerta.classList.remove("none");
@@ -102,7 +98,7 @@ async function listarVentas(lista) {
     }
     return 0;
   });
-
+  const fragment = document.createDocumentFragment();
   for await (let venta of lista) {
     let tipo = "";
     if (venta.tipo_comp === "Presupuesto") {
@@ -127,12 +123,9 @@ async function listarVentas(lista) {
     let minutes = hora[1];
     let seconds = hora[2];
     let anio = fecha[0];
-    const movimientos = (
-      await axios.get(
-        `${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`,
-        configAxios
-      )
-    ).data;
+
+    const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
+
     for await (let mov of movimientos) {
       const tr = document.createElement("tr");
 
@@ -176,8 +169,9 @@ async function listarVentas(lista) {
       tr.appendChild(tdPrecio);
       tr.appendChild(tdTotal);
 
-      tbody.appendChild(tr);
+      fragment.appendChild(tr);
     }
+    tbody.appendChild(fragment);
 
     if (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") {
       tbody.innerHTML += `
@@ -194,7 +188,8 @@ async function listarVentas(lista) {
                     <td>${venta.precioFinal}</td>
                 </tr>
             `;
-    }
+    };
+
     if (
       venta.tipo_comp === "Ticket Factura" ||
       venta.tipo_comp === "Factura A" ||
@@ -248,13 +243,7 @@ async function listarVentas(lista) {
   contado.addEventListener("click", listarContado);
   cteCorriente.addEventListener("click", listarCuentaCorriente);
   divAlerta.classList.add("none");
-}
-
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    window.close();
-  }
-});
+};
 
 async function listarContado() {
   totalFactura = 0;
@@ -267,7 +256,7 @@ async function listarContado() {
   contado.classList.add("seleccionado");
   cteCorriente.classList.remove("seleccionado");
   listarVentas([...ventasContado, ...recibos, ...recibos_P]);
-}
+};
 
 async function listarCuentaCorriente() {
   totalFactura = 0;
@@ -278,17 +267,59 @@ async function listarCuentaCorriente() {
   cteCorriente.classList.add("seleccionado");
   contado.classList.remove("seleccionado");
   listarVentas(ventasContado);
-}
+};
 
 async function imprimirVentas() {
-  document.querySelector(".buscador").classList.add("none");
-  document.querySelector(".elegir").classList.add("none");
-  document.querySelector(".listar").classList.add("impresion");
+  let movimientosAExportar = [];
+  const XLSX = require('xlsx');
+  let path = await ipcRenderer.invoke("elegirPath");
 
-  window.print();
+  let wb = XLSX.utils.book_new();
+  wb.props = {
+    title: 'Listado de Comprobantes',
+    subject: "test",
+    Author: "Electro Avenida"
+  };
 
-  document.querySelector(".buscador").classList.remove("none");
-  document.querySelector(".elegir").classList.remove("none");
+  for await(let venta of ventas){
+    const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
+    movimientosAExportar = [...movimientosAExportar, ...movimientos];
+  };
 
-  document.querySelector(".listar").classList.remove("impresion");
-}
+  movimientosAExportar = movimientosAExportar.filter(mov => mov.tipo_pago  === 'CD');
+  
+  for await(let mov of movimientosAExportar){
+    mov.fecha = mov.fecha.slice(0,10).split('-', 3).reverse().join('/') + ' - ' + mov.fecha.slice(11, 19);
+    delete mov._id;
+    delete mov.__v;
+    delete mov.iva;
+    delete mov.costo;
+    delete mov.stock;
+    delete mov.rubro;
+    delete mov.tipo_pago;
+  };
+
+  for await(let venta of ventas){
+    if(venta.tipo_pago === 'CD' || venta.tipo_comp === 'Recibos' || venta.tipo_comp === 'Recibos_P'){
+      const mov = {};
+      mov.fecha = venta.fecha.slice(0,10).split('-', 3).reverse().join('/') + ' - ' + venta.fecha.slice(11, 19);
+      mov.total = venta.precioFinal;
+      mov.nro_comp = venta.nro_comp;
+      movimientosAExportar.push(mov);
+      movimientosAExportar.push({fecha: mov.fecha});
+    }
+  };
+  
+  movimientosAExportar.sort((a, b) => {
+    if(a.fecha > b.fecha) return 1;
+    if(a.fecha < b.fecha) return -1;
+    return 0
+  })
+    
+  let newWS = XLSX.utils.json_to_sheet(movimientosAExportar, {
+    header: ['fecha', 'codCliente', 'cliente', 'nro_comp', 'codProd', 'descripcion', 'ingreso', 'egreso', 'tipo_comp', 'precio_unitario']
+  });
+  
+  XLSX.utils.book_append_sheet(wb, newWS, 'Comprobantes');
+  XLSX.writeFile(wb, path + "." + "xlsx");
+};
