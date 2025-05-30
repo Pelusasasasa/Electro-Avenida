@@ -161,7 +161,7 @@ aceptar.addEventListener('click', async e => {
 
             await ipcRenderer.send('enviar-info-ventana-principal', data.tarjeta);
             if (cerrar) {
-                // window.close();
+                window.close();
             } else {
                 location.reload();
             }
