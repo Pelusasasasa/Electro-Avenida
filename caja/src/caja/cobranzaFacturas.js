@@ -221,6 +221,7 @@ aceptar.addEventListener("click", async (e) => {
     tbody.removeChild(seleccionado);
     total.value = "0.00";
     cobrado.value = "0.00";
+    recibido.value = "0.00";
     descuento.value = "0.00";
     vuelto.value = "0.00";
   } catch (error) {
