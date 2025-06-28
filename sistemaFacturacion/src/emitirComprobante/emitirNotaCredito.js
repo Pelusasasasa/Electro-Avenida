@@ -187,6 +187,9 @@ const mostrarVentas = (objeto, cantidad) => {
 };
 
 const movimientoProducto = async (objeto, cantidad, venta) => {
+  console.log(objeto.stock + ' Stock');
+  console.log(cantidad + ' Cantidad');
+  console.log(venta.tipo_pago + ' Tipo Pago');
   let movProducto = {};
   movProducto.codProd = objeto._id;
   movProducto.descripcion = objeto.descripcion;
@@ -197,13 +200,9 @@ const movimientoProducto = async (objeto, cantidad, venta) => {
   movProducto.nro_comp = venta.nro_comp;
   movProducto.iva = objeto.iva;
   movProducto.ingreso = cantidad;
-  movProducto.stock = objeto.stock;
-  movProducto.precio_unitario = objeto.oferta
-    ? objeto.precioOferta
-    : objeto.precio_venta;
-  movProducto.total = (
-    parseFloat(movProducto.ingreso) * parseFloat(movProducto.precio_unitario)
-  ).toFixed(2);
+  movProducto.stock = venta.tipo_pago == 'PP' ? objeto.stock : (parseFloat(objeto.stock) + parseFloat(cantidad)).toFixed(2);
+  movProducto.precio_unitario = objeto.oferta ? objeto.precioOferta : objeto.precio_venta;
+  movProducto.total = (parseFloat(movProducto.ingreso) * parseFloat(movProducto.precio_unitario)).toFixed(2);
   movProducto.vendedor = venta.vendedor;
   arregloMovimiento.push(movProducto);
 };
@@ -717,13 +716,7 @@ factura.addEventListener("click", async (e) => {
           ));
 
         //Imprimos el ticket
-        ipcRenderer.send("imprimir-venta", [
-          venta,
-          afip,
-          true,
-          1,
-          "Ticket Factura",
-        ]);
+        ipcRenderer.send("imprimir-venta", [venta, afip, true, 1, "Ticket Factura"]);
 
         //Si la venta no es Presupuesto Presupuesto descontamos el stock y hacemos movimiento de producto
         if (venta.tipo_pago !== "PP") {
@@ -735,22 +728,16 @@ factura.addEventListener("click", async (e) => {
             await agregarStock(producto.objeto._id, producto.cantidad);
             await movimientoProducto(producto.objeto, producto.cantidad, venta);
           }
-          await axios.put(
-            `${URL}productos`,
-            arregloProductosDescontarStock,
-            configAxios
-          );
-          await axios.post(
-            `${URL}movProductos`,
-            arregloMovimiento,
-            configAxios
-          );
+
+          await axios.put(`${URL}productos`, arregloProductosDescontarStock);
+          await axios.post(`${URL}movProductos`,arregloMovimiento);
+
           arregloMovimiento = [];
           arregloProductosDescontarStock = [];
         }
         //creamos el pdf
         alerta.children[1].innerHTML = "Guardando nota de credito como pdf";
-        await axios.post(`${URL}crearPdf`, [venta, cliente, afip], configAxios);
+        await axios.post(`${URL}crearPdf`, [venta, cliente, afip]);
         //reiniciamos la pagina
         location.href = "../index.html";
       }

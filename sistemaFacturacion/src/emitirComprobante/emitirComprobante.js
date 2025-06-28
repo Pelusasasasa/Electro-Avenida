@@ -630,20 +630,10 @@ async function sacarStock(cantidad, objeto) {
 //INICIO MOVPRODUCTOS
 
 //Registramos un movimiento de producto
-async function movimientoProducto(
-  cantidad,
-  objeto,
-  idCliente,
-  cliente,
-  tipo_pago,
-  tipo_comp,
-  nro_comp,
-  vendedor
-) {
+async function movimientoProducto(cantidad, objeto,idCliente, cliente, tipo_pago, tipo_comp, nro_comp, vendedor ) {
   let movProducto = {};
   movProducto.codProd = objeto._id;
-  movProducto.descripcion = `${objeto.descripcion} ${objeto.marca ? objeto.marca : ""
-    } ${objeto.cod_fabrica ? objeto.cod_fabrica : ""}`;
+  movProducto.descripcion = `${objeto.descripcion} ${objeto.marca ? objeto.marca : ""} ${objeto.cod_fabrica ? objeto.cod_fabrica : ""}`;
   movProducto.codCliente = idCliente;
   movProducto.cliente = cliente;
   movProducto.comprobante = tipoVenta;
@@ -651,16 +641,9 @@ async function movimientoProducto(
   movProducto.nro_comp = nro_comp;
   movProducto.egreso = cantidad;
   movProducto.iva = objeto.iva;
-  movProducto.stock =
-    tipo_pago === "PP"
-      ? objeto.stock
-      : parseFloat((parseFloat(objeto.stock) - cantidad).toFixed(2));
-  movProducto.precio_unitario = objeto.oferta
-    ? objeto.precioOferta
-    : parseFloat(objeto.precio_venta);
-  movProducto.total = (
-    parseFloat(movProducto.egreso) * parseFloat(movProducto.precio_unitario)
-  ).toFixed(2);
+  movProducto.stock = tipo_pago === "PP" ? objeto.stock : parseFloat((parseFloat(objeto.stock) - cantidad).toFixed(2));
+  movProducto.precio_unitario = objeto.oferta ? objeto.precioOferta : parseFloat(objeto.precio_venta);
+  movProducto.total = (parseFloat(movProducto.egreso) * parseFloat(movProducto.precio_unitario)).toFixed(2);
   movProducto.rubro = objeto.rubro;
   movProducto.tipo_pago = tipo_pago;
   movProducto.vendedor = vendedor;

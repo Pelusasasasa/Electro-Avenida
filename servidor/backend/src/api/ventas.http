@@ -1,0 +1,2 @@
+### Buscamos venta por razon social y fechas
+GET http://localhost:4000/api/ventas/forRazon/LORENZATTO/2023-06-01/2023-06-26
