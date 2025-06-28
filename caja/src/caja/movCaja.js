@@ -13,6 +13,7 @@ require("dotenv").config();
 const URL = process.env.URL;
 const sweet = require("sweetalert2");
 const { ipcRenderer } = require("electron");
+const Formatter = require("../assets/js/formate");
 
 const inputFecha = document.querySelector("#fecha");
 const punto = document.querySelector("#punto");
@@ -78,6 +79,7 @@ descripcion.addEventListener("keypress", (e) => {
 });
 
 importe.addEventListener("keypress", (e) => {
+  
   if (e.key === "Enter") {
     if (aceptar.classList.contains("none")) {
       modificar.focus();
@@ -110,6 +112,9 @@ window.addEventListener("load", async (e) => {
 });
 
 aceptar.addEventListener("click", async (e) => {
+  console.log(importe.value)
+  asd
+
   if (tipoMovimiento.value === "") {
 
     await alerta("Seleccionar un tipo de movimiento");
@@ -222,3 +227,50 @@ const rellenarSelect = (lista) => {
     tipoCuenta.appendChild(option);
   }
 };
+
+
+ let ultimaTecla = '';
+
+  importe.addEventListener('keyup', (e) => {
+    ultimaTecla = e.key;
+    if(ultimaTecla === '.'){
+      console.log(importe.value)
+      importe.value = importe.value.slice(0,-1);
+      importe.value = importe.value + ','
+    }
+
+  });
+
+  importe.addEventListener('input', () => {
+    let valor = importe.value;
+    // 1. Eliminar todos los puntos (asumen separador de miles)
+    valor = valor.replace(/\./g, '');
+    // 2. Reemplazar coma por punto para parseo
+    valor = valor.replace(/,/g, '.');
+
+    // 3. Evitar más de un separador decimal
+    const partes = valor.split('.');
+    if (partes.length > 2) {
+      // Restaurar el valor anterior (opcional) o simplemente salir
+      return;
+    }
+
+    // 4. Parsear el número
+    const num = parseFloat(valor);
+    if (isNaN(num)) {
+      importe.dataset.valor = '';
+      return;
+    }
+
+    // 5. Guardar valor "real"
+    importe.dataset.valor = num;
+
+    // 6. Formatear la parte entera
+    const entero = partes[0] || '0';
+    const decimal = partes[1] || '';
+
+    const enteroFormateado = parseInt(entero).toLocaleString('es-AR');
+    const final = decimal ? `${enteroFormateado},${decimal.slice(0, 2)}` : enteroFormateado;
+
+    importe.value = final;
+      });

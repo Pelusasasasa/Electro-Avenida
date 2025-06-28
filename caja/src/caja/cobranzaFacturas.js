@@ -49,81 +49,7 @@ window.addEventListener("load", async (e) => {
   listar(movimientos);
 });
 
-const cobrarML = async (e) => {
-  if (seleccionado) {
-    let aux = seleccionado.children[5].innerHTML.replace('.', '');
-    aux = aux.replace(',', '.');
 
-    const { isConfirmed, value } = await Swal.fire({
-      title: 'Precio Tarjeta',
-      html: `
-        <div class='flex gap-2 flex-col'>
-          <input type="number" id="cobradoML"/>
-          <input type="date" id="fechaML"/>
-        </div>
-      `,
-      didOpen: () => {
-        document.getElementById('cobradoML').value = aux;
-        document.getElementById('fechaML').value = seleccionado.children[0].innerText.split('/', 3).reverse().join('-');
-      },
-      preConfirm: () => {
-        const cobradoML = document.getElementById('cobradoML').value;
-        const fechaML = document.getElementById('fechaML').value;
-
-        return { cobradoML, fechaML };
-      },
-      confirmButtonText: 'Aceptar',
-      showCancelButton: true
-    });
-
-    if (seleccionado) {
-      const egreso = {};
-
-      egreso.tMov = "E";
-      egreso.fecha = new Date();
-      egreso.nro_comp = seleccionado.children[4].innerText;
-      egreso.desc = seleccionado.children[2].innerText + ' MERCADO LIBRE GASTOS';
-      egreso.idCuenta = "ML";
-      egreso.pasado = true;
-      egreso.imp = (aux - parseFloat(value.cobradoML)).toFixed(2);
-      egreso.cuenta = "MERCADO LIBRE";
-      egreso.vendedor = seleccionado.children[6].innerText;
-      egreso.codigo = seleccionado.children[1].innerText;
-      egreso.cliente = seleccionado.children[2].innerText;
-
-      try {
-        await axios.post(`${URL}movCajas`, egreso);
-      } catch (error) {
-        console.log(error);
-        await Swal.fire({
-          title: "No se pudo cargar el descuento en caja",
-        });
-      }
-
-      const tarjeta = {};
-      const now = new Date();
-      const fechaArgentina = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
-
-      tarjeta.fecha = fechaArgentina;
-      tarjeta.tarjeta = 'MERCADO PAGO'
-      tarjeta.imp = aux = "" ? 0 : parseFloat(aux) - parseFloat(egreso.imp);
-      tarjeta.cliente = seleccionado.children[2].innerText;
-      tarjeta.vendedor = seleccionado.children[6].innerText;
-      tarjeta.tipo = "Tarjeta";
-      tarjeta.tipo_comp = seleccionado.children[3].innerText;
-      tarjeta.fechaPago = value.fechaML;
-
-      try {
-        await axios.post(`${URL}tarjetas`, tarjeta);
-      } catch (error) {
-        console.log(error)
-      }
-
-      aceptar.click();
-    }
-
-  }
-}
 
 const listar = async (lista) => {
   tbody.innerHTML = "";
@@ -265,7 +191,6 @@ cheque.addEventListener("click", (e) => {
   }
 });
 
-ml.addEventListener('click', cobrarML);
 
 tarjeta.addEventListener("click", (e) => {
   if (seleccionado) {
@@ -405,7 +330,7 @@ function listarUltimoMovimiento(mov) {
   const tdVendedor = document.createElement("td");
 
   tdImporte.classList.add("text-right");
-  console.log(mov.fecha.slice(0, 10).split("-", 3).reverse().join("/"));
+
   tdFecha.innerText = mov.fecha.slice(0, 10).split("-", 3).reverse().join("/");
   tdCodigo.innerText = mov.codigo;
   tdCliente.innerText = mov.cliente;
