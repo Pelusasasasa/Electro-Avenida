@@ -13,6 +13,7 @@ require("dotenv").config();
 const URL = process.env.URL;
 const sweet = require("sweetalert2");
 const { ipcRenderer } = require("electron");
+const {parsearNumero, formater} = require("../assets/js/formate");
 
 const inputFecha = document.querySelector("#fecha");
 const punto = document.querySelector("#punto");
@@ -78,6 +79,7 @@ descripcion.addEventListener("keypress", (e) => {
 });
 
 importe.addEventListener("keypress", (e) => {
+  
   if (e.key === "Enter") {
     if (aceptar.classList.contains("none")) {
       modificar.focus();
@@ -110,6 +112,7 @@ window.addEventListener("load", async (e) => {
 });
 
 aceptar.addEventListener("click", async (e) => {
+
   if (tipoMovimiento.value === "") {
 
     await alerta("Seleccionar un tipo de movimiento");
@@ -133,7 +136,7 @@ aceptar.addEventListener("click", async (e) => {
     const fechaActual = new Date(year, month - 1, day, hours, minuts, seconds);
 
     movimientoCaja.fecha = fechaActual;
-    movimientoCaja.imp = importe.value;
+    movimientoCaja.imp = parseFloat(importe.value.replace(/\./g, '').replace(/\,/g, '.'));
     movimientoCaja.cuenta = document.querySelector("option[value = " + tipoCuenta.value + "]").innerHTML;
     movimientoCaja.idCuenta = tipoCuenta.value;
     movimientoCaja.desc = descripcion.value.toUpperCase();
@@ -155,20 +158,14 @@ modificar.addEventListener("click", async (e) => {
   const movimiento = {};
   movimiento.fecha = fecha.value;
   movimiento.nro_comp =
-    punto.value.padStart(4, "0") + "-" + numero.value.padStart(8, "0");
+  punto.value.padStart(4, "0") + "-" + numero.value.padStart(8, "0");
   movimiento.tMov = tipoMovimiento.value;
   movimiento.idCuenta = tipoCuenta.value;
-  movimiento.cuenta = document.querySelector(
-    "option[value = " + tipoCuenta.value + "]"
-  ).innerHTML;
+  movimiento.cuenta = document.querySelector("option[value = " + tipoCuenta.value + "]").innerHTML;
   movimiento.desc = descripcion.value.toUpperCase();
-  movimiento.imp = importe.value;
+  movimiento.imp = parseFloat(importe.value.replace(/\./g, '').replace(/\,/g, '.'));
   try {
-    await axios.put(
-      `${URL}movCajas/id/${modificar.id}`,
-      movimiento,
-      configAxios
-    );
+    await axios.put(`${URL}movCajas/id/${modificar.id}`, movimiento);
     window.close();
   } catch (error) {
     sweet.fire({
@@ -196,7 +193,7 @@ const listarMovimiento = (movimiento) => {
   tipoMovimiento.value = movimiento.tMov;
   tipoCuenta.value = movimiento.idCuenta;
   descripcion.value = movimiento.desc;
-  importe.value = movimiento.imp.toFixed(2);
+  importe.value = formater(movimiento.imp.toString());
 };
 
 ipcRenderer.on("recibir-informacion", async (e, args) => {
@@ -222,3 +219,10 @@ const rellenarSelect = (lista) => {
     tipoCuenta.appendChild(option);
   }
 };
+
+
+ let ultimaTecla = '';
+
+  importe.addEventListener('keyup', (e) => {
+    importe.value = parsearNumero(e, importe);
+  });

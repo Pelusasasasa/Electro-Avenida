@@ -324,7 +324,7 @@ const templateMenu = [
       {
         label: "Cheques No Cobrados",
         click() {
-          abrirVentana("bancos/chequesNoCobrados.html", 1000, 1000)
+          abrirVentana("bancos/chequesNoCobrados.html", 1000, 800)
         }
       }, {
         label: "Ingresar Pago Cheques Propios",

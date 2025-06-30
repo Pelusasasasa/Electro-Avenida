@@ -1,0 +1,10 @@
+GET http://localhost:4000/api/cheques
+
+### Cargar una
+POST http://localhost:4000/api/cheques
+Content-Type: application/json
+
+{
+    "i_cheque": 500,
+    "banco": "Macro"
+}
