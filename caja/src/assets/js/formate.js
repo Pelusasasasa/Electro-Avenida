@@ -1,22 +1,32 @@
-const Formatter = (valor) => {
-     // Primero, limpiamos el valor (eliminamos todo excepto números y punto)
-    const valorLimpio = valor.replace(/[^\d.]/g, '');
-    console.log(valorLimpio)
-    // Separamos parte entera y decimal
-    const partes = valorLimpio.split('.');
-    let parteEntera = partes[0] || '0';
-    let parteDecimal = partes[1] || '';
+const parsearNumero = (e, importe) => {
+    ultimaTecla = e.key;
+    let bandera = '';
+    if(ultimaTecla === '.'){
+      importe.value = importe.value.slice(0,-1);
+      importe.value = importe.value + ','
+      bandera = ','
+    };
 
-    console.log(parteEntera)
-    console.log(parteDecimal)
-
-    // Formateamos parte entera con puntos cada 3 dígitos
+    const separador = importe.value.split(',');
+    let parteEntera = separador[0].replace(/\./g, '') ?? '0';
+    let parteDecimal = separador[1] ?? '';
     parteEntera = parteEntera.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-    console.log(parteEntera)
+    
+    return parteDecimal ? parteEntera + ',' + parteDecimal : parteEntera + bandera;
 
-
-    // Unimos parte entera y decimal con coma
-    return (parteDecimal || valorLimpio.includes('.')) ? `${parteEntera},${parteDecimal}` : parteEntera;
 };
 
-module.exports = Formatter
+const formater = (value) => {
+    const separador = value.split('.');
+    let parteEntera = separador[0].replace(/\./g, '') ?? '0';
+    let parteDecimal = separador[1] ?? '';
+    console.log(parteDecimal);
+    parteEntera = parteEntera.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+    return parteDecimal ? parteEntera + ',' + parteDecimal : parteEntera;
+}
+
+module.exports = {
+    parsearNumero,
+    formater
+}

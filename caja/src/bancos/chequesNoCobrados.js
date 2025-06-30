@@ -7,13 +7,14 @@ const tbody = document.querySelector("tbody");
 
 window.addEventListener("load", async (e) => {
   cerrarVentana();
-  const chequesNoCobrados = (
-    await axios.get(`${URL}cheques/sinFechaPagoYPropios`, configAxios)
-  ).data;
+
+  const chequesNoCobrados = (await axios.get(`${URL}cheques/sinFechaPagoYPropios`)).data;
   listarCheques(chequesNoCobrados);
+
 });
 
 listarCheques = (lista) => {
+
   lista.sort((a, b) => {
     if (a.f_cheque > b.f_cheque) {
       return 1;
@@ -22,12 +23,14 @@ listarCheques = (lista) => {
     }
     return 0;
   });
+  
   let total = 0;
   lista.forEach((cheque) => {
-    console.log(cheque);
-    const fechaRecibido = cheque.f_recibido.slice(0, 10).split("-", 3);
-    const fechaCheque =
-      cheque.f_cheque?.slice(0, 10).split("-", 3) ?? "00/00/00";
+    
+    const fechaRecibido = cheque.f_recibido.slice(0, 10).split("-", 3) ?? '00/00/00';
+    const fechaCheque = cheque.f_cheque?.slice(0, 10).split("-", 3) ?? "00/00/00";
+    const importe = cheque.i_cheque.toFixed(2) ?? '0.00';
+
     const tr = document.createElement("tr");
 
     const tdEmision = document.createElement("td");
@@ -37,11 +40,10 @@ listarCheques = (lista) => {
     const tdImporte = document.createElement("td");
 
     tdEmision.innerHTML = `${fechaRecibido[2]}/${fechaRecibido[1]}/${fechaRecibido[0]}`;
-    tdNumero.innerHTML = cheque.n_cheque;
+    tdNumero.innerHTML = cheque.n_cheque ?? '';
     tdFechaCheque.innerHTML = `${fechaCheque[2]}/${fechaCheque[1]}/${fechaCheque[0]}`;
     tdEntregadoA.innerHTML = cheque.entreg_a;
-    tdImporte.innerHTML = cheque.i_cheque.toFixed(2);
-
+    tdImporte.innerHTML = importe;
     tdImporte.classList.add("text-right");
 
     tr.appendChild(tdEmision);
