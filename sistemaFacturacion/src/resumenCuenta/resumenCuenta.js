@@ -217,10 +217,8 @@ function listarVentas(ventas, situacion, saldoAnterior, saldoAnterior_P) {
                     <td>${dia}/${mes}/${anio}</td>
                     <td>${comprobante}</td>
                     <td>${venta.nro_comp}</td>
-                    <td class=text-end>${venta.debe === 0.0 ? "" : venta.debe.toFixed(2)
-      }</td>
-                    <td class=text-end>${venta.haber === 0.0 ? "" : venta.haber.toFixed(2)
-      }</td>
+                    <td class=text-end>${venta.debe === 0.0 ? "" : venta.debe.toFixed(2)}</td>
+                    <td class=text-end>${venta.haber === 0.0 ? "" : venta.haber.toFixed(2)}</td>
                     <td class=text-end>${venta.saldo.toFixed(2)}</td>
                 </tr>
             `;
