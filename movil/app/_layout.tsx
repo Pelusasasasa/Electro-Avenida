@@ -1,21 +1,23 @@
-import React from 'react'
 
-import { productos } from '@/data/productos'
+import { store } from '@/store/store'
 import { Stack } from 'expo-router'
+import React from 'react'
+import { Provider } from 'react-redux'
 import '../global.css'
 
 const _layout = () => {
 
-  console.log(productos);
   return (
-    <Stack>
-      <Stack.Screen
-        options={{
-          headerShown: false
-        }}
-        name='listado'
-      />
-    </Stack>
+    <Provider store={store}>
+        <Stack>
+        <Stack.Screen
+          options={{
+            headerShown: false
+          }}
+          name='listado'
+        />
+      </Stack>
+    </Provider>
   )
 }
 
