@@ -4,6 +4,40 @@ const fs = require('fs');
 
 const Productos = require("../models/Producto");
 
+productosCTRL.buscarProducto = async(req, res) => {
+    const { text } = req.params;
+
+
+    
+    try {
+        let productos = [];
+
+        if(text === 'textoVacio'){
+            productos = await Productos.find().limit(50)
+        }else{
+            productos = await Productos.find({
+                $or: [
+                    {descripcion: new RegExp(text, 'i')},
+                    {_id: new RegExp(text, 'i')},
+                    {cod_fabrica: new RegExp(text, 'i')},
+                ]
+            });
+        }
+
+
+        res.status(200).json({
+            ok: true,
+            productos
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'No se pudo obtener los prodcutos'
+        })
+    }
+};
+
 productosCTRL.traerProductos = async(req,res)=>{
     let {texto,tipoBusqueda} = req.params;
     texto = texto.replace('ALT47','/');
@@ -30,7 +64,7 @@ productosCTRL.traerProductos = async(req,res)=>{
 
     }
     res.send(productos)
-}
+};
 
 productosCTRL.getproducto = async(req,res)=>{
     const {id} = req.params
@@ -43,7 +77,7 @@ productosCTRL.getproducto = async(req,res)=>{
         res.send(producto[0])
     }
 
-}
+};
 
 productosCTRL.crearProducto = async(req,res)=>{
     const productonuevo = new Productos(req.body);

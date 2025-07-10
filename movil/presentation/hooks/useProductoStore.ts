@@ -1,6 +1,7 @@
 import { electroApi } from "@/core/api/electroApi";
 import { Producto } from "@/core/types/productos";
 import { loading, setProductos } from "@/store/producto/productoSlice";
+import { Alert } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 interface RootState {
@@ -19,21 +20,14 @@ export const useProductoStore = () => {
     const startTraerProductosPorTexto = async(texto: string) => {
         try {
             dispatch(loading())
-            const { data } = await electroApi(`productos/buscarProducto/${texto === '' ? 'textoVacio' : texto}/descripcion`);
-            dispatch(setProductos(data))
+            const { data } = await electroApi.get(`productos/filtrar/${!texto ? 'textoVacio' : texto}`);
+            if(data.ok){
+                dispatch(setProductos(data.productos))
+            }else{
+                await Alert.alert('No se pudo obtener los productos')
+            }
         } catch (error) {
             console.log(error);
-        }
-    };
-
-    const startTraerImagen = async(id: string) => {
-        try {
-            const { data } = await electroApi(`productos/${id}/image`);
-
-            return data
-        } catch (error) {
-            console.log(error);
-            return ''
         }
     };
 
@@ -45,6 +39,5 @@ export const useProductoStore = () => {
 
         //Metodos
         startTraerProductosPorTexto,
-        startTraerImagen
     }
 }

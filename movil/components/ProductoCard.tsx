@@ -41,7 +41,7 @@ const ProductoCard = ({_id, descripcion, precio_venta, stock, cod_fabrica, rubro
                     <Text className='text-yellow-600 text-2xl font-medium'>$ {precio_venta.toFixed(2)}</Text>
                     <View className='flex-row px-2 justify-between'>
                         <Text className='text-md text-white px-2 py-1 rounded-full  bg-black'>Stock: {stock}</Text>
-                        <Text className='inline-flex border-yellow-200 bg-yellow-50 text-yellow-800 rounded-full px-2.5 items-center text-xs font-medium'>{rubro}</Text>
+                        {/* <Text className='inline-flex border-yellow-200 bg-yellow-50 text-yellow-800 rounded-full px-2.5 items-center text-xs font-medium'>{rubro}</Text> */}
                     </View>
                 </View>
 

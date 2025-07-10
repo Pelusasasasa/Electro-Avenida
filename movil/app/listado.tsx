@@ -42,7 +42,7 @@ const ListadoScreen = () => {
                 </View>
         ) : (
             <View className='p-4'>
-                <Text className='text-xl py-2 font-medium'>Productos Encotntrados ({productos.length})</Text>
+                <Text className='text-xl py-2 font-medium'>Productos Encotntrados ({productos?.length})</Text>
                 <FlatList
                 data={productos}
                 keyExtractor={item => item._id}
