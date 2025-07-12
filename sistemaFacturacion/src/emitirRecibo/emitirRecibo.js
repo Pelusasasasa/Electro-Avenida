@@ -86,7 +86,7 @@ document.addEventListener("keydown", (event) => {
         mostrarNegro();
         situacion = "negro";
         parseFloat(cliente.saldo_p) > 0 &&
-          Vendedor !== "ELBIO" &&
+          (Vendedor !== "ELBIO" && Vendedor !== 'PABLO') &&
           saldoAfavor.setAttribute("disabled", "");
         listarLista(nuevaLista, situacion);
       } else if (e.key === "F8" && situacion === "negro") {

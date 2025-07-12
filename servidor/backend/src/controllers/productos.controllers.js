@@ -6,9 +6,6 @@ const Productos = require("../models/Producto");
 
 productosCTRL.buscarProducto = async(req, res) => {
     const { text } = req.params;
-
-
-    
     try {
         let productos = [];
 
@@ -20,6 +17,7 @@ productosCTRL.buscarProducto = async(req, res) => {
                     {descripcion: new RegExp(text, 'i')},
                     {_id: new RegExp(text, 'i')},
                     {cod_fabrica: new RegExp(text, 'i')},
+                    {marca: new RegExp(text, 'i')},
                 ]
             });
         }
