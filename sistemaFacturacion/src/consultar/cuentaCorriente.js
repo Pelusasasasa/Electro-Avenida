@@ -688,20 +688,15 @@ async function cancelarCuenta(e) {
   });
 
   if (isConfirmed) {
-    const cuenta = (
-      await axios.get(
-        `${URL}cuentaComp/numeroYCliente/${comp.nro_comp}${scomp.codigoeccionado.children[2].innerText}/${codigoCliente.value}`,
-        configAxios
-      )
-    ).data;
-    cuenta.pagado = cuenta.importe;
-    cuenta.saldo = 0;
-    await axios.put(
-      `${URL}cuentaComp/numeroYCliente/${comp.nro_comp}${comp.codigo.nro_comp}/${cuenta.codigo}`,
-      cuenta,
-      configAxios
-    );
-    listar.removeChild(seleccionado);
+    try {
+      await axios.delete(`${URL}cuentaComp/id/${seleccionado.children[2].innerText}`);
+      await axios.delete(`${URL}cuentaHisto/id/${seleccionado.children[2].innerText}`);
+      
+      listar.removeChild(seleccionado);
+      seleccionado = '';
+    } catch (error) {
+      await sweet.fire('No se pudo Eliminar la cuenta', `No se pudo eliminar la cuenta ${seleccionado.children[2].innerText}`, 'error')
+    }
   }
 }
 

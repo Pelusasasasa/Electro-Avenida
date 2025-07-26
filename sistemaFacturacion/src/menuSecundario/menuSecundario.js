@@ -46,7 +46,7 @@ const cambiarObservaciones = new MenuItem({
 });
 
 const cancelarCuenta = new MenuItem({
-    label: "Cancelar Cuenta",
+    label: "Eliminar Cuenta Comp. E Hist.",
     async click() {
         ventanaPrincipal.webContents.send('CancelarCuenta');
     }
@@ -120,7 +120,7 @@ function mostrarMenu(ventana, x, y) {
             menuSecundario.append(compensarCuenta);
         };
 
-        if (!menuSecundario.items.find(menu => menu.label === "Cancelar Cuenta")) {
+        if (!menuSecundario.items.find(menu => menu.label === "Eliminar Cuenta Comp. E Hist.")) {
             menuSecundario.append(cancelarCuenta);
         };
 
