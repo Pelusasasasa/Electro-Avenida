@@ -9,7 +9,7 @@ const _layout = () => {
 
   return (
     <Provider store={store}>
-        <Stack>
+        <Stack screenOptions={{ headerShown: false}}>
         <Stack.Screen
           options={{
             headerShown: false
