@@ -14,7 +14,7 @@ const _layout = () => {
           options={{
             headerShown: false
           }}
-          name='listado'
+          name='index'
         />
       </Stack>
     </Provider>
