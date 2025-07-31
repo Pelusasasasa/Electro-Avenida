@@ -10,6 +10,9 @@ const tbody = document.querySelector("tbody");
 const detallesProducto = document.querySelector(".detallesProducto");
 const detalle = document.getElementById("detalle");
 
+const ordenarFecha = document.getElementById('ordenarFecha');
+
+
 const botonFacturar = document.getElementById("botonFacturar");
 
 /* Variables */
@@ -18,8 +21,17 @@ let subSeleccionado = "";
 
 window.addEventListener("load", async (e) => {
   const hoy = new Date();
-  const prestamos = (await axios.get(`${URL}prestamos/noAnulados`, configAxios))
-    .data;
+  const {data: prestamos} = (await axios.get(`${URL}prestamos/noAnulados`));
+
+  prestamos.sort((a, b) => {
+    if (a.observaciones > b.observaciones) {
+      return 1;
+    } else if (a.observaciones < b.observaciones) {
+      return -1;
+    }
+    return 0;
+  });
+
   listarPrestamos(prestamos);
 });
 
@@ -28,14 +40,6 @@ botonFacturar.addEventListener("click", facturarPrestamos);
 
 //Listamos los prestamos traidos
 async function listarPrestamos(lista) {
-  lista.sort((a, b) => {
-    if (a.observaciones > b.observaciones) {
-      return 1;
-    } else if (a.observaciones < b.observaciones) {
-      return -1;
-    }
-    return 0;
-  });
 
   tbody.innerText = "";
   for (let elem of lista) {
@@ -72,7 +76,7 @@ async function listarPrestamos(lista) {
 
     tbody.appendChild(tr);
   }
-}
+};
 
 //si se hace un click en el prestamo se traen los moviminetos de producto
 async function mostrarDetalleProducto(e) {
@@ -237,4 +241,16 @@ document.addEventListener("keyup", (e) => {
       location.href = "../index.html";
     }
   }
+});
+
+
+ordenarFecha.addEventListener('click', async() => {
+  const {data: prestamos} = (await axios.get(`${URL}prestamos/noAnulados`));
+  prestamos.sort((a, b) => {
+    if(a.fecha > b.fecha) return 1
+    if(a.fecha < b.fecha) return -1
+    return 0
+  });
+  console.log(prestamos[0])
+  listarPrestamos(prestamos)
 });
