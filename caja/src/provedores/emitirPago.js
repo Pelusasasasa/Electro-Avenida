@@ -193,14 +193,17 @@ const descontarSaldoProvedor = async () => {
   }
 };
 
-const listarProductos = (lista) => {
+const listarProvedores = (lista) => {
   for (let elem of lista) {
     const option = document.createElement("option");
     option.value = elem.codigo;
     option.text = elem.provedor;
 
     provedores.appendChild(option);
-  }
+  };
+
+  obtenerProvedor(provedores.value)
+  
 };
 
 const ponerEnComprobantePagos = async () => {
@@ -285,6 +288,17 @@ const sumarNumeroPago = async () => {
   }
 };
 
+const obtenerProvedor = async(value) => {
+  const { data } = await axios.get(`${URL}provedor/codigo/${provedores.value}`);
+  provedor = data;
+
+  codigo.value = provedor.codigo;
+  saldo.value = provedor.saldo.toFixed(2);
+  condIva.value = provedor.situa;
+  cuit.value = provedor.cuit;
+  
+}
+
 window.addEventListener("load", async (e) => {
   let numero = (
     await axios.get(`${URL}tipoVenta/name/Ultimo Pago`, configAxios)
@@ -300,18 +314,13 @@ window.addEventListener("load", async (e) => {
     return 0;
   });
 
-  listarProductos(provedores);
+  listarProvedores(provedores);
 });
 
 provedores.addEventListener("change", async (e) => {
   e.preventDefault();
-  provedor = (
-    await axios.get(`${URL}provedor/codigo/${provedores.value}`, configAxios)
-  ).data;
-  codigo.value = provedor.codigo;
-  saldo.value = provedor.saldo.toFixed(2);
-  condIva.value = provedor.situa;
-  cuit.value = provedor.cuit;
+  obtenerProvedor(provedores.value)
+  
 });
 
 //cuanado apretamos enter si hay un numero buscamos en la base de datos el cheque y sino lo pasamos a banco
