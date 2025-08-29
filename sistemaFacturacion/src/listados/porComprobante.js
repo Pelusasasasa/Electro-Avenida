@@ -85,6 +85,7 @@ document.addEventListener("keydown", (e) => {
 exportar.addEventListener("click", imprimirVentas);
 
 async function listarVentas(lista) {
+
   divAlerta.classList.remove("none");
   contado.removeEventListener("click", listarContado);
   cteCorriente.removeEventListener("click", listarCuentaCorriente);
@@ -98,7 +99,9 @@ async function listarVentas(lista) {
     }
     return 0;
   });
+
   const fragment = document.createDocumentFragment();
+
   for await (let venta of lista) {
     let tipo = "";
     if (venta.tipo_comp === "Presupuesto") {
@@ -113,7 +116,7 @@ async function listarVentas(lista) {
       tipo = "FB";
     } else {
       tipo = "R";
-    }
+    };
 
     const fecha = venta.fecha.slice(0, 10).split("-", 3);
     const hora = venta.fecha.slice(11, 19).split(":", 3);
@@ -171,6 +174,7 @@ async function listarVentas(lista) {
 
       fragment.appendChild(tr);
     }
+    
     tbody.appendChild(fragment);
 
     if (venta.tipo_comp === "Recibos" || venta.tipo_comp === "Recibos_P") {
@@ -255,6 +259,7 @@ async function listarContado() {
   const ventasContado = ventas.filter((venta) => venta.tipo_pago === "CD");
   contado.classList.add("seleccionado");
   cteCorriente.classList.remove("seleccionado");
+  console.log("a")
   listarVentas([...ventasContado, ...recibos, ...recibos_P]);
 };
 
