@@ -106,7 +106,6 @@ codigoMLCTRL.subirImagenes = async(req, res) => {
             };
 
             const imagenSubida = (await axios.post(`${url}pictures/items/upload`, formData,  {headers})).data;
-            console.log(imagenSubida)
 
             if (imagenSubida) {
                 arregloImagenes.push(imagenSubida);
@@ -119,7 +118,7 @@ codigoMLCTRL.subirImagenes = async(req, res) => {
             ok: true
         })
     } catch (error) {
-        console.log(error)
+        console.error(error)
         res.send({
             message: error.response.data.message,
             ok: false
@@ -140,7 +139,7 @@ codigoMLCTRL.getOrders = async(req, res) => {
 
         res.send(ordenes.data.results)
     } catch (error) {
-        console.log(error)
+        console.error(error)
         
         res.status(500).send({
             message: error.response.data.message,

@@ -29,7 +29,7 @@ ultimosCTRL.getLast = async(req, res) => {
             ultimo
         });
     } catch (error) {
-        console.log(error);
+        console.error(error);
         res.status(500).json({
             ok: false,
             msg: 'Hable con el administrador'

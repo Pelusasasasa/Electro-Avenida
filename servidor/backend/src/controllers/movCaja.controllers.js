@@ -21,7 +21,7 @@ movCajaCTRL.post = async(req,res)=>{
         await movCaja.save();
     } catch (error) {
         console.log("Error en " + req.body.fecha + "Con el numero de comprobante " + req.body.nro_comp + "Y tipo " + req.body.tPago + "Y descripcion " + req.body.desc );
-        console.log(error);
+        console.error(error);
     }
     console.log(`Movimiento de caja ${req.body.desc} cargado por el vendedor ${req.body.vendedor} en la maquina ${req.body.maquina} con la hora ${(new Date()).toLocaleString()}`);
     res.send(`Moviemiento de caja Cargado`);
@@ -43,7 +43,7 @@ movCajaCTRL.getBetweenDates = async(req,res)=>{
             ]
         });
     } catch (error) {
-        console.log("Error en la linea 35")
+        console.error(error);
     }
     res.send(movimientos)
 };
@@ -54,7 +54,7 @@ movCajaCTRL.put = async(req,res)=>{
         try {
             await MovCaja.findOneAndUpdate({_id:elem._id},elem);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             console.log(`Movimiento de caja con el numero de comprobante: ${elem.nro_comp} no fue modificado`)
         }
         console.log(`Movimiento de caja ${elem._id} Modificado`);
@@ -129,7 +129,7 @@ movCajaCTRL.putForId = async(req,res)=>{
         await MovCaja.findOneAndUpdate({_id:id},req.body);
     } catch (error) {
         console.log(`El error estuvo a la hora ${new Date()} en el movimineto ${req.body.nro_comp} de ${req.body.cliente}`)
-        console.log(error)
+        console.error(error)
     }
     res.end();
 }

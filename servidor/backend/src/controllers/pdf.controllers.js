@@ -140,19 +140,15 @@ pdfCTRL.crearPdf = async (req, res) => {
     html = html.replace('{{precioFinal}}', venta.precioFinal);
 
     const config = {
-        "height": "10.5in", "width": "8in", "format": "A4", "type": "pdf", "zoomFactor": "0.65",
-    };
-    pdf.create(html, config).toFile(`pdfs/${venta.nro_comp}--${venta.tipo_comp === "Recibos" ? venta.cliente : venta.nombreCliente}--${venta.tipo_comp}.pdf`, (err, res) => {
-        if (err) {
-            console.log(err);
-        } else {
-            console.log(res)
-            console.log("")
-            console.log("")
-        }
-        html = fs.readFileSync(__dirname + '/pdf.html', 'utf8');
-    })
-    res.send("a");
+         "height": "10.5in", "width": "8in",  "format" : "A4", "type": "pdf", "zoomFactor": "0.65",    
+        };
+        pdf.create(html,config).toFile(`pdfs/${venta.nro_comp}--${venta.tipo_comp === "Recibos" ? venta.cliente : venta.nombreCliente}--${venta.tipo_comp}.pdf`,(err,res)=>{
+            if (err) {
+                console.log(err);
+            }
+            html = fs.readFileSync(__dirname + '/pdf.html','utf8');
+        })
+        res.send("a");
 };
 
 const verCodigoComp = (codigoComprobante) => {

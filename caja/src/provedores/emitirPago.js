@@ -45,8 +45,8 @@ const cancelar = document.getElementById("cancelar");
 
 let listaCheques = [];
 let provedor;
-let totalInput;
 let facturas = [];
+let listaDescuentos = [];
 
 
 const agregarComprobante = () => {
@@ -62,7 +62,7 @@ const agregarComprobante = () => {
   const tdEliminar = document.createElement("td");
 
   tdNumero.innerHTML =
-    puntoVenta.value.padStart(4, "0") + "-" + numero.value.padStart(8, "0");
+  puntoVenta.value.padStart(4, "0") + "-" + numero.value.padStart(8, "0");
   tdTipo.innerHTML = tipo.value;
   tdDescuento.innerHTML = "0.00";
   tdImporte.innerHTML = parseFloat(importe.value).toFixed(2);
@@ -70,16 +70,18 @@ const agregarComprobante = () => {
 
   tr.appendChild(tdNumero);
   tr.appendChild(tdTipo);
+  console.log(tipo.value);
   tr.appendChild(tdDescuento);
   tr.appendChild(tdImporte);
   tr.appendChild(tdEliminar);
 
   tbodyComprobante.appendChild(tr);
 
-  total.value = redondear(
-    parseFloat(importe.value) + parseFloat(total.value),
-    2
-  );
+  total.value = redondear(parseFloat(importe.value) + parseFloat(total.value),2);
+  
+  if(tipo.value === 'Descuento'){
+    listaDescuentos.push(parseFloat(importe.value));
+  };
 };
 
 const agregarCheque = () => {
@@ -126,6 +128,7 @@ const agregarCheque = () => {
 
   listaCheques.push(cheque);
 
+
   numeroCheque.value = "";
   banco.value = "BANCO DE ENTRE RIOS";
   fecha.value = "";
@@ -138,14 +141,8 @@ const cambiarNumeroComprobantePago = async(lista) => {
   for await (let elem of lista) {
     if (elem.children[1].innerText !== "Pago Anticipado" && elem.children[1].innerText !== "Pago A Cuenta") {
       const comprobante = (await axios.get(`${URL}ctactePro/numero/${elem.children[0].innerText}`)).data;
-
       comprobante.com_pago = numeroVenta.value;
-      
-      await axios.put(
-        `${URL}ctactePro/id/${comprobante._id}`,
-        comprobante,
-        configAxios
-      );
+      await axios.put(`${URL}ctactePro/id/${comprobante._id}`,comprobante);
     }
   }
 };
@@ -163,22 +160,18 @@ const cargarChequesPropios = async (lista) => {
       tarjeta.vendedor = 'ELBIO';
       banderaMP = true;
       await axios.post(`${URL}tarjetas`, tarjeta);
-    } else {
-      console.log(cheque)
+    } else if(cheque.banco !== 'EFECTIVO'){
+        console.log(cheque)
       await axios.put(`${URL}cheques/${cheque.n_cheque}`, cheque);
     }
     
   });
 };
 
-const descontarSaldoProvedor = async () => {
-  provedor.saldo = redondear(provedor.saldo - parseFloat(total.value), 2);
+const descontarSaldoProvedor = async (saldo) => {
+  provedor.saldo = saldo - parseFloat(total.value);
   try {
-    await axios.put(
-      `${URL}provedor/codigo/${provedor.codigo}`,
-      provedor,
-      configAxios
-    );
+    await axios.put(`${URL}provedor/codigo/${provedor.codigo}`,provedor);
   } catch (error) {
     sweet.fire({
       title:
@@ -246,7 +239,7 @@ const ponerEnComprobantePagos = async () => {
   }
 };
 
-const ponerEnCuentaCorriente = async () => {
+const ponerEnCuentaCorriente = async (saldo) => {
   const cuenta = {};
   cuenta.fecha = new Date().toISOString().slice(0, 10);
   cuenta.codProv = codigo.value;
@@ -255,10 +248,10 @@ const ponerEnCuentaCorriente = async () => {
   cuenta.nro_comp = numeroVenta.value;
   cuenta.debe = 0;
   cuenta.haber = total.value;
-  cuenta.saldo = redondear(provedor.saldo - parseFloat(total.value), 2);
+  cuenta.saldo = redondear(saldo - parseFloat(total.value), 2);
   cuenta.com_pago = numeroVenta.value;
   try {
-    await axios.post(`${URL}ctactePro`, cuenta, configAxios);
+    await axios.post(`${URL}ctactePro`, cuenta);
   } catch (error) {
     sweet.fire({
       title: "No se pudo cargar en cuenta corriente provedor",
@@ -393,7 +386,33 @@ tbodyCheque.addEventListener("click", (e) => {
 });
 
 aceptar.addEventListener("click", async (e) => {
-  let banderaMP = false
+  let banderaMP = false;
+  let saldo = parseFloat(provedor.saldo);
+
+  for(let elem of listaDescuentos){
+    saldo = saldo + elem;
+    const cuenta = {};
+    cuenta.fecha = new Date().toISOString().slice(0, 10);
+    cuenta.codProv = codigo.value;
+    cuenta.provedor = provedor.provedor;
+    cuenta.tipo_comp = "Descuento";
+    cuenta.nro_comp = '0000-00000000';
+    cuenta.debe = 0;
+    cuenta.haber = -elem;
+    cuenta.saldo = saldo;
+    cuenta.com_pago = '0000-00000000';
+
+    try {
+      await axios.post(`${URL}ctactePro`, cuenta);
+    } catch (error) {
+      sweet.fire({
+        title: "No se pudo cargar en cuenta corriente provedor",
+      });
+      console.log(error);
+    }
+  };
+
+  
 
   for(let elem of listaCheques){
     if (elem.banco === "MERCADO PAGO"){
@@ -405,7 +424,7 @@ aceptar.addEventListener("click", async (e) => {
   await cambiarNumeroComprobantePago(document.querySelectorAll("#tbodyComprobante tr"));
 
   await ponerEnComprobantePagos();
-
+  
   if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
     const comprobante = {};
 
@@ -417,25 +436,16 @@ aceptar.addEventListener("click", async (e) => {
     comprobante.rSocial = provedores.value;
     comprobante.n_cheque = numeroCheque.value;
 
-    await ponerEnCuentaCorriente();
-    await descontarSaldoProvedor();
+    await ponerEnCuentaCorriente(saldo);
+    await descontarSaldoProvedor(saldo);
     await sumarNumeroPago();
 
     if (facturas.length !== 0) {
       for await (let fact of facturas) {
-        const cuenta = (
-          await axios.get(
-            `${URL}ctactePro/numero/${fact.nro_comp}`,
-            configAxios
-          )
-        ).data;
+        const cuenta = (await axios.get(`${URL}ctactePro/numero/${fact.nro_comp}`)).data;
         cuenta.com_pago = numeroVenta.value;
         try {
-          await axios.put(
-            `${URL}ctactePro/id/${cuenta._id}`,
-            cuenta,
-            configAxios
-          );
+          await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
         } catch (error) {
           console.log(error);
           await sweet.fire({
@@ -483,6 +493,11 @@ aceptar.addEventListener("click", async (e) => {
       total: total.value,
     });
     location.reload();
+  }else{
+    await sweet.fire({
+      title: 'Los Totales son distintos',
+      text: `El total de los comprobantes es ${total.value} y el total de los cheques es ${totalCheque.value}`
+    })
   }
 });
 

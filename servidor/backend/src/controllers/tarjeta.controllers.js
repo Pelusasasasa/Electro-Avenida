@@ -7,13 +7,13 @@ tarjetaCTRL.post = async (req, res) => {
     try {
         const tarjeta = new Tarjeta(req.body);
         await tarjeta.save();
-
+        
         res.send({
             ok: true,
             tarjeta
         })
     } catch (error) {
-        console.log(error)
+        console.error(error)
         res.status(500).json({
             ok: false,
             msg: 'Hable Con el administrador'
