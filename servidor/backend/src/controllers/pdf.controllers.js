@@ -143,10 +143,6 @@ pdfCTRL.crearPdf = async(req,res)=>{
         pdf.create(html,config).toFile(`pdfs/${venta.nro_comp}--${venta.tipo_comp === "Recibos" ? venta.cliente : venta.nombreCliente}--${venta.tipo_comp}.pdf`,(err,res)=>{
             if (err) {
                 console.log(err);
-            }else{
-                console.log(res)
-                console.log("")
-                console.log("")
             }
             html = fs.readFileSync(__dirname + '/pdf.html','utf8');
         })

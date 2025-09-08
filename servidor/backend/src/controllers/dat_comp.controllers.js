@@ -51,7 +51,7 @@ datCompCTRL.getFechaImpt = async(req,res)=>{
             {fecha_imput:{$lt:mesSig}}
         ]});
     } catch (error) {
-        console.log(error)
+        console.error(error)
     }
 
     res.send(compras)
