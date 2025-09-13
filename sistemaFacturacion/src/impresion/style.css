@@ -181,7 +181,7 @@ html {
 
 .presupuesto .informacion main,
 .presupuesto .cliente .nombre {
-    grid-template-columns: 3fr 1fr 1fr;
+    grid-template-columns: 3fr 0.5fr 2fr;
 }
 
 .presupuesto #marina {
@@ -210,7 +210,7 @@ svg {
 }
 
 .presupuesto .tabla {
-    min-height: 23vh;
+    min-height: 21vh;
     height: auto;
 }
 

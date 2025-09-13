@@ -110,6 +110,29 @@ let arregloMovimiento = [];
 let arregloProductosDescontarStock = [];
 let maquina = "";
 
+/**
+ * @param {Object} objeto
+ * @return {Number}
+ */
+const calcularPrecioProducto = async({costo, costodolar, impuestos, iva, utilidad}, cantidad, aumento) => {
+  let precio = 0;
+
+  if(costodolar !== 0){
+    const { data } = (await axios.get(`${URL}tipoVenta`));
+    const dolar = parseFloat(data.dolar);
+    
+    let costoIva = (costodolar + parseFloat(impuestos) )  * dolar;
+    precio = ((costoIva + (costoIva * parseFloat(utilidad) / 100)) * aumento);
+
+    return precio
+  }else{
+    let costoIva = (parseFloat(costo) + parseFloat(impuestos));
+    precio = ((costoIva + (costoIva * parseFloat(utilidad) / 100)) * aumento);
+
+    return precio
+  };
+};
+
 window.addEventListener("load", async (e) => {
   copiar();
   maquina = verNombrePc();
@@ -267,19 +290,16 @@ codigo.addEventListener("keypress", async (e) => {
         );
       } else if (codigo.value === "777-058") {
         //tomamos los valores de los div y le sacamos la propiedad none
-        let descripcion = document.querySelector(".descripcion");
-        const porcentaje = document.querySelector(".porcentaje");
+        console.log(descripcion);
 
-        descripcion.classList.remove("none");
-        porcentaje.classList.remove("none");
+        descripcion.parentNode.classList.remove("none");
+        porcentaje.parentNode.classList.remove("none");
 
-        descripcion.children[0].value = "FINANCIACION BANCO DE ENTRE RIOS";
-        porcentaje.children[0].placeholder = "Porcentaje";
-        porcentaje.children[0].focus();
+        descripcion.value = "FINANCIACION BANCO DE ENTRE RIOS";
+        porcentaje.placeholder = "Porcentaje";
+        porcentaje.focus();
 
-        porcentaje.addEventListener("keypress", (e) =>
-          ponerFinanciacionBancoEntreRios(e, descripcion, porcentaje)
-        );
+        
       } else {
         let producto = (
           await axios.get(`${URL}productos/${e.target.value}`, configAxios)
@@ -848,11 +868,7 @@ presupuesto.addEventListener("click", async (e) => {
         venta.nro_comp
       );
       await ponerEnCuentaCorrienteCompensada(venta, valorizado.checked);
-      await ponerEnCuentaCorrienteHistorica(
-        venta,
-        valorizado.checked,
-        saldo_p.value
-      );
+      await ponerEnCuentaCorrienteHistorica(venta,valorizado.checked,saldo_p.value);
     }
 
     //si la venta es distinta de presupuesto o de prestamo sacamos el stock y movimiento de producto
@@ -897,15 +913,7 @@ presupuesto.addEventListener("click", async (e) => {
         cond_iva: conIva.value,
       };
       if (venta.tipo_pago === "CC") {
-        await ipcRenderer.send("imprimir-venta", [
-          venta,
-          cliente,
-          true,
-          2,
-          venta.tipo_comp,
-          valorizadoImpresion,
-          arregloMovimiento,
-        ]);
+        await ipcRenderer.send("imprimir-venta", [venta, cliente, true, 2, venta.tipo_comp, valorizadoImpresion, arregloMovimiento]);
       } else if (venta.tipo_pago === "CD") {
         await ipcRenderer.send("imprimir-venta", [
           venta,
@@ -1851,7 +1859,7 @@ async function ponerPrecioFinanciacionTarjeta(e, descripcion, precio) {
 }
 
 function ponerFinanciacionBancoEntreRios(e, descripcion, porcentaje) {
-  const valor = parseFloat(porcentaje.children[0].value) / 100 + 1;
+  const valor = parseFloat(porcentaje.value) / 100 + 1;
   if (e.keyCode === 13) {
     total.value = "0.00";
     Preciofinal = 0;
@@ -1859,28 +1867,31 @@ function ponerFinanciacionBancoEntreRios(e, descripcion, porcentaje) {
     resultado.innerHTML = "";
     const listaAux = JSON.parse(JSON.stringify(listaProductos)); //Creamos una lista auxiliar para borrar la otra lista de productos
     listaProductos = [];
+    console.log(listaAux);
 
-    listaAux.map(({ cantidad, objeto }) => {
+    listaAux.map(async({ cantidad, objeto }) => {
       if (objeto.oferta) {
         objeto.precioOferta *= valor;
         objeto.precioOferta = parseFloat(objeto.precioOferta.toFixed(2));
       } else {
-        objeto.precio_venta *= valor;
-        objeto.precio_venta = parseFloat(objeto.precio_venta.toFixed(2));
+        objeto.precio_venta = await calcularPrecioProducto(objeto, cantidad, valor);
       }
       mostrarVentas(objeto, cantidad);
     });
 
-    descripcion.children[0].value = "";
-    porcentaje.children[0].value = "";
+    descripcion.value = "";
+    porcentaje.value = "";
     codigo.value = "";
 
-    descripcion.classList.add("none");
-    porcentaje.classList.add("none");
+    descripcion.parentNode.classList.add("none");
+    porcentaje.parentNode.classList.add("none");
 
-    ponerNotificaciones("Aumento Banco Entre Rios Activado");
+    // ponerNotificaciones("Aumento Banco Entre Rios Activado");
   }
-}
+};
+porcentaje.addEventListener("keypress", (e) =>
+  ponerFinanciacionBancoEntreRios(e, descripcion, porcentaje)
+);
 
 telefono.addEventListener("focus", (e) => {
   telefono.select();
