@@ -756,18 +756,10 @@ presupuesto.addEventListener("click", async (e) => {
   } else if (listaProductos.length === 0) {
     await sweet.fire({ title: "Cargar Productos" });
     return;
-  } else if (
-    parseFloat(descuento.value) < -10 ||
-    (parseFloat(descuento.value) > 10 &&
-      codigoC.value !== "L082" &&
-      vendedor !== "ELBIO" &&
-      vendedor !== "AGUSTIN")
-  ) {
+  } else if (parseFloat(descuento.value) < -10 || (parseFloat(descuento.value) > 10 && codigoC.value !== "L082" && vendedor !== "ELBIO" && vendedor !== "AGUSTIN")) {
     await sweet.fire({ title: "Descuento no autorizado" });
     return;
-  } else if (
-    document.getElementById("cuentaCorriente").checked &&
-    listaProductos.find((producto) => producto.objeto._id === "999-999")
+  } else if (document.getElementById("cuentaCorriente").checked && listaProductos.find((producto) => producto.objeto._id === "999-999")
   ) {
     await sweet.fire({
       title: "Producto con 999-999 no se puedo hacer Cuenta Corriente",
@@ -790,13 +782,13 @@ presupuesto.addEventListener("click", async (e) => {
     showCancelButton: true,
   });
 
-  if (!isConfirmed) {
-    return;
-  }
+  if (!isConfirmed) return;
+
+  if(listaProductos.length > 11 ){
+    await sweet.fire('Necesita Una Hoja Grande para imprimir');
+  };
 
   venta.tipo_pago = await verElTipoDeVenta(tiposVentas); //vemos si es CD,CC o PP en el input[radio]
-  //creamos una lista sin los descuentos para imprimirlos
-  const listaSinDescuento = JSON.parse(JSON.stringify(listaProductos));
   venta.productos = listaProductos;
   try {
     alerta.classList.remove("none");
@@ -1320,11 +1312,7 @@ ticketFactura.addEventListener("click", async (e) => {
               mov.nro_comp = venta.nro_comp;
               mov.tipo_comp = venta.tipo_comp;
             }
-            await axios.put(
-              `${URL}movProductos`,
-              movimientosViejos,
-              configAxios
-            );
+            await axios.put(`${URL}movProductos`,movimientosViejos);
 
             //borramos la cuenta compensada
             await borrrarCuentaCompensada(ventaDeCtaCte);

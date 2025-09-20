@@ -52,14 +52,14 @@ const { ipcRenderer } = require("electron");
             };
 
             tbody.innerHTML = "";
-             for await (let elem of lista) {
+            for await (let elem of lista) {
                 console.log(elem)
-                 if ((venta.tipo_pago !== "CC" || (valorizado === "valorizado" && venta.tipo_pago === "CC")) && valorizado !== "no valorizado") {
+                if ((venta.tipo_pago !== "CC" || (valorizado === "valorizado" && venta.tipo_pago === "CC")) && valorizado !== "no valorizado") {
                     tbody.innerHTML += `
                     <tr>
                         <td>${(elem.egreso).toFixed(2)}</td>
                         <td>${elem.codProd}</td>
-                        <td class="descripcion">${elem.descripcion.slice(0,59)}</td>
+                        <td class="descripcion">${elem.descripcion.slice(0,51)}</td>
                         <td>${parseFloat(elem.precio_unitario).toFixed(2)}</td>
                         <td>${(parseFloat(elem.precio_unitario)*elem.egreso).toFixed(2)}</td>
                     </tr>
