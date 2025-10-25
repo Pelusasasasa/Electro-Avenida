@@ -114,18 +114,18 @@ let maquina = "";
  * @param {Object} objeto
  * @return {Number}
  */
-const calcularPrecioProducto = async({costo, costodolar, impuestos, iva, utilidad}, cantidad, aumento) => {
+const calcularPrecioProducto = async ({ costo, costodolar, impuestos, iva, utilidad }, cantidad, aumento) => {
   let precio = 0;
 
-  if(costodolar !== 0){
+  if (costodolar !== 0) {
     const { data } = (await axios.get(`${URL}tipoVenta`));
     const dolar = parseFloat(data.dolar);
-    
-    let costoIva = (costodolar + parseFloat(impuestos) )  * dolar;
+
+    let costoIva = (costodolar + parseFloat(impuestos)) * dolar;
     precio = ((costoIva + (costoIva * parseFloat(utilidad) / 100)) * aumento);
 
     return precio
-  }else{
+  } else {
     let costoIva = (parseFloat(costo) + parseFloat(impuestos));
     precio = ((costoIva + (costoIva * parseFloat(utilidad) / 100)) * aumento);
 
@@ -299,7 +299,7 @@ codigo.addEventListener("keypress", async (e) => {
         porcentaje.placeholder = "Porcentaje";
         porcentaje.focus();
 
-        
+
       } else {
         let producto = (
           await axios.get(`${URL}productos/${e.target.value}`, configAxios)
@@ -402,26 +402,18 @@ function mostrarVentas(objeto, cantidad) {
   descuento.value = "0.00";
   descuentoN.value = "0.00";
   cobrado.value = "0.00";
-  Preciofinal += objeto.oferta
-    ? objeto.precioOferta * cantidad
-    : objeto.precio_venta * cantidad;
+  Preciofinal += objeto.oferta ? objeto.precioOferta * cantidad : objeto.precio_venta * cantidad;
   total.value = redondear(Preciofinal, 2);
+
   resultado.innerHTML += `
-        <tr id=${id} class=${objeto.stock <= 0 || objeto.precio_venta <= 0 ? "tdRojo" : ""
-    } >
+      <tr id=${id} class=${objeto.stock <= 0 || objeto.precio_venta <= 0 || objeto.stock - cantidad <= 0 ? "tdRojo" : ""}>
         <td class="tdEnd">${cantidad.toFixed(2)}</td>
         <td>${objeto._id}</td>
         <td>${objeto.descripcion} ${objeto.marca}</td>
         <td class="tdEnd">${(objeto.iva === "R" ? 10.5 : 21).toFixed(2)}</td>
-        <td class="tdEnd">${objeto.oferta
-      ? objeto.precioOferta.toFixed(2)
-      : parseFloat(objeto.precio_venta).toFixed(2)
-    }</td>
-        <td class="tdEnd">${objeto.oferta
-      ? (objeto.precioOferta * cantidad).toFixed(2)
-      : (parseFloat(objeto.precio_venta) * cantidad).toFixed(2)
-    }</td>
-        </tr>
+        <td class="tdEnd">${objeto.oferta ? objeto.precioOferta.toFixed(2) : parseFloat(objeto.precio_venta).toFixed(2)}</td>
+        <td class="tdEnd">${objeto.oferta ? (objeto.precioOferta * cantidad).toFixed(2) : (parseFloat(objeto.precio_venta) * cantidad).toFixed(2)}</td>
+      </tr>
     `;
   objeto.identificadorTabla = `${id}`;
   id++;
@@ -650,7 +642,7 @@ async function sacarStock(cantidad, objeto) {
 //INICIO MOVPRODUCTOS
 
 //Registramos un movimiento de producto
-async function movimientoProducto(cantidad, objeto,idCliente, cliente, tipo_pago, tipo_comp, nro_comp, vendedor ) {
+async function movimientoProducto(cantidad, objeto, idCliente, cliente, tipo_pago, tipo_comp, nro_comp, vendedor) {
   let movProducto = {};
   movProducto.codProd = objeto._id;
   movProducto.descripcion = `${objeto.descripcion} ${objeto.marca ? objeto.marca : ""} ${objeto.cod_fabrica ? objeto.cod_fabrica : ""}`;
@@ -784,7 +776,7 @@ presupuesto.addEventListener("click", async (e) => {
 
   if (!isConfirmed) return;
 
-  if(listaProductos.length > 11 ){
+  if (listaProductos.length > 11) {
     await sweet.fire('Necesita Una Hoja Grande para imprimir');
   };
 
@@ -860,7 +852,7 @@ presupuesto.addEventListener("click", async (e) => {
         venta.nro_comp
       );
       await ponerEnCuentaCorrienteCompensada(venta, valorizado.checked);
-      await ponerEnCuentaCorrienteHistorica(venta,valorizado.checked,saldo_p.value);
+      await ponerEnCuentaCorrienteHistorica(venta, valorizado.checked, saldo_p.value);
     }
 
     //si la venta es distinta de presupuesto o de prestamo sacamos el stock y movimiento de producto
@@ -1312,7 +1304,7 @@ ticketFactura.addEventListener("click", async (e) => {
               mov.nro_comp = venta.nro_comp;
               mov.tipo_comp = venta.tipo_comp;
             }
-            await axios.put(`${URL}movProductos`,movimientosViejos);
+            await axios.put(`${URL}movProductos`, movimientosViejos);
 
             //borramos la cuenta compensada
             await borrrarCuentaCompensada(ventaDeCtaCte);
@@ -1857,7 +1849,7 @@ function ponerFinanciacionBancoEntreRios(e, descripcion, porcentaje) {
     listaProductos = [];
     console.log(listaAux);
 
-    listaAux.map(async({ cantidad, objeto }) => {
+    listaAux.map(async ({ cantidad, objeto }) => {
       if (objeto.oferta) {
         objeto.precioOferta *= valor;
         objeto.precioOferta = parseFloat(objeto.precioOferta.toFixed(2));

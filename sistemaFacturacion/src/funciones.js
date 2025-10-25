@@ -428,10 +428,12 @@ const buscarPersonaPorDNI = async (valor) => {
 
   try {
     persona = await afip.RegisterScopeThirteen.getTaxpayerDetails("27" + valor + digito);
+    console.log(persona)
   } catch (error) {
     console.log(error);
   }
-  if (!persona) {
+
+  if (!persona | persona.tipoClave === 'CDI') {
     const digito = calcularDigitoVerificador("20" + valor);
     try {
       persona = await afip.RegisterScopeThirteen.getTaxpayerDetails("20" + valor + digito);
@@ -443,7 +445,7 @@ const buscarPersonaPorDNI = async (valor) => {
   if (!persona) {
     const digito = calcularDigitoVerificador("23" + valor);
     try {
-    persona = await afip.RegisterScopeThirteen.getTaxpayerDetails("23" + valor + digito);
+      persona = await afip.RegisterScopeThirteen.getTaxpayerDetails("23" + valor + digito);
     } catch (error) {
       await sweet.fire('Error', 'No se encontro la persona en la AFIP', 'error');
       console.log(error);
@@ -451,12 +453,12 @@ const buscarPersonaPorDNI = async (valor) => {
   };
 
   const { nombre, apellido, domicilio } = persona;
-
+  console.log(persona)
   const retorno = {
     nombre: (nombre ? nombre : '') + " " + apellido,
-    direccion: domicilio[0].direccion,
-    localidad: domicilio[0].localidad,
-    provincia: domicilio[0].descripcionProvincia,
+    direccion: domicilio ? domicilio[0].direccion : '',
+    localidad: domicilio ? domicilio[0].localidad : '',
+    provincia: domicilio ? domicilio[0].descripcionProvincia : '',
   };
 
   return retorno;
