@@ -406,7 +406,7 @@ function mostrarVentas(objeto, cantidad) {
   total.value = redondear(Preciofinal, 2);
 
   resultado.innerHTML += `
-      <tr id=${id} class=${objeto.stock <= 0 || objeto.precio_venta <= 0 || objeto.stock - cantidad <= 0 ? "tdRojo" : ""}>
+      <tr id=${id} class=${objeto.stock <= 0 || objeto.precio_venta <= 0 || objeto.stock - cantidad < 0 ? "tdRojo" : ""}>
         <td class="tdEnd">${cantidad.toFixed(2)}</td>
         <td>${objeto._id}</td>
         <td>${objeto.descripcion} ${objeto.marca}</td>
@@ -821,7 +821,8 @@ presupuesto.addEventListener("click", async (e) => {
       }
     }
 
-    await axios.post(`${URL}presupuesto`, venta, configAxios);
+    const { data } = await axios.post(`${URL}presupuesto`, venta);
+
 
     venta.tipo_pago === "CD" &&
       (await generarMovimientoCaja(
@@ -874,11 +875,7 @@ presupuesto.addEventListener("click", async (e) => {
     }
 
     if (venta.tipo_pago !== "PP" && !facturarPrestamo) {
-      await axios.put(
-        `${URL}productos`,
-        arregloProductosDescontarStock,
-        configAxios
-      );
+      await axios.put(`${URL}productos`, arregloProductosDescontarStock);
     }
 
     if (facturarPrestamo && venta.tipo_pago === "PP") {
@@ -896,28 +893,13 @@ presupuesto.addEventListener("click", async (e) => {
         localidad: localidad.value,
         cond_iva: conIva.value,
       };
+
       if (venta.tipo_pago === "CC") {
         await ipcRenderer.send("imprimir-venta", [venta, cliente, true, 2, venta.tipo_comp, valorizadoImpresion, arregloMovimiento]);
       } else if (venta.tipo_pago === "CD") {
-        await ipcRenderer.send("imprimir-venta", [
-          venta,
-          ,
-          true,
-          1,
-          "Ticket Factura",
-          valorizadoImpresion,
-          arregloMovimiento,
-        ]);
+        await ipcRenderer.send("imprimir-venta", [venta, , true, 1, "Ticket Factura", valorizadoImpresion, arregloMovimiento,]);
       } else {
-        await ipcRenderer.send("imprimir-venta", [
-          venta,
-          cliente,
-          false,
-          1,
-          venta.tipo_comp,
-          valorizadoImpresion,
-          arregloMovimiento,
-        ]);
+        await ipcRenderer.send("imprimir-venta", [data, cliente, false, 1, venta.tipo_comp, valorizadoImpresion, arregloMovimiento,]);
       }
     }
 
@@ -929,21 +911,16 @@ presupuesto.addEventListener("click", async (e) => {
       });
 
       //Lo que hacemos es modificar los movimientos que estan como prestamos a el tipo de venta
-      venta.tipo_pago !== "PP" &&
-        (await axios.put(`${URL}movProductos`, movimientos, configAxios));
+      venta.tipo_pago !== "PP" && (await axios.put(`${URL}movProductos`, movimientos, configAxios));
 
       //Anulamos el prestamo anterior
       let lista = JSON.parse(getParameterByName("arregloPrestamo"));
-      venta.tipo_pago !== "PP" &&
-        (await axios.put(
-          `${URL}prestamos/anularVarios/${venta.nro_comp}`,
-          lista
-        ));
+      venta.tipo_pago !== "PP" && (await axios.put(`${URL}prestamos/anularVarios/${venta.nro_comp}`, lista));
     }
 
     arregloMovimiento = [];
     arregloProductosDescontarStock = [];
-    window.location = "../index.html";
+    //window.location = "../index.html";
   } catch (error) {
     console.log(error);
     await sweet.fire({ title: "No se puedo cargar la venta" });
