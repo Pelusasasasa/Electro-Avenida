@@ -79,28 +79,40 @@
         </table>
       </section>
 
-      <section class="pagado">
-        <main class="saldoAFavor">
-          <h3>Saldo a favor</h3>
+      <section class="pagado mt-1">
+        <main class="saldoAFavor flex flex-col">
+          <label>Saldo a favor</label>
           <input type="number" id="saldoAFavor" value="0.00" class="text-right" name="saldoAFavor" />
         </main>
 
-        <main>
-          <h3 for="valoresRecibidos">Valores Recibido</h3>
+        <main class="flex flex-col">
+          <label for="valoresRecibidos">Valores Recibido</label>
           <input type="text" name="valoresRecibidos" id="valoresRecibidos">
         </main>
 
-        <main class="total">
-          <h3>Total</h3>
-          <input type="number" placeholder="0.00" id="total" name="total" disabled />
+        <main class="flex flex-col subTotal">
+          <label>Sub Total</label>
+          <input type="number" placeholder="0.00" id="subTotal" name="subTotal" disabled />
         </main>
+
+        <main class="flex flex-col">
+          <label>Descuento %</label>
+          <input type="number" name="descuento" id="descuento">
+        </main>
+
+        <main class="flex flex-col total">
+          <label for="total">Total</label>
+          <input type="number" name="total" id="total">
+        </main>
+
+        
       </section>
 
       <section class="botones">
         <button class="todo">Pagar Todo</button>
         <button class="cancelar">Cancelar</button>
         <button class="imprimir">Imprimir</button>
-        <div class="vendedor"></div>
+        <div class="vendedor border"></div>
       </section>
 
       <div class="alerta none">

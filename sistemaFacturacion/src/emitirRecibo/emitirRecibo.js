@@ -63,6 +63,8 @@ const cancelar = document.querySelector(".cancelar");
 
 const vendedor = document.querySelector(".vendedor");
 const saldoAfavor = document.querySelector("#saldoAFavor");
+const subTotal = document.querySelector("#subTotal");
+const descuento = document.querySelector("#descuento");
 const total = document.querySelector("#total");
 
 const Vendedor = getParameterByName("vendedor");
@@ -99,6 +101,25 @@ document.addEventListener("keydown", (event) => {
     });
   }
 });
+
+const cambiarDescuento = () => {
+  const aux = Number(subTotal.value);
+  
+  total.value = (aux - (aux * Number(descuento.value) / 100)).toFixed(2);
+};
+
+cambiarTotal = () => {
+  
+  const aux = Number(subTotal.value);
+  const totalValue = Number(total.value);
+
+  if (aux === 0) {
+    descuento.value = "0.00";
+  } else {
+    const calculatedDiscount = (1 - (totalValue / aux)) * 100;
+    descuento.value = calculatedDiscount.toFixed(2);
+  }
+};
 
 //ocultamos lo que esta en negro y ponemos las cosas en blanco
 const ocultarNegro = () => {
@@ -331,12 +352,12 @@ listar.addEventListener("click", (e) => {
 
 let saldoAFavorAnterior = "0";
 saldoAfavor.addEventListener("change", (e) => {
-  if (!total.value) {
-    total.value = 0;
+  if (!subTotal.value) {
+    tosubTotaltal.value = 0;
   }
   if (saldoAfavor.value !== "") {
-    total.value = (
-      parseFloat(total.value) +
+    subTotal.value = (
+      parseFloat(subTotal.value) +
       parseFloat(saldoAfavor.value) -
       parseFloat(saldoAFavorAnterior)
     ).toFixed(2);
@@ -348,6 +369,7 @@ saldoAfavor.addEventListener("change", (e) => {
 
 imprimir.addEventListener("click", async (e) => {
   e.preventDefault();
+
   if (parseFloat(total.value) === 0) {
     await sweet
       .fire({
@@ -360,7 +382,13 @@ imprimir.addEventListener("click", async (e) => {
           hacerRecibo();
         }
       });
-  } else {
+  } else if(Number(descuento.value > 10)){
+    await sweet.fire({
+      title: "El porcentaje de descuento no esta permitido",
+      icon: "error",
+      confirmButtonText: "Aceptar",
+    })
+    } else {
     hacerRecibo();
   }
 });
@@ -576,19 +604,6 @@ const modificarVentasConpensadas = async (lista) => {
   }
 };
 
-cancelar.addEventListener("click", async (e) => {
-  await sweet
-    .fire({
-      title: "Desea cancelar el Recibo",
-      showCancelButton: true,
-      confirmButtonText: "Aceptar",
-    })
-    .then(({ isConfirmed }) => {
-      if (isConfirmed) {
-        location.href = "../index.html";
-      }
-    });
-});
 
 const ponerEnCuentaCorrienteHistorica = async (recibo, vendedor, maquina) => {
   const cuenta = {};
@@ -675,12 +690,12 @@ async function calculartotal() {
     saldoAfavor.removeAttribute("disabled");
   }
 
-  total.value = redondear(sum + parseFloat(saldoAfavor.value), 2);
+  subTotal.value = redondear(sum + parseFloat(saldoAfavor.value), 2);
 }
 
 //si hacemos click en pagar todo se compensan todas las ventas que aparecen
 todo.addEventListener("click", (e) => {
-  total.value = situacion === "blanco" ? saldo.value : saldo_p.value;
+  subTotal.value = situacion === "blanco" ? saldo.value : saldo_p.value;
   saldoAfavor.removeAttribute("disabled");
 
   const trs = document.querySelectorAll(".listar tr");
@@ -689,8 +704,8 @@ todo.addEventListener("click", (e) => {
       tr.children[5].children[0].value = tr.children[6].innerHTML;
       tr.children[6].innerHTML = "0.00";
     } else {
-      total.value = redondear(
-        parseFloat(total.value) - parseFloat(tr.children[3].innerHTML),
+      subTotal.value = redondear(
+        parseFloat(subTotal.value) - parseFloat(tr.children[3].innerHTML),
         2
       );
     }
@@ -700,6 +715,23 @@ todo.addEventListener("click", (e) => {
 codigo.addEventListener("focus", (e) => {
   codigo.select();
 });
+
+cancelar.addEventListener("click", async (e) => {
+  await sweet
+    .fire({
+      title: "Desea cancelar el Recibo",
+      showCancelButton: true,
+      confirmButtonText: "Aceptar",
+    })
+    .then(({ isConfirmed }) => {
+      if (isConfirmed) {
+        location.href = "../index.html";
+      }
+    });
+});
+
+descuento.addEventListener("keyup", cambiarDescuento);
+total.addEventListener("keyup", cambiarTotal);
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {

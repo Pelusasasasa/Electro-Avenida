@@ -32,12 +32,12 @@ const ListadoScreen = () => {
       <View className="bg-gradient-to-r bg-yellow-400 from-yellow-400 to-yellow-500 py-3">
         <View className="flex-row justify-center my-2 text-black p-4 shadow-lg">
           <Ionicons name="flash-outline" size={30} />
-          <Text className="text-2xl font-medium">Electron Avenida</Text>
+          <Text className="text-2xl font-medium">Electron Avenidas</Text>
         </View>
 
         <View className="mx-2 flex-row gap-2">
           <TextInput
-            className="border flex-1 rounded-lg border-gray-400 bg-white"
+            className="border flex-1 rounded-lg border-gray-400 bg-white text-black placeholder:text-black"
             placeholder="Buscar Por codigo, Descripcion, fabrica o marca"
             onChangeText={handleText}
           />
