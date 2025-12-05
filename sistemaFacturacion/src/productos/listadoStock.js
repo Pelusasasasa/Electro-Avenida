@@ -51,14 +51,7 @@ buscar.addEventListener("click", async (e) => {
 
 async function listarProductos() {
   tbody.innerHTML = "";
-  for (let {
-    _id,
-    descripcion,
-    cod_fabrica,
-    stock,
-    observacion,
-    marca,
-  } of productos) {
+  for (let {_id,descripcion,cod_fabrica,stock,observacion,marca, } of productos) {
     const tr = document.createElement("tr");
     const tdId = document.createElement("td");
 
@@ -102,7 +95,7 @@ imprimir.addEventListener("click", async (e) => {
 excel.addEventListener("click", (e) => {
   let listado = [];
   productos.forEach(
-    ({ _id, descripcion, stock, provedor, cod_fabrica, marca }) => {
+    ({ _id, descripcion, stock, provedor, cod_fabrica, marca, costoDolar }) => {
       let objeto = {};
       objeto.codigo = _id;
       objeto.descripcion = descripcion;
@@ -110,6 +103,7 @@ excel.addEventListener("click", (e) => {
       objeto.provedor = provedor;
       objeto.fabrica = cod_fabrica;
       objeto.marca = marca;
+      
       listado.push(objeto);
     }
   );

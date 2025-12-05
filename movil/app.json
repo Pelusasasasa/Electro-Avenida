@@ -27,6 +27,14 @@
     "plugins": [
       "expo-router",
       [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",
@@ -44,6 +52,12 @@
       "eas": {
         "projectId": "149a836f-4c05-4d53-bf2a-73f7fd775435"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/149a836f-4c05-4d53-bf2a-73f7fd775435"
     }
   }
 }
