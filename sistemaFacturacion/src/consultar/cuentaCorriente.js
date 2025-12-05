@@ -220,11 +220,12 @@ const listarLista = (lista, situacion, tipo) => {
 
   listaGlobal = lista.filter((e) => {
     if (aux === "Presupuesto") {
-      return e.tipo_comp === aux || e.tipo_comp === "Recibos_P";
+      return e.tipo_comp === aux || e.tipo_comp === "Recibos_P" || e.tipo_comp === "Descuento: Recibos_P";
     } else {
       return (
         e.tipo_comp === aux ||
         e.tipo_comp === "Recibos" ||
+        e.tipo_comp === "Descuento: Recibos" ||
         e.tipo_comp === "Nota Credito" ||
         e.tipo_comp === "Ticket Factura"
       );
@@ -638,6 +639,7 @@ const ponerDatosCliente = async (Cliente) => {
   let historicas = (
     await axios.get(`${URL}cuentaHisto/cliente/${Cliente._id}`, configAxios)
   ).data;
+  console.log(historicas)
   listaCompensada = compensadas;
   listaHistorica = historicas;
   listarLista(compensadas, situacion, tipo);

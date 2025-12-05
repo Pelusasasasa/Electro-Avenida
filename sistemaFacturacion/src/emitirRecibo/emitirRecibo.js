@@ -448,7 +448,7 @@ const hacerRecibo = async () => {
   recibo.maquina = maquina;
   const aux = situacion === "negro" ? "saldo_p" : "saldo";
   let saldoFavor = 0;
-  recibo.descuento = 0;
+  recibo.descuento = descuento.value !== "" ? parseFloat(subTotal.value) - parseFloat(total.value) : 0;
   saldoFavor = saldoAfavor.value !== "" && parseFloat(saldoAFavor.value);
   recibo.saldoAFavor = saldoFavor;
   recibo.precioFinal = parseFloat(total.value);
@@ -481,7 +481,10 @@ const hacerRecibo = async () => {
     );
 
     //Ponemos en la historica el Recibo
-    await ponerEnCuentaCorrienteHistorica(recibo, Vendedor, maquina);
+    const nuevoSaldo = await ponerEnCuentaCorrienteHistorica(recibo, Vendedor, maquina);
+
+    //Poner Descuento En Historica
+    await ponerDescuentoEnHistorica(recibo, nuevoSaldo, Vendedor, maquina);
 
     //Ponemos en la compensada si le queda saldo a favor
     parseFloat(saldoAfavor.value) !== 0 &&
@@ -496,12 +499,8 @@ const hacerRecibo = async () => {
         maquina
       ));
 
-    await axios.put(
-      `${URL}clientes/${recibo.codigo}`,
-      clienteTraido,
-      configAxios
-    );
-    await axios.post(`${URL}recibos`, recibo, configAxios);
+    await axios.put(`${URL}clientes/${recibo.codigo}`,clienteTraido);
+    await axios.post(`${URL}recibos`, recibo);
     await generarMovimientoCaja(
       recibo.fecha,
       "I",
@@ -619,13 +618,35 @@ const ponerEnCuentaCorrienteHistorica = async (recibo, vendedor, maquina) => {
   cuenta.vendedor = vendedor;
   cuenta.maquina = maquina;
   try {
-    await axios.post(`${URL}cuentaHisto`, cuenta, configAxios);
+    await axios.post(`${URL}cuentaHisto`, cuenta);
   } catch (error) {
     await sweet.fire({
       title: "No se pudo poner en historica el recibo, Anotalo!!",
     });
   }
+
+  return cuenta.saldo;
 };
+
+const ponerDescuentoEnHistorica = async(recibo, saldo, vendedor, maquina) => {
+  const cuenta = {};
+  cuenta.codigo = recibo.codigo;
+  cuenta.cliente = cliente.cliente;
+  cuenta.tipo_comp = "Descuento: " + recibo.tipo_comp;
+  cuenta.nro_comp = recibo.nro_comp;
+  cuenta.haber = parseFloat(recibo.descuento).toFixed(2);
+  cuenta.saldo = (saldo - cuenta.haber).toFixed(2);
+  cuenta.vendedor = vendedor;
+  cuenta.maquina = maquina;
+
+  try {
+    await axios.post(`${URL}cuentaHisto`, cuenta);
+  } catch (error) {
+    await sweet.fire({
+      title: "No se pudo poner en historica el descuento, Anotalo!!",
+    });
+  }
+}
 
 //Calculamos el td saldo
 async function saldoPagado(e) {

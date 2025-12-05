@@ -107,20 +107,17 @@ const ponerDatos = async (cliente) => {
   direccion.innerHTML = `${cliente.direccion}-${cliente.localidad}`;
   telefono.innerHTML = cliente.telefono;
 
-  let cuentas = (
-    await axios.get(`${URL}cuentaHisto/cliente/${cliente._id}`, configAxios)
-  ).data;
+  let cuentas = (await axios.get(`${URL}cuentaHisto/cliente/${cliente._id}`)).data;
   let ventasAnteriores = cuentas.filter((e) => e.fecha < desde.value);
   //Aca vemos si ya debia algo del progama viejo
   ventasAnteriores = ventasAnteriores.reverse();
-  const primerHistoP = ventasAnteriores.find(
-    (venta) =>
-      venta.tipo_comp === "Presupuesto" || venta.tipo_comp === "Recibos_P"
-  );
+  console.log(ventasAnteriores)
+  const primerHistoP = ventasAnteriores.find((venta) =>venta.tipo_comp === "Presupuesto" || venta.tipo_comp === "Recibos_P" || venta.tipo_comp === "Descuento: Recibos_P");
   const primerHisto = ventasAnteriores.find(
     (venta) =>
       venta.tipo_comp === "Ticket Factura" ||
       venta.tipo_comp === "Recibos" ||
+      venta.tipo_comp === "Descuento: Recibos" ||
       venta.tipo_comp === "Nota Credito" ||
       venta.tipo_comp === "Factura B" ||
       venta.tipo_comp === "Factura A"
@@ -166,13 +163,14 @@ function listarVentas(ventas, situacion, saldoAnterior, saldoAnterior_P) {
   let listaAux = ventas;
   if (aux === "Presupuesto") {
     listaAux = listaAux.filter((e) => {
-      return e.tipo_comp === aux || e.tipo_comp === "Recibos_P";
+      return e.tipo_comp === aux || e.tipo_comp === "Recibos_P" || e.tipo_comp === "Descuento: Recibos_P";
     });
   } else {
     listaAux = listaAux.filter((e) => {
       return (
         e.tipo_comp === aux ||
         e.tipo_comp === "Recibos" ||
+        e.tipo_comp === "Descuento: Recibos" ||
         e.tipo_comp === "Nota Credito" ||
         e.tipo_comp === "Ticket Factura"
       );
