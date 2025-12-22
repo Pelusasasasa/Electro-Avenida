@@ -170,7 +170,7 @@ function listarVentas(ventas, situacion, saldoAnterior, saldoAnterior_P) {
       return (
         e.tipo_comp === aux ||
         e.tipo_comp === "Recibos" ||
-        e.tipo_comp === "Descuento: Recibos" ||
+        (e.tipo_comp === "Descuento: Recibos" && e.haber !== 0) ||
         e.tipo_comp === "Nota Credito" ||
         e.tipo_comp === "Ticket Factura"
       );

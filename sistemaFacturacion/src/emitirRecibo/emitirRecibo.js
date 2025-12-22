@@ -353,7 +353,7 @@ listar.addEventListener("click", (e) => {
 let saldoAFavorAnterior = "0";
 saldoAfavor.addEventListener("change", (e) => {
   if (!subTotal.value) {
-    tosubTotaltal.value = 0;
+    subTotal.value = 0;
   }
   if (saldoAfavor.value !== "") {
     subTotal.value = (
