@@ -920,7 +920,7 @@ presupuesto.addEventListener("click", async (e) => {
 
     arregloMovimiento = [];
     arregloProductosDescontarStock = [];
-    //window.location = "../index.html";
+    window.location = "../index.html";
   } catch (error) {
     console.log(error);
     await sweet.fire({ title: "No se puedo cargar la venta" });

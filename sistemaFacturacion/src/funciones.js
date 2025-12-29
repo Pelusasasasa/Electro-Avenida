@@ -496,7 +496,7 @@ const ponerNotificaciones = async (texto, titulo = "!Info") => {
   notificacion.classList.remove("none");
 
   document.getElementById("notificacion-texto").innerText = texto;
-  document.getElementById("notificacion-titulo").innerText = titulo;
+  //document.getElementById("notificacion-titulo").innerText = titulo;
   document
     .getElementById("notificacion-close")
     .addEventListener("click", () => {

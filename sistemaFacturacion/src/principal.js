@@ -17,21 +17,11 @@ const { verEstadoServidorAfip, configAxios, verificarUsuarios, ponerNotificacion
 
 const notificaciones = require("node-notifier");
 
-window.addEventListener("load", async (e) => {
-  setTimeout(async () => {
-    const dolarSistema = parseFloat(
-      (await axios.get(`${URL}tipoVenta`, configAxios)).data.dolar
-    );
-    const dolarBNA = parseFloat((await avisarDolar()).replace(",", ".")) + 1;
 
-    if (dolarBNA !== dolarSistema) {
-      ponerNotificaciones(
-        `El dolar del sistema: ${dolarSistema} es distinto al dolar de el BNA: ${dolarBNA}`
-      );
-    }
 
-    vendedores = (await axios.get(`${URL}usuarios`, configAxios)).data;
-  }, 0);
+document.addEventListener('DOMContentLoaded', async () => {
+  vendedores = (await axios.get(`${URL}usuarios`, configAxios)).data;
+  obtenerDolar();
 });
 
 const avisarDolar = async () => {
@@ -46,6 +36,20 @@ const avisarDolar = async () => {
 
   return dolares;
 };
+
+const obtenerDolar = async () => {
+setTimeout(async () => {
+    const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`, configAxios)).data.dolar);
+    const dolarBNA = parseFloat((await avisarDolar()).replace(",", ".")) + 1;
+
+    if (dolarBNA !== dolarSistema) {
+      ponerNotificaciones(
+        `El dolar del sistema: ${dolarSistema} es distinto al dolar de el BNA: ${dolarBNA}`
+      );
+    }
+
+  }, 0);
+}
 
 const body = document.querySelector("body");
 const emitirComprobante = document.querySelector(".emitirComprobante");
