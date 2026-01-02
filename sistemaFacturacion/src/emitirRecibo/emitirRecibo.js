@@ -1,30 +1,19 @@
 //Esta funcion sirve para tomar lo que esta en la url
 function getParameterByName(name) {
-  name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-  var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  var regex = new RegExp('[\\?&]' + name + '=([^&#]*)'),
     results = regex.exec(location.search);
-  return results === null
-    ? ""
-    : decodeURIComponent(results[1].replace(/\+/g, " "));
+  return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 }
 
-const sweet = require("sweetalert2");
-const { ipcRenderer } = require("electron");
+const sweet = require('sweetalert2');
+const { ipcRenderer } = require('electron');
 
-const axios = require("axios");
-require("dotenv").config;
+const axios = require('axios');
+require('dotenv').config;
 const URL = process.env.URL;
 
-const {
-  copiar,
-  verCodComp,
-  redondear,
-  generarMovimientoCaja,
-  configAxios,
-  verNombrePc,
-  ponerEnCuentaCorrienteCompensada,
-  validarRecibo,
-} = require("../funciones");
+const { copiar, verCodComp, redondear, generarMovimientoCaja, configAxios, verNombrePc, ponerEnCuentaCorrienteCompensada, validarRecibo } = require('../funciones');
 
 const hoy = new Date();
 let diaDeHoy = hoy.getDate();
@@ -35,67 +24,64 @@ mesDeHoy = mesDeHoy === 0 ? 1 : mesDeHoy;
 mesDeHoy = mesDeHoy < 10 ? `0${mesDeHoy}` : mesDeHoy;
 diaDeHoy = diaDeHoy < 10 ? `0${diaDeHoy}` : diaDeHoy;
 
-const body = document.querySelector("body");
-const informacionCliente = document.querySelector(".cliente");
-const botones = document.querySelector(".botones");
-const pagado = document.querySelector(".pagado");
-const alerta = document.querySelector(".alerta");
-const todo = document.querySelector(".todo");
+const body = document.querySelector('body');
+const informacionCliente = document.querySelector('.cliente');
+const botones = document.querySelector('.botones');
+const pagado = document.querySelector('.pagado');
+const alerta = document.querySelector('.alerta');
+const todo = document.querySelector('.todo');
 
 //cliente
-const codigo = document.querySelector("#codigo");
-const nombre = document.querySelector("#nombre");
-const saldo = document.querySelector("#saldo");
-const saldo_p = document.querySelector("#saldo_p");
-const direccion = document.querySelector("#direccion");
-const localidad = document.querySelector("#localidad");
-const fecha = document.querySelector("#fecha");
-const cond_iva = document.querySelector("#cond_iva");
-const cuit = document.querySelector("#cuit");
+const codigo = document.querySelector('#codigo');
+const nombre = document.querySelector('#nombre');
+const saldo = document.querySelector('#saldo');
+const saldo_p = document.querySelector('#saldo_p');
+const direccion = document.querySelector('#direccion');
+const localidad = document.querySelector('#localidad');
+const fecha = document.querySelector('#fecha');
+const cond_iva = document.querySelector('#cond_iva');
+const cuit = document.querySelector('#cuit');
 
-const listar = document.querySelector(".listar");
+const listar = document.querySelector('.listar');
 
-const valoresRecibidos = document.getElementById("valoresRecibidos");
+const valoresRecibidos = document.getElementById('valoresRecibidos');
 
 //botones
-const imprimir = document.querySelector(".imprimir");
-const cancelar = document.querySelector(".cancelar");
+const imprimir = document.querySelector('.imprimir');
+const cancelar = document.querySelector('.cancelar');
 
-const vendedor = document.querySelector(".vendedor");
-const saldoAfavor = document.querySelector("#saldoAFavor");
-const subTotal = document.querySelector("#subTotal");
-const descuento = document.querySelector("#descuento");
-const total = document.querySelector("#total");
+const vendedor = document.querySelector('.vendedor');
+const saldoAfavor = document.querySelector('#saldoAFavor');
+const subTotal = document.querySelector('#subTotal');
+const descuento = document.querySelector('#descuento');
+const total = document.querySelector('#total');
 
-const Vendedor = getParameterByName("vendedor");
-let situacion = "blanco"; //es con la situacion que empezamos a ver
-let subseleccionado = "";
+const Vendedor = getParameterByName('vendedor');
+let situacion = 'blanco'; //es con la situacion que empezamos a ver
+let subseleccionado = '';
 let inputSeleccionado = listar;
 let trSeleccionado;
 let cliente = {};
 let nuevaLista = [];
 vendedor.innerHTML = `<h3>${Vendedor}</h3>`;
 
-window.addEventListener("load", (e) => {
+window.addEventListener('load', (e) => {
   fecha.value = `${anioDeHoy}-${mesDeHoy}-${diaDeHoy}`;
   copiar();
 });
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Alt") {
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "F9" && situacion === "blanco") {
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Alt') {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'F9' && situacion === 'blanco') {
         mostrarNegro();
-        situacion = "negro";
-        parseFloat(cliente.saldo_p) > 0 &&
-          (Vendedor !== "ELBIO" && Vendedor !== 'PABLO') &&
-          saldoAfavor.setAttribute("disabled", "");
+        situacion = 'negro';
+        parseFloat(cliente.saldo_p) > 0 && Vendedor !== 'ELBIO' && Vendedor !== 'PABLO' && saldoAfavor.setAttribute('disabled', '');
         listarLista(nuevaLista, situacion);
-      } else if (e.key === "F8" && situacion === "negro") {
+      } else if (e.key === 'F8' && situacion === 'negro') {
         ocultarNegro();
-        situacion = "blanco";
-        parseFloat(cliente.saldo) > 0 &&
-          saldoAfavor.setAttribute("disabled", "");
+        situacion = 'blanco';
+        parseFloat(cliente.saldo) > 0 && saldoAfavor.setAttribute('disabled', '');
         listarLista(nuevaLista, situacion);
       }
     });
@@ -104,81 +90,75 @@ document.addEventListener("keydown", (event) => {
 
 const cambiarDescuento = () => {
   const aux = Number(subTotal.value);
-  
-  total.value = (aux - (aux * Number(descuento.value) / 100)).toFixed(2);
+
+  total.value = (aux - (aux * Number(descuento.value)) / 100).toFixed(2);
 };
 
 cambiarTotal = () => {
-  
   const aux = Number(subTotal.value);
   const totalValue = Number(total.value);
 
   if (aux === 0) {
-    descuento.value = "0.00";
+    descuento.value = '0.00';
   } else {
-    const calculatedDiscount = (1 - (totalValue / aux)) * 100;
+    const calculatedDiscount = (1 - totalValue / aux) * 100;
     descuento.value = calculatedDiscount.toFixed(2);
   }
 };
 
 //ocultamos lo que esta en negro y ponemos las cosas en blanco
 const ocultarNegro = () => {
-  pagado.classList.remove("mostrarNegro");
-  informacionCliente.classList.remove("mostrarNegro");
-  botones.classList.remove("mostrarNegro");
-  saldo.parentNode.classList.remove("none");
-  saldo_p.parentNode.classList.add("none");
-  body.classList.remove("mostrarNegro");
+  pagado.classList.remove('mostrarNegro');
+  informacionCliente.classList.remove('mostrarNegro');
+  botones.classList.remove('mostrarNegro');
+  saldo.parentNode.classList.remove('none');
+  saldo_p.parentNode.classList.add('none');
+  body.classList.remove('mostrarNegro');
 };
 
 //ocultamos las cosas en blanco y ponemos lo que esta en negro
 const mostrarNegro = () => {
-  pagado.classList.add("mostrarNegro");
-  informacionCliente.classList.add("mostrarNegro");
-  botones.classList.add("mostrarNegro");
-  saldo.parentNode.classList.add("none");
-  saldo_p.parentNode.classList.remove("none");
-  body.classList.add("mostrarNegro");
+  pagado.classList.add('mostrarNegro');
+  informacionCliente.classList.add('mostrarNegro');
+  botones.classList.add('mostrarNegro');
+  saldo.parentNode.classList.add('none');
+  saldo_p.parentNode.classList.remove('none');
+  body.classList.add('mostrarNegro');
 };
 
 //cuando apretamos enter y el codigo esta vacio se abre la ventana para buscar un cliente, sino traemos con el codigo
-codigo.addEventListener("keypress", async (e) => {
-  if (e.key === "Enter") {
-    if (codigo.value !== "") {
-      cliente = (
-        await axios.get(
-          `${URL}clientes/id/${codigo.value.toUpperCase()}`,
-          configAxios
-        )
-      ).data;
-      if (cliente === "") {
+codigo.addEventListener('keypress', async (e) => {
+  if (e.key === 'Enter') {
+    if (codigo.value !== '') {
+      cliente = (await axios.get(`${URL}clientes/id/${codigo.value.toUpperCase()}`, configAxios)).data;
+      if (cliente === '') {
         await sweet.fire({
-          title: "Cliente no encontrado",
+          title: 'Cliente no encontrado',
           returnFocus: false,
         });
         codigo.focus();
-        codigo.value = "";
+        codigo.value = '';
       } else {
         inputsCliente(cliente);
       }
     } else {
-      ipcRenderer.send("abrir-ventana", "clientes");
+      ipcRenderer.send('abrir-ventana', 'clientes');
     }
   }
 });
 
 //traemos el cliente de otra ventana
-ipcRenderer.on("mando-el-cliente", async (e, args) => {
+ipcRenderer.on('mando-el-cliente', async (e, args) => {
   cliente = (await axios.get(`${URL}clientes/id/${args}`, configAxios)).data;
   inputsCliente(cliente);
 });
 
-ipcRenderer.on("actualizarCuenta", async (e) => {
+ipcRenderer.on('actualizarCuenta', async (e) => {
   console.log(trSeleccionado.id);
 
   await sweet.fire({
     title: `Cuenta ${trSeleccionado.id} Actualizada`,
-    icon: "success",
+    icon: 'success',
   });
 });
 
@@ -198,27 +178,23 @@ const inputsCliente = async (cliente) => {
 
   codigo.value = cliente._id;
   nombre.value = cliente.cliente;
-  cliente.cond_iva === ""
-    ? (cond_iva.value = "Consumidor Final")
-    : (cond_iva.value = cliente.cond_iva);
+  cliente.cond_iva === '' ? (cond_iva.value = 'Consumidor Final') : (cond_iva.value = cliente.cond_iva);
   saldo.value = cliente.saldo.toFixed(2);
   saldo_p.value = cliente.saldo_p.toFixed(2);
   direccion.value = cliente.direccion;
   localidad.value = cliente.localidad;
   cuit.value = cliente.cuit;
 
-  if (Vendedor !== "ELBIO") {
+  if (Vendedor !== 'ELBIO') {
     //Lo que hacemos es ver si el vendedor es elbio no cancelamos el saldo a favor
-    if (situacion === "blanco" && parseFloat(cliente.saldo) > 0) {
-      saldoAFavor.setAttribute("disabled", "");
-    } else if (situacion === "negro" && parseFloat(cliente.saldo_p) > 0) {
-      saldoAFavor.setAttribute("disabled", "");
+    if (situacion === 'blanco' && parseFloat(cliente.saldo) > 0) {
+      saldoAFavor.setAttribute('disabled', '');
+    } else if (situacion === 'negro' && parseFloat(cliente.saldo_p) > 0) {
+      saldoAFavor.setAttribute('disabled', '');
     }
   }
 
-  let conpensada = (
-    await axios.get(`${URL}cuentaComp/cliente/${cliente._id}`, configAxios)
-  ).data; //traemos las compensadas
+  let conpensada = (await axios.get(`${URL}cuentaComp/cliente/${cliente._id}`, configAxios)).data; //traemos las compensadas
   nuevaLista = conpensada;
   listarLista(conpensada, situacion);
 
@@ -227,32 +203,25 @@ const inputsCliente = async (cliente) => {
     inputSeleccionado = trSeleccionado.children[5].children[0];
   }
 
-  codigo.setAttribute("disabled", "");
+  codigo.setAttribute('disabled', '');
 };
 
 const listarLista = (lista, situacion) => {
   let aux;
-  let auxRecibo = situacion === "negro" ? "Recibos_P" : "Recibos";
+  let auxRecibo = situacion === 'negro' ? 'Recibos_P' : 'Recibos';
 
-  if (situacion === "negro") {
-    aux = "Presupuesto";
+  if (situacion === 'negro') {
+    aux = 'Presupuesto';
   } else {
-    if (cond_iva.value === "Inscripto" || cond_iva.value === "Monotributista") {
-      aux = "Factura A";
+    if (cond_iva.value === 'Inscripto' || cond_iva.value === 'Monotributista') {
+      aux = 'Factura A';
     } else {
-      aux = "Factura B";
+      aux = 'Factura B';
     }
   }
   const listaRecibo = lista.filter((e) => e.tipo_comp === auxRecibo);
-  const listaVenta = lista.filter(
-    (e) =>
-      e.tipo_comp === aux ||
-      (e.tipo_comp === "Ticket Factura" && situacion === "blanco")
-  );
-  const listaNota =
-    situacion === "blanco"
-      ? lista.filter((e) => e.tipo_comp === "Nota Credito")
-      : [];
+  const listaVenta = lista.filter((e) => e.tipo_comp === aux || (e.tipo_comp === 'Ticket Factura' && situacion === 'blanco'));
+  const listaNota = situacion === 'blanco' ? lista.filter((e) => e.tipo_comp === 'Nota Credito') : [];
 
   const arreglo = [...listaRecibo, ...listaVenta, ...listaNota]; //este arreglo contiene las compensadas dependiendo la situacion
   arreglo.sort((a, b) => {
@@ -265,7 +234,7 @@ const listarLista = (lista, situacion) => {
     return 0;
   });
 
-  listar.innerHTML = " ";
+  listar.innerHTML = ' ';
 
   arreglo.forEach((venta) => {
     if (venta.length !== 0) {
@@ -279,44 +248,38 @@ const listarLista = (lista, situacion) => {
       mes = mes < 10 ? `0${mes}` : mes;
       dia = dia < 10 ? `0${dia}` : dia;
 
-      const tr = document.createElement("tr");
+      const tr = document.createElement('tr');
       tr.id = venta.nro_comp;
 
-      const tdFecha = document.createElement("td");
-      const tdTipo = document.createElement("td");
-      const tdNumero = document.createElement("td");
-      const tdImporte = document.createElement("td");
-      const tdPagado = document.createElement("td");
-      const tdActual = document.createElement("td");
-      const inputActual = document.createElement("input");
-      const tdSaldo = document.createElement("td");
-      const tdObservaciones = document.createElement("td");
-      tdObservaciones.setAttribute("contentEditable", true);
+      const tdFecha = document.createElement('td');
+      const tdTipo = document.createElement('td');
+      const tdNumero = document.createElement('td');
+      const tdImporte = document.createElement('td');
+      const tdPagado = document.createElement('td');
+      const tdActual = document.createElement('td');
+      const inputActual = document.createElement('input');
+      const tdSaldo = document.createElement('td');
+      const tdObservaciones = document.createElement('td');
+      tdObservaciones.setAttribute('contentEditable', true);
 
-      inputActual.type = "number";
-      inputActual.value = "0.00";
+      inputActual.type = 'number';
+      inputActual.value = '0.00';
 
-      inputActual.addEventListener("blur", saldoPagado);
-      inputActual.addEventListener("blur", calculartotal);
-      inputActual.addEventListener("keypress", saltoAOtroPago);
+      inputActual.addEventListener('blur', saldoPagado);
+      inputActual.addEventListener('blur', calculartotal);
+      inputActual.addEventListener('keypress', saltoAOtroPago);
 
       if (venta.importe === 0.1) {
-        inputActual.setAttribute("disabled", "");
+        inputActual.setAttribute('disabled', '');
       }
 
       tdFecha.innerHTML = `${dia}/${mes}/${anio}`;
       tdTipo.innerHTML = venta.tipo_comp;
       tdNumero.innerHTML = venta.nro_comp;
-      tdImporte.innerHTML =
-        venta.tipo_comp === "Nota Credito"
-          ? (venta.importe * -1).toFixed(2)
-          : venta.importe.toFixed(2);
+      tdImporte.innerHTML = venta.tipo_comp === 'Nota Credito' ? (venta.importe * -1).toFixed(2) : venta.importe.toFixed(2);
       tdPagado.innerHTML = venta.pagado.toFixed(2);
-      tdSaldo.innerHTML =
-        venta.tipo_comp === "Nota Credito"
-          ? (saldo * -1).toFixed(2)
-          : saldo.toFixed(2);
-      tdSaldo.classList.add("saldop");
+      tdSaldo.innerHTML = venta.tipo_comp === 'Nota Credito' ? (saldo * -1).toFixed(2) : saldo.toFixed(2);
+      tdSaldo.classList.add('saldop');
 
       tdActual.appendChild(inputActual);
       tdObservaciones.innerHTML = venta.observaciones;
@@ -335,79 +298,69 @@ const listarLista = (lista, situacion) => {
   });
 };
 //Vemos que tr se selecciono y lo guardamos en una varaible
-listar.addEventListener("click", (e) => {
-  trSeleccionado =
-    e.target.nodeName === "TD"
-      ? e.target.parentNode
-      : e.target.parentNode.parentNode;
+listar.addEventListener('click', (e) => {
+  trSeleccionado = e.target.nodeName === 'TD' ? e.target.parentNode : e.target.parentNode.parentNode;
   inputSeleccionado = trSeleccionado.children[5].children[0];
 
-  e.target.nodeName === "INPUT" && inputSeleccionado.select();
+  e.target.nodeName === 'INPUT' && inputSeleccionado.select();
 
-  subseleccionado && subseleccionado.classList.remove("subseleccionado");
-  subseleccionado =
-    e.target.nodeName === "INPUT" ? e.target.parentNode : e.target;
-  subseleccionado.classList.add("subseleccionado");
+  subseleccionado && subseleccionado.classList.remove('subseleccionado');
+  subseleccionado = e.target.nodeName === 'INPUT' ? e.target.parentNode : e.target;
+  subseleccionado.classList.add('subseleccionado');
 });
 
-let saldoAFavorAnterior = "0";
-saldoAfavor.addEventListener("change", (e) => {
+let saldoAFavorAnterior = '0';
+saldoAfavor.addEventListener('change', (e) => {
   if (!subTotal.value) {
     subTotal.value = 0;
   }
-  if (saldoAfavor.value !== "") {
-    subTotal.value = (
-      parseFloat(subTotal.value) +
-      parseFloat(saldoAfavor.value) -
-      parseFloat(saldoAFavorAnterior)
-    ).toFixed(2);
+
+  if (saldoAfavor.value !== '') {
+    subTotal.value = (parseFloat(subTotal.value) + parseFloat(saldoAfavor.value) - parseFloat(saldoAFavorAnterior)).toFixed(2);
     saldoAFavorAnterior = saldoAfavor.value;
     saldoAfavor.value = parseFloat(saldoAfavor.value).toFixed(2);
     imprimir.focus();
   }
 });
 
-imprimir.addEventListener("click", async (e) => {
+imprimir.addEventListener('click', async (e) => {
   e.preventDefault();
 
   if (parseFloat(total.value) === 0) {
     await sweet
       .fire({
-        title: "Recibo en 0, Desea Continuar",
+        title: 'Recibo en 0, Desea Continuar',
         showCancelButton: true,
-        confirmButtonText: "Aceptar",
+        confirmButtonText: 'Aceptar',
       })
       .then(({ isConfirmed }) => {
         if (isConfirmed) {
           hacerRecibo();
         }
       });
-  } else if(Number(descuento.value > 10)){
+  } else if (Number(descuento.value > 10)) {
     await sweet.fire({
-      title: "El porcentaje de descuento no esta permitido",
-      icon: "error",
-      confirmButtonText: "Aceptar",
-    })
-    } else {
+      title: 'El porcentaje de descuento no esta permitido',
+      icon: 'error',
+      confirmButtonText: 'Aceptar',
+    });
+  } else {
     hacerRecibo();
   }
 });
 
-document.addEventListener("contextmenu", clickderecho);
+document.addEventListener('contextmenu', clickderecho);
 
 function clickderecho(e) {
   const cordenadas = {
     x: e.clientX,
     y: e.clientY,
-    ventana: "Emitir Recibo",
+    ventana: 'Emitir Recibo',
   };
 
-  trSeleccionado =
-    e.target.nodeName === "TD"
-      ? e.target.parentNode
-      : e.target.parentNode.parentNode;
+  trSeleccionado = e.target.nodeName === 'TD' ? e.target.parentNode : e.target.parentNode.parentNode;
 
-  ipcRenderer.send("mostrar-menu", cordenadas);
+  ipcRenderer.send('mostrar-menu', cordenadas);
 }
 
 const hacerRecibo = async () => {
@@ -415,13 +368,10 @@ const hacerRecibo = async () => {
   let arregloParaImprimir = [];
   let maquina = verNombrePc();
 
-  alerta.classList.remove("none");
-  const trs = document.querySelectorAll("tbody tr");
+  alerta.classList.remove('none');
+  const trs = document.querySelectorAll('tbody tr');
   for await (let tr of trs) {
-    if (
-      tr.children[5].children[0].value !== "" &&
-      parseFloat(tr.children[5].children[0].value) !== 0
-    ) {
+    if (tr.children[5].children[0].value !== '' && parseFloat(tr.children[5].children[0].value) !== 0) {
       arregloParaImprimir.push({
         fecha: tr.children[0].innerHTML,
         comprobante: tr.children[1].innerHTML,
@@ -431,36 +381,33 @@ const hacerRecibo = async () => {
       });
     }
   }
+
   const recibo = {};
+  const aux = situacion === 'negro' ? 'saldo_p' : 'saldo';
+  let saldoFavor = 0;
+
   recibo.fecha = new Date();
   recibo.codigo = codigo.value;
   recibo.cliente = nombre.value;
   recibo.vendedor = Vendedor;
-  recibo.tipo_comp = situacion === "blanco" ? "Recibos" : "Recibos_P";
+  recibo.tipo_comp = situacion === 'blanco' ? 'Recibos' : 'Recibos_P';
   recibo.localidad = localidad.value;
   recibo.direccion = direccion.value;
   recibo.condIva = cond_iva.value;
   recibo.dnicuit = cuit.value;
-  recibo.observaciones = valoresRecibidos.value
-    ? valoresRecibidos.value.toUpperCase()
-    : "EFECTIVO";
+  recibo.observaciones = valoresRecibidos.value ? valoresRecibidos.value.toUpperCase() : 'EFECTIVO';
   recibo.comprobantes = arregloParaImprimir;
   recibo.maquina = maquina;
-  const aux = situacion === "negro" ? "saldo_p" : "saldo";
-  let saldoFavor = 0;
-  recibo.descuento = descuento.value !== "" ? parseFloat(subTotal.value) - parseFloat(total.value) : 0;
-  saldoFavor = saldoAfavor.value !== "" && parseFloat(saldoAFavor.value);
+
   recibo.saldoAFavor = saldoFavor;
   recibo.precioFinal = parseFloat(total.value);
-  const saldoNuevo = redondear(
-    parseFloat(cliente[aux]) - parseFloat(total.value),
-    2
-  );
+  recibo.descuento = descuento.value !== '' ? parseFloat(subTotal.value) - parseFloat(total.value) : 0;
+
+  saldoFavor = saldoAfavor.value !== '' && parseFloat(saldoAFavor.value);
+  const saldoNuevo = redondear(parseFloat(cliente[aux]) - parseFloat(subTotal.value), 2);
 
   //Tomamos el cliente y modificamos su saldo
-  let clienteTraido = (
-    await axios.get(`${URL}clientes/id/${recibo.codigo}`, configAxios)
-  ).data;
+  let clienteTraido = (await axios.get(`${URL}clientes/id/${recibo.codigo}`, configAxios)).data;
   clienteTraido[aux] = parseFloat(saldoNuevo);
   clienteTraido.vendedor = Vendedor;
   clienteTraido.maquina = maquina;
@@ -468,17 +415,14 @@ const hacerRecibo = async () => {
 
   const { bandera, message } = await validarRecibo(recibo);
   console.log(message);
+
   if (bandera) {
     //modificamos las ventas en cuentas compensada
     await modificarVentasConpensadas(nuevaLista);
 
     //modificamos el numero del recibo
-    const numeroAModificar = parseFloat(recibo.nro_comp.split("-")[1]);
-    await modifcarNroRecibo(
-      numeroAModificar,
-      recibo.tipo_comp,
-      clienteTraido.cond_iva
-    );
+    const numeroAModificar = parseFloat(recibo.nro_comp.split('-')[1]);
+    await modifcarNroRecibo(numeroAModificar, recibo.tipo_comp, clienteTraido.cond_iva);
 
     //Ponemos en la historica el Recibo
     const nuevoSaldo = await ponerEnCuentaCorrienteHistorica(recibo, Vendedor, maquina);
@@ -488,57 +432,26 @@ const hacerRecibo = async () => {
 
     //Ponemos en la compensada si le queda saldo a favor
     parseFloat(saldoAfavor.value) !== 0 &&
-      (await ponerEnCuentaCorrienteCompensada(
-        recibo.codigo,
-        recibo.cliente,
-        recibo.tipo_comp,
-        recibo.nro_comp,
-        parseFloat(saldoAfavor.value),
-        parseFloat(saldoAfavor.value),
-        Vendedor,
-        maquina
-      ));
+      (await ponerEnCuentaCorrienteCompensada(recibo.codigo, recibo.cliente, recibo.tipo_comp, recibo.nro_comp, parseFloat(saldoAfavor.value), parseFloat(saldoAfavor.value), Vendedor, maquina));
 
-    await axios.put(`${URL}clientes/${recibo.codigo}`,clienteTraido);
+    await axios.put(`${URL}clientes/${recibo.codigo}`, clienteTraido);
     await axios.post(`${URL}recibos`, recibo);
-    await generarMovimientoCaja(
-      recibo.fecha,
-      "I",
-      recibo.nro_comp,
-      recibo.tipo_comp,
-      "RC",
-      recibo.precioFinal,
-      recibo.cliente,
-      recibo.codigo,
-      recibo.cliente,
-      recibo.vendedor,
-      maquina
-    );
+
+    await generarMovimientoCaja(recibo.fecha, 'I', recibo.nro_comp, recibo.tipo_comp, 'RC', recibo.precioFinal, recibo.cliente, recibo.codigo, recibo.cliente, recibo.vendedor, maquina);
     //Hacemos que los productos sean las cuentas conpensadas
     recibo.productos = arregloParaImprimir;
     // arregloParaImprimir contiene todos las ventas que tiene pagadas y total contiene el total del recibo
-    alerta.children[1].children[0].innerHTML = "Imprimiendo Recibo";
-    recibo.tipo_comp === "Recibos_P"
-      ? await ipcRenderer.send("imprimir-recibo", [
-        recibo,
-        cliente,
-        arregloParaImprimir,
-        recibo.tipo_comp,
-      ])
-      : await ipcRenderer.send("imprimir-recibo", [
-        recibo,
-        cliente,
-        arregloParaImprimir,
-        recibo.tipo_comp,
-      ]);
+    alerta.children[1].children[0].innerHTML = 'Imprimiendo Recibo';
+    recibo.tipo_comp === 'Recibos_P'
+      ? await ipcRenderer.send('imprimir-recibo', [recibo, cliente, arregloParaImprimir, recibo.tipo_comp])
+      : await ipcRenderer.send('imprimir-recibo', [recibo, cliente, arregloParaImprimir, recibo.tipo_comp]);
+
     //Mandar Recibo para que se guarde como pdf
-    recibo.tipo_comp === "Recibos" &&
-      (alerta.children[1].children[0].innerHTML = "Guardando Recibo Como PDF");
-    recibo.tipo_comp === "Recibos" &&
-      (await axios.post(`${URL}crearPdf`, [recibo, cliente, {}], configAxios));
-    location.href = "../index.html";
+    recibo.tipo_comp === 'Recibos' && (alerta.children[1].children[0].innerHTML = 'Guardando Recibo Como PDF');
+    recibo.tipo_comp === 'Recibos' && (await axios.post(`${URL}crearPdf`, [recibo, cliente, {}], configAxios));
+    location.href = '../index.html';
   } else {
-    alerta.classList.add("none");
+    alerta.classList.add('none');
     await sweet.fire({
       title: message,
     });
@@ -547,52 +460,33 @@ const hacerRecibo = async () => {
 
 const traerUltimoNroRecibo = async () => {
   let numero = await axios.get(`${URL}tipoVenta`, configAxios);
-  numero = numero.data["Ultimo Recibo"];
+  numero = numero.data['Ultimo Recibo'];
   return numero;
 };
 
 const modifcarNroRecibo = async (numero, tipo_comp, iva) => {
   let numeros = (await axios.get(`${URL}tipoVenta`, configAxios)).data;
-  numeros["Ultimo Recibo"] = `0004-${(numero + 1).toString().padStart(8, "0")}`;
+  numeros['Ultimo Recibo'] = `0004-${(numero + 1).toString().padStart(8, '0')}`;
   try {
     await axios.put(`${URL}tipoventa`, numeros, configAxios);
   } catch (error) {
     await sweet.fire({
-      title:
-        "No se pudo modifcar el numero de recibo en las variales de numeros, pero si se modifico las cuentas compensadas",
+      title: 'No se pudo modifcar el numero de recibo en las variales de numeros, pero si se modifico las cuentas compensadas',
     });
   }
 };
 
 const modificarVentasConpensadas = async (lista) => {
-  const trs = document.querySelectorAll("tbody tr");
+  const trs = document.querySelectorAll('tbody tr');
   for await (let tr of trs) {
     for await (let venta of nuevaLista) {
       if (tr.id === venta.nro_comp) {
         venta.pagado =
-          tr.children[5].children[0].value !== ""
-            ? parseFloat(
-              redondear(
-                parseFloat(tr.children[4].innerHTML) +
-                parseFloat(tr.children[5].children[0].value),
-                2
-              )
-            )
-            : parseFloat(venta.pagado);
-        venta.pagado =
-          venta.tipo_comp === "Nota Credito"
-            ? parseFloat(redondear(venta.pagado * -1, 2))
-            : venta.pagado;
-        venta.saldo =
-          venta.tipo_comp === "Nota Credito"
-            ? parseFloat(tr.children[6].innerHTML) * -1
-            : parseFloat(tr.children[6].innerHTML);
+          tr.children[5].children[0].value !== '' ? parseFloat(redondear(parseFloat(tr.children[4].innerHTML) + parseFloat(tr.children[5].children[0].value), 2)) : parseFloat(venta.pagado);
+        venta.pagado = venta.tipo_comp === 'Nota Credito' ? parseFloat(redondear(venta.pagado * -1, 2)) : venta.pagado;
+        venta.saldo = venta.tipo_comp === 'Nota Credito' ? parseFloat(tr.children[6].innerHTML) * -1 : parseFloat(tr.children[6].innerHTML);
         try {
-          await axios.put(
-            `${URL}cuentaComp/numeroYCliente/${venta.nro_comp}/${venta.codigo}`,
-            venta,
-            configAxios
-          );
+          await axios.put(`${URL}cuentaComp/numeroYCliente/${venta.nro_comp}/${venta.codigo}`, venta, configAxios);
         } catch (error) {
           await sweet.fire({
             title: `No se pudo modifcar la cuenta compensada ${venta.nro_comp}, Anotalo!!`,
@@ -603,7 +497,6 @@ const modificarVentasConpensadas = async (lista) => {
   }
 };
 
-
 const ponerEnCuentaCorrienteHistorica = async (recibo, vendedor, maquina) => {
   const cuenta = {};
   cuenta.codigo = recibo.codigo;
@@ -611,28 +504,25 @@ const ponerEnCuentaCorrienteHistorica = async (recibo, vendedor, maquina) => {
   cuenta.tipo_comp = recibo.tipo_comp;
   cuenta.nro_comp = recibo.nro_comp;
   cuenta.haber = parseFloat(recibo.precioFinal).toFixed(2);
-  cuenta.saldo =
-    cuenta.tipo_comp === "Recibos"
-      ? parseFloat((parseFloat(saldo.value) - cuenta.haber).toFixed(2))
-      : parseFloat((parseFloat(saldo_p.value) - cuenta.haber).toFixed(2));
+  cuenta.saldo = cuenta.tipo_comp === 'Recibos' ? parseFloat((parseFloat(saldo.value) - cuenta.haber).toFixed(2)) : parseFloat((parseFloat(saldo_p.value) - cuenta.haber).toFixed(2));
   cuenta.vendedor = vendedor;
   cuenta.maquina = maquina;
   try {
     await axios.post(`${URL}cuentaHisto`, cuenta);
   } catch (error) {
     await sweet.fire({
-      title: "No se pudo poner en historica el recibo, Anotalo!!",
+      title: 'No se pudo poner en historica el recibo, Anotalo!!',
     });
   }
 
   return cuenta.saldo;
 };
 
-const ponerDescuentoEnHistorica = async(recibo, saldo, vendedor, maquina) => {
+const ponerDescuentoEnHistorica = async (recibo, saldo, vendedor, maquina) => {
   const cuenta = {};
   cuenta.codigo = recibo.codigo;
   cuenta.cliente = cliente.cliente;
-  cuenta.tipo_comp = "Descuento: " + recibo.tipo_comp;
+  cuenta.tipo_comp = 'Descuento: ' + recibo.tipo_comp;
   cuenta.nro_comp = recibo.nro_comp;
   cuenta.haber = parseFloat(recibo.descuento).toFixed(2);
   cuenta.saldo = (saldo - cuenta.haber).toFixed(2);
@@ -643,36 +533,27 @@ const ponerDescuentoEnHistorica = async(recibo, saldo, vendedor, maquina) => {
     await axios.post(`${URL}cuentaHisto`, cuenta);
   } catch (error) {
     await sweet.fire({
-      title: "No se pudo poner en historica el descuento, Anotalo!!",
+      title: 'No se pudo poner en historica el descuento, Anotalo!!',
     });
   }
-}
+};
 
 //Calculamos el td saldo
 async function saldoPagado(e) {
   const tr = e.target.parentNode.parentNode;
   const aux = tr.children[6].innerText;
-  e.target.value === "" && (e.target.value = "0.00");
-  tr.children[6].innerText = redondear(
-    parseFloat(tr.children[3].innerText) -
-    parseFloat(tr.children[4].innerText) -
-    parseFloat(e.target.value),
-    2
-  );
+  e.target.value === '' && (e.target.value = '0.00');
+  tr.children[6].innerText = redondear(parseFloat(tr.children[3].innerText) - parseFloat(tr.children[4].innerText) - parseFloat(e.target.value), 2);
 
-  if (
-    (tr.children[6].innerText < 0 &&
-      parseFloat(tr.children[3].innerText) > 0) ||
-    (tr.children[6].innerText > 0 && parseFloat(tr.children[3].innerText) < 0)
-  ) {
+  if ((tr.children[6].innerText < 0 && parseFloat(tr.children[3].innerText) > 0) || (tr.children[6].innerText > 0 && parseFloat(tr.children[3].innerText) < 0)) {
     await sweet.fire({
-      title: "Pagado Actual Es Mayor Al saldo",
+      title: 'Pagado Actual Es Mayor Al saldo',
       showConfirmButton: true,
       timer: 1600,
-      icon: "error",
+      icon: 'error',
     });
     tr.children[6].innerText = aux;
-    tr.children[5].children[0].value = "0.00";
+    tr.children[5].children[0].value = '0.00';
     tr.children[5].children[0].focus();
     tr.children[5].children[0].select();
     trSeleccionado = tr;
@@ -696,66 +577,63 @@ function saltoAOtroPago(e) {
 
 //Calculamos el total de los inputs
 async function calculartotal() {
-  const trs = document.querySelectorAll(".listar tr");
+  const trs = document.querySelectorAll('.listar tr');
 
   let sum = 0;
   for await (let tr of trs) {
     sum += parseFloat(tr.children[5].children[0].value);
   }
 
-  if (situacion === "negro" && cliente.saldo_p === sum) {
-    saldoAfavor.removeAttribute("disabled");
+  if (situacion === 'negro' && cliente.saldo_p === sum) {
+    saldoAfavor.removeAttribute('disabled');
   }
 
-  if (situacion === "blanco" && cliente.saldo === sum) {
-    saldoAfavor.removeAttribute("disabled");
+  if (situacion === 'blanco' && cliente.saldo === sum) {
+    saldoAfavor.removeAttribute('disabled');
   }
 
   subTotal.value = redondear(sum + parseFloat(saldoAfavor.value), 2);
 }
 
 //si hacemos click en pagar todo se compensan todas las ventas que aparecen
-todo.addEventListener("click", (e) => {
-  subTotal.value = situacion === "blanco" ? saldo.value : saldo_p.value;
-  saldoAfavor.removeAttribute("disabled");
+todo.addEventListener('click', (e) => {
+  subTotal.value = situacion === 'blanco' ? saldo.value : saldo_p.value;
+  saldoAfavor.removeAttribute('disabled');
 
-  const trs = document.querySelectorAll(".listar tr");
+  const trs = document.querySelectorAll('.listar tr');
   for (let tr of trs) {
-    if (tr.children[3].innerHTML !== "0.10") {
+    if (tr.children[3].innerHTML !== '0.10') {
       tr.children[5].children[0].value = tr.children[6].innerHTML;
-      tr.children[6].innerHTML = "0.00";
+      tr.children[6].innerHTML = '0.00';
     } else {
-      subTotal.value = redondear(
-        parseFloat(subTotal.value) - parseFloat(tr.children[3].innerHTML),
-        2
-      );
+      subTotal.value = redondear(parseFloat(subTotal.value) - parseFloat(tr.children[3].innerHTML), 2);
     }
   }
 });
 
-codigo.addEventListener("focus", (e) => {
+codigo.addEventListener('focus', (e) => {
   codigo.select();
 });
 
-cancelar.addEventListener("click", async (e) => {
+cancelar.addEventListener('click', async (e) => {
   await sweet
     .fire({
-      title: "Desea cancelar el Recibo",
+      title: 'Desea cancelar el Recibo',
       showCancelButton: true,
-      confirmButtonText: "Aceptar",
+      confirmButtonText: 'Aceptar',
     })
     .then(({ isConfirmed }) => {
       if (isConfirmed) {
-        location.href = "../index.html";
+        location.href = '../index.html';
       }
     });
 });
 
-descuento.addEventListener("keyup", cambiarDescuento);
-total.addEventListener("keyup", cambiarTotal);
+descuento.addEventListener('keyup', cambiarDescuento);
+total.addEventListener('keyup', cambiarTotal);
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
-    location.href = "../index.html";
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    location.href = '../index.html';
   }
 });
