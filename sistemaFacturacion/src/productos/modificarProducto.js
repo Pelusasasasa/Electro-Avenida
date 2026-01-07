@@ -1,52 +1,52 @@
-const { ipcRenderer } = require("electron");
+const { ipcRenderer } = require('electron');
 
-require("dotenv").config();
+require('dotenv').config();
 const URL = process.env.URL;
-const axios = require("axios");
+const axios = require('axios');
 
-const { redondear, configAxios, verNombrePc } = require("../funciones");
-const sweet = require("sweetalert2");
-const path = require("path");
+const { redondear, configAxios, verNombrePc } = require('../funciones');
+const sweet = require('sweetalert2');
+const path = require('path');
 
 let info = [];
 
-const codigo = document.querySelector("#codigo");
-const codFabrica = document.querySelector("#cod-fabrica");
-const dolarInput = document.querySelector("#dolar");
+const codigo = document.querySelector('#codigo');
+const codFabrica = document.querySelector('#cod-fabrica');
+const dolarInput = document.querySelector('#dolar');
 
-const descripcion = document.querySelector("#descripcion");
+const descripcion = document.querySelector('#descripcion');
 
-const unidad = document.querySelector("#unidad");
-const stock = document.querySelector("#stock");
+const unidad = document.querySelector('#unidad');
+const stock = document.querySelector('#stock');
 
-const provedor = document.querySelector("#provedor");
-const select = document.querySelector("#rubros");
-const subRubros = document.querySelector("#subRubros");
-const marca = document.querySelector("#marca");
+const provedor = document.querySelector('#provedor');
+const select = document.querySelector('#rubros');
+const subRubros = document.querySelector('#subRubros');
+const marca = document.querySelector('#marca');
 
-const tasaIva = document.querySelector("#tasaIva");
-const costoPesos = document.querySelector("#costoPesos");
-const costoDolares = document.querySelector("#costoDolares");
-const ivaImp = document.querySelector("#ivaImp");
-const costoTotal = document.querySelector("#costoTotal");
+const tasaIva = document.querySelector('#tasaIva');
+const costoPesos = document.querySelector('#costoPesos');
+const costoDolares = document.querySelector('#costoDolares');
+const ivaImp = document.querySelector('#ivaImp');
+const costoTotal = document.querySelector('#costoTotal');
 
-const observaciones = document.querySelector("#observaciones");
-const oferta = document.querySelector("#oferta");
-const precioOferta = document.querySelector("#precioOferta");
+const observaciones = document.querySelector('#observaciones');
+const oferta = document.querySelector('#oferta');
+const precioOferta = document.querySelector('#precioOferta');
 
-const utilidad = document.querySelector("#utilidad");
-const precioVenta = document.querySelector("#precioVenta");
+const utilidad = document.querySelector('#utilidad');
+const precioVenta = document.querySelector('#precioVenta');
 
-const imagen = document.querySelector("#imagen");
-const destacado = document.querySelector("#destacado");
-const mostrarWeb = document.querySelector("#mostrarWeb");
+const imagen = document.querySelector('#imagen');
+const destacado = document.querySelector('#destacado');
+const mostrarWeb = document.querySelector('#mostrarWeb');
 
-const masDatos = document.querySelector("#masDatos");
+const masDatos = document.querySelector('#masDatos');
 
 //Botones
-const modificar = document.querySelector(".modificar");
-const guardar = document.querySelector(".guardar");
-const salir = document.querySelector(".salir");
+const modificar = document.querySelector('.modificar');
+const guardar = document.querySelector('.guardar');
+const salir = document.querySelector('.salir');
 
 let dolar = 0;
 let costo = 0;
@@ -56,7 +56,7 @@ let producto;
 let vendedor;
 
 //Traer el dolar
-window.addEventListener("load", async (e) => {
+window.addEventListener('load', async (e) => {
   let numeros = (await axios.get(`${URL}tipoVenta`, configAxios)).data;
   dolar = numeros.dolar;
   dolarInput.value = dolar;
@@ -65,20 +65,19 @@ window.addEventListener("load", async (e) => {
 //listamos los rubros para que tenemos en la base de datos
 const listarRubros = async (lista) => {
   for (let elem of lista) {
-    const option = document.createElement("option");
+    const option = document.createElement('option');
     option.value = `${elem.codigo}`;
-    option.text = elem.codigo + " - " + elem.nombre;
+    option.text = elem.codigo + ' - ' + elem.nombre;
 
     select.appendChild(option);
   }
 };
 
 const listarSubRubros = async (rubro) => {
-  const subRubrosLista = (await axios.get(`${URL}rubros/${rubro}`, configAxios))
-    .data.subRubros;
+  const subRubrosLista = (await axios.get(`${URL}rubros/${rubro}`, configAxios)).data.subRubros;
   if (subRubrosLista) {
     for (let rubro of subRubrosLista) {
-      const option = document.createElement("option");
+      const option = document.createElement('option');
       option.value = `${rubro}`;
       option.text = rubro;
 
@@ -87,7 +86,7 @@ const listarSubRubros = async (rubro) => {
   }
 };
 
-ipcRenderer.on("id-producto", async (e, args) => {
+ipcRenderer.on('id-producto', async (e, args) => {
   let rubros = (await axios.get(`${URL}rubros`, configAxios)).data;
   producto = (await axios.get(`${URL}productos/${args}`, configAxios)).data;
   await listarRubros(rubros);
@@ -95,15 +94,15 @@ ipcRenderer.on("id-producto", async (e, args) => {
   await asignarCampos(producto);
 });
 
-ipcRenderer.on("acceso", (e, args) => {
+ipcRenderer.on('acceso', (e, args) => {
   acceso = JSON.parse(args);
-  if (acceso === "2") {
-    document.querySelector(".costos").classList.add("none");
-    document.querySelector(".utilidad").classList.add("none");
+  if (acceso === '2') {
+    document.querySelector('.costos').classList.add('none');
+    document.querySelector('.utilidad').classList.add('none');
   }
 });
 
-ipcRenderer.on("vendedor", (e, args) => {
+ipcRenderer.on('vendedor', (e, args) => {
   vendedor = args;
 });
 
@@ -113,10 +112,8 @@ function asignarCampos(producto) {
   descripcion.value = producto.descripcion;
 
   provedor.value = producto.provedor;
-  select.value = producto.rubro ? producto.rubro : (select.value = "0");
-  subRubros.value = producto.subRubro
-    ? producto.subRubro
-    : (subRubros.value = "0");
+  select.value = producto.rubro ? producto.rubro : (select.value = '0');
+  subRubros.value = producto.subRubro ? producto.subRubro : (subRubros.value = '0');
   marca.value = producto.marca;
 
   unidad.value = producto.unidad;
@@ -124,21 +121,14 @@ function asignarCampos(producto) {
 
   tasaIva.value = producto.iva;
 
-  info = producto.datos.join("\n");
-  parseFloat(producto.costo) !== 0
-    ? (costoPesos.value = parseFloat(producto.costo).toFixed(2))
-    : (costoPesos.value = "0.00");
-  parseFloat(producto.costodolar) !== 0
-    ? (costoDolares.value = parseFloat(producto.costodolar).toFixed(3))
-    : (costoDolares.value = "0.00");
+  info = producto.datos.join('\n');
+  parseFloat(producto.costo) !== 0 ? (costoPesos.value = parseFloat(producto.costo).toFixed(2)) : (costoPesos.value = '0.00');
+  parseFloat(producto.costodolar) !== 0 ? (costoDolares.value = parseFloat(producto.costodolar).toFixed(3)) : (costoDolares.value = '0.00');
 
   if (parseFloat(costoDolares.value) !== 0) {
     ivaImp.value = parseFloat(producto.impuestos);
     costo = parseFloat(costoDolares.value);
-    costoTotal.value = (
-      (costo + parseFloat(producto.impuestos)) *
-      dolar
-    ).toFixed(3);
+    costoTotal.value = ((costo + parseFloat(producto.impuestos)) * dolar).toFixed(3);
   } else {
     ivaImp.value = parseFloat(producto.impuestos);
     costo = parseFloat(costoPesos.value);
@@ -158,62 +148,62 @@ function asignarCampos(producto) {
   valorTasaIva = tasaIvas(producto.iva);
 }
 
-select.addEventListener("change", async (e) => {
+select.addEventListener('change', async (e) => {
   subRubros.innerHTML = ' <option value="0">---Seleccionar---</option> ';
   listarSubRubros(e.target.value);
 });
 
-tasaIva.addEventListener("click", (e) => {
+tasaIva.addEventListener('click', (e) => {
   valorTasaIva = tasaIvas(e.target.value);
 });
 
-modificar.addEventListener("click", (e) => {
-  modificar.classList.add("none");
-  guardar.classList.remove("none");
+modificar.addEventListener('click', (e) => {
+  modificar.classList.add('none');
+  guardar.classList.remove('none');
 
-  codFabrica.removeAttribute("disabled");
-  descripcion.removeAttribute("disabled");
-  unidad.removeAttribute("disabled");
+  codFabrica.removeAttribute('disabled');
+  descripcion.removeAttribute('disabled');
+  unidad.removeAttribute('disabled');
 
-  provedor.removeAttribute("disabled");
-  rubros.removeAttribute("disabled");
-  subRubros.removeAttribute("disabled");
-  marca.removeAttribute("disabled");
+  provedor.removeAttribute('disabled');
+  rubros.removeAttribute('disabled');
+  subRubros.removeAttribute('disabled');
+  marca.removeAttribute('disabled');
 
-  tasaIva.removeAttribute("disabled");
-  costoPesos.removeAttribute("disabled");
-  costoDolares.removeAttribute("disabled");
-  costoTotal.removeAttribute("disabled");
+  tasaIva.removeAttribute('disabled');
+  costoPesos.removeAttribute('disabled');
+  costoDolares.removeAttribute('disabled');
+  costoTotal.removeAttribute('disabled');
 
-  observaciones.removeAttribute("disabled");
-  oferta.removeAttribute("disabled");
+  observaciones.removeAttribute('disabled');
+  oferta.removeAttribute('disabled');
 
   if (oferta.checked) {
-    precioOferta.removeAttribute("disabled");
+    precioOferta.removeAttribute('disabled');
   }
 
-  utilidad.removeAttribute("disabled");
-  precioVenta.removeAttribute("disabled");
+  utilidad.removeAttribute('disabled');
+  precioVenta.removeAttribute('disabled');
 
-  mostrarWeb.removeAttribute("disabled");
-  destacado.removeAttribute("disabled");
+  mostrarWeb.removeAttribute('disabled');
+  destacado.removeAttribute('disabled');
 });
 
-guardar.addEventListener("click", async (e) => {
+guardar.addEventListener('click', async (e) => {
   let producto = {};
 
-  if (costoPesos.value === "") {
+  if (costoPesos.value === '') {
     await sweet.fire({
-      title: "Poner un valor en costo",
+      title: 'Poner un valor en costo',
       returnFocus: false,
     });
     costoPesos.focus();
     return;
   }
 
-  if (costoDolares.value === "") {
+  if (costoDolares.value === '') {
     await sweet.fire({
-      title: "Poner un valor en costo dolar",
+      title: 'Poner un valor en costo dolar',
       returnFocus: false,
     });
     costoDolares.focus();
@@ -255,43 +245,41 @@ guardar.addEventListener("click", async (e) => {
 
   if (imagen.files[0]) {
     //Gaurdamos la imgane en la carpeta
-    const fs = require("fs");
+    const fs = require('fs');
     const streamLectura = fs.createReadStream(imagen.files[0].path);
-    const streamEscritura = fs.createWriteStream(
-      "\\\\192.168.0.101//imagenes//" + producto._id + ".jpg"
-    );
+    const streamEscritura = fs.createWriteStream('\\\\192.168.0.101//imagenes//' + producto._id + '.jpg');
 
     streamLectura.pipe(streamEscritura);
 
     //guardar en cloudinary
-    const { v2: cloudinary } = require("cloudinary");
+    const { v2: cloudinary } = require('cloudinary');
     //configuracion
     cloudinary.config({
-      cloud_name: "dyo36foif",
-      api_key: "146911571979255",
-      api_secret: "_hFmQnWkIfztgcsqCcW5M_lMupc",
+      cloud_name: 'dyo36foif',
+      api_key: '146911571979255',
+      api_secret: '_hFmQnWkIfztgcsqCcW5M_lMupc',
     });
 
     await cloudinary.uploader
       .upload(imagen.files[0].path, {
-        folder: "EA",
+        folder: 'EA',
         public_id: producto._id,
-        resource_type: "image",
+        resource_type: 'image',
       })
       .then(console.log);
   }
 
-  ipcRenderer.send("productoModificado", producto);
+  ipcRenderer.send('productoModificado', producto);
 
   window.close();
 });
 
-salir.addEventListener("click", (e) => {
+salir.addEventListener('click', (e) => {
   window.close();
 });
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
     window.close();
   }
 });
@@ -301,97 +289,97 @@ function resultado(numero1, numero2, dolar = 1) {
 }
 
 function tasaIvas(palabra) {
-  if (palabra === "N") {
+  if (palabra === 'N') {
     return 26;
   } else {
     return 15;
   }
 }
 
-codigo.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+codigo.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     codFabrica.focus();
   }
 });
 
-codFabrica.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+codFabrica.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     descripcion.focus();
   }
 });
 
-descripcion.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+descripcion.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     unidad.focus();
   }
 });
 
-unidad.addEventListener("keypress", (e) => {
+unidad.addEventListener('keypress', (e) => {
   e.preventDefault();
-  if (e.key === "Enter") {
+  if (e.key === 'Enter') {
     provedor.focus();
   }
 });
 
-stock.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+stock.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     provedor.focus();
   }
 });
 
-provedor.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+provedor.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     marca.focus();
   }
 });
 
-marca.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+marca.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     tasaIva.focus();
   }
 });
 
-tasaIva.addEventListener("keypress", (e) => {
+tasaIva.addEventListener('keypress', (e) => {
   e.preventDefault();
-  if (e.key === "Enter") {
+  if (e.key === 'Enter') {
     costoPesos.focus();
     costoPesos.select();
   }
 });
 
-costoPesos.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+costoPesos.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     costoDolares.focus();
     costoDolares.select();
   }
 });
 
-costoDolares.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+costoDolares.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     costoTotal.focus();
   }
 });
 
-ivaImp.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+ivaImp.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     costoTotal.focus();
   }
 });
 
-costoTotal.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+costoTotal.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     observaciones.focus();
   }
 });
 
-observaciones.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+observaciones.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     oferta.focus();
   }
 });
 
-oferta.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+oferta.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     if (oferta.checked) {
       precioOferta.focus();
     } else {
@@ -400,90 +388,85 @@ oferta.addEventListener("keypress", (e) => {
   }
 });
 
-precioOferta.addEventListener("keypress", (e) => {
+precioOferta.addEventListener('keypress', (e) => {
   if (e.keyCode === 13) {
     utilidad.focus();
   }
 });
 
-utilidad.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+utilidad.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     precioVenta.focus();
   }
 });
 
-precioVenta.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+precioVenta.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     guardar.focus();
   }
 });
 
-utilidad.addEventListener("focus", (e) => {
+utilidad.addEventListener('focus', (e) => {
   utilidad.select();
 });
 
-costoPesos.addEventListener("focus", (e) => {
+costoPesos.addEventListener('focus', (e) => {
   costoPesos.select();
 });
 
-costoDolares.addEventListener("focus", (e) => {
+costoDolares.addEventListener('focus', (e) => {
   costoDolares.select();
 });
 
-marca.addEventListener("focus", (e) => {
+marca.addEventListener('focus', (e) => {
   marca.select();
 });
 
-stock.addEventListener("focus", (e) => {
+stock.addEventListener('focus', (e) => {
   stock.select();
 });
 
-provedor.addEventListener("focus", (e) => {
+provedor.addEventListener('focus', (e) => {
   provedor.select();
 });
 
-descripcion.addEventListener("focus", (e) => {
+descripcion.addEventListener('focus', (e) => {
   descripcion.select();
 });
 
-codigo.addEventListener("focus", (e) => {
+codigo.addEventListener('focus', (e) => {
   codigo.select();
 });
 
-codFabrica.addEventListener("focus", (e) => {
+codFabrica.addEventListener('focus', (e) => {
   codFabrica.select();
 });
 
-ivaImp.addEventListener("focus", (e) => {
+ivaImp.addEventListener('focus', (e) => {
   ivaImp.select();
 });
 
-costoTotal.addEventListener("focus", (e) => {
+costoTotal.addEventListener('focus', (e) => {
   costoTotal.select();
 });
 
-observaciones.addEventListener("focus", (e) => {
+observaciones.addEventListener('focus', (e) => {
   observaciones.select();
 });
 
-precioOferta.addEventListener("focus", (e) => {
+precioOferta.addEventListener('focus', (e) => {
   precioOferta.select();
 });
 
-costoTotal.addEventListener("focus", () => {
+costoTotal.addEventListener('focus', () => {
   console.log((costoPesos.value * valorTasaIva) / 100);
-  ivaImp.value =
-    parseFloat(costoDolares.value) !== 0
-      ? parseFloat(((costoDolares.value * valorTasaIva) / 100).toFixed(2))
-      : ((costoPesos.value * valorTasaIva) / 100).toFixed(2);
+  ivaImp.value = parseFloat(costoDolares.value) !== 0 ? parseFloat(((costoDolares.value * valorTasaIva) / 100).toFixed(2)) : ((costoPesos.value * valorTasaIva) / 100).toFixed(2);
 
   costoT = parseFloat(ivaImp.value);
   let costoP = 0;
 
   if (parseFloat(costoDolares.value) !== 0) {
-    const costoMasIVa = parseFloat(
-      redondear(parseFloat(ivaImp.value) + parseFloat(costoDolares.value), 2)
-    );
+    const costoMasIVa = parseFloat(redondear(parseFloat(ivaImp.value) + parseFloat(costoDolares.value), 2));
     costoTotal.value = redondear(costoMasIVa * dolar, 2);
   } else {
     costoP = parseFloat(costoPesos.value);
@@ -491,31 +474,26 @@ costoTotal.addEventListener("focus", () => {
   }
 });
 
-precioVenta.addEventListener("focus", (e) => {
+precioVenta.addEventListener('focus', (e) => {
   precioVenta.select();
-  const aux = (
-    (parseFloat(utilidad.value) * parseFloat(costoTotal.value)) /
-    100
-  ).toFixed(2);
-  precioVenta.value = Math.round(
-    parseFloat(aux) + parseFloat(costoTotal.value)
-  ).toFixed(2);
+  const aux = ((parseFloat(utilidad.value) * parseFloat(costoTotal.value)) / 100).toFixed(2);
+  precioVenta.value = Math.round(parseFloat(aux) + parseFloat(costoTotal.value)).toFixed(2);
 });
 
-oferta.addEventListener("change", (e) => {
+oferta.addEventListener('change', (e) => {
   if (oferta.checked) {
-    precioOferta.removeAttribute("disabled");
+    precioOferta.removeAttribute('disabled');
   } else {
-    precioOferta.setAttribute("disabled", "");
+    precioOferta.setAttribute('disabled', '');
   }
 });
 
-masDatos.addEventListener("click", async (e) => {
+masDatos.addEventListener('click', async (e) => {
   const { value } = await sweet.fire({
-    title: "Datos",
-    input: "textarea",
+    title: 'Datos',
+    input: 'textarea',
     inputValue: info,
   });
 
-  info = value.split("\n");
+  info = value.split('\n');
 });

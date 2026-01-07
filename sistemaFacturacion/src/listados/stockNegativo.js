@@ -1,40 +1,39 @@
-const sweet = require("sweetalert2");
+const sweet = require('sweetalert2');
 
-const tbody = document.querySelector(".tbody");
-const body = document.querySelector("body");
-const salir = document.querySelector(".salirBoton");
-const cambiar = document.querySelector(".cambiarBoton");
-const impirmir = document.querySelector(".imprimirBoton");
+const tbody = document.querySelector('.tbody');
+const body = document.querySelector('body');
+const salir = document.querySelector('.salirBoton');
+const cambiar = document.querySelector('.cambiarBoton');
+const impirmir = document.querySelector('.imprimirBoton');
 
-const axios = require("axios");
-const { verificarUsuarios, configAxios, verNombrePc } = require("../funciones");
-require("dotenv").config;
+const axios = require('axios');
+const { verificarUsuarios, configAxios, verNombrePc } = require('../funciones');
+require('dotenv').config;
 const URL = process.env.URL;
 
 let seleccionado;
 let subSeleccionado;
 let vendedor;
 
-body.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
+body.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
     window.close();
   }
 });
 
-window.addEventListener("load", async (e) => {
+window.addEventListener('load', async (e) => {
   vendedor = await verificarUsuarios();
 
-  if (vendedor === "") {
+  if (vendedor === '') {
     await sweet.fire({
-      title: "Contraseña Incorrecta",
+      title: 'Contraseña Incorrecta',
     });
     location.reload();
   } else if (!vendedor) {
     window.close();
   }
 
-  let productos = (await axios(`${URL}productos/stockNegativo`, configAxios))
-    .data;
+  let productos = (await axios(`${URL}productos/stockNegativo`, configAxios)).data;
   listarStockNegativo(productos);
 });
 
@@ -64,49 +63,41 @@ async function listarProductos(lista) {
   }
   seleccionado = tbody.firstElementChild;
   subSeleccionado = seleccionado.children[1];
-  seleccionado.classList.add("seleccionado");
-  subSeleccionado.classList.add("subSeleccionado");
+  seleccionado.classList.add('seleccionado');
+  subSeleccionado.classList.add('subSeleccionado');
 }
 
-tbody.addEventListener("click", (e) => {
-  seleccionado && seleccionado.classList.remove("seleccionado");
-  subSeleccionado && subSeleccionado.classList.remove("subSeleccionado");
+tbody.addEventListener('click', (e) => {
+  seleccionado && seleccionado.classList.remove('seleccionado');
+  subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
 
   seleccionado = e.target.parentNode;
   subSeleccionado = e.target;
 
-  seleccionado.classList.add("seleccionado");
-  subSeleccionado.classList.add("subSeleccionado");
+  seleccionado.classList.add('seleccionado');
+  subSeleccionado.classList.add('subSeleccionado');
 });
 
-cambiar.addEventListener("click", async (e) => {
+cambiar.addEventListener('click', async (e) => {
   await sweet
     .fire({
-      title: "Nuevo Stock",
+      title: 'Nuevo Stock',
       showCancelButton: false,
-      input: "text",
-      confirmButtonText: "Aceptar",
+      input: 'text',
+      confirmButtonText: 'Aceptar',
     })
     .then(async ({ isConfirmed, value }) => {
-      if (isConfirmed && value !== "") {
-        let producto = (
-          await axios.get(`${URL}productos/${seleccionado.id}`, configAxios)
-        ).data;
+      if (isConfirmed && value !== '') {
+        let producto = (await axios.get(`${URL}productos/${seleccionado.id}`, configAxios)).data;
         await crearMovimiento(producto, value);
         producto.stock = value;
         producto.vendedor = vendedor.nombre;
         producto.maquina = verNombrePc();
-        await axios.put(
-          `${URL}productos/${seleccionado.id}`,
-          producto,
-          configAxios
-        );
+        await axios.put(`${URL}productos/${seleccionado.id}`, producto, configAxios);
         if (parseFloat(producto.stock) > 0) {
           tbody.removeChild(seleccionado);
         } else {
-          seleccionado.children[3].innerHTML = parseFloat(
-            producto.stock
-          ).toFixed(2);
+          seleccionado.children[3].innerHTML = parseFloat(producto.stock).toFixed(2);
         }
       }
     });
@@ -121,22 +112,22 @@ const crearMovimiento = async (producto, stock) => {
   movimiento.stock = stock;
   movimiento.vendedor = vendedor.nombre;
   movimiento.maquina = verNombrePc();
-  movimiento.tipo_comp = "+";
+  movimiento.tipo_comp = '+';
   movimiento.precio_unitario = producto.precio_venta;
   await axios.post(`${URL}movProductos`, [movimiento], configAxios);
 };
 
-impirmir.addEventListener("click", (e) => {
+impirmir.addEventListener('click', (e) => {
   printPage();
 });
 
-salir.addEventListener("click", () => {
+salir.addEventListener('click', () => {
   window.close();
 });
 
 function printPage() {
-  const botones = document.querySelector(".botones");
-  botones.classList.add("disable");
+  const botones = document.querySelector('.botones');
+  botones.classList.add('disable');
   window.print();
-  botones.classList.remove("disable");
+  botones.classList.remove('disable');
 }

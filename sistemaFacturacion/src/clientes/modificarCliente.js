@@ -1,43 +1,41 @@
-const { ipcRenderer } = require("electron");
+const { ipcRenderer } = require('electron');
 
-const axios = require("axios");
-const { configAxios, verNombrePc } = require("../funciones");
-require("dotenv").config;
+const axios = require('axios');
+const { configAxios, verNombrePc } = require('../funciones');
+require('dotenv').config;
 const URL = process.env.URL;
 
-const nombre = document.querySelector("#nombre");
-const localidad = document.querySelector("#localidad");
-const direccion = document.querySelector("#direccion");
-const telefono = document.querySelector("#telefono");
-const provincia = document.querySelector("#provincia");
-const cod_postal = document.querySelector("#cod_postal");
-const email = document.querySelector("#email");
-const dnicuit = document.querySelector("#dnicuit");
-const conIva = document.querySelector("#conIva");
-const limite = document.querySelector("#limite");
+const nombre = document.querySelector('#nombre');
+const localidad = document.querySelector('#localidad');
+const direccion = document.querySelector('#direccion');
+const telefono = document.querySelector('#telefono');
+const provincia = document.querySelector('#provincia');
+const cod_postal = document.querySelector('#cod_postal');
+const email = document.querySelector('#email');
+const dnicuit = document.querySelector('#dnicuit');
+const conIva = document.querySelector('#conIva');
+const limite = document.querySelector('#limite');
 const moroso = document.querySelectorAll('input[name="moroso"]');
-const conFact = document.querySelector("#conFact");
-const observaciones = document.querySelector("#observaciones");
+const conFact = document.querySelector('#conFact');
+const observaciones = document.querySelector('#observaciones');
 
-const modificar = document.querySelector(".modificar");
-const guardar = document.querySelector(".guardar");
+const modificar = document.querySelector('.modificar');
+const guardar = document.querySelector('.guardar');
 
-let _id = "";
+let _id = '';
 let condicion;
 let acceso;
-let situacion = "blanco";
-let vendedor = "";
+let situacion = 'blanco';
+let vendedor = '';
 
-ipcRenderer.on("datos-clientes", async (e, args) => {
-  cliente = (
-    await axios.get(`${URL}clientes/id/${JSON.parse(args)[0]}`, configAxios)
-  ).data;
+ipcRenderer.on('datos-clientes', async (e, args) => {
+  cliente = (await axios.get(`${URL}clientes/id/${JSON.parse(args)[0]}`, configAxios)).data;
   acceso = JSON.parse(args)[1];
 
   for (let i of moroso) {
     if (i.value === cliente.condicion) {
       condicion = cliente.condicion;
-      i.setAttribute("checked", "");
+      i.setAttribute('checked', '');
     }
   }
   _id = cliente._id;
@@ -55,31 +53,29 @@ ipcRenderer.on("datos-clientes", async (e, args) => {
   conIva.value = cliente.cond_iva;
 });
 
-ipcRenderer.on("vendedor", (e, args) => {
+ipcRenderer.on('vendedor', (e, args) => {
   vendedor = args;
 });
 
-modificar.addEventListener("click", (e) => {
+modificar.addEventListener('click', (e) => {
   e.preventDefault();
 
-  modificar.classList.add("none");
-  const inputs = document.querySelectorAll("input");
-  const select = document.querySelector("#conIva");
+  modificar.classList.add('none');
+  const inputs = document.querySelectorAll('input');
+  const select = document.querySelector('#conIva');
 
-  select.toggleAttribute("disabled");
+  select.toggleAttribute('disabled');
 
-  acceso !== "0"
-    ? conFact.setAttribute("disabled", "")
-    : conFact.removeAttribute("disabled");
+  acceso !== '0' ? conFact.setAttribute('disabled', '') : conFact.removeAttribute('disabled');
 
   for (let input of inputs) {
-    input.toggleAttribute("disabled");
+    input.toggleAttribute('disabled');
   }
 
   nombre.focus();
 });
 
-guardar.addEventListener("click", async (e) => {
+guardar.addEventListener('click', async (e) => {
   const nuevoCliente = {};
   for (let i of moroso) {
     i.checked && (condicion = i.value);
@@ -102,130 +98,126 @@ guardar.addEventListener("click", async (e) => {
   nuevoCliente.maquina = verNombrePc();
   console.log(vendedor);
   nuevoCliente.vendedor = vendedor;
-  await axios.put(
-    `${URL}clientes/${nuevoCliente._id}`,
-    nuevoCliente,
-    configAxios
-  );
+  await axios.put(`${URL}clientes/${nuevoCliente._id}`, nuevoCliente, configAxios);
   window.close();
 });
 
-const salir = document.querySelector(".salir");
-salir.addEventListener("click", () => {
+const salir = document.querySelector('.salir');
+salir.addEventListener('click', () => {
   window.close();
 });
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
     window.close();
   }
 });
 
-nombre.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+nombre.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     conIva.focus();
   }
 });
 
-conIva.addEventListener("keypress", (e) => {
+conIva.addEventListener('keypress', (e) => {
   e.preventDefault();
-  if (e.key === "Enter") {
+  if (e.key === 'Enter') {
     direccion.focus();
   }
 });
 
-localidad.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+localidad.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     provincia.focus();
   }
 });
 
-provincia.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+provincia.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     cod_postal.focus();
   }
 });
-cod_postal.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+cod_postal.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     dnicuit.focus();
   }
 });
-direccion.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+direccion.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     localidad.focus();
   }
 });
 
-dnicuit.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+dnicuit.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     email.focus();
   }
 });
 
-email.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+email.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     telefono.focus();
   }
 });
 
-telefono.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+telefono.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     limite.focus();
   }
 });
 
-limite.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+limite.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     conFact.focus();
   }
 });
-conFact.addEventListener("keypress", (e) => {
+conFact.addEventListener('keypress', (e) => {
   e.preventDefault();
-  if (e.key === "Enter") {
+  if (e.key === 'Enter') {
     console.log(moroso[0]);
     moroso[0].focus();
   }
 });
 
-moroso[0].addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+moroso[0].addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     observaciones.focus();
   }
 });
 
-observaciones.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+observaciones.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     guardar.focus();
   }
 });
 
-nombre.addEventListener("focus", (e) => {
+nombre.addEventListener('focus', (e) => {
   nombre.select();
 });
-localidad.addEventListener("focus", (e) => {
+localidad.addEventListener('focus', (e) => {
   localidad.select();
 });
-provincia.addEventListener("focus", (e) => {
+provincia.addEventListener('focus', (e) => {
   provincia.select();
 });
-cod_postal.addEventListener("focus", (e) => {
+cod_postal.addEventListener('focus', (e) => {
   cod_postal.select();
 });
-direccion.addEventListener("focus", (e) => {
+direccion.addEventListener('focus', (e) => {
   direccion.select();
 });
-dnicuit.addEventListener("focus", (e) => {
+dnicuit.addEventListener('focus', (e) => {
   dnicuit.select();
 });
-email.addEventListener("focus", (e) => {
+email.addEventListener('focus', (e) => {
   email.select();
 });
-telefono.addEventListener("focus", (e) => {
+telefono.addEventListener('focus', (e) => {
   telefono.select();
 });
-limite.addEventListener("focus", (e) => {
+limite.addEventListener('focus', (e) => {
   limite.select();
 });
-observaciones.addEventListener("focus", (e) => {
+observaciones.addEventListener('focus', (e) => {
   observaciones.select();
 });

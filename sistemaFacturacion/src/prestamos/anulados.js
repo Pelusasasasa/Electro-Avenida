@@ -1,23 +1,21 @@
-const axios = require("axios");
-const { copiar, configAxios } = require("../funciones");
-require("dotenv").config();
+const axios = require('axios');
+const { copiar, configAxios } = require('../funciones');
+require('dotenv').config();
 const URL = process.env.URL;
 
-const desde = document.getElementById("desde");
-const hasta = document.getElementById("hasta");
-const tbody = document.querySelector("tbody");
-const detallesProducto = document.querySelector(".detallesProducto");
-const cerrarVentana = document.getElementById("cerrarVentana");
-const detalle = document.getElementById("detalle");
+const desde = document.getElementById('desde');
+const hasta = document.getElementById('hasta');
+const tbody = document.querySelector('tbody');
+const detallesProducto = document.querySelector('.detallesProducto');
+const cerrarVentana = document.getElementById('cerrarVentana');
+const detalle = document.getElementById('detalle');
 
 let seleccionado;
 let subSeleccionado;
 
-window.addEventListener("load", (e) => {
+window.addEventListener('load', (e) => {
   const hoy = new Date();
-  const fechaArgentina = new Date(
-    hoy.getTime() - hoy.getTimezoneOffset() * 60000
-  ).toISOString();
+  const fechaArgentina = new Date(hoy.getTime() - hoy.getTimezoneOffset() * 60000).toISOString();
   desde.value = fechaArgentina.slice(0, 10);
   hasta.value = fechaArgentina.slice(0, 10);
 
@@ -25,49 +23,44 @@ window.addEventListener("load", (e) => {
   traerPrestamosAnulados();
 });
 
-desde.addEventListener("keypress", (e) => {
+desde.addEventListener('keypress', (e) => {
   if (e.keyCode === 13) {
     hasta.focus();
     traerPrestamosAnulados();
   }
 });
 
-hasta.addEventListener("keypress", (e) => {
+hasta.addEventListener('keypress', (e) => {
   if (e.keyCode === 13) {
     traerPrestamosAnulados();
   }
 });
 
-cerrarVentana.addEventListener("click", (e) => {
-  detallesProducto.classList.add("none");
+cerrarVentana.addEventListener('click', (e) => {
+  detallesProducto.classList.add('none');
 });
 
-tbody.addEventListener("click", seleccionarTr);
+tbody.addEventListener('click', seleccionarTr);
 
 async function traerPrestamosAnulados() {
-  const prestamos = (
-    await axios.get(
-      `${URL}prestamos/anulados/${desde.value}/${hasta.value}`,
-      configAxios
-    )
-  ).data;
+  const prestamos = (await axios.get(`${URL}prestamos/anulados/${desde.value}/${hasta.value}`, configAxios)).data;
   listarPrestamos(prestamos);
 }
 
 async function listarPrestamos(lista) {
-  tbody.innerText = "";
+  tbody.innerText = '';
   for (let prestamo of lista) {
-    const tr = document.createElement("tr");
+    const tr = document.createElement('tr');
     tr.id = prestamo._id;
 
-    const tdFecha = document.createElement("td");
-    const tdCodigo = document.createElement("td");
-    const tdCliente = document.createElement("td");
-    const tdNro = document.createElement("td");
-    const tdObservaciones = document.createElement("td");
-    const tdNroPresupuesto = document.createElement("td");
+    const tdFecha = document.createElement('td');
+    const tdCodigo = document.createElement('td');
+    const tdCliente = document.createElement('td');
+    const tdNro = document.createElement('td');
+    const tdObservaciones = document.createElement('td');
+    const tdNroPresupuesto = document.createElement('td');
 
-    const fecha = prestamo.fecha.slice(0, 10).split("-", 3);
+    const fecha = prestamo.fecha.slice(0, 10).split('-', 3);
 
     tdFecha.innerText = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
     tdCodigo.innerText = prestamo.codigo;
@@ -88,32 +81,30 @@ async function listarPrestamos(lista) {
 }
 
 async function seleccionarTr(e) {
-  seleccionado && seleccionado.classList.remove("seleccionado");
-  subSeleccionado && subSeleccionado.classList.remove("subSeleccionado");
+  seleccionado && seleccionado.classList.remove('seleccionado');
+  subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
 
-  if (e.target.nodeName === "TD") {
+  if (e.target.nodeName === 'TD') {
     seleccionado = e.target.parentNode;
     subSeleccionado = e.target;
   }
 
-  seleccionado.classList.add("seleccionado");
-  subSeleccionado.classList.add("subSeleccionado");
+  seleccionado.classList.add('seleccionado');
+  subSeleccionado.classList.add('subSeleccionado');
 
   PonerMovimientos(seleccionado.children[5].innerText);
 }
 
 async function PonerMovimientos(id) {
-  const movimientos = (
-    await axios.get(`${URL}movProductos/${id}/Presupuesto`, configAxios)
-  ).data;
-  detalle.innerText = "";
+  const movimientos = (await axios.get(`${URL}movProductos/${id}/Presupuesto`, configAxios)).data;
+  detalle.innerText = '';
   for await (let mov of movimientos) {
-    const tr = document.createElement("tr");
-    const tdCodigo = document.createElement("td");
-    const tdProducto = document.createElement("td");
-    const tdCantidad = document.createElement("td");
-    const tdStock = document.createElement("td");
-    const tdPrecio = document.createElement("td");
+    const tr = document.createElement('tr');
+    const tdCodigo = document.createElement('td');
+    const tdProducto = document.createElement('td');
+    const tdCantidad = document.createElement('td');
+    const tdStock = document.createElement('td');
+    const tdPrecio = document.createElement('td');
 
     tdCodigo.innerText = mov.codProd;
     tdProducto.innerText = mov.descripcion;
@@ -130,11 +121,11 @@ async function PonerMovimientos(id) {
     detalle.appendChild(tr);
   }
 
-  detallesProducto.classList.remove("none");
+  detallesProducto.classList.remove('none');
 }
 
-document.addEventListener("keyup", (e) => {
+document.addEventListener('keyup', (e) => {
   if (e.keyCode === 27) {
-    location.href = "../index.html";
+    location.href = '../index.html';
   }
 });

@@ -1,9 +1,9 @@
-const { ipcRenderer } = require("electron");
+const { ipcRenderer } = require('electron');
 
-const axios = require("axios");
-const XLSX = require("xlsx");
-const { configAxios } = require("../funciones");
-require("dotenv").config;
+const axios = require('axios');
+const XLSX = require('xlsx');
+const { configAxios } = require('../funciones');
+require('dotenv').config;
 const URL = process.env.URL;
 
 const fecha = new Date();
@@ -34,25 +34,25 @@ let ultimoDia = new Date(anio, mes, 0);
 ultimoDia = ultimoDia.getDate();
 let mesAyer = mes - 1 === 0 ? 12 : mes - 1;
 mesAyer = mesAyer < 10 ? `0${mesAyer}` : mesAyer;
-const anioAyer = mes === "01" ? anio - 1 : anio;
+const anioAyer = mes === '01' ? anio - 1 : anio;
 
 const fechaAyer = `${anioAyer}-${mesAyer}-${ultimoDiaMesAnterior}`;
 
 const fechaHoy = `${anio}-${mes}-${ultimoDia}`;
 
-const desde = document.querySelector("#desde");
-const hasta = document.querySelector("#hasta");
-const tbody = document.querySelector(".tbody");
-const buscar = document.querySelector(".buscar");
-const exportar = document.querySelector(".exportar");
+const desde = document.querySelector('#desde');
+const hasta = document.querySelector('#hasta');
+const tbody = document.querySelector('.tbody');
+const buscar = document.querySelector('.buscar');
+const exportar = document.querySelector('.exportar');
 
 desde.value = fechaAyer;
 hasta.value = fechaHoy;
 
 let ventasExportar = [];
 
-buscar.addEventListener("click", async (e) => {
-  tbody.innerHTML = "";
+buscar.addEventListener('click', async (e) => {
+  tbody.innerHTML = '';
   totalGlobalGravado21Nota = 0;
   totalGlobalIva21Nota = 0;
   totalGlobalGravado105Nota = 0;
@@ -64,11 +64,9 @@ buscar.addEventListener("click", async (e) => {
   totalGlobalIva105Factura = 0;
   totalGlobalFactura = 0;
   const desdeFecha = new Date(desde.value);
-  let ventas = (
-    await axios.get(`${URL}ventas/${desdeFecha}/${hasta.value}`, configAxios)
-  ).data;
-  ventas = ventas.filter((venta) => venta.tipo_comp !== "Recibos");
-  ventas = ventas.filter((venta) => venta.tipo_comp !== "Recibos_P");
+  let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hasta.value}`, configAxios)).data;
+  ventas = ventas.filter((venta) => venta.tipo_comp !== 'Recibos');
+  ventas = ventas.filter((venta) => venta.tipo_comp !== 'Recibos_P');
   ventasExportar = ventas;
   ventasTraidas(ventas);
 });
@@ -77,7 +75,7 @@ const ventasTraidas = async (ventas) => {
   if (ventas.length === 0) {
     return;
   }
-  buscar.setAttribute("disabled", "");
+  buscar.setAttribute('disabled', '');
   //Ordenamos la ventas por fecha
   ventas.sort((a, b) => {
     if (a.fecha > b.fecha) {
@@ -95,11 +93,7 @@ const ventasTraidas = async (ventas) => {
   // diaVentaAnterior = diaVentaAnterior < 10 ? `0${diaVentaAnterior}` : diaVentaAnterior;
   let ventasHoy = [];
   for await (let venta of ventas) {
-    if (
-      new Date(venta.fecha).getDate() > diaVentaAnterior ||
-      (new Date(venta.fecha).getDate() < diaVentaAnterior &&
-        new Date(venta.fecha).getMonth + 1 !== mesDelDiaAnterior)
-    ) {
+    if (new Date(venta.fecha).getDate() > diaVentaAnterior || (new Date(venta.fecha).getDate() < diaVentaAnterior && new Date(venta.fecha).getMonth + 1 !== mesDelDiaAnterior)) {
       ventasHoy.length !== 0 && (await listar(ventasHoy, diaVentaAnterior));
       ventasHoy = [];
       diaVentaAnterior = new Date(venta.fecha).getDate();
@@ -108,9 +102,7 @@ const ventasTraidas = async (ventas) => {
       ventasHoy.push(venta);
     }
   }
-  const ventasUltimoDia = ventas.filter(
-    (venta) => new Date(venta.fecha).getDate() === ultimoDia
-  );
+  const ventasUltimoDia = ventas.filter((venta) => new Date(venta.fecha).getDate() === ultimoDia);
   await listar(ventasUltimoDia);
   tbody.innerHTML += `
         <tr>
@@ -119,18 +111,10 @@ const ventasTraidas = async (ventas) => {
             <td></td>
             <td></td>
             <td>TOTAL MENSUAL</td>
-            <td>${(
-      totalGlobalGravado21Factura - totalGlobalGravado21Nota
-    ).toFixed(2)}</td>
-            <td>${(totalGlobalIva21Factura - totalGlobalIva21Nota).toFixed(
-      2
-    )}</td>
-            <td>${(
-      totalGlobalGravado105Factura - totalGlobalGravado105Nota
-    ).toFixed(2)}</td>
-            <td>${(totalGlobalIva105Factura - totalGlobalIva105Nota).toFixed(
-      2
-    )}</td>
+            <td>${(totalGlobalGravado21Factura - totalGlobalGravado21Nota).toFixed(2)}</td>
+            <td>${(totalGlobalIva21Factura - totalGlobalIva21Nota).toFixed(2)}</td>
+            <td>${(totalGlobalGravado105Factura - totalGlobalGravado105Nota).toFixed(2)}</td>
+            <td>${(totalGlobalIva105Factura - totalGlobalIva105Nota).toFixed(2)}</td>
             <td>${(totalGlobalFactura - totalGlobalNota).toFixed(2)}</td>
         </tr>
 
@@ -176,29 +160,20 @@ const ventasTraidas = async (ventas) => {
             <td></td>
             <td></td>
             <td></td>
+            <td class="borde">${(totalGlobalGravado105Factura + totalGlobalGravado21Factura - totalGlobalGravado105Nota - totalGlobalGravado21Nota).toFixed(2)}</td>
+            <td class="borde">${(totalGlobalIva21Factura - totalGlobalIva21Nota).toFixed(2)}</td>
+            <td class="borde">${(totalGlobalIva105Factura - totalGlobalIva105Nota).toFixed(2)}</td>
             <td class="borde">${(
-      totalGlobalGravado105Factura +
-      totalGlobalGravado21Factura -
-      totalGlobalGravado105Nota -
-      totalGlobalGravado21Nota
-    ).toFixed(2)}</td>
-            <td class="borde">${(
-      totalGlobalIva21Factura - totalGlobalIva21Nota
-    ).toFixed(2)}</td>
-            <td class="borde">${(
-      totalGlobalIva105Factura - totalGlobalIva105Nota
-    ).toFixed(2)}</td>
-            <td class="borde">${(
-      totalGlobalGravado105Factura +
-      totalGlobalGravado21Factura -
-      totalGlobalGravado105Nota -
-      totalGlobalGravado21Nota +
-      (totalGlobalIva21Factura - totalGlobalIva21Nota) +
-      (totalGlobalIva105Factura - totalGlobalIva105Nota)
-    ).toFixed(2)}</td>
+              totalGlobalGravado105Factura +
+              totalGlobalGravado21Factura -
+              totalGlobalGravado105Nota -
+              totalGlobalGravado21Nota +
+              (totalGlobalIva21Factura - totalGlobalIva21Nota) +
+              (totalGlobalIva105Factura - totalGlobalIva105Nota)
+            ).toFixed(2)}</td>
         </tr>
     `;
-  buscar.removeAttribute("disabled");
+  buscar.removeAttribute('disabled');
 };
 
 const listar = async (ventas, diaVentaAnterior) => {
@@ -230,10 +205,8 @@ const listar = async (ventas, diaVentaAnterior) => {
     month = month < 10 ? `0${month}` : month;
     let year = fecha.getFullYear();
 
-    let cliente = (
-      await axios.get(`${URL}clientes/id/${venta.cliente}`, configAxios)
-    ).data;
-    cond_iva = cliente.cond_iva ? cliente.cond_iva : "Consumidor Final";
+    let cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`, configAxios)).data;
+    cond_iva = cliente.cond_iva ? cliente.cond_iva : 'Consumidor Final';
     gravado105 = venta.gravado105;
     gravado21 = venta.gravado21;
     iva105 = venta.iva105;
@@ -244,8 +217,7 @@ const listar = async (ventas, diaVentaAnterior) => {
                 <td>${day}/${month}/${year}</td>
                 <td class = "inicio">${venta.nombreCliente.slice(0, 18)}</td>
                 <td class = "inicio">${cond_iva}</td>
-                <td class = "inicio">${venta.dnicuit ? venta.dnicuit : "00000000"
-      }</td>
+                <td class = "inicio">${venta.dnicuit ? venta.dnicuit : '00000000'}</td>
                 <td class = "inicio">${venta.tipo_comp}</td>
                 <td>${venta.nro_comp}</td>
                 <td class = "final">${gravado21}</td>
@@ -257,9 +229,7 @@ const listar = async (ventas, diaVentaAnterior) => {
         `;
     const indexSiguiente = ventas.indexOf(venta) + 1;
 
-    let ventaSiguiente = ventas.find(
-      (venta) => ventas.indexOf(venta) === indexSiguiente
-    );
+    let ventaSiguiente = ventas.find((venta) => ventas.indexOf(venta) === indexSiguiente);
 
     if (venta.tipo_comp === tipo_comp) {
       totalgravado21 += venta.gravado21;
@@ -285,12 +255,7 @@ const listar = async (ventas, diaVentaAnterior) => {
                     <td class = "final">${total.toFixed(2)}</td>
                     </tr>
                 `;
-      if (
-        tipo_comp === "Ticket Factura" ||
-        tipo_comp === "Factura A" ||
-        tipo_comp === "Factura B" ||
-        tipo_comp === "Nota de Debito"
-      ) {
+      if (tipo_comp === 'Ticket Factura' || tipo_comp === 'Factura A' || tipo_comp === 'Factura B' || tipo_comp === 'Nota de Debito') {
         totalGlobalGravado105Factura += totalgravado105;
         totalGlobalGravado21Factura += totalgravado21;
         totalGlobalIva105Factura += totaliva105;
@@ -313,45 +278,45 @@ const listar = async (ventas, diaVentaAnterior) => {
   }
 };
 
-exportar.addEventListener("click", (e) => {
-  ipcRenderer.send("elegirPath");
-  let path = "";
-  let extencion = "xlsx";
-  ipcRenderer.on("mandoPath", (e, args) => {
+exportar.addEventListener('click', (e) => {
+  ipcRenderer.send('elegirPath');
+  let path = '';
+  let extencion = 'xlsx';
+  ipcRenderer.on('mandoPath', (e, args) => {
     path = args;
-    extencion = path.split(".")[1] ? path.split(".")[1] : extencion;
-    path = path.split(".")[0];
+    extencion = path.split('.')[1] ? path.split('.')[1] : extencion;
+    path = path.split('.')[0];
 
     let wb = XLSX.utils.book_new();
 
     wb.props = {
-      Title: "LibroVentas",
-      subject: "test",
-      Author: "Electro Avenida",
+      Title: 'LibroVentas',
+      subject: 'test',
+      Author: 'Electro Avenida',
     };
 
     let newWS = XLSX.utils.json_to_sheet(ventasExportar);
 
-    XLSX.utils.book_append_sheet(wb, newWS, "LibroVentas");
-    XLSX.writeFile(wb, path + "." + extencion);
+    XLSX.utils.book_append_sheet(wb, newWS, 'LibroVentas');
+    XLSX.writeFile(wb, path + '.' + extencion);
   });
 });
 
 //cuando hacemos enter en desde o hasta que se pase al siguiente, en el caso de hasta que pase a buscar
-desde.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+desde.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     hasta.focus();
   }
 });
 
-hasta.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+hasta.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     buscar.focus();
   }
 });
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
     window.close();
   }
 });

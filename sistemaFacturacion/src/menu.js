@@ -1,53 +1,53 @@
-const { abrirVentana, configAxios } = require("./funciones");
-const { dialog, ipcRenderer, ipcMain } = require("electron");
-const [pedidos] = require("./descargas/descargas");
+const { abrirVentana, configAxios } = require('./funciones');
+const { dialog, ipcRenderer, ipcMain } = require('electron');
+const [pedidos] = require('./descargas/descargas');
 
-const axios = require("axios");
-require("dotenv").config;
+const axios = require('axios');
+require('dotenv').config;
 const URL = process.env.URL;
 
 //menu de la aplciacion
 const templateMenu = [
   //Descargas
   {
-    label: "Convertir excel",
+    label: 'Convertir excel',
     submenu: [
       {
-        label: "Pedidos",
+        label: 'Pedidos',
         async click() {
           const path = (await dialog.showSaveDialog()).filePath;
           pedidos((await axios.get(`${URL}pedidos`, configAxios)).data, path);
         },
       },
       {
-        label: "Ventas",
+        label: 'Ventas',
         click() {
-          abrirVentana("fechas/fechas.html", 600, 300);
+          abrirVentana('fechas/fechas.html', 600, 300);
         },
       },
       {
-        label: "Por Comprobante",
+        label: 'Por Comprobante',
         click() {
-          abrirVentana("fechas/fechas.html", 600, 300, false, "porComprobante");
+          abrirVentana('fechas/fechas.html', 600, 300, false, 'porComprobante');
         },
       },
     ],
   },
   //Datos
   {
-    label: "Datos",
+    label: 'Datos',
     submenu: [
       {
-        label: "Rubros",
+        label: 'Rubros',
         submenu: [
           {
-            label: "Agregar rubros",
+            label: 'Agregar rubros',
             click() {
-              abrirVentana("rubros/rubros.html", 1200, 1200);
+              abrirVentana('rubros/rubros.html', 1200, 1200);
             },
           },
           {
-            label: "Graficos",
+            label: 'Graficos',
             click() {
               abrirVentana(`rubros/grafico.html`, 1200, 650);
             },
@@ -55,202 +55,202 @@ const templateMenu = [
         ],
       },
       {
-        label: "Numeros",
+        label: 'Numeros',
         click() {
-          abrirVentana("numeros/numeros.html", 600, 550);
+          abrirVentana('numeros/numeros.html', 600, 550);
         },
       },
       {
-        label: "Vendedores",
+        label: 'Vendedores',
         click() {
-          abrirVentana("usuarios/usuarios.html", 800, 400);
+          abrirVentana('usuarios/usuarios.html', 800, 400);
         },
       },
     ],
   },
   //Clientes
   {
-    label: "Clientes",
+    label: 'Clientes',
     submenu: [
       {
-        label: "Listado Saldo",
+        label: 'Listado Saldo',
         click() {
-          abrirVentana("clientes/listadoSaldo.html", 1200, 600);
+          abrirVentana('clientes/listadoSaldo.html', 1200, 600);
         },
       },
       {
-        label: "Arreglar Saldo",
+        label: 'Arreglar Saldo',
         click() {
-          abrirVentana("clientes/arreglarSaldo.html", 600, 500);
+          abrirVentana('clientes/arreglarSaldo.html', 600, 500);
         },
       },
       {
-        label: "Arreglar Compensada",
+        label: 'Arreglar Compensada',
         click() {
-          validarUsuario("arreglarCompensada");
+          validarUsuario('arreglarCompensada');
         },
       },
     ],
   },
   //Productos
   {
-    label: "Productos",
+    label: 'Productos',
     submenu: [
       {
-        label: "Listado de Stock",
+        label: 'Listado de Stock',
         click() {
-          abrirVentana("productos/listadoStock.html", 1000, 900);
+          abrirVentana('productos/listadoStock.html', 1000, 900);
         },
       },
       {
-        label: "Cambio de codigo",
+        label: 'Cambio de codigo',
         click() {
-          ventanaPrincipal.webContents.send("cambioCodigo");
+          ventanaPrincipal.webContents.send('cambioCodigo');
         },
       },
       {
-        label: "Aum porcentaje",
+        label: 'Aum porcentaje',
         click() {
-          ventanaPrincipal.webContents.send("aumPorcentaje");
+          ventanaPrincipal.webContents.send('aumPorcentaje');
         },
       },
       {
-        label: "Listado Por Marca",
+        label: 'Listado Por Marca',
         click() {
-          abrirVentana("./productos/listadoPorMarca.html", 1200, 1000);
+          abrirVentana('./productos/listadoPorMarca.html', 1200, 1000);
         },
       },
       {
-        label: "Cambiar Precios con lista",
+        label: 'Cambiar Precios con lista',
         click() {
-          abrirVentana("./productos/cambiarPrecios.html", 1400, 1100);
+          abrirVentana('./productos/cambiarPrecios.html', 1400, 1100);
         },
       },
     ],
   },
   //Listados
   {
-    label: "Listado",
+    label: 'Listado',
     submenu: [
       {
-        label: "PorComprobante",
+        label: 'PorComprobante',
         click() {
-          abrirVentana("listados/porComrpobante.html", 1200, 600);
+          abrirVentana('listados/porComrpobante.html', 1200, 600);
         },
       },
       {
-        label: "Presupuesto",
+        label: 'Presupuesto',
         click() {
-          abrirVentana("listados/presupuestos.html", 1200, 1000, false);
+          abrirVentana('listados/presupuestos.html', 1200, 1000, false);
         },
       },
       {
-        label: "Remitos",
+        label: 'Remitos',
         click() {
-          abrirVentana("listados/remitos.html", 1200, 1000);
+          abrirVentana('listados/remitos.html', 1200, 1000);
         },
       },
       {
-        label: "Buscar Venta",
+        label: 'Buscar Venta',
         click() {
-          abrirVentana("listados/buscarVentas.html", 1200, 1000);
+          abrirVentana('listados/buscarVentas.html', 1200, 1000);
         },
       },
       {
-        label: "Stock Negativo",
+        label: 'Stock Negativo',
         click() {
-          abrirVentana("listados/stockNegativo.html", 1200, 1000);
+          abrirVentana('listados/stockNegativo.html', 1200, 1000);
         },
       },
       {
-        label: "Stock Cero",
+        label: 'Stock Cero',
         click() {
-          abrirVentana("listados/stockCero.html", 1200, 1000);
+          abrirVentana('listados/stockCero.html', 1200, 1000);
         },
       },
       {
-        label: "Libro Ventas",
+        label: 'Libro Ventas',
         click() {
-          abrirVentana("listados/libroVentas.html", 1100, 1000);
+          abrirVentana('listados/libroVentas.html', 1100, 1000);
         },
       },
     ],
   },
   //Utilidad
   {
-    label: "Utilidad",
+    label: 'Utilidad',
     submenu: [
       {
-        label: "Gerencial",
+        label: 'Gerencial',
         click() {
-          abrirVentana("utilidad/gerencial.html", 1200, 1000);
+          abrirVentana('utilidad/gerencial.html', 1200, 1000);
         },
       },
       {
-        label: "Imprimir Presupuesto",
+        label: 'Imprimir Presupuesto',
         click() {
-          abrirVentana("utilidad/imprimirPresupuesto.html", 400, 200);
+          abrirVentana('utilidad/imprimirPresupuesto.html', 400, 200);
         },
       },
       {
-        label: "Imprimir Recibo",
+        label: 'Imprimir Recibo',
         click() {
-          abrirVentana("utilidad/imprimirPresupuesto.html", 400, 200);
+          abrirVentana('utilidad/imprimirPresupuesto.html', 400, 200);
         },
       },
       {
-        label: "Agregar tarjeta",
+        label: 'Agregar tarjeta',
         click() {
-          abrirVentana("utilidad/cargarTarjeta.html", 500, 500);
+          abrirVentana('utilidad/cargarTarjeta.html', 500, 500);
         },
       },
       {
-        label: "Agregar cheque",
+        label: 'Agregar cheque',
         click() {
-          abrirVentana("utilidad/agregarCheque.html", 500, 550);
+          abrirVentana('utilidad/agregarCheque.html', 500, 550);
         },
       },
       {
-        label: "Ultimo Movimientos de Productos",
+        label: 'Ultimo Movimientos de Productos',
         click() {
-          abrirVentana("utilidad/ultimosMovimientos.html", 1200, 1000);
-        }
+          abrirVentana('utilidad/ultimosMovimientos.html', 1200, 1000);
+        },
       },
       {
-        label: "Ultimas Ventas",
+        label: 'Ultimas Ventas',
         click() {
-          abrirVentana("utilidad/ultimasVentas.html", 1200, 1000);
+          abrirVentana('utilidad/ultimasVentas.html', 1200, 1000);
         },
       },
     ],
   },
   //Pestamos
   {
-    label: "Prestamos",
+    label: 'Prestamos',
     submenu: [
       {
-        label: "Realizar Prestamo",
+        label: 'Realizar Prestamo',
         click() {
-          ventanaPrincipal.webContents.send("abrir-prestamo");
+          ventanaPrincipal.webContents.send('abrir-prestamo');
         },
       },
       {
-        label: "Ver Prestamos",
+        label: 'Ver Prestamos',
         click() {
-          ventanaPrincipal.webContents.send("ver-prestamos");
+          ventanaPrincipal.webContents.send('ver-prestamos');
         },
       },
       {
-        label: "Ver Prestamos Anulados",
+        label: 'Ver Prestamos Anulados',
         click() {
-          ventanaPrincipal.webContents.send("ver-prestamos-anulados");
+          ventanaPrincipal.webContents.send('ver-prestamos-anulados');
         },
       },
     ],
   },
   {
-    label: "",
-    accelerator: process.platform == "darwin" ? "Comand+D" : "Ctrl+D",
+    label: '',
+    accelerator: process.platform == 'darwin' ? 'Comand+D' : 'Ctrl+D',
     click(item, focusedWindow) {
       focusedWindow.toggleDevTools();
     },
@@ -258,7 +258,7 @@ const templateMenu = [
 ];
 
 const validarUsuario = (texto) => {
-  ventanaPrincipal.webContents.send("validarUsuario", JSON.stringify(texto));
+  ventanaPrincipal.webContents.send('validarUsuario', JSON.stringify(texto));
 };
 
 module.exports = templateMenu;

@@ -1,14 +1,14 @@
-const { ipcRenderer } = require("electron");
-require("dotenv").config();
+const { ipcRenderer } = require('electron');
+require('dotenv').config();
 const URL = process.env.URL;
-const axios = require("axios");
-const { cerrarVentana, configAxios } = require("../funciones");
+const axios = require('axios');
+const { cerrarVentana, configAxios } = require('../funciones');
 
-const select = document.querySelector("#marcas");
-const imprimir = document.querySelector("#imprimir");
-const tbody = document.querySelector("tbody");
+const select = document.querySelector('#marcas');
+const imprimir = document.querySelector('#imprimir');
+const tbody = document.querySelector('tbody');
 
-window.addEventListener("load", async (e) => {
+window.addEventListener('load', async (e) => {
   cerrarVentana();
   const marcas = (await axios.get(`${URL}productos`, configAxios)).data;
   marcas.sort((a, b) => {
@@ -20,40 +20,28 @@ window.addEventListener("load", async (e) => {
     return 0;
   });
   for await (let marca of marcas) {
-    const option = document.createElement("option");
+    const option = document.createElement('option');
     option.value = marca;
     option.text = marca;
     select.appendChild(option);
   }
 });
 
-select.addEventListener("keyup", async (e) => {
-  tbody.innerHTML = "";
+select.addEventListener('keyup', async (e) => {
+  tbody.innerHTML = '';
   listar();
 });
 
-select.addEventListener("click", async (e) => {
-  tbody.innerHTML = "";
-  if (e.target.value !== "") {
+select.addEventListener('click', async (e) => {
+  tbody.innerHTML = '';
+  if (e.target.value !== '') {
     listar();
   }
 });
 
 const listar = async () => {
-  const productos = (
-    await axios.get(
-      `${URL}productos/buscarProducto/${select.value}/marca`,
-      configAxios
-    )
-  ).data;
-  for await (let {
-    descripcion,
-    cod_fabrica,
-    _id,
-    stock,
-    precio_venta,
-    observacion,
-  } of productos) {
+  const productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`, configAxios)).data;
+  for await (let { descripcion, cod_fabrica, _id, stock, precio_venta, observacion } of productos) {
     tbody.innerHTML += `
             <tr>
                 <td>${_id}</td>
@@ -68,9 +56,9 @@ const listar = async () => {
   }
 };
 
-imprimir.addEventListener("click", async (e) => {
-  select.parentNode.parentNode.classList.add("none");
-  tbody.parentNode.parentNode.style.overflow = "visible";
-  tbody.parentNode.children[0].classList.add("none");
+imprimir.addEventListener('click', async (e) => {
+  select.parentNode.parentNode.classList.add('none');
+  tbody.parentNode.parentNode.style.overflow = 'visible';
+  tbody.parentNode.children[0].classList.add('none');
   window.print();
 });

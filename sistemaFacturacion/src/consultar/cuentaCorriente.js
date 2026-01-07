@@ -397,11 +397,14 @@ actualizar.addEventListener('click', async (e) => {
           saldo += parseFloat(cuentaCompensada.importe);
           cuentaHistorica.saldo = parseFloat((parseFloat(cuentaHistorica.saldo) + parseFloat(cuentaHistorica.debe)).toFixed(2));
           let ultimoSaldo = cuentaHistorica.saldo;
+
+          //Modificamos los movimientos restantes
           for await (let e of arregloRestante) {
-            e.saldo = e.tipo_comp === 'Recibos_P' ? parseFloat((ultimoSaldo - e.haber).toFixed(2)) : parseFloat((e.debe + ultimoSaldo).toFixed(2));
+            e.saldo = e.tipo_comp === 'Recibos_P' || e.tipo_comp === 'Descuento: Recibos_P' ? parseFloat((ultimoSaldo - e.haber).toFixed(2)) : parseFloat((e.debe + ultimoSaldo).toFixed(2));
             ultimoSaldo = e.saldo;
-            await axios.put(`${URL}cuentaHisto/id/${e.nro_comp}`, e);
+            await axios.put(`${URL}cuentaHisto/porId/${e._id}`, e);
           }
+
           cliente.saldo_p = saldo.toFixed(2);
           await axios.put(`${URL}cuentaHisto/id/${cuentaHistorica.nro_comp}`, cuentaHistorica);
           await axios.put(`${URL}cuentaComp/numeroYCliente/${cuentaCompensada.nro_comp}/${cuentaCompensada.codigo}`, cuentaCompensada);

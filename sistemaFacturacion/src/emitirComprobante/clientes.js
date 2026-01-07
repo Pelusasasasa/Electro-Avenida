@@ -1,35 +1,35 @@
-const { ipcRenderer } = require("electron");
-const sweet = require("sweetalert2");
-const axios = require("axios");
-const { copiar, recorrerFlechas, configAxios } = require("../funciones");
-require("dotenv").config;
+const { ipcRenderer } = require('electron');
+const sweet = require('sweetalert2');
+const axios = require('axios');
+const { copiar, recorrerFlechas, configAxios } = require('../funciones');
+require('dotenv').config;
 const URL = process.env.URL;
 
-const buscarCliente = document.querySelector("#buscarCliente");
-const resultado = document.querySelector("#resultado");
-const body = document.querySelector("body");
-const tbody = document.querySelector("tbody");
+const buscarCliente = document.querySelector('#buscarCliente');
+const resultado = document.querySelector('#resultado');
+const body = document.querySelector('body');
+const tbody = document.querySelector('tbody');
 
 let texto;
 let seleccionado;
 let subSeleccionado;
 
-window.addEventListener("load", (e) => {
+window.addEventListener('load', (e) => {
   filtrar();
   copiar();
 });
 
-body.addEventListener("keypress", (e) => {
-  seleccionado = document.querySelector(".seleccionado");
-  if (e.key === "Enter") {
-    ipcRenderer.send("mando-el-cliente", seleccionado.id);
+body.addEventListener('keypress', (e) => {
+  seleccionado = document.querySelector('.seleccionado');
+  if (e.key === 'Enter') {
+    ipcRenderer.send('mando-el-cliente', seleccionado.id);
     window.close();
   }
 });
 
 const listar = async (texto) => {
   //traemos a los clientes
-  texto === "" && (texto = "A Consumidor Final");
+  texto === '' && (texto = 'A Consumidor Final');
   let clientes = (await axios.get(`${URL}clientes/${texto}`, configAxios)).data;
 
   //ordenamos el arreglo de clientes
@@ -48,17 +48,17 @@ const listar = async (texto) => {
   });
 
   for (let cliente of clientes) {
-    const tr = document.createElement("tr");
+    const tr = document.createElement('tr');
     tr.id = cliente._id;
 
-    const tdCodigo = document.createElement("td");
-    const thNombre = document.createElement("th");
-    const tdLocalidad = document.createElement("td");
-    const tdDireccion = document.createElement("td");
-    const tdTelefono = document.createElement("td");
-    const tdCondIva = document.createElement("td");
-    const tdCuit = document.createElement("td");
-    const tdSaldo = document.createElement("td");
+    const tdCodigo = document.createElement('td');
+    const thNombre = document.createElement('th');
+    const tdLocalidad = document.createElement('td');
+    const tdDireccion = document.createElement('td');
+    const tdTelefono = document.createElement('td');
+    const tdCondIva = document.createElement('td');
+    const tdCuit = document.createElement('td');
+    const tdSaldo = document.createElement('td');
 
     tdCodigo.innerHTML = cliente._id;
     thNombre.innerHTML = cliente.cliente;
@@ -82,25 +82,25 @@ const listar = async (texto) => {
   }
 
   seleccionado = resultado.firstElementChild;
-  seleccionado.classList.add("seleccionado");
+  seleccionado.classList.add('seleccionado');
   subSeleccionado = resultado.firstElementChild.children[0];
-  subSeleccionado.classList.add("subSeleccionado");
+  subSeleccionado.classList.add('subSeleccionado');
 };
 
 //compramaos si en el input de buscar el texto que escribimos es igual al nombre de algun cliente
 const filtrar = () => {
-  resultado.innerHTML = "";
+  resultado.innerHTML = '';
   texto = buscarCliente.value.toLowerCase();
   listar(texto);
 };
 
-let seleccionarTBody = document.querySelector("tbody");
-seleccionarTBody.addEventListener("dblclick", (e) => {
-  ipcRenderer.send("mando-el-cliente", e.path[1].id);
+let seleccionarTBody = document.querySelector('tbody');
+seleccionarTBody.addEventListener('dblclick', (e) => {
+  ipcRenderer.send('mando-el-cliente', e.path[1].id);
   window.close();
 });
 
-buscarCliente.addEventListener("keyup", (e) => {
+buscarCliente.addEventListener('keyup', (e) => {
   if (e.keyCode === 40) {
     resultado.focus();
     buscarCliente.blur();
@@ -109,32 +109,32 @@ buscarCliente.addEventListener("keyup", (e) => {
   }
 });
 
-tbody.addEventListener("click", (e) => {
-  seleccionado = document.querySelector(".seleccionado");
-  subSeleccionado = document.querySelector(".subSeleccionado");
+tbody.addEventListener('click', (e) => {
+  seleccionado = document.querySelector('.seleccionado');
+  subSeleccionado = document.querySelector('.subSeleccionado');
 
-  seleccionado && seleccionado.classList.remove("seleccionado");
-  subSeleccionado && subSeleccionado.classList.remove("subSeleccionado");
+  seleccionado && seleccionado.classList.remove('seleccionado');
+  subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
 
-  if (e.target.nodeName === "TD" || e.target.nodeName === "TH") {
+  if (e.target.nodeName === 'TD' || e.target.nodeName === 'TH') {
     seleccionado = e.target.parentNode;
     subSeleccionado = e.target;
   }
 
-  seleccionado.classList.add("seleccionado");
-  subSeleccionado.classList.add("subSeleccionado");
+  seleccionado.classList.add('seleccionado');
+  subSeleccionado.classList.add('subSeleccionado');
 });
 
-document.addEventListener("keyup", async (e) => {
-  if (e.key === "Escape") {
+document.addEventListener('keyup', async (e) => {
+  if (e.key === 'Escape') {
     window.close();
   }
   subSeleccionado = await recorrerFlechas(e);
   seleccionado = subSeleccionado && subSeleccionado.parentNode;
   subSeleccionado &&
     subSeleccionado.scrollIntoView({
-      block: "center",
-      inline: "center",
-      behavior: "smooth",
+      block: 'center',
+      inline: 'center',
+      behavior: 'smooth',
     });
 });

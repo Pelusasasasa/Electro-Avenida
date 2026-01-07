@@ -1,133 +1,121 @@
-const sweet = require("sweetalert2");
-const axios = require("axios");
-const { ipcRenderer } = require("electron");
-require("dotenv").config;
+const sweet = require('sweetalert2');
+const axios = require('axios');
+const { ipcRenderer } = require('electron');
+require('dotenv').config;
 const URL = process.env.URL;
 
-const {
-  cerrarVentana,
-  botonesSalir,
-  verificarUsuarios,
-  configAxios,
-} = require("../funciones");
+const { cerrarVentana, botonesSalir, verificarUsuarios, configAxios } = require('../funciones');
 
-const numeroCheque = document.querySelector("#numeroCheque");
-const banco = document.querySelector("#banco");
-const fechaCheque = document.querySelector("#fechaCheque");
-const importe = document.querySelector("#importe");
-const entregadoPor = document.querySelector("#entregadoPor");
-const usuario = document.querySelector("#usuario");
-const domicilio = document.querySelector("#domicilio");
-const telefono = document.querySelector("#telefono");
-const agregar = document.querySelector(".agregar");
+const numeroCheque = document.querySelector('#numeroCheque');
+const banco = document.querySelector('#banco');
+const fechaCheque = document.querySelector('#fechaCheque');
+const importe = document.querySelector('#importe');
+const entregadoPor = document.querySelector('#entregadoPor');
+const usuario = document.querySelector('#usuario');
+const domicilio = document.querySelector('#domicilio');
+const telefono = document.querySelector('#telefono');
+const agregar = document.querySelector('.agregar');
 
 let vendedor;
 
-window.addEventListener("load", async (e) => {
+window.addEventListener('load', async (e) => {
   cerrarVentana();
   botonesSalir();
 });
 
-ipcRenderer.on("informacion", async (e, args) => {
-  const {
-    imp,
-    vendedor: ven,
-    loc,
-    dom,
-    cliente,
-    tel,
-  } = args ? JSON.parse(args) : "";
+ipcRenderer.on('informacion', async (e, args) => {
+  const { imp, vendedor: ven, loc, dom, cliente, tel } = args ? JSON.parse(args) : '';
   if (args) {
     importe.value = imp;
     telefono.value = tel;
     entregadoPor.value = cliente;
-    domicilio.value = dom + " - " + loc;
+    domicilio.value = dom + ' - ' + loc;
     usuario.value = ven;
   } else {
-    if (usuario.value === "") {
+    if (usuario.value === '') {
       vendedor = await verificarUsuarios();
       usuario.value = vendedor.nombre;
     }
   }
 });
 
-numeroCheque.addEventListener("keypress", async (e) => {
-  if (e.key === "Enter" && numeroCheque.value.length === 8) {
+numeroCheque.addEventListener('keypress', async (e) => {
+  if (e.key === 'Enter' && numeroCheque.value.length === 8) {
     banco.focus();
-  } else if (e.key === "Enter" && numeroCheque.value.length !== 8) {
+  } else if (e.key === 'Enter' && numeroCheque.value.length !== 8) {
     await sweet.fire({
-      title: "Numero del cheque no valido",
+      title: 'Numero del cheque no valido',
       returnFocus: false,
     });
     numeroCheque.focus();
   }
 });
 
-banco.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+banco.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     fechaCheque.focus();
   }
 });
 
-fechaCheque.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+fechaCheque.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     importe.focus();
   }
 });
 
-importe.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+importe.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     entregadoPor.focus();
   }
 });
 
-entregadoPor.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+entregadoPor.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     domicilio.focus();
   }
 });
 
-domicilio.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+domicilio.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     telefono.focus();
   }
 });
 
-telefono.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+telefono.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     agregar.focus();
   }
 });
 
-numeroCheque.addEventListener("focus", (e) => {
+numeroCheque.addEventListener('focus', (e) => {
   numeroCheque.select();
 });
 
-banco.addEventListener("focus", (e) => {
+banco.addEventListener('focus', (e) => {
   banco.select();
 });
 
-fechaCheque.addEventListener("focus", (e) => {
+fechaCheque.addEventListener('focus', (e) => {
   fechaCheque.select();
 });
 
-importe.addEventListener("focus", (e) => {
+importe.addEventListener('focus', (e) => {
   importe.select();
 });
 
-entregadoPor.addEventListener("focus", (e) => {
+entregadoPor.addEventListener('focus', (e) => {
   entregadoPor.select();
 });
 
-domicilio.addEventListener("focus", (e) => {
+domicilio.addEventListener('focus', (e) => {
   domicilio.select();
 });
 
-telefono.addEventListener("focus", (e) => {
+telefono.addEventListener('focus', (e) => {
   telefono.select();
 });
 
-agregar.addEventListener("click", async (e) => {
+agregar.addEventListener('click', async (e) => {
   const cheque = {};
   cheque.n_cheque = numeroCheque.value;
   cheque.banco = banco.value;
@@ -141,9 +129,9 @@ agregar.addEventListener("click", async (e) => {
   await axios.post(`${URL}cheques`, cheque, configAxios);
   await sweet
     .fire({
-      title: "Otro Cheque?",
+      title: 'Otro Cheque?',
       showCancelButton: true,
-      confirmButtonText: "Aceptar",
+      confirmButtonText: 'Aceptar',
     })
     .then(({ value }) => {
       if (value) {

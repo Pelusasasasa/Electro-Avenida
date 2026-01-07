@@ -1,12 +1,12 @@
-const axios = require("axios");
-const { redondear, configAxios } = require("../funciones");
-require("dotenv").config;
+const axios = require('axios');
+const { redondear, configAxios } = require('../funciones');
+require('dotenv').config;
 const URL = process.env.URL;
 
-const hasta = document.querySelector("#hasta");
-const desde = document.querySelector("#desde");
-const buscar = document.querySelector(".buscar");
-const tbody = document.querySelector(".tbody");
+const hasta = document.querySelector('#hasta');
+const desde = document.querySelector('#desde');
+const buscar = document.querySelector('.buscar');
+const tbody = document.querySelector('.tbody');
 
 const hoy = new Date();
 
@@ -27,26 +27,21 @@ const fechaDeHoy = `${hoy.getFullYear()}-${month}-${day}`;
 desde.value = fechaDeHoy;
 hasta.value = fechaDeHoy;
 
-desde.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+desde.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     hasta.focus();
   }
 });
 
-hasta.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+hasta.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     buscar.focus();
   }
 });
 
 const main = async () => {
   const desdeFecha = new Date(desde.value);
-  let ventasCanceladas = (
-    await axios.get(
-      `${URL}cancelados/${desdeFecha}/${hasta.value}`,
-      configAxios
-    )
-  ).data;
+  let ventasCanceladas = (await axios.get(`${URL}cancelados/${desdeFecha}/${hasta.value}`, configAxios)).data;
   for await (let venta of ventasCanceladas) {
     listarVentasCanceladas(venta);
   }
@@ -54,15 +49,10 @@ const main = async () => {
 
 main();
 
-buscar.addEventListener("click", async (e) => {
+buscar.addEventListener('click', async (e) => {
   const desdeFecha = new Date(desde.value);
-  let ventasCanceladas = (
-    await axios.get(
-      `${URL}cancelados/${desdeFecha}/${hasta.value}`,
-      configAxios
-    )
-  ).data;
-  tbody.innerHTML = "";
+  let ventasCanceladas = (await axios.get(`${URL}cancelados/${desdeFecha}/${hasta.value}`, configAxios)).data;
+  tbody.innerHTML = '';
   ventasCanceladas.forEach((venta) => {
     listarVentasCanceladas(venta);
   });
@@ -70,8 +60,8 @@ buscar.addEventListener("click", async (e) => {
 
 const listarVentasCanceladas = async (venta) => {
   let vendedor = venta.vendedor;
-  let fecha = venta.fecha.slice(0, 10).split("-", 3);
-  let horas = venta.fecha.slice(11, 18).split(":", 3);
+  let fecha = venta.fecha.slice(0, 10).split('-', 3);
+  let horas = venta.fecha.slice(11, 18).split(':', 3);
   let dia = fecha[2];
   let mes = fecha[1];
   let anio = fecha[0];
@@ -93,9 +83,7 @@ const listarVentasCanceladas = async (venta) => {
                 <td>${objeto._id}</td>
                 <td>${objeto.descripcion}</td>
                 <td>${cantidad}</td>
-                <td class = "total">${(cantidad * objeto.precio_venta).toFixed(
-      2
-    )}</td>
+                <td class = "total">${(cantidad * objeto.precio_venta).toFixed(2)}</td>
                 <td class="vendedor">${vendedor.slice(0, 3)}</td>
                 <td>${hora}:${minutos}:${segundos}</td>
 
@@ -114,8 +102,8 @@ const listarVentasCanceladas = async (venta) => {
     `;
 };
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape") {
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
     window.close();
   }
 });

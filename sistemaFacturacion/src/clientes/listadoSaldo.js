@@ -1,17 +1,17 @@
-const XLSX = require("xlsx");
-const { ipcRenderer } = require("electron");
+const XLSX = require('xlsx');
+const { ipcRenderer } = require('electron');
 
-const axios = require("axios");
-require("dotenv").config;
+const axios = require('axios');
+require('dotenv').config;
 const URL = process.env.URL;
 
-let situacion = "blanco";
+let situacion = 'blanco';
 let Clientes = {};
 
-const { configAxios } = require("../funciones");
+const { configAxios } = require('../funciones');
 
-const tbody = document.querySelector(".tbody");
-const fecha = document.querySelector(".fecha");
+const tbody = document.querySelector('.tbody');
+const fecha = document.querySelector('.fecha');
 const fechaHoy = new Date();
 
 let hoy = fechaHoy.getDate();
@@ -25,35 +25,35 @@ month = month === 13 ? 1 : month;
 
 fecha.innerHTML = `${hoy}/${month}/${year}`;
 
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Alt") {
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "F9" && situacion === "blanco") {
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Alt') {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'F9' && situacion === 'blanco') {
         mostrarNegro();
-        situacion = "negro";
+        situacion = 'negro';
         mostrarLista(Clientes);
       }
     });
   }
 });
-document.addEventListener("keydown", (event) => {
-  if (event.key === "Alt") {
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "F3" && situacion === "negro") {
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Alt') {
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'F3' && situacion === 'negro') {
         ocultarNegro();
-        situacion = "blanco";
+        situacion = 'blanco';
         mostrarLista(Clientes);
       }
     });
   }
 });
-const saldoP = document.querySelector(".saldoP");
+const saldoP = document.querySelector('.saldoP');
 const ocultarNegro = () => {
-  saldoP.classList.add("none");
+  saldoP.classList.add('none');
 };
 
 const mostrarNegro = () => {
-  saldoP.classList.remove("none");
+  saldoP.classList.remove('none');
 };
 
 const traerSaldo = async () => {
@@ -66,24 +66,21 @@ const traerSaldo = async () => {
     }
     return 0;
   });
-  clientes = Clientes.filter(
-    (cliente) =>
-      parseFloat(cliente.saldo) !== 0 || parseFloat(cliente.saldo_p) !== 0
-  );
+  clientes = Clientes.filter((cliente) => parseFloat(cliente.saldo) !== 0 || parseFloat(cliente.saldo_p) !== 0);
   mostrarLista(Clientes);
 };
 traerSaldo();
 
-const descargar = document.querySelector(".descargar");
-descargar.addEventListener("click", async (e) => {
-  let path = await ipcRenderer.invoke("elegirPath");
-  let extencion = "xlsx";
+const descargar = document.querySelector('.descargar');
+descargar.addEventListener('click', async (e) => {
+  let path = await ipcRenderer.invoke('elegirPath');
+  let extencion = 'xlsx';
   let wb = XLSX.utils.book_new();
-  extencion = path.split(".")[1] ? path.split(".")[1] : extencion;
+  extencion = path.split('.')[1] ? path.split('.')[1] : extencion;
   wb.props = {
-    Title: "Listado Saldo",
-    subject: "test",
-    Author: "Electro Avenida",
+    Title: 'Listado Saldo',
+    subject: 'test',
+    Author: 'Electro Avenida',
   };
 
   clientes.forEach((cliente) => {
@@ -93,20 +90,20 @@ descargar.addEventListener("click", async (e) => {
 
   let newWS = XLSX.utils.json_to_sheet(clientes);
 
-  XLSX.utils.book_append_sheet(wb, newWS, "Saldos");
-  XLSX.writeFile(wb, path + "." + extencion);
+  XLSX.utils.book_append_sheet(wb, newWS, 'Saldos');
+  XLSX.writeFile(wb, path + '.' + extencion);
 });
 
-document.addEventListener("keyup", (e) => {
-  if (e.key === "Escape") {
+document.addEventListener('keyup', (e) => {
+  if (e.key === 'Escape') {
     window.close();
   }
 });
 
 const mostrarLista = (clientes) => {
-  tbody.innerHTML = "";
+  tbody.innerHTML = '';
   clientes.forEach((cliente) => {
-    if (situacion === "blanco" && parseFloat(cliente.saldo) !== 0) {
+    if (situacion === 'blanco' && parseFloat(cliente.saldo) !== 0) {
       tbody.innerHTML += `
             <tr>
                 <td class = "id">${cliente._id}</td>
@@ -117,10 +114,7 @@ const mostrarLista = (clientes) => {
                 <td>${cliente.saldo}</td>
             </tr>
         `;
-    } else if (
-      situacion === "negro" &&
-      (parseFloat(cliente.saldo) !== 0 || parseFloat(cliente.saldo_p) !== 0)
-    ) {
+    } else if (situacion === 'negro' && (parseFloat(cliente.saldo) !== 0 || parseFloat(cliente.saldo_p) !== 0)) {
       tbody.innerHTML += `
                 <tr>
                     <td class = "id">${cliente._id}</td>

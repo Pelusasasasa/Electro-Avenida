@@ -1,20 +1,15 @@
-const axios = require("axios");
-const { ipcRenderer } = require("electron");
-require("dotenv").config;
+const axios = require('axios');
+const { ipcRenderer } = require('electron');
+require('dotenv').config;
 const URL = process.env.URL;
 
-const {
-  botonesSalir,
-  cerrarVentana,
-  verificarUsuarios,
-  configAxios,
-} = require("../funciones");
+const { botonesSalir, cerrarVentana, verificarUsuarios, configAxios } = require('../funciones');
 
-const fecha = document.querySelector("#fecha");
-const tarjetas = document.querySelector("#tarjetas");
-const usuario = document.querySelector("#vendedor");
-const importe = document.querySelector("#importe");
-const agregar = document.querySelector(".agregar");
+const fecha = document.querySelector('#fecha');
+const tarjetas = document.querySelector('#tarjetas');
+const usuario = document.querySelector('#vendedor');
+const importe = document.querySelector('#importe');
+const agregar = document.querySelector('.agregar');
 
 const hoy = new Date();
 let date = hoy.getDate();
@@ -32,14 +27,13 @@ fecha.value = `${year}-${month}-${date}`;
 
 let vendedor;
 
-window.addEventListener("load", async (e) => {
+window.addEventListener('load', async (e) => {
   botonesSalir();
   cerrarVentana();
 
-  const tipoTajertas = (await axios.get(`${URL}tipoTarjetas`, configAxios))
-    .data;
+  const tipoTajertas = (await axios.get(`${URL}tipoTarjetas`, configAxios)).data;
   for await (let tipo of tipoTajertas) {
-    const option = document.createElement("option");
+    const option = document.createElement('option');
 
     option.value = tipo.nombre;
     option.text = tipo.nombre.toUpperCase();
@@ -48,8 +42,8 @@ window.addEventListener("load", async (e) => {
   }
 });
 
-ipcRenderer.on("informacion", async (e, args) => {
-  const { imp, vendedor: ven } = args ? JSON.parse(args) : "";
+ipcRenderer.on('informacion', async (e, args) => {
+  const { imp, vendedor: ven } = args ? JSON.parse(args) : '';
   importe.value = imp;
   usuario.value = ven;
 
@@ -59,8 +53,8 @@ ipcRenderer.on("informacion", async (e, args) => {
   }
 });
 
-const sweet = require("sweetalert2");
-agregar.addEventListener("click", async (e) => {
+const sweet = require('sweetalert2');
+agregar.addEventListener('click', async (e) => {
   const tarjeta = {};
   tarjeta.vendedor = usuario.value;
   tarjeta.imp = importe.value;
@@ -72,30 +66,30 @@ agregar.addEventListener("click", async (e) => {
   } catch (error) {
     console.log(error);
     sweet.fire({
-      title: "No se pudo cargar la tarjeta",
+      title: 'No se pudo cargar la tarjeta',
     });
   }
 });
 
-fecha.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+fecha.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     tarjetas.focus();
   }
 });
 
-importe.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+importe.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     agregar.focus();
   }
 });
 
-tarjetas.addEventListener("keypress", (e) => {
-  if (e.key === "Enter") {
+tarjetas.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
     e.preventDefault();
     importe.focus();
   }
 });
 
-importe.addEventListener("focus", (e) => {
+importe.addEventListener('focus', (e) => {
   importe.select();
 });
