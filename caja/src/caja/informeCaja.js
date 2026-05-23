@@ -2,7 +2,7 @@ const axios = require('axios');
 require('dotenv').config();
 const URL = process.env.URL;
 
-const {clipboard, ipcRenderer} = require('electron')
+const { clipboard, ipcRenderer } = require('electron')
 const sweet = require('sweetalert2');
 const { redondear, configAxios } = require('../assets/js/globales');
 
@@ -34,41 +34,41 @@ month = month === 13 ? 1 : month;
 month = month < 10 ? `0${month}` : month;
 day = day < 10 ? `0${day}` : day;
 
-window.addEventListener('load',async e=>{
+window.addEventListener('load', async e => {
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
 
-    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
+    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`, configAxios)).data;
 
     arregloEgresos = movimientos.filter(mov => (mov.pasado && mov.tMov === "E") && mov.pasado === true);
     arregloIngresos = movimientos.filter(mov => (mov.pasado && mov.tMov === "I") && mov.pasado === true);
-    arregloEgresos.length !== 0 && listar(arregloEgresos,tbodyEgreso);
-    arregloIngresos.length !== 0 && listar(arregloIngresos,tbodyIngreso);
+    arregloEgresos.length !== 0 && listar(arregloEgresos, tbodyEgreso);
+    arregloIngresos.length !== 0 && listar(arregloIngresos, tbodyIngreso);
 
 });
 
-const listar = async(lista,tbody)=>{
+const listar = async (lista, tbody) => {
     tbody.innerHTML = '';
     totalEgresos = 0;
     totalIngresos = 0;
     let total = 0;
-    lista.sort((a,b)=>{
+    lista.sort((a, b) => {
         if (a.cuenta > b.cuenta) {
             return 1
-        }else if(a.cuenta < b.cuenta){
+        } else if (a.cuenta < b.cuenta) {
             return -1
         }
         return 0
     })
     let cuenta = lista[0].cuenta;
-    for await(let mov of lista){
+    for await (let mov of lista) {
         if (tbody.classList.contains('tbodyEgreso')) {
             totalEgresos += mov.imp;
-        }else{
+        } else {
             totalIngresos += mov.imp;
         }
         if (mov.cuenta !== cuenta) {
-            ponerTotal(total,cuenta,tbody)
+            ponerTotal(total, cuenta, tbody)
             cuenta = mov.cuenta;
             total = 0;
         }
@@ -76,7 +76,7 @@ const listar = async(lista,tbody)=>{
 
         const tr = document.createElement('tr');
         tr.id = mov._id
-            
+
         const tdFecha = document.createElement('td');
         const tdNumero = document.createElement('td');
         const tdDescripcion = document.createElement('td');
@@ -84,8 +84,8 @@ const listar = async(lista,tbody)=>{
         const tdImporte = document.createElement('td');
 
         tdImporte.classList.add('text-right');
-        const fecha = mov.fecha.slice(0,10).split('-',3);
-        const hora = mov.fecha.slice(11,19).split(':',3);
+        const fecha = mov.fecha.slice(0, 10).split('-', 3);
+        const hora = mov.fecha.slice(11, 19).split(':', 3);
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]} - ${hora[0]}:${hora[1]}:${hora[2]}`
         tdNumero.innerHTML = mov.nro_comp;
         tdDescripcion.innerHTML = mov.desc;
@@ -100,7 +100,7 @@ const listar = async(lista,tbody)=>{
 
         tbody.appendChild(tr);
     }
-    ponerTotal(total,cuenta,tbody)
+    ponerTotal(total, cuenta, tbody)
 
     const tr = document.createElement('tr');
     const td = document.createElement('td');
@@ -113,7 +113,7 @@ const listar = async(lista,tbody)=>{
     if (tbody.classList.contains('tbodyEgreso')) {
         td.innerHTML = "TOTAL EGRESOS";
         tdTotal.innerHTML = totalEgresos.toFixed(2);
-    }else{
+    } else {
         td.innerHTML = "TOTAL Ingresos";
         tdTotal.innerHTML = totalIngresos.toFixed(2);
     }
@@ -127,23 +127,23 @@ const listar = async(lista,tbody)=>{
     tdTotal.classList.add('bold');
 
     tbody.appendChild(tr);
-    document.querySelector('.saldoAnterior').innerHTML = (await axios.get(`${URL}tipoVenta`,configAxios)).data["saldo Inicial"];
+    document.querySelector('.saldoAnterior').innerHTML = (await axios.get(`${URL}tipoVenta`, configAxios)).data["saldo Inicial"];
     if (tbody.classList.contains('tbodyEgreso')) {
         document.querySelector('.totalEgresos').innerHTML = totalEgresos.toFixed(2);
-    }else{
+    } else {
         document.querySelector('.totalIngresos').innerHTML = totalIngresos.toFixed(2);
     }
-    document.querySelector('.saldoFinal').innerHTML = redondear(totalIngresos-totalEgresos + (await axios.get(`${URL}tipoVenta`,configAxios)).data["saldo Inicial"],2);
-    
+    document.querySelector('.saldoFinal').innerHTML = redondear(totalIngresos - totalEgresos + (await axios.get(`${URL}tipoVenta`, configAxios)).data["saldo Inicial"], 2);
+
 };
 
-document.addEventListener('keyup',e=>{
+document.addEventListener('keyup', e => {
     if (e.keyCode === 27) {
         window.close();
     }
 });
 
-const ponerTotal = (total,cuenta,tbody)=>{
+const ponerTotal = (total, cuenta, tbody) => {
     const tr = document.createElement('tr');
     const tdCuenta = document.createElement('td');
     const td = document.createElement('td');
@@ -153,7 +153,7 @@ const ponerTotal = (total,cuenta,tbody)=>{
     tdCuenta.classList.add('bold')
     tdTotal.classList.add('bold')
     tdTotal.classList.add('text-right')
-    
+
     tdCuenta.innerHTML = cuenta;
     tdTotal.innerHTML = total.toFixed(2)
     tr.appendChild(tdCuenta)
@@ -163,15 +163,15 @@ const ponerTotal = (total,cuenta,tbody)=>{
     tbody.appendChild(tr);
 };
 
-desde.addEventListener('keypress',e=>{
+desde.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         hasta.focus();
     }
 });
 
-hasta.addEventListener('keypress', async e=>{
+hasta.addEventListener('keypress', async e => {
     if (e.key === "Enter") {
-        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`, configAxios)).data;
 
         arregloEgresos = movimientos.filter(elem => (elem.pasado && elem.tMov === "E"));
         arregloIngresos = movimientos.filter(elem => (elem.pasado & elem.tMov === "I"));
@@ -179,48 +179,48 @@ hasta.addEventListener('keypress', async e=>{
         tbodyEgreso.innerHTML = "";
         tbodyIngreso.innerHTML = "";
 
-        arregloEgresos.length !== 0 && listar(arregloEgresos,tbodyEgreso);
-        arregloIngresos.length !== 0 && listar(arregloIngresos,tbodyIngreso);
+        arregloEgresos.length !== 0 && listar(arregloEgresos, tbodyEgreso);
+        arregloIngresos.length !== 0 && listar(arregloIngresos, tbodyIngreso);
     }
 });
 
-tbodyIngreso.addEventListener('click',e=>{
+tbodyIngreso.addEventListener('click', e => {
     seleccionarTr(e);
     if (e.target.nodeName === "INPUT") {
         e.target.select()
-    } 
+    }
 });
 
-tbodyEgreso.addEventListener('click',e=>{
-    seleccionarTr(e);   
+tbodyEgreso.addEventListener('click', e => {
+    seleccionarTr(e);
     if (e.target.nodeName === "INPUT") {
         e.target.select()
-    } 
+    }
 });
 
-document.addEventListener('keyup',e=>{
-        recorrerConFlechas(e);
+document.addEventListener('keyup', e => {
+    recorrerConFlechas(e);
 
-        //copiamos los inner html al hacer control + C
-        if (e.keyCode === 17) {
-            document.addEventListener('keyup',even=>{
-                if(even.keyCode === 67){
-                   subSeleccionado && clipboard.writeText(subSeleccionado.innerHTML);
-                }
-            })
-        }else if(e.target.nodeName === "INPUT" && e.target.parentNode.nodeName === "TD"){
-            //lo que hacemos es ver si se modifica el input entonces agregamos ese tr a la lista para modficar
-            const enLista = arregloDeMovimientosAModificar.find(elem => elem === e.target.parentNode.parentNode.id)
-            enLista === undefined && arregloDeMovimientosAModificar.push(seleccionado.id);
-        }
+    //copiamos los inner html al hacer control + C
+    if (e.keyCode === 17) {
+        document.addEventListener('keyup', even => {
+            if (even.keyCode === 67) {
+                subSeleccionado && clipboard.writeText(subSeleccionado.innerHTML);
+            }
+        })
+    } else if (e.target.nodeName === "INPUT" && e.target.parentNode.nodeName === "TD") {
+        //lo que hacemos es ver si se modifica el input entonces agregamos ese tr a la lista para modficar
+        const enLista = arregloDeMovimientosAModificar.find(elem => elem === e.target.parentNode.parentNode.id)
+        enLista === undefined && arregloDeMovimientosAModificar.push(seleccionado.id);
+    }
 });
 
-const recorrerConFlechas = (e)=>{
+const recorrerConFlechas = (e) => {
     if (e.keyCode === 40 && seleccionado.nextElementSibling) {
         let aux;
         let i = 0;
         const tds = document.querySelectorAll('.seleccionado td');
-        for(let td of tds){
+        for (let td of tds) {
             if (td.classList.contains('subSeleccionado')) {
                 aux = i;
             }
@@ -234,11 +234,11 @@ const recorrerConFlechas = (e)=>{
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
         subSeleccionado = seleccionado.children[aux]
         subSeleccionado.classList.add('subSeleccionado');
-    }else if(e.keyCode === 38 && seleccionado.previousElementSibling){
+    } else if (e.keyCode === 38 && seleccionado.previousElementSibling) {
         let aux;
         let i = 0;
         const tds = document.querySelectorAll('.seleccionado td');
-        for(let td of tds){
+        for (let td of tds) {
             if (td.classList.contains('subSeleccionado')) {
                 aux = i;
             }
@@ -252,11 +252,11 @@ const recorrerConFlechas = (e)=>{
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
         subSeleccionado = seleccionado.children[aux]
         subSeleccionado.classList.add('subSeleccionado');
-    }else if(e.keyCode === 37 && subSeleccionado.previousElementSibling){
+    } else if (e.keyCode === 37 && subSeleccionado.previousElementSibling) {
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
         subSeleccionado = subSeleccionado.previousElementSibling;
         subSeleccionado.classList.add('subSeleccionado');
-    }else if(e.keyCode === 39 && subSeleccionado.nextElementSibling){
+    } else if (e.keyCode === 39 && subSeleccionado.nextElementSibling) {
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
         subSeleccionado = subSeleccionado.nextElementSibling;
         subSeleccionado.classList.add('subSeleccionado');
@@ -264,7 +264,7 @@ const recorrerConFlechas = (e)=>{
 };
 
 //hacer pintar el tr y el td de colores para saber que ese es el seleccionado
-const seleccionarTr = (e)=>{
+const seleccionarTr = (e) => {
     seleccionado && seleccionado.classList.remove('seleccionado');
     seleccionado = e.target.nodeName === "TD" ? e.target.parentNode : e.target.parentNode.parentNode;
     seleccionado.classList.add('seleccionado');
@@ -274,7 +274,7 @@ const seleccionarTr = (e)=>{
     subSeleccionado.classList.add('subSeleccionado');
 };
 
-exportar.addEventListener('click',async e=>{
+exportar.addEventListener('click', async e => {
 
     const XLSX = require('xlsx');
     let wb = XLSX.utils.book_new();
@@ -288,33 +288,33 @@ exportar.addEventListener('click',async e=>{
         Author: "Electro Avenida"
     };
 
-    sheetData = await ponerDatos(sheetData,arregloIngresos);
-    sheetData = await ponerDatos(sheetData,arregloEgresos);
+    sheetData = await ponerDatos(sheetData, arregloIngresos);
+    sheetData = await ponerDatos(sheetData, arregloEgresos);
     const worksheet = XLSX.utils.aoa_to_sheet(sheetData);
-    worksheet['!cols'] = [{wch:40}]
+    worksheet['!cols'] = [{ wch: 40 }]
 
-    XLSX.utils.book_append_sheet(wb,worksheet,'ingresos');
-    XLSX.writeFile(wb,path + "." + extencion); 
+    XLSX.utils.book_append_sheet(wb, worksheet, 'ingresos');
+    XLSX.writeFile(wb, path + "." + extencion);
 
 });
 
-salir.addEventListener('click',e=>{
+salir.addEventListener('click', e => {
     window.close();
 });
 
-async function  ponerDatos(sheetData,arreglo) {
+async function ponerDatos(sheetData, arreglo) {
     let cuenta = arreglo[0].cuenta;
     let total = 0;
 
-    for await(let ingreso of arreglo){
+    for await (let ingreso of arreglo) {
         if (ingreso.cuenta !== cuenta) {
-            sheetData.push([cuenta,total]);
+            sheetData.push([cuenta, total]);
             total = 0;
             cuenta = ingreso.cuenta;
         };
         total += ingreso.imp;
     };
 
-    sheetData.push([cuenta,total]);
+    sheetData.push([cuenta, total]);
     return sheetData;
 }

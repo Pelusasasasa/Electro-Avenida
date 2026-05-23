@@ -1,0 +1,264 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Green & White Industrial Palette */
+  --ws-bg: #f5f7f9;          /* Light Workspace Background */
+  --ws-surface: #ffffff;     /* White List/Surface */
+  --ws-elevated: #f1f3f5;
+  
+  --ws-green: #3ab65c;       /* Classic System Green */
+  --ws-green-dim: #2e914a;
+  --ws-green-low: rgba(58, 182, 92, 0.1);
+  
+  --ws-steel: #455a64;       /* Industrial Steel Gray */
+  --ws-steel-low: rgba(69, 90, 100, 0.05);
+  
+  --ws-text: #2d3436;        /* Darker text for readability */
+  --ws-text-muted: #636e72;
+  
+  --ws-border: rgba(0, 0, 0, 0.08);
+  --ws-border-heavy: rgba(0, 0, 0, 0.15);
+  
+  --ws-radius: 10px;
+  --ws-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  --ws-shadow-heavy: 0 10px 30px rgba(0, 0, 0, 0.1);
+  
+  --ws-transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.rustic-fluid {
+  background-color: var(--ws-bg);
+  color: var(--ws-text);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: -0.02em;
+}
+
+/* --- Layout Components --- */
+
+.workshop-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+.workshop-header {
+  padding: 1.25rem 2rem;
+  background: #1e2124;      /* Dark Header for Industrial Style */
+  border-radius: var(--ws-radius);
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--ws-shadow-heavy);
+}
+
+.workshop-header .title {
+  font-weight: 700;
+  font-size: 1.4rem;        /* Enlarged title */
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.workshop-header .title span {
+  color: var(--ws-green);
+}
+
+/* --- Improved Buttons (Tactile & Premium) --- */
+
+.workshop-btn {
+  padding: 1.2rem 2.5rem;   /* Increased padding */
+  border-radius: var(--ws-radius);
+  border: 1px solid var(--ws-border-heavy);
+  font-weight: 700;
+  font-size: 1.1rem;        /* Enlarged font */
+  cursor: pointer;
+  transition: var(--ws-transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  background: #ffffff;
+  color: var(--ws-text);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.workshop-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  border-color: var(--ws-green);
+}
+
+.workshop-btn.primary {
+  background: linear-gradient(135deg, var(--ws-green), var(--ws-green-dim));
+  color: #ffffff;
+  border: none;
+}
+
+.workshop-btn.primary:hover {
+  background: linear-gradient(135deg, var(--ws-green-dim), #24753c);
+  box-shadow: 0 6px 20px rgba(58, 182, 92, 0.4);
+}
+
+/* --- Inputs (Refined & Larger) --- */
+
+.workshop-input {
+  background: #ffffff;
+  border: 2px solid var(--ws-border-heavy);
+  border-radius: var(--ws-radius);
+  padding: 1.2rem 1.5rem;   /* Larger padding */
+  color: var(--ws-text);
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 1.2rem;        /* Larger font */
+  transition: var(--ws-transition);
+}
+
+.workshop-input:focus {
+  outline: none;
+  border-color: var(--ws-green);
+  box-shadow: 0 0 0 5px var(--ws-green-low);
+}
+
+.workshop-header .workshop-input {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  width: 100%;
+}
+
+/* --- Table (White Background & Larger Text) --- */
+
+.workshop-table-card {
+  background: var(--ws-surface);
+  border: 1px solid var(--ws-border-heavy);
+  border-radius: var(--ws-radius);
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--ws-shadow-heavy);
+}
+
+.workshop-table td {
+  padding: 1.4rem 1rem;     /* Increased cell padding */
+  border-bottom: 1px solid var(--ws-border);
+  font-size: 1.15rem;       /* Enlarged text for table cells */
+  color: var(--ws-text);
+  font-weight: 500;
+}
+
+.workshop-table th {
+  background: var(--ws-elevated);
+  padding: 1.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--ws-text-muted);
+  text-transform: uppercase;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  letter-spacing: 0.08em;
+  border-bottom: 3px solid var(--ws-border);
+}
+
+.workshop-table tr.seleccionado td {
+  background: var(--ws-green-low);
+  border-bottom-color: var(--ws-green);
+  color: var(--ws-green-dim);
+  font-weight: 700;          /* Bold selected text */
+}
+
+/* --- Spacing --- */
+.flex-gap-buttons {
+  gap: 2rem !important;      /* Increased spacing between buttons */
+}
+
+/* --- Inline Row Actions --- */
+.action-cell {
+  white-space: nowrap;
+  width: 1%;
+  text-align: center;
+}
+
+.action-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  border: 2px solid var(--ws-border-heavy);
+  background: #ffffff;
+  cursor: pointer;
+  transition: var(--ws-transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 6px;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ws-text-muted);
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  color: #ffffff;
+}
+
+.action-btn.edit:hover {
+  background: var(--ws-green);
+  border-color: var(--ws-green-dim);
+}
+
+.action-btn.delete:hover {
+  background: #f85149;
+  border-color: #d73a49;
+}
+
+/* --- Sheets --- */
+
+.workshop-sheet {
+  background: var(--ws-surface);
+  border: 1px solid var(--ws-border-heavy);
+  border-radius: var(--ws-radius);
+  width: 100%;
+  max-width: 850px;
+  margin: 0 auto;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+  overflow: hidden;
+  animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sheet-head {
+  padding: 1.5rem 2.5rem;
+  background: #1e2124;
+  color: #ffffff;
+}
+
+.sheet-head h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--ws-green);
+}
+
+.workshop-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--ws-text-muted);
+  text-transform: uppercase;
+  margin-bottom: 0.3rem;
+  display: block;
+}

@@ -15,11 +15,11 @@ let vales = [];
 let trSeleccionado;
 let tdSeleccionado;
 
-const listar = async(lista)=>{
-    for await(let vale of lista){
+const listar = async (lista) => {
+    for await (let vale of lista) {
         const tr = document.createElement('tr');
         tr.id = vale._id
- 
+
         //fecha
         const tdFecha = document.createElement('td');
         let hoy = new Date(vale.fecha)
@@ -56,12 +56,12 @@ const listar = async(lista)=>{
     totalInput.value = total.toFixed(2);
 }
 
-window.addEventListener('load',async e=>{
-    vales = (await axios.get(`${URL}vales`,configAxios)).data;
+window.addEventListener('load', async e => {
+    vales = (await axios.get(`${URL}vales`, configAxios)).data;
     listar(vales)
 });
 
-tbody.addEventListener('click',e=>{
+tbody.addEventListener('click', e => {
     trSeleccionado && trSeleccionado.classList.remove('trSeleccionado');
     tdSeleccionado && tdSeleccionado.classList.remove('tdSeleccionado');
 
@@ -77,66 +77,66 @@ const borrar = document.querySelector('.borrar');
 const salir = document.querySelector('.salir');
 
 
-salir.addEventListener('click',e=>{
+salir.addEventListener('click', e => {
     location.href = '../index.html';
 });
 
-agregar.addEventListener('click',e=>{
-    ipcRenderer.send('abrir-ventana',{
-        path:'./vale/agregarValePersonal.html',
-        width:500,
-        height:500,
-        reinicio:true
+agregar.addEventListener('click', e => {
+    ipcRenderer.send('abrir-ventana', {
+        path: './vale/agregarValePersonal.html',
+        width: 500,
+        height: 500,
+        reinicio: true
     })
 });
 
-borrar.addEventListener('click',async e=>{
+borrar.addEventListener('click', async e => {
     if (trSeleccionado) {
-        await axios.delete(`${URL}vale/${trSeleccionado.id}`,configAxios);
+        await axios.delete(`${URL}vale/${trSeleccionado.id}`, configAxios);
         location.reload();
-    }else{
+    } else {
         sweet.fire({
-            title:"Seleccionar un vale",
-            returnFocus:false
+            title: "Seleccionar un vale",
+            returnFocus: false
         })
     }
 });
 
-totalInput.addEventListener('focus',e=>{
+totalInput.addEventListener('focus', e => {
     totalInput.select()
 })
 
-document.addEventListener('keydown',e=>{
+document.addEventListener('keydown', e => {
     if (e.key === "Escape") {
         location.href = '../index.html';
     }
-    if(e.key === "Control" && document.activeElement.nodeName !== "INPUT"){
-        body.addEventListener('keyup',e=>{
+    if (e.key === "Control" && document.activeElement.nodeName !== "INPUT") {
+        body.addEventListener('keyup', e => {
             navigator.clipboard.writeText(tdSeleccionado.innerHTML)
         });
     }
 });
 
 
-body.addEventListener('keydown',e=>{
+body.addEventListener('keydown', e => {
     if (document.activeElement.nodeName !== 'INPUT') {
         recorrerFlechas(e);
     }
 });
 
-const recorrerFlechas = async(e)=>{
+const recorrerFlechas = async (e) => {
     if (e.keyCode === 39 && tdSeleccionado.nextElementSibling) {
         tdSeleccionado.classList.remove('tdSeleccionado');
         tdSeleccionado = tdSeleccionado.nextElementSibling;
         tdSeleccionado.classList.add('tdSeleccionado');
-    }else if(e.keyCode === 37 && tdSeleccionado.previousElementSibling){
+    } else if (e.keyCode === 37 && tdSeleccionado.previousElementSibling) {
         tdSeleccionado.classList.remove('tdSeleccionado');
         tdSeleccionado = tdSeleccionado.previousElementSibling;
         tdSeleccionado.classList.add('tdSeleccionado');
-    }else if(e.keyCode === 38 && trSeleccionado.previousElementSibling){
+    } else if (e.keyCode === 38 && trSeleccionado.previousElementSibling) {
         let i = 0;
         let aux = 0;
-        for await(let td of trSeleccionado.children){
+        for await (let td of trSeleccionado.children) {
             if (td.classList.contains('tdSeleccionado')) {
                 aux = i;
             }
@@ -150,10 +150,10 @@ const recorrerFlechas = async(e)=>{
         tdSeleccionado && tdSeleccionado.classList.remove('tdSeleccionado');
         tdSeleccionado = trSeleccionado.children[aux];
         tdSeleccionado.classList.add('tdSeleccionado');
-    }else if(e.keyCode === 40 && trSeleccionado.nextElementSibling){
+    } else if (e.keyCode === 40 && trSeleccionado.nextElementSibling) {
         let i = 0;
         let aux = 0;
-        for await(let td of trSeleccionado.children){
+        for await (let td of trSeleccionado.children) {
             if (td.classList.contains('tdSeleccionado')) {
                 aux = i;
             }

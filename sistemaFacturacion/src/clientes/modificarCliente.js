@@ -60,16 +60,31 @@ ipcRenderer.on('vendedor', (e, args) => {
 modificar.addEventListener('click', (e) => {
   e.preventDefault();
 
-  modificar.classList.add('none');
-  const inputs = document.querySelectorAll('input');
-  const select = document.querySelector('#conIva');
+  modificar.style.display = 'none';
+  guardar.style.display = 'inline-flex';
 
-  select.toggleAttribute('disabled');
+  const statusDot = document.querySelector('.status-dot');
+  const statusText = document.querySelector('.status-box span');
 
-  acceso !== '0' ? conFact.setAttribute('disabled', '') : conFact.removeAttribute('disabled');
+  if (statusDot) {
+    statusDot.style.background = '#f85149';
+    statusDot.style.boxShadow = '0 0 8px rgba(248, 81, 73, 0.4)';
+  }
+  if (statusText) {
+    statusText.innerText = 'MODO: EDICIÓN ACTIVA';
+    statusText.style.color = '#f85149';
+  }
+
+  const inputs = document.querySelectorAll('.workshop-input');
+  const radios = document.querySelectorAll('input[type="radio"]');
 
   for (let input of inputs) {
-    input.toggleAttribute('disabled');
+    if (input.id !== 'conFact' || acceso === '0') {
+      input.removeAttribute('disabled');
+    }
+  }
+  for (let radio of radios) {
+    radio.removeAttribute('disabled');
   }
 
   nombre.focus();

@@ -4,36 +4,49 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arreglar saldo</title>
+    <title>Mantenimiento // Arreglar Saldo</title>
     <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="../assets/css/rustic-theme.css">
     <link rel="stylesheet" href="./clientes.css">
 </head>
-<body class="arreglarSaldo">
-    <h1>Arreglar Saldo</h1>
-    <section class="inputs">
-        <main class="codigo">
-            <label for="codigo">Codigo</label>
-            <input autofocus type="text" id="codigo" name="codigo">
-        </main>
-        <main class="nombre">
-            <label for="nombre">Nombre</label>
-            <input type="text" name="nombre" disabled id="nombre">
-        </main>
-        <div class="saldos">
-            <main>
-                <label for="saldo">Saldo</label>
-                <input type="number" name="saldo" id="saldo">
-            </main>
-            <main class="saldo_P none">
-                <label for="saldo_P">Saldo_P</label>
-                <input type="number" name="saldo_P" id="saldo_P">
-            </main>
+<body class="rustic-fluid arreglarSaldo">
+    <div class="workshop-shell">
+        <div class="workshop-sheet" style="margin-top: 2rem;">
+            <header class="sheet-head">
+                <h2>Utilidad de Sistema // Corrección de Saldo</h2>
+            </header>
+
+            <div class="sheet-body">
+                <div class="workshop-input-group">
+                    <label for="codigo" class="workshop-label">ID_CODIGO_CLIENTE</label>
+                    <input autofocus type="text" id="codigo" name="codigo" class="workshop-input">
+                </div>
+                <div class="workshop-input-group">
+                    <label for="nombre" class="workshop-label">RAZON_SOCIAL</label>
+                    <input type="text" name="nombre" disabled id="nombre" class="workshop-input">
+                </div>
+                
+                <div class="workshop-input-group">
+                    <label for="saldo" class="workshop-label">NUEVO_SALDO_OPERATIVO ($)</label>
+                    <input type="number" name="saldo" id="saldo" class="workshop-input">
+                </div>
+                
+                <div class="workshop-input-group saldo_P none">
+                    <label for="saldo_P" class="workshop-label">SALDO_P_DIFERIDO ($)</label>
+                    <input type="number" name="saldo_P" id="saldo_P" class="workshop-input">
+                </div>
+            </div>
+
+            <footer class="sheet-foot flex-gap-buttons">
+                <button class="workshop-btn primary guardar">
+                    GUARDAR CAMBIOS
+                </button>
+                <button class="workshop-btn salir">
+                    SALIR <span class="mono" style="opacity: 0.5; font-size: 0.8rem;">[ESC]</span>
+                </button>
+            </footer>
         </div>
-    </section>
-    <section class="botones">
-        <button class="guardar">Guardar</button>
-        <button class="salir">Salir</button>
-    </section>
-</body>
+    </div>
     <script src="./arreglarSaldo.js"></script>
+</body>
 </html>

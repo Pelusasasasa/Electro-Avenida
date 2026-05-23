@@ -346,9 +346,9 @@ async function totales() {
   const ivaT = document.getElementById("ivaT");
   ivaT.innerText = redondear(
     parseFloat(iva21F.innerText) +
-      parseFloat(iva105F.innerText) +
-      parseFloat(iva21N.innerText) +
-      parseFloat(iva105N.innerText),
+    parseFloat(iva105F.innerText) +
+    parseFloat(iva21N.innerText) +
+    parseFloat(iva105N.innerText),
     2
   );
 
@@ -400,14 +400,14 @@ async function totales() {
   );
   ivas.innerText = redondear(
     parseFloat(ivaT.innerText) -
-      parseFloat(document.getElementById("ivaC").innerText),
+    parseFloat(document.getElementById("ivaC").innerText),
     2
   );
 
   porcentajeIva.innerText = redondear(
     (parseFloat(ivas.innerText) /
       parseFloat(document.getElementById("ivaC").innerText)) *
-      100,
+    100,
     3
   );
 }

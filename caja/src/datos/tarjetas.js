@@ -37,8 +37,8 @@ const listarTarjetas = async (lista) => {
   }
 };
 
-const eliminarTarjeta = async() => {
-  const {isConfirmed} = await sweet.fire({
+const eliminarTarjeta = async () => {
+  const { isConfirmed } = await sweet.fire({
     title: `Seguro quiere Eliminar ${tarjetas.value}?`,
     confirmButtonText: 'Aceptar',
     showCancelButton: true

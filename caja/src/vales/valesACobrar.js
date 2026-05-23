@@ -142,7 +142,7 @@ tbody.addEventListener("click", (e) => {
             tbody.removeChild(seleccionado);
             totalInput.value = redondear(
               parseFloat(totalInput.value) -
-                parseFloat(seleccionado.children[5].innerHTML),
+              parseFloat(seleccionado.children[5].innerHTML),
               2
             );
           } catch (error) {

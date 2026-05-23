@@ -6,105 +6,108 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Agregar Cliente</title>
     <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="../assets/css/rustic-theme.css">
     <link rel="stylesheet" href="./clientes.css">
   </head>
-  <body class="agregarCliente">
+  <body class="rustic-fluid agregarCliente">
+    <div class="workshop-shell">
+      <div class="workshop-sheet">
+        <header class="sheet-head">
+          <h2>Ficha de Registro // Nuevo Cliente</h2>
+        </header>
 
-    <section class="nombre">
-      <main>
-        <label for="nombre">Nombre</label>
-        <input autofocus type="text" name="nombre" id="nombre" placeholder="Nombre"/>
-      </main>
-    </section>
+        <form class="sheet-body">
+          <div class="workshop-input-group span-all">
+            <label for="nombre" class="workshop-label">Nombre Completo / Razón Social</label>
+            <input autofocus type="text" name="nombre" id="nombre" class="workshop-input" placeholder="Nombre del cliente" />
+          </div>
 
-    <section class="inputs">
-      <main>
-        <label for="conIva">Cond IVA</label>
-        <select name="conIva" id="conIva">
-          <option value="Consumidor Final">Consumidor Final</option>
-          <option value="Monotributista">Monotributista</option>
-          <option value="Inscripto">Inscripto</option>
-          <option value="Exento">Exento</option>
-        </select>
-      </main>
-      
-      <main>
-        <label for="direccion">Direccion</label>
-        <input type="text" name="direccion" id="direccion" placeholder="Direccion"/>
-      </main>
+          <div class="workshop-input-group">
+            <label for="conIva" class="workshop-label">Condición IVA</label>
+            <select name="conIva" id="conIva" class="workshop-input">
+              <option value="Consumidor Final">Consumidor Final</option>
+              <option value="Monotributista">Monotributista</option>
+              <option value="Inscripto">Inscripto</option>
+              <option value="Exento">Exento</option>
+            </select>
+          </div>
 
-      <main>
-        <label for="localidad">Localidad</label>
-        <input type="text" name="localidad" id="localidad" placeholder="Localidad"/>
-      </main>
-    </section>
+          <div class="workshop-input-group">
+            <label for="dnicuit" class="workshop-label">DNI / CUIT</label>
+            <input type="text" name="dnicuit" id="dnicuit" class="workshop-input" placeholder="Código fiscal" />
+          </div>
 
-    <section class="inputs">
-      <main>
-        <label for="provincia">Provincia</label>
-        <input type="text" name="provincia" id="provincia" placeholder="Provincia" />
-      </main>
+          <div class="workshop-input-group span-all">
+            <label for="direccion" class="workshop-label">Dirección Operativa</label>
+            <input type="text" name="direccion" id="direccion" class="workshop-input" placeholder="Calle y número" />
+          </div>
 
-      <main>
-        <label for="cod_postal">Codigo Postal</label>
-        <input type="text" name="cod_postal" id="cod_postal" placeholder="Codigo Postal" />
-      </main>
+          <div class="workshop-input-group">
+            <label for="localidad" class="workshop-label">Localidad</label>
+            <input type="text" name="localidad" id="localidad" class="workshop-input" placeholder="Ciudad" />
+          </div>
 
-      <main>
-        <label for="dnicuit">Dni o Cuit</label>
-        <input type="text" name="dnicuit" id="dnicuit" placeholder="Dni o Cuit" />
-      </main>
-    </section>
+          <div class="workshop-input-group">
+            <label for="provincia" class="workshop-label">Provincia</label>
+            <input type="text" name="provincia" id="provincia" class="workshop-input" placeholder="Estado/Provincia" />
+          </div>
 
-    <section class="inputs">
-      <main>
-        <label for="email">Email</label>
-        <input type="mail" name="email" id="email" placeholder="Correo@correo.com" />
-      </main>
+          <div class="workshop-input-group">
+            <label for="cod_postal" class="workshop-label">Código Postal</label>
+            <input type="text" name="cod_postal" id="cod_postal" class="workshop-input" placeholder="CP" />
+          </div>
 
-      <main>
-        <label for="telefono">Telefono</label>
-        <input type="tel" name="telefono" id="telefono" placeholder="Telefono" />
-      </main>
+          <div class="workshop-input-group">
+            <label for="telefono" class="workshop-label">Teléfono</label>
+            <input type="tel" name="telefono" id="telefono" class="workshop-input" placeholder="Nro. de contacto" />
+          </div>
 
-      <main>
-        <label for="limite">Limite de compra</label>
-        <input type="Number" name="limite" id="limite" placeholder="15000" />
-      </main>
-    </section>
+          <div class="workshop-input-group">
+            <label for="email" class="workshop-label">Correo Electrónico</label>
+            <input type="mail" name="email" id="email" class="workshop-input" placeholder="ejemplo@correo.com" />
+          </div>
 
-    <section class="inputs">
-      <main>
-        <label for="condicionFacturacion">Condicion de Factura</label>
-        <select disabled name="conFac" id="conFac" >
-          <option value="1">1- Cte. Cte Normal</option>
-          <option value="4" selected>4- Contado</option>
-        </select>
-      </main>
+          <div class="workshop-input-group">
+            <label for="limite" class="workshop-label">Límite de Compra ($)</label>
+            <input type="Number" name="limite" id="limite" class="workshop-input" placeholder="0.00" />
+          </div>
 
-      <section class="tipo">
-        <main class="moroso">
-          <label for="normal">Normal</label>
-          <input type="radio" checked name="moroso" id="moroso/normal" value="N" />
-        </main>
+          <div class="workshop-input-group">
+            <label for="conFac" class="workshop-label">Tipo de Facturación</label>
+            <select disabled name="conFac" id="conFac" class="workshop-input">
+              <option value="1">1- Cte. Cte Normal</option>
+              <option value="4" selected>4- Contado</option>
+            </select>
+          </div>
 
-        <main class="moroso">
-          <label for="moroso">Moroso</label>
-          <input type="radio" name="moroso" id="moroso/normal" value="M" />
-        </main>
-      </section>
-    </section>
+          <div class="workshop-input-group">
+            <label class="workshop-label">Calificación de Riesgo</label>
+            <div style="display: flex; gap: 2rem; padding: 0.5rem 0;">
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="radio" checked name="moroso" value="N" style="accent-color: var(--ws-brass);" /> Normal
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer; color: #f85149;">
+                <input type="radio" name="moroso" value="M" style="accent-color: #f85149;" /> Moroso
+              </label>
+            </div>
+          </div>
 
-        <main>
-          <label for="observaciones">Observaciones</label>
-          <input type="text" name="observaciones" id="observaciones" placeholder="Observaciones" />
-        </main>
+          <div class="workshop-input-group span-all">
+            <label for="observaciones" class="workshop-label">Observaciones Adicionales</label>
+            <input type="text" name="observaciones" id="observaciones" class="workshop-input" placeholder="Notas del sistema..." />
+          </div>
+        </form>
 
-    <section class="botones">
-      <button id="boton-enviar" >Registrar</button>
-
-      <button class="salir">Salir</button>
-    </section>
+        <footer class="sheet-foot flex-gap-buttons">
+          <button id="boton-enviar" class="workshop-btn primary">
+            REGISTRAR CLIENTE
+          </button>
+          <button class="workshop-btn salir">
+            CANCELAR <span class="mono" style="opacity: 0.5; font-size: 0.8rem;">[ESC]</span>
+          </button>
+        </footer>
+      </div>
+    </div>
 
     <script src="./agregarcliente.js"></script>
   </body>

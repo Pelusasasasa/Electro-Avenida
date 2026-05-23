@@ -32,21 +32,21 @@ let subSeleccionado;
 let cuentasConTipo;
 let cuentas;
 
-window.addEventListener('load',async e=>{
+window.addEventListener('load', async e => {
     cerrarVentana();
     copiar();
-    
+
     desde.value = `${year}-${month}-${day}`;
     hasta.value = `${year}-${month}-${day}`;
 });
 
-select.addEventListener('change',async e=>{
-    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${hasta.value}/${select.value}`,configAxios)).data
+select.addEventListener('change', async e => {
+    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${hasta.value}/${select.value}`, configAxios)).data
     listar(ingresos);
 });
 
-const listarRubros = async(cuentasConTipo)=>{
-    for(let cuenta of cuentasConTipo){
+const listarRubros = async (cuentasConTipo) => {
+    for (let cuenta of cuentasConTipo) {
         const option = document.createElement('option');
         option.value = cuenta.cod;
         option.text = cuenta.desc;
@@ -56,26 +56,26 @@ const listarRubros = async(cuentasConTipo)=>{
     let nextDay = new Date(hasta.value);
     nextDay.setDate(today.getDate() + 1);
 
-    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${nextDay}/${select.value}`,configAxios)).data;
+    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${nextDay}/${select.value}`, configAxios)).data;
     listar(ingresos.filter(ingreso => ingreso.tMov === tipo))
 }
 
-const listar = async(lista)=>{
-    const listaOrdenada = lista.filter(elem=>elem.tMov === tipo);
-    listaOrdenada.sort((a,b)=>{//la usamos para ordenar la lsita
-        if (a.idCuenta>b.idCuenta) {
+const listar = async (lista) => {
+    const listaOrdenada = lista.filter(elem => elem.tMov === tipo);
+    listaOrdenada.sort((a, b) => {//la usamos para ordenar la lsita
+        if (a.idCuenta > b.idCuenta) {
             return 1
-        }else if(a.idCuenta<b.idCuenta){
+        } else if (a.idCuenta < b.idCuenta) {
             return -1
         }
         return 0
     });
 
-    tbody.innerHTML = "" ;
+    tbody.innerHTML = "";
     let cuenta = "";
     let total = 0;
     let totalIngresos = 0;
-    for await (let elem of listaOrdenada){
+    for await (let elem of listaOrdenada) {
         totalIngresos += elem.imp
 
         if (cuenta !== "" && cuenta !== elem.idCuenta) {
@@ -100,15 +100,15 @@ const listar = async(lista)=>{
             td.classList.add('bold')
 
             td.innerHTML = elem.cuenta;
-            
+
             tr.appendChild(td);
-            
+
             tbody.appendChild(tr);
             cuenta = elem.idCuenta;
 
         }
-        
-        const fecha = elem.fecha.slice(0,10).split('-',3);
+
+        const fecha = elem.fecha.slice(0, 10).split('-', 3);
 
         const tr = document.createElement('tr');
         tr.id = elem._id;
@@ -117,7 +117,7 @@ const listar = async(lista)=>{
         const tdNumero = document.createElement('td');
         const tdDescripcion = document.createElement('td');
         const tdImporte = document.createElement('td');
-        
+
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
         tdNumero.innerHTML = elem.nro_comp;
         tdDescripcion.innerHTML = elem.desc;
@@ -138,30 +138,30 @@ const listar = async(lista)=>{
     totalInput.value = totalIngresos.toFixed(2);
 };
 
-select.addEventListener('keypress',e=>{
+select.addEventListener('keypress', e => {
     e.preventDefault();
     if (e.keyCode === 13) {
         desde.focus();
     }
 });
 
-desde.addEventListener('keypress',async e=>{
-    const fecha = hasta.value.split('-',3);
-    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${hasta.value}/${select.value}`,configAxios)).data
+desde.addEventListener('keypress', async e => {
+    const fecha = hasta.value.split('-', 3);
+    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${hasta.value}/${select.value}`, configAxios)).data
     listar(ingresos);
 });
 
-hasta.addEventListener('change',async e=>{
-        const fecha = hasta.value.split('-',3);
-        let nextDay = new Date(fecha[0],fecha[1] - 1,fecha[2]);
-        nextDay.setDate(nextDay.getDate() + 1);
+hasta.addEventListener('change', async e => {
+    const fecha = hasta.value.split('-', 3);
+    let nextDay = new Date(fecha[0], fecha[1] - 1, fecha[2]);
+    nextDay.setDate(nextDay.getDate() + 1);
 
-        const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${nextDay}/${select.value}`,configAxios)).data
-        listar(ingresos);
+    const ingresos = (await axios.get(`${URL}movCajas/forDatesAndIdCuenta/${desde.value}/${nextDay}/${select.value}`, configAxios)).data
+    listar(ingresos);
 });
 
 //cuando hacemos click en la tabla seleccioonamos el tr y subseleccionamos el td
-tbody.addEventListener('click',e=>{
+tbody.addEventListener('click', e => {
 
     seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
@@ -169,10 +169,10 @@ tbody.addEventListener('click',e=>{
     if (e.target.nodeName === "TD") {
         seleccionado = e.target.parentNode;
         subSeleccionado = e.target;
-    }else if(e.target.nodeName === "DIV"){
+    } else if (e.target.nodeName === "DIV") {
         seleccionado = e.target.parentNode.parentNode;
         subSeleccionado = e.target.parentNode;
-    }else if(e.target.nodeName === "SPAN"){
+    } else if (e.target.nodeName === "SPAN") {
         seleccionado = e.target.parentNode.parentNode.parentNode;
         subSeleccionado = e.target.parentNode.parentNode;
     }
@@ -181,20 +181,20 @@ tbody.addEventListener('click',e=>{
     subSeleccionado.classList.add('subSeleccionado');
 });
 
-ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    cuentas = (await axios.get(`${URL}cuentas`,configAxios)).data;
+ipcRenderer.on('recibir-informacion', async (e, args) => {
+    cuentas = (await axios.get(`${URL}cuentas`, configAxios)).data;
     tipo = args;
     if (tipo === "I") {
         titulo.innerHTML = "Ingreso de Caja";
-        cuentasConTipo = cuentas.filter(cuenta=>cuenta.tipo === tipo);
-    }else{
+        cuentasConTipo = cuentas.filter(cuenta => cuenta.tipo === tipo);
+    } else {
         titulo.innerHTML = "Egreso de Caja";
-        cuentasConTipo = cuentas.filter(cuenta=>cuenta.tipo === tipo)
+        cuentasConTipo = cuentas.filter(cuenta => cuenta.tipo === tipo)
     }
     listarRubros(cuentasConTipo)
 });
 
-desde.addEventListener('keypress',e=>{
+desde.addEventListener('keypress', e => {
     if (e.keyCode === 13) {
         hasta.focus();
     }

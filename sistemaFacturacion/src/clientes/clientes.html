@@ -6,39 +6,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Electro Avenida</title>
     <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="../assets/css/rustic-theme.css">
     <link rel="stylesheet" href="./clientes.css">
   </head>
-  <body class="clientes">
+  <body class="rustic-fluid clientes">
+    <div class="workshop-shell">
+      <header class="workshop-header">
+        <div class="title">Administración // <span>Cartera de Clientes</span></div>
+        <div class="flex gap-4">
+          <div class="workshop-input-group" style="width: 500px;">
+            <input autofocus type="search" name="buscarCliente" id="buscarCliente" class="workshop-input" placeholder="BUSCAR CLIENTE POR NOMBRE O *..." />
+          </div>
+        </div>
+      </header>
 
-    <section class="buscador">
-      <label for="buscarCliente" class="buscarCliente">Buscar Cliente</label>
-      <input autofocus type="search" name="buscarCliente" id="buscarCliente"/>
-    </section>
+      <main class="workshop-table-card">
+        <div class="workshop-table-container">
+          <table class="workshop-table">
+            <thead>
+              <tr>
+                <th class="mono">ID_COD</th>
+                <th>Nombre / Razón Social</th>
+                <th>Localidad</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Cond. IVA</th>
+                <th class="mono">CUIT/DNI</th>
+                <th style="text-align: right;">Saldo Actual</th>
+                <th style="text-align: center;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="resultado"></tbody>
+          </table>
+        </div>
+      </main>
 
-    <section class="tabla">
-      <table>
-        <thead>
-          <tr>
-            <th>Cod</th>
-            <th>Nombre</th>
-            <th>Localidad</th>
-            <th>Direccion</th>
-            <th>Telefono</th>
-            <th>CondIva</th>
-            <th>Dni o Cuit</th>
-            <th>Saldo</th>
-          </tr>
-        </thead>
-        <tbody id="resultado"></tbody>
-      </table>
-    </section>
-
-    <section class="botones">
-      <button class="agregar">Agregar</button>
-      <button class="modificar">Modificar</button>
-      <button class="eliminar">Eliminar</button>
-      <button class="salir">Salir</button>
-    </section>
+      <footer class="flex justify-between items-center mt-6">
+        <div class="flex flex-gap-buttons">
+          <button class="workshop-btn primary agregar">
+            <span>+</span> AGREGAR CLIENTE
+          </button>
+          <button class="workshop-btn modificar">
+            MODIFICAR
+          </button>
+          <button class="workshop-btn danger eliminar" style="color: #f85149; border-color: rgba(248, 81, 73, 0.2);">
+            ELIMINAR
+          </button>
+        </div>
+        <button class="workshop-btn salir">
+          SALIR <span class="mono" style="opacity: 0.5; font-size: 0.8rem;">[ESC]</span>
+        </button>
+      </footer>
+    </div>
 
     <script src="./clientes.js"></script>
   </body>

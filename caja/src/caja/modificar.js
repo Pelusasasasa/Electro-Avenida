@@ -16,7 +16,7 @@ let seleccionado;
 let subSeleccionado;
 
 
-window.addEventListener('load',async e=>{
+window.addEventListener('load', async e => {
     const date = new Date();
 
     let day = date.getDate();
@@ -31,31 +31,31 @@ window.addEventListener('load',async e=>{
     hasta.value = `${year}-${month}-${day}`;
 
 
-    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
+    const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`, configAxios)).data;
     const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
-    movimientosPasados.sort((a,b)=>{
+    movimientosPasados.sort((a, b) => {
         if (a.fecha > b.fecha) {
             return 1
-        }else if(a.fecha < b.fecha){
+        } else if (a.fecha < b.fecha) {
             return -1
         };
         return 0
     });
-    
+
     listar(movimientosPasados);
 });
 
-desde.addEventListener('keypress',async e=>{
+desde.addEventListener('keypress', async e => {
     if (e.keyCode === 13) {
 
-        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`, configAxios)).data;
         const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
-        movimientosPasados.sort((a,b)=>{
+        movimientosPasados.sort((a, b) => {
             if (a.fecha > b.fecha) {
                 return 1
-            }else if(a.fecha < b.fecha){
+            } else if (a.fecha < b.fecha) {
                 return -1
             };
             return 0
@@ -66,15 +66,15 @@ desde.addEventListener('keypress',async e=>{
     }
 });
 
-hasta.addEventListener('keypress',async e=>{
-    if(e.keyCode === 13){
-        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`,configAxios)).data;
+hasta.addEventListener('keypress', async e => {
+    if (e.keyCode === 13) {
+        const movimientos = (await axios.get(`${URL}movCajas/${desde.value}/${hasta.value}`, configAxios)).data;
         const movimientosPasados = movimientos.filter(movimiento => movimiento.pasado === true);
 
-        movimientosPasados.sort((a,b)=>{
+        movimientosPasados.sort((a, b) => {
             if (a.fecha > b.fecha) {
                 return 1
-            }else if(a.fecha < b.fecha){
+            } else if (a.fecha < b.fecha) {
                 return -1
             };
             return 0
@@ -84,9 +84,9 @@ hasta.addEventListener('keypress',async e=>{
     }
 });
 
-const listar = (lista)=>{
+const listar = (lista) => {
     tbody.innerHTML = "";
-    for(let mov of lista){
+    for (let mov of lista) {
         const tr = document.createElement('tr');
         tr.id = mov._id;
 
@@ -98,12 +98,12 @@ const listar = (lista)=>{
         const tdCuenta = document.createElement('td');
         const tdEmpresa = document.createElement('td');
         const tdACciones = document.createElement('td');
-        
+
         tdACciones.classList.add('acciones');
 
-        const fecha = mov.fecha.slice(0,10).split('-',3)
+        const fecha = mov.fecha.slice(0, 10).split('-', 3)
         tdFecha.innerHTML = `${fecha[2]}/${fecha[1]}/${fecha[0]}`;
-        tdTipo.innerHTML = mov.tMov.slice(0,1);
+        tdTipo.innerHTML = mov.tMov.slice(0, 1);
         tdNumero.innerHTML = mov.nro_comp;
         tdDescripcion.innerHTML = mov.desc;
         tdImporte.innerHTML = mov.imp ? mov.imp.toFixed(2) : "0.00";
@@ -134,17 +134,17 @@ const listar = (lista)=>{
 };
 
 
-tbody.addEventListener('click',async e=>{
+tbody.addEventListener('click', async e => {
     seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
 
-    if(e.target.nodeName === "TD"){
+    if (e.target.nodeName === "TD") {
         seleccionado = e.target.parentNode;
         subSeleccionado = e.target;
-    }else if(e.target.nodeName === "DIV"){
+    } else if (e.target.nodeName === "DIV") {
         seleccionado = e.target.parentNode.parentNode;
         subSeleccionado = e.target.parentNode;
-    }else if(e.target.nodeName === "SPAN"){
+    } else if (e.target.nodeName === "SPAN") {
         seleccionado = e.target.parentNode.parentNode.parentNode;
         subSeleccionado = e.target.parentNode.parentNode;
     }
@@ -153,27 +153,27 @@ tbody.addEventListener('click',async e=>{
     subSeleccionado.classList.add('subSeleccionado');
 
     if (e.target.innerHTML === "edit") {
-        ipcRenderer.send('abrir-ventana',({
-            path:"./caja/movCaja.html",
-            width:800,
-            height:500,
-            reinicio:true,
+        ipcRenderer.send('abrir-ventana', ({
+            path: "./caja/movCaja.html",
+            width: 800,
+            height: 500,
+            reinicio: true,
             informacion: seleccionado.id
         }))
-        
-    }else if(e.target.innerHTML === "delete"){
+
+    } else if (e.target.innerHTML === "delete") {
         await sweet.fire({
-            title:"Eliminar Movimiento?",
-            confirmButtonText:"Aceptar",
-            showCancelButton:true
-        }).then(async ({isConfirmed})=>{
+            title: "Eliminar Movimiento?",
+            confirmButtonText: "Aceptar",
+            showCancelButton: true
+        }).then(async ({ isConfirmed }) => {
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}movCajas/id/${seleccionado.id}`,configAxios);
+                    await axios.delete(`${URL}movCajas/id/${seleccionado.id}`, configAxios);
                     tbody.removeChild(seleccionado);
                 } catch (error) {
                     sweet.fire({
-                        title:"No se pudo elimar el movimientos"
+                        title: "No se pudo elimar el movimientos"
                     })
                 }
             }
@@ -182,20 +182,20 @@ tbody.addEventListener('click',async e=>{
 
 });
 
-agregar.addEventListener('click',e=>{
-    ipcRenderer.send('abrir-ventana',{
-        path:"caja/movCaja.html",
-        wodth:500,
-        height:500,
-        reinicio:true
+agregar.addEventListener('click', e => {
+    ipcRenderer.send('abrir-ventana', {
+        path: "caja/movCaja.html",
+        wodth: 500,
+        height: 500,
+        reinicio: true
     })
 });
 
-salir.addEventListener('click',e=>{
+salir.addEventListener('click', e => {
     location.href = '../index.html';
 });
 
-document.addEventListener('keyup',e=>{
+document.addEventListener('keyup', e => {
     if (e.keyCode === 27) {
         location.href = '../index.html';
     }

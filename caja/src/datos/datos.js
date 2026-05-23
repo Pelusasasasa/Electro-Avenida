@@ -17,19 +17,19 @@ const salir = document.querySelector('.salir');
 let cuentas = [];
 let index = 1;
 
-const listar = (cuenta)=>{
-    codigo.value =cuenta.cod;
-    descripcion.value =cuenta.desc;
-    tipo.value =cuenta.tipo;
+const listar = (cuenta) => {
+    codigo.value = cuenta.cod;
+    descripcion.value = cuenta.desc;
+    tipo.value = cuenta.tipo;
 }
 
-window.addEventListener('load',async e=>{
-    cuentas = (await axios.get(`${URL}cuentas`,configAxios)).data;
+window.addEventListener('load', async e => {
+    cuentas = (await axios.get(`${URL}cuentas`, configAxios)).data;
     listar(cuentas[0]);
 });
 
 
-agregar.addEventListener('click',e=>{
+agregar.addEventListener('click', e => {
     agregar.classList.add('none');
     guardar.classList.remove('none');
     codigo.value = "";
@@ -43,72 +43,72 @@ agregar.addEventListener('click',e=>{
     codigo.focus();
 });
 
-codigo.addEventListener('keypress',async e=>{
+codigo.addEventListener('keypress', async e => {
     if ((e.key === "Enter")) {
         const cuentaExistente = cuentas.find(cuenta => cuenta.cod === codigo.value.toUpperCase());
         if (cuentaExistente) {
             await sweet.fire({
-                title:"CODIGO YA UTILIZADO"
+                title: "CODIGO YA UTILIZADO"
             });
             codigo.value = "";
-        }else{
+        } else {
             descripcion.focus();
         }
     }
 });
 
-descripcion.addEventListener('keypress',e=>{
+descripcion.addEventListener('keypress', e => {
     if ((e.key === "Enter")) {
         tipo.focus();
     }
 });
 
-tipo.addEventListener('keypress',e=>{
+tipo.addEventListener('keypress', e => {
     if (e.key === "Enter") {
-        agregar.classList.contains('none') ? guardar.focus() : agregar.focus(); 
+        agregar.classList.contains('none') ? guardar.focus() : agregar.focus();
     }
 });
 
-codigo.addEventListener('focus',e=>{
+codigo.addEventListener('focus', e => {
     codigo.select();
 });
 
-descripcion.addEventListener('focus',e=>{
+descripcion.addEventListener('focus', e => {
     descripcion.select();
 });
 
-tipo.addEventListener('focus',e=>{
+tipo.addEventListener('focus', e => {
     tipo.select();
 });
 
-salir.addEventListener('click',e=>{
+salir.addEventListener('click', e => {
     window.close();
 });
 
-document.addEventListener('keyup',e=>{
+document.addEventListener('keyup', e => {
     if (e.key === "Escape") {
         window.close();
     }
 });
 
-guardar.addEventListener('click',async e=>{
+guardar.addEventListener('click', async e => {
     const cuenta = {};
     cuenta.cod = (codigo.value).toUpperCase();
     cuenta.desc = (descripcion.value).toUpperCase();
     cuenta.tipo = tipo.value.toUpperCase();
     try {
-        await axios.post(`${URL}cuentas`,cuenta,configAxios);
+        await axios.post(`${URL}cuentas`, cuenta, configAxios);
         location.reload();
     } catch (error) {
         sweet.fire({
-            title:"No se pudo cargar la cuenta"
+            title: "No se pudo cargar la cuenta"
         })
     }
 })
 
-proximo.addEventListener('click',e=>{
+proximo.addEventListener('click', e => {
     console.log(cuentas)
     listar(cuentas[index]);
     index++;
-    
+
 });

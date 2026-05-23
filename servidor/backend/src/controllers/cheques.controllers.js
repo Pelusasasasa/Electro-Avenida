@@ -2,34 +2,73 @@ const chequesCTRL = {};
 
 const Cheque = require('../models/Cheques');
 
-chequesCTRL.getsAll = async(req,res)=>{
-    const cheques = await Cheque.find({},{_id:1,__v:0});
-    res.send(cheques);
+chequesCTRL.getsAll = async (req, res) => {
+    const cheques = await Cheque.find({}, { _id: 1, __v: 0 }).sort({ f_recibido: -1 }).limit(100);
+    res.send(cheques.reverse());
 };
 
-chequesCTRL.getForId = async(req,res)=>{
-    const {id} = req.params;
-    const cheque = (await Cheque.findOne({_id:id})); 
+
+chequesCTRL.getFilter = async (req, res) => {
+    const { tipo, texto } = req.params;
+    console.log(tipo, texto)
+
+    try {
+        if (tipo === 'numero') {
+            console.log(texto)
+            const cheques = await Cheque.find({ n_cheque: { $regex: texto, $options: "i" } });
+
+            res.status(200).json({
+                ok: true,
+                cheques
+            });
+        } else if (tipo === 'importe') {
+            const cheques = await Cheque.find({ i_cheque: texto });
+            res.status(200).json({
+                ok: true,
+                cheques
+            });
+
+        } else if (tipo === 'razon') {
+            const re = new RegExp(texto, 'i');
+            const cheques = await Cheque.find({ ent_por: { $regex: re } });
+            res.status(200).json({
+                ok: true,
+                cheques
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Hable con el administrador'
+        });
+
+    }
+}
+
+chequesCTRL.getForId = async (req, res) => {
+    const { id } = req.params;
+    const cheque = (await Cheque.findOne({ _id: id }));
     res.send(cheque)
 };
 
-chequesCTRL.getForNumero = async(req,res)=>{
-    const {numero} = req.params;
-    const cheque = await Cheque.findOne({n_cheque:numero},{entreg_a:1,i_cheque:1,banco:1,f_cheque:1});
+chequesCTRL.getForNumero = async (req, res) => {
+    const { numero } = req.params;
+    const cheque = await Cheque.findOne({ n_cheque: numero }, { entreg_a: 1, i_cheque: 1, banco: 1, f_cheque: 1 });
     res.send(cheque);
 };
 
-chequesCTRL.sinFechaPagoYPropios = async(req,res)=>{
+chequesCTRL.sinFechaPagoYPropios = async (req, res) => {
     const cheques = await Cheque.find({
-        $and:[
-            {fechaPago:{$exists:false}},
-            {tipo:"P"}
+        $and: [
+            { fechaPago: { $exists: false } },
+            { tipo: "P" }
         ]
     });
     res.send(cheques)
 };
 
-chequesCTRL.post = async(req,res)=>{
+chequesCTRL.post = async (req, res) => {
     const now = new Date();
     req.body.f_recibido = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     const cheque = new Cheque(req.body);
@@ -38,23 +77,23 @@ chequesCTRL.post = async(req,res)=>{
     res.end();
 };
 
-chequesCTRL.putOne = async(req,res)=>{
-    const {numero} = req.params;
-    await Cheque.findOneAndUpdate({n_cheque:numero},req.body);
+chequesCTRL.putOne = async (req, res) => {
+    const { numero } = req.params;
+    await Cheque.findOneAndUpdate({ n_cheque: numero }, req.body);
     console.log(`Cheque ${numero} Modificado`);
     res.send(`Cheque ${numero} Modificado`);
 };
 
-chequesCTRL.putForId = async(req,res)=>{
-    const {id} = req.params;
-    await Cheque.findByIdAndUpdate({_id:id},req.body);
+chequesCTRL.putForId = async (req, res) => {
+    const { id } = req.params;
+    await Cheque.findByIdAndUpdate({ _id: id }, req.body);
     console.log(`Cheque con numero ${req.body.n_cheque} modificado`)
     res.end();
 };
 
-chequesCTRL.deleteforId = async(req,res)=>{
-    const {id} = req.params;
-    await Cheque.findByIdAndDelete({_id:id});
+chequesCTRL.deleteforId = async (req, res) => {
+    const { id } = req.params;
+    await Cheque.findByIdAndDelete({ _id: id });
     console.log(`Chueque con el id ${id} Eliminado`)
     res.end()
 };

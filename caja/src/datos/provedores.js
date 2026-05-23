@@ -19,8 +19,8 @@ const salir = document.querySelector('.salir');
 let botones = false;
 let provedores
 
-window.addEventListener('load',async e=>{
-    provedores = (await axios.get(`${URL}provedor`,configAxios)).data;
+window.addEventListener('load', async e => {
+    provedores = (await axios.get(`${URL}provedor`, configAxios)).data;
     await listar(provedores);
 
     seleccionado = tbody.firstElementChild;
@@ -28,56 +28,56 @@ window.addEventListener('load',async e=>{
 
     subSeleccionado = seleccionado.firstElementChild;
     subSeleccionado.classList.add('subSeleccionado');
-    
+
 });
 
-nombre.addEventListener('keyup',async e=>{
-    const listaAux = provedores ? provedores.filter(provedor=>provedor.provedor.startsWith(nombre.value.toUpperCase())) : [];
+nombre.addEventListener('keyup', async e => {
+    const listaAux = provedores ? provedores.filter(provedor => provedor.provedor.startsWith(nombre.value.toUpperCase())) : [];
     await listar(listaAux)
 });
 
-codigo.addEventListener('keyup',async e=>{
-    const listaAux = provedores.filter(provedor=>provedor.codigo === codigo.value);
+codigo.addEventListener('keyup', async e => {
+    const listaAux = provedores.filter(provedor => provedor.codigo === codigo.value);
     await listar(listaAux);
 });
 
-agregar.addEventListener('click',e=>{
-    ipcRenderer.send('abrir-ventana',{
+agregar.addEventListener('click', e => {
+    ipcRenderer.send('abrir-ventana', {
         path: "datos/agregarProvedor.html",
-        width:1200,
-        height:700,
-        reinicio:true
+        width: 1200,
+        height: 700,
+        reinicio: true
     })
 });
 
 
-salir.addEventListener('click',e=>{
+salir.addEventListener('click', e => {
     location.href = '../index.html';
 });
 
-document.addEventListener('keyup',e=>{
+document.addEventListener('keyup', e => {
     if (e.key === "Escape") {
         if (botones) {
             location.href = '../index.html';
-        }else{
+        } else {
             window.close();
         }
     }
 });
 
-const listar = (lista)=>{
+const listar = (lista) => {
     tbody.innerHTML = "";
 
-    lista.sort((a,b)=>{
+    lista.sort((a, b) => {
         if (a.provedor > b.provedor) {
             return 1;
-        }else if(a.provedor < b.provedor){
+        } else if (a.provedor < b.provedor) {
             return -1;
         }
         return 0;
     });
 
-    for (let elem of lista){
+    for (let elem of lista) {
         const tr = document.createElement('tr');
 
         const tdCodigo = document.createElement('td');
@@ -121,17 +121,17 @@ const listar = (lista)=>{
 };
 
 const body = document.querySelector('body');
-tbody.addEventListener('click',async e=>{
+tbody.addEventListener('click', async e => {
     seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
 
     if (e.target.nodeName === "TD") {
         seleccionado = e.target.parentNode;
         subSeleccionado = e.target;
-    }else if(e.target.nodeName === "DIV"){
+    } else if (e.target.nodeName === "DIV") {
         seleccionado = e.target.parentNode.parentNode;
         subSeleccionado = e.target.parentNode;
-    }else if(e.target.nodeName === "SPAN"){
+    } else if (e.target.nodeName === "SPAN") {
         seleccionado = e.target.parentNode.parentNode.parentNode;
         subSeleccionado = e.target.parentNode.parentNode;
     }
@@ -141,49 +141,49 @@ tbody.addEventListener('click',async e=>{
 
 
     if (e.target.innerHTML === "edit") {
-        ipcRenderer.send('abrir-ventana',{
-            path:"datos/modificarProvedor.html",
-            width:1200,
-            height:700,
-            reinicio:false,
-            informacion:seleccionado.id
+        ipcRenderer.send('abrir-ventana', {
+            path: "datos/modificarProvedor.html",
+            width: 1200,
+            height: 700,
+            reinicio: false,
+            informacion: seleccionado.id
         })
-    }else if(e.target.innerHTML === "delete"){
+    } else if (e.target.innerHTML === "delete") {
         await sweet.fire({
-            title:"Seguro eliminar provedor",
-            showCancelButton:true,
-            confirmButtonText:"Aceptar"
-        }).then(async ({isConfirmed})=>{
+            title: "Seguro eliminar provedor",
+            showCancelButton: true,
+            confirmButtonText: "Aceptar"
+        }).then(async ({ isConfirmed }) => {
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}provedor/codigo/${seleccionado.id}`,configAxios);
+                    await axios.delete(`${URL}provedor/codigo/${seleccionado.id}`, configAxios);
                     location.reload();
                 } catch (error) {
                     sweet.fire({
-                        title:"No se pudo borrar el provedor"
+                        title: "No se pudo borrar el provedor"
                     })
                 }
             }
-            
+
         })
     }
 
 });
 
-body.addEventListener('keyup',e=>{  
-    
+body.addEventListener('keyup', e => {
+
     if (e.keyCode === 13 && seleccionado && !botones) {
-        ipcRenderer.send('enviar-info-ventana-principal',seleccionado.id);
+        ipcRenderer.send('enviar-info-ventana-principal', seleccionado.id);
         window.close();
 
-    }else if (e.keyCode === 40 && seleccionado.nextElementSibling) {
+    } else if (e.keyCode === 40 && seleccionado.nextElementSibling) {
 
         const tds = document.querySelectorAll('.seleccionado td');
         let i = 0;
         let index
 
 
-        for(let td of tds){
+        for (let td of tds) {
             if (td.classList.contains('subSeleccionado')) {
                 index = i
             }
@@ -198,14 +198,14 @@ body.addEventListener('keyup',e=>{
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
         subSeleccionado = seleccionado.children[index];
         subSeleccionado.classList.add('subSeleccionado');
-        
+
         nombre.blur();
-        
-    }else if(e.keyCode === 38 && seleccionado.previousElementSibling){
+
+    } else if (e.keyCode === 38 && seleccionado.previousElementSibling) {
         const tds = document.querySelectorAll('.seleccionado td');
         let i = 0;
         let index
-        for(let td of tds){
+        for (let td of tds) {
             if (td.classList.contains('subSeleccionado')) {
                 index = i
             }
@@ -220,19 +220,19 @@ body.addEventListener('keyup',e=>{
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
         subSeleccionado = seleccionado.children[index];
         subSeleccionado.classList.add('subSeleccionado');
-        
-    }else if(e.keyCode === 39 && subSeleccionado.nextElementSibling){
+
+    } else if (e.keyCode === 39 && subSeleccionado.nextElementSibling) {
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
         subSeleccionado = subSeleccionado.nextElementSibling;
         subSeleccionado.classList.add('subSeleccionado');
-    }else if(e.keyCode === 37 && subSeleccionado.previousElementSibling){
+    } else if (e.keyCode === 37 && subSeleccionado.previousElementSibling) {
         subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
         subSeleccionado = subSeleccionado.previousElementSibling;
         subSeleccionado.classList.add('subSeleccionado')
     };
-    if(e.target.nodeName !== "INPUT"){
+    if (e.target.nodeName !== "INPUT") {
         if (e.key === "Control") {
-            body.addEventListener('keyup',e=>{
+            body.addEventListener('keyup', e => {
                 if (e.keyCode === 67) {
                     navigator.clipboard.writeText(subSeleccionado.innerHTML);
                 }
@@ -241,7 +241,7 @@ body.addEventListener('keyup',e=>{
     }
 })
 
-ipcRenderer.on('recibir-informacion',(e,args)=>{
+ipcRenderer.on('recibir-informacion', (e, args) => {
     botones = args.botones;
 
     if (!botones) {

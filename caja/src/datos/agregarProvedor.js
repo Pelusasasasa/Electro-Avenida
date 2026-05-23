@@ -31,7 +31,7 @@ const agregar = document.querySelector('.agregar');
 const salir = document.querySelector('.salir');
 
 
-agregar.addEventListener('click',async e=>{
+agregar.addEventListener('click', async e => {
     const nuevoProvedor = {};
     nuevoProvedor.codigo = codigo.value;
     nuevoProvedor.provedor = provedor.value.toUpperCase();
@@ -50,134 +50,134 @@ agregar.addEventListener('click',async e=>{
     nuevoProvedor.codigoPostal = codigoPostal.value;
     nuevoProvedor.provinciaPostal = provinciaPostal.value;
     try {
-        await axios.post(`${URL}provedor`,nuevoProvedor,configAxios);
+        await axios.post(`${URL}provedor`, nuevoProvedor, configAxios);
         window.close();
     } catch (error) {
         console.log(error)
         await sweet.fire({
-            title:"No se puedo cargar provedor"
+            title: "No se puedo cargar provedor"
         });
     }
 });
 
 
-window.addEventListener('load',async e=>{
-    const id = (await axios.get(`${URL}provedor/traerId`,configAxios)).data;
+window.addEventListener('load', async e => {
+    const id = (await axios.get(`${URL}provedor/traerId`, configAxios)).data;
     codigo.value = id;
 });
 
-salir.addEventListener('click',e=>{
+salir.addEventListener('click', e => {
     window.close();
 });
 
-document.addEventListener('keyup',e=>{
+document.addEventListener('keyup', e => {
     if (e.key === "Escape") {
         window.close();
     }
 });
 
 
-provedor.addEventListener('keypress',e=>{
+provedor.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         direccion.focus();
     }
 });
 
-direccion.addEventListener('keypress',e=>{
+direccion.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         codPostal.focus();
     }
 });
 
-codPostal.addEventListener('keypress',e=>{
+codPostal.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         localidad.focus();
     }
 });
 
-localidad.addEventListener('keypress',e=>{
+localidad.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         provincia.focus();
     }
 });
 
 
-provincia.addEventListener('keypress',e=>{
+provincia.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         telefono.focus();
     }
 });
 
 
-telefono.addEventListener('keypress',e=>{
+telefono.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         email.focus();
     }
 });
 
-email.addEventListener('keypress',e=>{
+email.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         condIva.focus();
     }
 });
 
-condIva.addEventListener('keypress',e=>{
+condIva.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         e.preventDefault();
         cuit.focus();
     }
 });
 
-cuit.addEventListener('keypress',e=>{
+cuit.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         viajante.focus();
     }
 });
 
-viajante.addEventListener('keypress',e=>{
+viajante.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         contacto.focus();
     }
 });
 
-contacto.addEventListener('keypress',e=>{
+contacto.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         condDGR.focus();
     }
 });
 
-condDGR.addEventListener('keypress',e=>{
+condDGR.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         e.preventDefault();
         nroDGR.focus();
     }
 });
 
-nroDGR.addEventListener('keypress',e=>{
+nroDGR.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         direccionPostal.focus();
     }
 });
 
-direccionPostal.addEventListener('keypress',e=>{
+direccionPostal.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         localidadPostal.focus();
     }
 });
 
-localidadPostal.addEventListener('keypress',e=>{
+localidadPostal.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         codigoPostal.focus();
     }
 });
 
-codigoPostal.addEventListener('keypress',e=>{
+codigoPostal.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         provinciaPostal.focus();
     }
 });
 
-provinciaPostal.addEventListener('keypress',e=>{
+provinciaPostal.addEventListener('keypress', e => {
     if (e.key === "Enter") {
         agregar.focus();
     }

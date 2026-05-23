@@ -5,61 +5,69 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/globales.css">
+    <link rel="stylesheet" href="../assets/css/rustic-theme.css">
     <link rel="stylesheet" href="../clientes/clientes.css">
-    <title>ARREGLAR COMPENSADA/HISTORICA</title>
+    <title>Utilitario // Arreglar Compensada/Histórica</title>
 </head>
-<body class="arreglarCompensada">
-    <h1 class="titulo">Arreglar Compensada</h1>
-    <section class="cliente">
-        <main>
-            <label for="codigo">Codigo</label>
-            <input type="text" autofocus name="codigo" id="codigo">
-        </main>
-        <main>
-            <label for="cliente">Cliente</label>
-            <input type="text" name="cliente" disabled id="cliente">
-        </main>
-    </section>
-    <section class="inputs">
-        <main>
-            <label for="puntoVenta">Punto Venta</label>
-            <input type="number" name="puntoVenta" id="puntoVenta">
-        </main> 
-        <main>            
-            <label for="numero">Numero</label>
-            <input type="number" name="numero" id="numero">
-        </main>
-    </section>
-    <section class="datos">
-        <fieldset>
-            <legend>Datos</legend>
-            <main>
-                <label for="tipoComp">Tipo_Comp</label>
-                <input type="text" name="tipoComp" id="tipoComp">
-            </main>
-            <main>
-                <label for="importe">Importe</label>
-                <input type="number" name="importe" id="importe">
-            </main>
-            <main>
-                <label for="pagado">Pagado</label>
-                <input type="number" name="pagado" id="pagado">
-            </main>
-            <main>
-                <label for="saldo">Saldo</label>
-                <input type="number" name="saldo" id="saldo">
-            </main>
-            <main>
-                <label for="observaciones">Observaciones</label>
-                <input type="text" name="observaciones" id="observaciones">
-            </main>
-        </fieldset>
-        
-    </section>
-    <section class="botones">
-        <button class="modificar">Modificar</button>
-        <button class="salir">Salir</button>
-    </section>
+<body class="rustic-fluid arreglarCompensada">
+    <div class="workshop-shell">
+        <div class="workshop-sheet" style="margin-top: 1rem;">
+            <header class="sheet-head flex justify-between items-center">
+                <h2>Corrección de Datos Históricos</h2>
+                <span class="mono" style="color: #f85149; font-size: 0.85rem; font-weight: 800;">ACCESO RAÍZ // PRECAUCIÓN</span>
+            </header>
+
+            <form class="sheet-body">
+                <div class="workshop-input-group">
+                    <label for="codigo" class="workshop-label">ID_CODIGO_CLIENTE</label>
+                    <input type="text" autofocus name="codigo" id="codigo" class="workshop-input">
+                </div>
+                <div class="workshop-input-group">
+                    <label for="cliente" class="workshop-label">RAZON_SOCIAL</label>
+                    <input type="text" name="cliente" disabled id="cliente" class="workshop-input">
+                </div>
+
+                <div class="workshop-input-group">
+                    <label for="puntoVenta" class="workshop-label">PUNTO_VENTA (POS)</label>
+                    <input type="number" name="puntoVenta" id="puntoVenta" class="workshop-input">
+                </div> 
+                <div class="workshop-input-group">            
+                    <label for="numero" class="workshop-label">NRO_COMPROBANTE</label>
+                    <input type="number" name="numero" id="numero" class="workshop-input">
+                </div>
+
+                <div class="workshop-input-group">
+                    <label for="tipoComp" class="workshop-label">TIPO_DOCUMENTO</label>
+                    <input type="text" name="tipoComp" id="tipoComp" class="workshop-input">
+                </div>
+                <div class="workshop-input-group">
+                    <label for="importe" class="workshop-label">IMPORTE_TOTAL ($)</label>
+                    <input type="number" name="importe" id="importe" class="workshop-input">
+                </div>
+                <div class="workshop-input-group">
+                    <label for="pagado" class="workshop-label">TOTAL_LIQUIDADO ($)</label>
+                    <input type="number" name="pagado" id="pagado" class="workshop-input">
+                </div>
+                <div class="workshop-input-group">
+                    <label for="saldo" class="workshop-label">SALDO_DIFERENCIA ($)</label>
+                    <input type="number" name="saldo" id="saldo" class="workshop-input">
+                </div>
+                <div class="workshop-input-group span-all">
+                    <label for="observaciones" class="workshop-label">MOTIVO_DE_LA_CORRECCION</label>
+                    <input type="text" name="observaciones" id="observaciones" class="workshop-input">
+                </div>
+            </form>
+
+            <footer class="sheet-foot flex-gap-buttons">
+                <button class="workshop-btn primary modificar">
+                    CONFIRMAR CORRECCIÓN
+                </button>
+                <button class="workshop-btn salir">
+                    SALIR <span class="mono" style="opacity: 0.5; font-size: 0.8rem;">[ESC]</span>
+                </button>
+            </footer>
+        </div>
+    </div>
+    <script src="./arreglarCompensadaHistorica.js"></script>
 </body>
-<script src="./arreglarCompensadaHistorica.js"></script>
 </html>

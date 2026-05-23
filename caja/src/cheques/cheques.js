@@ -3,6 +3,7 @@ const sweet = require('sweetalert2');
 
 const axios = require('axios');
 const { configAxios } = require('../assets/js/globales');
+const { default: Swal } = require('sweetalert2');
 require('dotenv').config();
 const URL = process.env.URL;
 
@@ -23,49 +24,61 @@ let cheques = [];
 let seleccionado;
 let subSeleccionado;
 
-window.addEventListener('load', async e =>{
-    cheques = (await axios.get(`${URL}cheques`,configAxios)).data;
+window.addEventListener('load', async e => {
+    cheques = (await axios.get(`${URL}cheques`, configAxios)).data;
     listarCheques(cheques);
 });
 
-buscador.addEventListener('keyup',e=>{
+buscador.addEventListener('keyup', async e => {
     if (buscador.value !== "") {
         if (porNumero.checked) {
-            const chequesFiltrados = cheques.filter(cheque=> cheque.n_cheque.startsWith(buscador.value))
-            listarCheques(chequesFiltrados)
-        }else if(porRazon.checked){
-            const chequesFiltrados = cheques.filter(cheque=> cheque.ent_por.startsWith(buscador.value.toUpperCase()));
-            listarCheques(chequesFiltrados)
-        }else{
-            const chequesFiltrados = cheques.filter(cheque => cheque.i_cheque?.toString().startsWith(buscador.value));
-            listarCheques(chequesFiltrados);
+            const { ok, cheques: chequesFiltrados } = (await axios.get(`${URL}cheques/filter/numero/${buscador.value}`)).data
+            if (ok) {
+                listarCheques(chequesFiltrados)
+            } else {
+                await Swal.fire('Error al buscar cheques')
+            }
+        } else if (porRazon.checked) {
+            const { ok, cheques: chequesFiltrados } = (await axios.get(`${URL}cheques/filter/razon/${buscador.value}`)).data
+            if (ok) {
+                listarCheques(chequesFiltrados)
+            } else {
+                await Swal.fire('Error al buscar cheques')
+            }
+        } else {
+            const { ok, cheques: chequesFiltrados } = (await axios.get(`${URL}cheques/filter/importe/${buscador.value}`)).data
+            if (ok) {
+                listarCheques(chequesFiltrados)
+            } else {
+                await Swal.fire('Error al buscar cheques')
+            }
         }
-    }else{
+    } else {
         listarCheques(cheques);
     };
 });
 
-agregar.addEventListener('click',async e=>{
-    ipcRenderer.send('abrir-ventana',{
-        path:"./cheques/agregar-modificarCheques.html",
-        width:500,
-        height:700,
-        reinicio:true
+agregar.addEventListener('click', async e => {
+    ipcRenderer.send('abrir-ventana', {
+        path: "./cheques/agregar-modificarCheques.html",
+        width: 500,
+        height: 700,
+        reinicio: true
     })
 });
 
 //Seleccionamos cheques
-tbody.addEventListener('click',async e=>{
+tbody.addEventListener('click', async e => {
     seleccionado && seleccionado.classList.remove('seleccionado');
     subSeleccionado && subSeleccionado.classList.remove('subSeleccionado');
 
     if (e.target.nodeName === "TD") {
         seleccionado = e.target.parentNode;
         subSeleccionado = e.target;
-    }else if(e.target.nodeName === "DIV"){
+    } else if (e.target.nodeName === "DIV") {
         seleccionado = e.target.parentNode.parentNode;
         subSeleccionado = e.target.parentNode;
-    }else if(e.target.nodeName === "SPAN"){
+    } else if (e.target.nodeName === "SPAN") {
         seleccionado = e.target.parentNode.parentNode.parentNode;
         subSeleccionado = e.target.parentNode.parentNode;
     }
@@ -75,39 +88,39 @@ tbody.addEventListener('click',async e=>{
 
     if (e.target.innerHTML === "delete") {
         await sweet.fire({
-            title:"Seguro Borrar Cheque?",
-            showCancelButton:true,
-            confirmButtonText:"Aceptar"
-        }).then(async ({isConfirmed})=>{
+            title: "Seguro Borrar Cheque?",
+            showCancelButton: true,
+            confirmButtonText: "Aceptar"
+        }).then(async ({ isConfirmed }) => {
             if (isConfirmed) {
                 try {
-                    await axios.delete(`${URL}cheques/id/${seleccionado.id}`,configAxios);
+                    await axios.delete(`${URL}cheques/id/${seleccionado.id}`, configAxios);
                     tbody.removeChild(seleccionado);
                 } catch (error) {
                     console.log(error)
                     await sweet.fire({
-                        title:"No se pudo borrar el cheque"
+                        title: "No se pudo borrar el cheque"
                     })
                 }
             }
         });
-    }else if(e.target.innerHTML === "edit"){
-        ipcRenderer.send('abrir-ventana',{
-            path:"./cheques/agregar-modificarCheques.html",
-            width:500,
-            height:700,
-            reinicio:false,
+    } else if (e.target.innerHTML === "edit") {
+        ipcRenderer.send('abrir-ventana', {
+            path: "./cheques/agregar-modificarCheques.html",
+            width: 500,
+            height: 700,
+            reinicio: false,
             informacion: seleccionado.id
         });
     }
 });
 
-const listarCheques = async(cheques)=>{
+const listarCheques = async (cheques) => {
     tbody.innerHTML = "";
-    for await(let {_id,f_recibido,n_cheque,banco,f_cheque,plaza,i_cheque,ent_por,entreg_a,domicilio,telefono,tipo} of cheques){
-        const fechaCorta = f_recibido.slice(0,10).split('-',3);
-        const fechaCheque = f_cheque ? f_cheque.slice(0,10).split('-',3) : "0000-00-00";
-        
+    for await (let { _id, f_recibido, n_cheque, banco, f_cheque, plaza, i_cheque, ent_por, entreg_a, domicilio, telefono, tipo } of cheques) {
+        const fechaCorta = f_recibido.slice(0, 10).split('-', 3);
+        const fechaCheque = f_cheque ? f_cheque.slice(0, 10).split('-', 3) : "0000-00-00";
+
         let recibido = fechaCorta[2] + "/" + fechaCorta[1] + "/" + fechaCorta[0]
         let F_cheque = fechaCheque[2] + "/" + fechaCheque[1] + "/" + fechaCheque[0];
 
@@ -151,7 +164,7 @@ const listarCheques = async(cheques)=>{
                 <p class=tooltip>Eliminar</p>
             </div>
         `
-        
+
         tr.appendChild(tdF_recibido);
         tr.appendChild(tdNumero);
         tr.appendChild(tdBanco);
@@ -169,26 +182,26 @@ const listarCheques = async(cheques)=>{
     }
 };
 
-salir.addEventListener('click',async e=>{
+salir.addEventListener('click', async e => {
     location.href = "../index.html";
 });
 
-document.addEventListener('keyup',e=>{
-    if(e.keyCode === 27){
+document.addEventListener('keyup', e => {
+    if (e.keyCode === 27) {
         location.href = "../index.html";
     }
 });
 
-ipcRenderer.on('recibir-informacion',modificarInputs);
+ipcRenderer.on('recibir-informacion', modificarInputs);
 
-function modificarInputs(e,cheque) {
+function modificarInputs(e, cheque) {
     const tr = document.getElementById(cheque._id);
     console.log(cheque)
-    tr.children[0].innerText = cheque.f_recibido.split('-',3).reverse().join('/');
+    tr.children[0].innerText = cheque.f_recibido.split('-', 3).reverse().join('/');
     tr.children[1].innerText = cheque.n_cheque;
     tr.children[2].innerText = cheque.banco;
     tr.children[3].innerText = cheque.plaza;
-    tr.children[4].innerText = cheque.f_cheque.split('-',3).reverse().join('/');;
+    tr.children[4].innerText = cheque.f_cheque.split('-', 3).reverse().join('/');;
     tr.children[5].innerText = cheque.i_cheque.toFixed(2);
     tr.children[6].innerText = cheque.ent_por;
     tr.children[7].innerText = cheque.entreg_a;

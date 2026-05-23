@@ -87,9 +87,9 @@ aceptar.addEventListener("click", async (e) => {
 
 const sumarSaldoProvedor = async () => {
   let provedor = (await axios.get(`${URL}provedor/codigo/${select.value}`)).data;
-    provedor.saldo = saldo.value;
+  provedor.saldo = saldo.value;
   try {
-    await axios.put(`${URL}provedor/codigo/${provedor.codigo}`,provedor);
+    await axios.put(`${URL}provedor/codigo/${provedor.codigo}`, provedor);
   } catch (error) {
     sweet.fire({
       title: "No se pudo modificar el saldo del provedor",

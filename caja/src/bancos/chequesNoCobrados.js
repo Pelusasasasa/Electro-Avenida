@@ -23,10 +23,10 @@ listarCheques = (lista) => {
     }
     return 0;
   });
-  
+
   let total = 0;
   lista.forEach((cheque) => {
-    
+
     const fechaRecibido = cheque.f_recibido.slice(0, 10).split("-", 3) ?? '00/00/00';
     const fechaCheque = cheque.f_cheque?.slice(0, 10).split("-", 3) ?? "00/00/00";
     const importe = cheque.i_cheque.toFixed(2) ?? '0.00';

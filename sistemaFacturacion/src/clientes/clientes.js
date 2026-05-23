@@ -48,40 +48,88 @@ const ponerClientes = (clientes) => {
     return 0;
   });
 
+  let delay = 0;
   for (let cliente of clientes) {
     let nombre = cliente.cliente.toLowerCase();
     texto = texto[0] === '*' ? texto.substr(1) : texto;
     const tr = document.createElement('tr');
     tr.id = cliente._id;
+    tr.style.opacity = '0';
+    tr.style.transform = 'translateY(10px)';
+    tr.style.transition = 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
 
     const tdCodigo = document.createElement('td');
-    const thNombre = document.createElement('th');
+    tdCodigo.className = 'mono';
+    tdCodigo.style.color = 'var(--ws-green)';
+
+    const tdNombre = document.createElement('td');
+    tdNombre.style.fontWeight = '700';
+
     const tdLocalidad = document.createElement('td');
     const tdDireccion = document.createElement('td');
     const tdTelefono = document.createElement('td');
     const tdCondIva = document.createElement('td');
+
     const tdCuit = document.createElement('td');
+    tdCuit.className = 'mono';
+
     const tdSaldo = document.createElement('td');
+    tdSaldo.style.textAlign = 'right';
+    tdSaldo.style.fontWeight = '800';
+    tdSaldo.style.color = 'var(--ws-green-dim)';
+
+    const tdAcciones = document.createElement('td');
+    tdAcciones.className = 'action-cell';
+
+    const btnEdit = document.createElement('button');
+    btnEdit.className = 'action-btn edit';
+    btnEdit.innerHTML = '✏️';
+    btnEdit.title = 'Modificar';
+    btnEdit.onclick = (e) => {
+      e.stopPropagation();
+      // El evento click del TR ya selecciona la fila,
+      // así que aquí solo disparamos la ventana de modificación
+      modificar.click();
+    };
+
+    const btnDelete = document.createElement('button');
+    btnDelete.className = 'action-btn delete';
+    btnDelete.innerHTML = '🗑️';
+    btnDelete.title = 'Eliminar';
+    btnDelete.onclick = (e) => {
+      e.stopPropagation();
+      eliminar.click();
+    };
+
+    tdAcciones.appendChild(btnEdit);
+    tdAcciones.appendChild(btnDelete);
 
     tdCodigo.innerHTML = cliente._id;
-    thNombre.innerHTML = cliente.cliente;
+    tdNombre.innerHTML = cliente.cliente;
     tdLocalidad.innerHTML = cliente.localidad;
     tdDireccion.innerHTML = cliente.direccion;
     tdTelefono.innerHTML = cliente.telefono;
     tdCondIva.innerHTML = cliente.cond_iva;
     tdCuit.innerHTML = cliente.cuit;
-    tdSaldo.innerHTML = cliente.saldo;
+    tdSaldo.innerHTML = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(cliente.saldo);
 
     tr.appendChild(tdCodigo);
-    tr.appendChild(thNombre);
+    tr.appendChild(tdNombre);
     tr.appendChild(tdLocalidad);
     tr.appendChild(tdDireccion);
     tr.appendChild(tdTelefono);
     tr.appendChild(tdCondIva);
     tr.appendChild(tdCuit);
     tr.appendChild(tdSaldo);
+    tr.appendChild(tdAcciones);
 
     resultado.appendChild(tr);
+
+    setTimeout(() => {
+      tr.style.opacity = '1';
+      tr.style.transform = 'translateY(0)';
+    }, delay);
+    delay += 30;
   }
 
   seleccionado = resultado.firstElementChild;

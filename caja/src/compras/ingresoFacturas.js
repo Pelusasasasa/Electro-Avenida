@@ -283,12 +283,12 @@ netoGravado.addEventListener("change", (e) => {
 percepcionIVA.addEventListener("change", (e) => {
   total.value = redondear(
     parseFloat(netoGravado.value) +
-      parseFloat(percepcionIVA.value) +
-      parseFloat(netoNoGravado.value) +
-      parseFloat(retencionDGR.value) +
-      parseFloat(retencionIVA.value) +
-      parseFloat(percepcionDGR.value) +
-      parseFloat(numeroIva.value),
+    parseFloat(percepcionIVA.value) +
+    parseFloat(netoNoGravado.value) +
+    parseFloat(retencionDGR.value) +
+    parseFloat(retencionIVA.value) +
+    parseFloat(percepcionDGR.value) +
+    parseFloat(numeroIva.value),
     2
   );
 });
@@ -296,12 +296,12 @@ percepcionIVA.addEventListener("change", (e) => {
 retencionDGR.addEventListener("change", (e) => {
   total.value = redondear(
     parseFloat(netoGravado.value) +
-      parseFloat(percepcionIVA.value) +
-      parseFloat(netoNoGravado.value) +
-      parseFloat(retencionDGR.value) +
-      parseFloat(retencionIVA.value) +
-      parseFloat(percepcionDGR.value) +
-      parseFloat(numeroIva.value),
+    parseFloat(percepcionIVA.value) +
+    parseFloat(netoNoGravado.value) +
+    parseFloat(retencionDGR.value) +
+    parseFloat(retencionIVA.value) +
+    parseFloat(percepcionDGR.value) +
+    parseFloat(numeroIva.value),
     2
   );
 });
@@ -309,12 +309,12 @@ retencionDGR.addEventListener("change", (e) => {
 percepcionDGR.addEventListener("change", (e) => {
   total.value = redondear(
     parseFloat(netoGravado.value) +
-      parseFloat(percepcionIVA.value) +
-      parseFloat(netoNoGravado.value) +
-      parseFloat(retencionDGR.value) +
-      parseFloat(retencionIVA.value) +
-      parseFloat(percepcionDGR.value) +
-      parseFloat(numeroIva.value),
+    parseFloat(percepcionIVA.value) +
+    parseFloat(netoNoGravado.value) +
+    parseFloat(retencionDGR.value) +
+    parseFloat(retencionIVA.value) +
+    parseFloat(percepcionDGR.value) +
+    parseFloat(numeroIva.value),
     2
   );
 });
@@ -322,12 +322,12 @@ percepcionDGR.addEventListener("change", (e) => {
 retencionIVA.addEventListener("change", (e) => {
   total.value = redondear(
     parseFloat(netoGravado.value) +
-      parseFloat(percepcionIVA.value) +
-      parseFloat(netoNoGravado.value) +
-      parseFloat(retencionDGR.value) +
-      parseFloat(retencionIVA.value) +
-      parseFloat(percepcionDGR.value) +
-      parseFloat(numeroIva.value),
+    parseFloat(percepcionIVA.value) +
+    parseFloat(netoNoGravado.value) +
+    parseFloat(retencionDGR.value) +
+    parseFloat(retencionIVA.value) +
+    parseFloat(percepcionDGR.value) +
+    parseFloat(numeroIva.value),
     2
   );
 });
@@ -699,12 +699,12 @@ const listarFactura = async (factura) => {
 
   total.value = redondear(
     factura.netoNoGravado +
-      factura.netoGravado +
-      factura.iva +
-      factura.p_iva_c +
-      factura.p_dgr_c +
-      factura.r_dgr_c +
-      factura.r_iva_c,
+    factura.netoGravado +
+    factura.iva +
+    factura.p_iva_c +
+    factura.p_dgr_c +
+    factura.r_dgr_c +
+    factura.r_iva_c,
     2
   );
 

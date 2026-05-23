@@ -13,7 +13,7 @@ require("dotenv").config();
 const URL = process.env.URL;
 const sweet = require("sweetalert2");
 const { ipcRenderer } = require("electron");
-const {parsearNumero, formater} = require("../assets/js/formate");
+const { parsearNumero, formater } = require("../assets/js/formate");
 
 const inputFecha = document.querySelector("#fecha");
 const punto = document.querySelector("#punto");
@@ -79,7 +79,7 @@ descripcion.addEventListener("keypress", (e) => {
 });
 
 importe.addEventListener("keypress", (e) => {
-  
+
   if (e.key === "Enter") {
     if (aceptar.classList.contains("none")) {
       modificar.focus();
@@ -158,7 +158,7 @@ modificar.addEventListener("click", async (e) => {
   const movimiento = {};
   movimiento.fecha = fecha.value;
   movimiento.nro_comp =
-  punto.value.padStart(4, "0") + "-" + numero.value.padStart(8, "0");
+    punto.value.padStart(4, "0") + "-" + numero.value.padStart(8, "0");
   movimiento.tMov = tipoMovimiento.value;
   movimiento.idCuenta = tipoCuenta.value;
   movimiento.cuenta = document.querySelector("option[value = " + tipoCuenta.value + "]").innerHTML;
@@ -221,8 +221,8 @@ const rellenarSelect = (lista) => {
 };
 
 
- let ultimaTecla = '';
+let ultimaTecla = '';
 
-  importe.addEventListener('keyup', (e) => {
-    importe.value = parsearNumero(e, importe);
-  });
+importe.addEventListener('keyup', (e) => {
+  importe.value = parsearNumero(e, importe);
+});

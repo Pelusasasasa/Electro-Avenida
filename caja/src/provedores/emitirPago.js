@@ -62,7 +62,7 @@ const agregarComprobante = () => {
   const tdEliminar = document.createElement("td");
 
   tdNumero.innerHTML =
-  puntoVenta.value.padStart(4, "0") + "-" + numero.value.padStart(8, "0");
+    puntoVenta.value.padStart(4, "0") + "-" + numero.value.padStart(8, "0");
   tdTipo.innerHTML = tipo.value;
   tdDescuento.innerHTML = "0.00";
   tdImporte.innerHTML = parseFloat(importe.value).toFixed(2);
@@ -77,9 +77,9 @@ const agregarComprobante = () => {
 
   tbodyComprobante.appendChild(tr);
 
-  total.value = redondear(parseFloat(importe.value) + parseFloat(total.value),2);
-  
-  if(tipo.value === 'Descuento'){
+  total.value = redondear(parseFloat(importe.value) + parseFloat(total.value), 2);
+
+  if (tipo.value === 'Descuento') {
     listaDescuentos.push(parseFloat(importe.value));
   };
 };
@@ -137,12 +137,12 @@ const agregarCheque = () => {
   numeroCheque.focus();
 };
 
-const cambiarNumeroComprobantePago = async(lista) => {
+const cambiarNumeroComprobantePago = async (lista) => {
   for await (let elem of lista) {
     if (elem.children[1].innerText !== "Pago Anticipado" && elem.children[1].innerText !== "Pago A Cuenta") {
       const comprobante = (await axios.get(`${URL}ctactePro/numero/${elem.children[0].innerText}`)).data;
       comprobante.com_pago = numeroVenta.value;
-      await axios.put(`${URL}ctactePro/id/${comprobante._id}`,comprobante);
+      await axios.put(`${URL}ctactePro/id/${comprobante._id}`, comprobante);
     }
   }
 };
@@ -151,7 +151,7 @@ const cargarChequesPropios = async (lista) => {
   lista.forEach(async (cheque) => {
     if (cheque.banco === "BANCO DE ENTRE RIOS") {
       await axios.post(`${URL}cheques`, cheque, configAxios);
-    }else if(cheque.banco === "MERCADO PAGO"){
+    } else if (cheque.banco === "MERCADO PAGO") {
       const tarjeta = {};
       tarjeta.cliente = cheque.entreg_a;
       tarjeta.tipo_comp = 'FACTURA A';
@@ -160,18 +160,18 @@ const cargarChequesPropios = async (lista) => {
       tarjeta.vendedor = 'ELBIO';
       banderaMP = true;
       await axios.post(`${URL}tarjetas`, tarjeta);
-    } else if(cheque.banco !== 'EFECTIVO'){
-        console.log(cheque)
+    } else if (cheque.banco !== 'EFECTIVO') {
+      console.log(cheque)
       await axios.put(`${URL}cheques/${cheque.n_cheque}`, cheque);
     }
-    
+
   });
 };
 
 const descontarSaldoProvedor = async (saldo) => {
   provedor.saldo = saldo - parseFloat(total.value);
   try {
-    await axios.put(`${URL}provedor/codigo/${provedor.codigo}`,provedor);
+    await axios.put(`${URL}provedor/codigo/${provedor.codigo}`, provedor);
   } catch (error) {
     sweet.fire({
       title:
@@ -190,7 +190,7 @@ const listarProvedores = (lista) => {
   };
 
   obtenerProvedor(provedores.value)
-  
+
 };
 
 const ponerEnComprobantePagos = async () => {
@@ -275,7 +275,7 @@ const sumarNumeroPago = async () => {
   }
 };
 
-const obtenerProvedor = async(value) => {
+const obtenerProvedor = async (value) => {
   const { data } = await axios.get(`${URL}provedor/codigo/${provedores.value}`);
   provedor = data;
 
@@ -283,7 +283,7 @@ const obtenerProvedor = async(value) => {
   saldo.value = provedor.saldo.toFixed(2);
   condIva.value = provedor.situa;
   cuit.value = provedor.cuit;
-  
+
 }
 
 window.addEventListener("load", async (e) => {
@@ -307,7 +307,7 @@ window.addEventListener("load", async (e) => {
 provedores.addEventListener("change", async (e) => {
   e.preventDefault();
   obtenerProvedor(provedores.value)
-  
+
 });
 
 //cuanado apretamos enter si hay un numero buscamos en la base de datos el cheque y sino lo pasamos a banco
@@ -389,7 +389,7 @@ aceptar.addEventListener("click", async (e) => {
   let banderaMP = false;
   let saldo = parseFloat(provedor.saldo);
 
-  for(let elem of listaDescuentos){
+  for (let elem of listaDescuentos) {
     saldo = saldo + elem;
     const cuenta = {};
     cuenta.fecha = new Date().toISOString().slice(0, 10);
@@ -412,25 +412,25 @@ aceptar.addEventListener("click", async (e) => {
     }
   };
 
-  
 
-  for(let elem of listaCheques){
-    if (elem.banco === "MERCADO PAGO"){
+
+  for (let elem of listaCheques) {
+    if (elem.banco === "MERCADO PAGO") {
       banderaMP = true
     }
   };
-  
+
   await cargarChequesPropios(listaCheques);
   await cambiarNumeroComprobantePago(document.querySelectorAll("#tbodyComprobante tr"));
 
   await ponerEnComprobantePagos();
-  
+
   if (parseFloat(total.value) === parseFloat(totalCheque.value)) {
     const comprobante = {};
 
     comprobante.fecha = new Date();
     const now = new Date();
-    
+
     comprobante.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
     comprobante.codProv = codigo.value;
     comprobante.rSocial = provedores.value;
@@ -445,7 +445,7 @@ aceptar.addEventListener("click", async (e) => {
         const cuenta = (await axios.get(`${URL}ctactePro/numero/${fact.nro_comp}`)).data;
         cuenta.com_pago = numeroVenta.value;
         try {
-          await axios.put(`${URL}ctactePro/id/${cuenta._id}`,cuenta);
+          await axios.put(`${URL}ctactePro/id/${cuenta._id}`, cuenta);
         } catch (error) {
           console.log(error);
           await sweet.fire({
@@ -459,14 +459,14 @@ aceptar.addEventListener("click", async (e) => {
 
     for await (let elem of listaCheques) {
       if (elem.banco === "BANCO DE ENTRE RIOS") {
-        await generarMovimientoCaja(elem.f_recibido,"I",elem.n_cheque,elem.banco,"BE",
+        await generarMovimientoCaja(elem.f_recibido, "I", elem.n_cheque, elem.banco, "BE",
           elem.i_cheque,
           elem.entreg_a
         );
       }
     };
 
-    await generarMovimientoCaja(comprobante.fecha, "E", numeroVenta.value, "FACTURAS PROVEDORES", "FP", total.value,  banderaMP ? `${provedor.provedor} (MERCADO PAGO)` : provedor.provedor);
+    await generarMovimientoCaja(comprobante.fecha, "E", numeroVenta.value, "FACTURAS PROVEDORES", "FP", total.value, banderaMP ? `${provedor.provedor} (MERCADO PAGO)` : provedor.provedor);
 
     const trs = document.querySelectorAll("#tbodyComprobante tr");
     const trs2 = document.querySelectorAll("#tbodyCheque tr");
@@ -493,7 +493,7 @@ aceptar.addEventListener("click", async (e) => {
       total: total.value,
     });
     location.reload();
-  }else{
+  } else {
     await sweet.fire({
       title: 'Los Totales son distintos',
       text: `El total de los comprobantes es ${total.value} y el total de los cheques es ${totalCheque.value}`
@@ -589,7 +589,7 @@ descuento.addEventListener("keypress", (e) => {
     const tr = document.getElementById("tbodyComprobante").lastElementChild;
     importe.value = redondear(
       (-parseFloat(tr.children[3].innerHTML) * parseFloat(descuento.value)) /
-        100,
+      100,
       2
     );
     importe.focus();

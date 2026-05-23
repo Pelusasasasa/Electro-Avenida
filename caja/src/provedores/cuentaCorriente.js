@@ -6,7 +6,7 @@ function getParameterByName(name) {
 }
 
 const axios = require("axios");
-const {cerrarVentana,configAxios,clickderecho,} = require("../assets/js/globales");
+const { cerrarVentana, configAxios, clickderecho, } = require("../assets/js/globales");
 require("dotenv").config();
 const URL = process.env.URL;
 

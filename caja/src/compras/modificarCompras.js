@@ -154,26 +154,26 @@ modificar.addEventListener("click", (e) => {
   }
 });
 
-eliminar.addEventListener("click", async(e) => {
+eliminar.addEventListener("click", async (e) => {
   const { isConfirmed } = await sweet.fire({
-      title: "Eliminar compra?",
-      confirmButtonText: "Aceptar",
-      showCancelButton: true,
-    });
-    
-    if (isConfirmed) {
-        try {
-          await axios.delete(`${URL}dat_comp/id/${seleccionado.id}`);
-          tbody.removeChild(seleccionado);
-          seleccionado = '';
-          subSeleccionado = '';
-        } catch (error) {
-          console.log(error);
-          await sweet.fire({
-            title: "No se pudo eliminar la compra",
-          });
-        }
-      };
+    title: "Eliminar compra?",
+    confirmButtonText: "Aceptar",
+    showCancelButton: true,
+  });
+
+  if (isConfirmed) {
+    try {
+      await axios.delete(`${URL}dat_comp/id/${seleccionado.id}`);
+      tbody.removeChild(seleccionado);
+      seleccionado = '';
+      subSeleccionado = '';
+    } catch (error) {
+      console.log(error);
+      await sweet.fire({
+        title: "No se pudo eliminar la compra",
+      });
+    }
+  };
 });
 
 salir.addEventListener("click", (e) => {

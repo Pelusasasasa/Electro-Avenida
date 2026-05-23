@@ -28,13 +28,13 @@ const modificar = document.querySelector('.modificar');
 const consultar = document.querySelector('.consultar');
 const salir = document.querySelector('.salir');
 
-ipcRenderer.on('recibir-informacion',async (e,args)=>{
-    const provedor = (await axios.get(`${URL}provedor/codigo/${args}`,configAxios)).data;
+ipcRenderer.on('recibir-informacion', async (e, args) => {
+    const provedor = (await axios.get(`${URL}provedor/codigo/${args}`, configAxios)).data;
     console.log(provedor)
     llenarinputs(provedor);
 });
 
-const llenarinputs = async(provedor)=>{
+const llenarinputs = async (provedor) => {
     console.log(provedor)
     codigo.value = provedor.codigo;
     inputProvedor.value = provedor.provedor;
@@ -57,31 +57,31 @@ const llenarinputs = async(provedor)=>{
 };
 
 
-salir.addEventListener('click',e=>{
+salir.addEventListener('click', e => {
     window.close();
 });
 
-document.addEventListener('keyup',e=>{
-    if (e.key==="Escape") {
+document.addEventListener('keyup', e => {
+    if (e.key === "Escape") {
         window.close();
     }
 });
 
-consultar.addEventListener('click',e=>{
+consultar.addEventListener('click', e => {
     consultar.classList.add('none');
     modificar.classList.remove('none');
 
     const inputs = document.querySelectorAll('input:not(#codigo)')
     const selects = document.querySelectorAll('select');
-    for(let input of inputs){
+    for (let input of inputs) {
         input.removeAttribute('disabled');
     };
-    for(let select of selects){
+    for (let select of selects) {
         select.removeAttribute('disabled')
     };
 });
 
-modificar.addEventListener('click',async e=>{
+modificar.addEventListener('click', async e => {
     const provedorModificado = {};
     provedorModificado.codigo = codigo.value;
     provedorModificado.provedor = inputProvedor.value;
@@ -103,18 +103,18 @@ modificar.addEventListener('click',async e=>{
     provedorModificado.provinciaPostal = provinciaPostal.value;
 
     try {
-        await axios.put(`${URL}provedor/codigo/${provedorModificado.codigo}`,provedorModificado,configAxios);
+        await axios.put(`${URL}provedor/codigo/${provedorModificado.codigo}`, provedorModificado, configAxios);
         await sweet.fire({
-            title:`Provedor ${provedorModificado.provedor} Modificado`
+            title: `Provedor ${provedorModificado.provedor} Modificado`
         });
         window.close();
     } catch (error) {
         sweet.fire({
-            title:"No se pudo modificar el provedor"
+            title: "No se pudo modificar el provedor"
         });
     }
 });
 
-saldo.addEventListener('focus',e=>{
+saldo.addEventListener('focus', e => {
     saldo.select();
 });

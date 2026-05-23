@@ -107,7 +107,7 @@ tbody.addEventListener("click", async (e) => {
             tbody.removeChild(seleccionado);
             total.value = redondear(
               parseFloat(total.value) -
-                parseFloat(seleccionado.children[4].innerHTML),
+              parseFloat(seleccionado.children[4].innerHTML),
               2
             );
           } catch (erro) {

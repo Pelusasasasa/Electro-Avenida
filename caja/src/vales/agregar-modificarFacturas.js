@@ -18,7 +18,7 @@ const aceptar = document.querySelector('.aceptar');
 const modificar = document.querySelector('.modificar');
 const salir = document.querySelector('.salir');
 
-window.addEventListener('load',e=>{
+window.addEventListener('load', e => {
     cerrarVentana();
 
     let date = new Date();
@@ -27,15 +27,15 @@ window.addEventListener('load',e=>{
     let year = date.getFullYear();
 
     month = month === 13 ? 1 : month;
-    month = month<10 ? `0${month}` : month;
-    day = day<10 ? `0${day}` : day;
+    month = month < 10 ? `0${month}` : month;
+    day = day < 10 ? `0${day}` : day;
 
     fecha.value = `${year}-${month}-${day}`
 
 });
 
 //cuando escribimos en el nro de comprobante se pone un guion despues de 4 numeros
-nro_comp.addEventListener('keydown',e=>{
+nro_comp.addEventListener('keydown', e => {
     if (e.target.value.length === 4 && e.keyCode !== 109 && e.keyCode !== 8) {
         nro_comp.value = nro_comp.value + '-';
     }
@@ -44,7 +44,7 @@ nro_comp.addEventListener('keydown',e=>{
     }
 });
 
-aceptar.addEventListener('click',async e=>{
+aceptar.addEventListener('click', async e => {
     const vale = {};
     vale.nro_comp = nro_comp.value;
     vale.rsoc = rSocial.value.toUpperCase();
@@ -52,11 +52,11 @@ aceptar.addEventListener('click',async e=>{
     vale.concepto = concepto.value.toUpperCase();
     vale.fecha = fecha.value;
     vale.tipo = "F";
-    await axios.post(`${URL}vales`,vale,configAxios);
+    await axios.post(`${URL}vales`, vale, configAxios);
     window.close();
 });
 
-modificar.addEventListener('click',async e=>{
+modificar.addEventListener('click', async e => {
     const vales = {};
     vales.nro_comp = nro_comp.value;
     vales.rsoc = rSocial.value.toUpperCase();
@@ -64,62 +64,62 @@ modificar.addEventListener('click',async e=>{
     vales.concepto = concepto.value.toUpperCase();
     vales.fecha = fecha.value;
 
-    await axios.put(`${URL}vales/id/${modificar.id}`,vales,configAxios);
+    await axios.put(`${URL}vales/id/${modificar.id}`, vales, configAxios);
 
     window.close();
 });
 
-salir.addEventListener('click',e=>{
+salir.addEventListener('click', e => {
     window.close();
 });
 
-rSocial.addEventListener('keydown',e=>{
+rSocial.addEventListener('keydown', e => {
     if (e.keyCode === 13) {
         concepto.focus();
     }
 });
 
-concepto.addEventListener('keydown',e=>{
+concepto.addEventListener('keydown', e => {
     if (e.keyCode === 13) {
         imp.focus();
     }
 });
 
-imp.addEventListener('keydown',e=>{
+imp.addEventListener('keydown', e => {
     if (e.keyCode === 13) {
-       if (aceptar.classList.contains('none')) {
-        modificar.focus();
-       }else{
-        aceptar.focus();
-       }
+        if (aceptar.classList.contains('none')) {
+            modificar.focus();
+        } else {
+            aceptar.focus();
+        }
     }
 });
 
-nro_comp.addEventListener('focus',e=>{
+nro_comp.addEventListener('focus', e => {
     nro_comp.select();
 });
 
-rSocial.addEventListener('focus',e=>{
+rSocial.addEventListener('focus', e => {
     rSocial.select();
 });
 
-concepto.addEventListener('focus',e=>{
+concepto.addEventListener('focus', e => {
     concepto.select();
 });
 
 
-ipcRenderer.on('recibir-informacion',async(e,args)=>{
+ipcRenderer.on('recibir-informacion', async (e, args) => {
     h1.innerHTML = "MODIFICAR FACTURA";
 
     aceptar.classList.add('none');
     modificar.classList.remove('none');
     modificar.id = args;
 
-    const factura = (await axios.get(`${URL}vales/id/${args}`,configAxios)).data
+    const factura = (await axios.get(`${URL}vales/id/${args}`, configAxios)).data
     llenarInputs(factura)
 });
 
-const llenarInputs = async(factura)=>{
+const llenarInputs = async (factura) => {
     nro_comp.value = factura.nro_comp;
     rSocial.value = factura.rsoc;
     concepto.value = factura.concepto;
