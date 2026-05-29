@@ -1,6 +1,5 @@
 const { abrirVentana, configAxios } = require('./funciones');
 const { dialog, ipcRenderer, ipcMain } = require('electron');
-const [pedidos] = require('./descargas/descargas');
 
 const axios = require('axios');
 require('dotenv').config;
@@ -16,6 +15,7 @@ const templateMenu = [
         label: 'Pedidos',
         async click() {
           const path = (await dialog.showSaveDialog()).filePath;
+          const [pedidos] = require('./descargas/descargas');
           pedidos((await axios.get(`${URL}pedidos`, configAxios)).data, path);
         },
       },
@@ -81,7 +81,7 @@ const templateMenu = [
       {
         label: 'Arreglar Saldo',
         click() {
-          abrirVentana('clientes/arreglarSaldo.html', 600, 500);
+          abrirVentana('clientes/arreglarSaldo.html', 600, 700);
         },
       },
       {

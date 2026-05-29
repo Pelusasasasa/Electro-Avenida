@@ -1,6 +1,7 @@
-const XLSX = require('xlsx');//llamamos a la libreria xlsx
+const obtenerXLSX = () => require('xlsx');
 
 const pedidos = (Pedidos,path) =>{
+    const XLSX = obtenerXLSX();
     let wb = XLSX.utils.book_new();
     let extencion = "xlsx";
     extencion = path.split('.')[1] ? path.split('.')[1] : extencion;
@@ -19,6 +20,7 @@ const pedidos = (Pedidos,path) =>{
 };
 
 const ventas = (Ventas,path)=>{
+    const XLSX = obtenerXLSX();
 
     let wb = XLSX.utils.book_new();
 
@@ -103,6 +105,7 @@ const ventas = (Ventas,path)=>{
 };
 
 const comprobantes = async (datos,path) =>{
+    const XLSX = obtenerXLSX();
 
     let wb = XLSX.utils.book_new();
 

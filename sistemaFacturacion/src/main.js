@@ -1,15 +1,12 @@
 const fs = require('fs');
-require('update-electron-app')();
 require('dotenv').config();
 const axios = require("axios")
 const path = require('path');
 const url = require('url');
 const { app, BrowserWindow, ipcMain, Menu, dialog, MenuItem } = require('electron');
-const { autoUpdater } = require('electron-updater');
 
 const { abrirVentana, configAxios } = require('./funciones');
 const templateMenu = require('./menu');
-const [pedidos, ventas, comprobantes] = require('./descargas/descargas');
 const { mostrarMenu } = require('./menuSecundario/menuSecundario');
 
 
@@ -43,13 +40,21 @@ function crearVentanaPrincipal() {
     });
     ventanaPrincipal.once('ready-to-show', e => {
         ventanaPrincipal.show();
+        setTimeout(verificarActualizaciones, 10000);
     })
     ventanaPrincipal.loadFile('src/index.html')
     ventanaPrincipal.maximize();
-    ventanaPrincipal.once('listo para mostrar', () => {
-        autoUpdater.checkForUpdatesAndNotify();
-    });
 };
+
+function verificarActualizaciones() {
+    try {
+        require('update-electron-app')();
+        const { autoUpdater } = require('electron-updater');
+        autoUpdater.checkForUpdatesAndNotify();
+    } catch (error) {
+        console.log(error);
+    }
+}
 
 ipcMain.handle('elegirPath', async e => {
     const path = (await dialog.showSaveDialog()).filePath;
@@ -348,6 +353,7 @@ const abrirVentanaImprimir = async (texto, width, height, reinicio, show = false
 //Aca hacemos que se descargue un excel Ya sea con los pedidos o con las ventas
 
 async function descargas(nombreFuncion, ventasTraidas, path) {
+    const [pedidos, ventas, comprobantes] = require('./descargas/descargas');
     if (nombreFuncion === "Pedidos") {
         pedidos((await axios.get(`${URL}pedidos`, configAxios)).data, path)
     } else if (nombreFuncion === "Ventas") {
@@ -362,11 +368,3 @@ const mainMenu = Menu.buildFromTemplate(templateMenu)
 
 Menu.setApplicationMenu(mainMenu)
 module.exports = { crearVentanaPrincipal, abrirVentana }
-
-autoUpdater.on('actualización-disponible', () => {
-    mainWindow.webContents.send('actualización_disponible');
-});
-
-autoUpdater.on('actualización-descargada', () => {
-    mainWindow.webContents.send('actualización_descargada');
-});

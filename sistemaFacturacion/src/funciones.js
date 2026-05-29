@@ -8,9 +8,17 @@ require('dotenv').process;
 const URL = process.env.URL;
 const sweet = require('sweetalert2');
 
-let Afip = require('@afipsdk/afip.js');
-let afip = new Afip({ CUIT: 27165767433 });
 const prueba = btoa(`electroAvenida:Elbio935`);
+let afip;
+
+function obtenerAfip() {
+  if (!afip) {
+    const Afip = require('@afipsdk/afip.js');
+    afip = new Afip({ CUIT: 27165767433 });
+  }
+
+  return afip;
+}
 
 function redondear(numero, decimales) {
   const signo = numero >= 0 ? 1 : -1;
@@ -300,7 +308,7 @@ async function generarQR(texto) {
 }
 
 const verEstadoServidorAfip = async () => {
-  const serverStatus = await afip.ElectronicBilling.getServerStatus();
+  const serverStatus = await obtenerAfip().ElectronicBilling.getServerStatus();
   console.log(serverStatus);
 };
 
@@ -308,6 +316,7 @@ const verEstadoServidorAfip = async () => {
 const subirAAfip = async (venta) => {
   alerta.children[1].children[0].innerHTML = 'Esperando Confirmacion de AFIP';
   const fecha = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().split('T')[0];
+  const afip = obtenerAfip();
 
   const serverStatus = await afip.ElectronicBilling.getServerStatus();
   console.log(serverStatus);
@@ -381,7 +390,7 @@ const subirAAfip = async (venta) => {
 
 //funcion que hace que traiga una persona de la afip
 const buscarPersonaPorCuit = async (valor) => {
-  const { nombre, razonSocial, apellido, domicilio } = await afip.RegisterScopeThirteen.getTaxpayerDetails(valor);
+  const { nombre, razonSocial, apellido, domicilio } = await obtenerAfip().RegisterScopeThirteen.getTaxpayerDetails(valor);
 
   const persona = {
     nombre: razonSocial ? razonSocial : nombre + ' ' + apellido,
@@ -400,7 +409,7 @@ const buscarPersonaPorDNI = async (valor) => {
   let persona = '';
 
   try {
-    persona = await afip.RegisterScopeThirteen.getTaxpayerDetails('27' + valor + digito);
+    persona = await obtenerAfip().RegisterScopeThirteen.getTaxpayerDetails('27' + valor + digito);
     console.log(persona);
   } catch (error) {
     console.log(error);
@@ -409,7 +418,7 @@ const buscarPersonaPorDNI = async (valor) => {
   if (!persona | (persona.tipoClave === 'CDI')) {
     const digito = calcularDigitoVerificador('20' + valor);
     try {
-      persona = await afip.RegisterScopeThirteen.getTaxpayerDetails('20' + valor + digito);
+      persona = await obtenerAfip().RegisterScopeThirteen.getTaxpayerDetails('20' + valor + digito);
     } catch (error) {
       console.log(error);
     }
@@ -418,7 +427,7 @@ const buscarPersonaPorDNI = async (valor) => {
   if (!persona) {
     const digito = calcularDigitoVerificador('23' + valor);
     try {
-      persona = await afip.RegisterScopeThirteen.getTaxpayerDetails('23' + valor + digito);
+      persona = await obtenerAfip().RegisterScopeThirteen.getTaxpayerDetails('23' + valor + digito);
     } catch (error) {
       await sweet.fire('Error', 'No se encontro la persona en la AFIP', 'error');
       console.log(error);
@@ -482,7 +491,7 @@ const ponerNotificaciones = async (texto, titulo = '!Info') => {
 };
 
 const ultimasFacturas = async (puntoVenta, tipoComp) => {
-  const lastVoucher = await afip.ElectronicBilling.getLastVoucher(puntoVenta, tipoComp);
+  const lastVoucher = await obtenerAfip().ElectronicBilling.getLastVoucher(puntoVenta, tipoComp);
   return lastVoucher;
 };
 

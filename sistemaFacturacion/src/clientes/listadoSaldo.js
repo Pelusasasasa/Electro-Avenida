@@ -10,6 +10,8 @@ let Clientes = {};
 
 const { configAxios } = require('../funciones');
 
+const descargar = document.getElementById('descargar');
+
 const tbody = document.querySelector('.tbody');
 const fecha = document.querySelector('.fecha');
 const fechaHoy = new Date();
@@ -71,7 +73,6 @@ const traerSaldo = async () => {
 };
 traerSaldo();
 
-const descargar = document.querySelector('.descargar');
 descargar.addEventListener('click', async (e) => {
   let path = await ipcRenderer.invoke('elegirPath');
   let extencion = 'xlsx';
@@ -111,7 +112,7 @@ const mostrarLista = (clientes) => {
                 <td class ="inicio">${cliente.direccion.slice(0, 25)}</td>
                 <td class ="inicio">${cliente.cond_iva}</td>
                 <td class ="inicio">${cliente.telefono}</td>
-                <td>${cliente.saldo}</td>
+                <td>${cliente.saldo?.toFixed(2)}</td>
             </tr>
         `;
     } else if (situacion === 'negro' && (parseFloat(cliente.saldo) !== 0 || parseFloat(cliente.saldo_p) !== 0)) {
@@ -122,8 +123,8 @@ const mostrarLista = (clientes) => {
                     <td class ="inicio">${cliente.direccion}</td>
                     <td class ="inicio">${cliente.cond_iva}</td>
                     <td class ="inicio">${cliente.telefono}</td>
-                    <td>${cliente.saldo}</td>
-                    <td>${cliente.saldo_p}</td>
+                    <td>${cliente.saldo?.toFixed(2)}</td>
+                    <td>${cliente.saldo_p?.toFixed(2)}</td>
                 </tr>
             `;
     }

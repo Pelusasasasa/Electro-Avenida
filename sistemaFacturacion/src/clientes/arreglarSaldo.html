@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,41 +8,351 @@
     <link rel="stylesheet" href="../assets/css/globales.css">
     <link rel="stylesheet" href="../assets/css/rustic-theme.css">
     <link rel="stylesheet" href="./clientes.css">
+    <style>
+        /* Custom Premium Overrides for Arreglar Saldo Utility */
+        body.arreglarSaldo {
+            background: radial-gradient(circle at top right, #eef2f7 0%, #dfe5ec 100%);
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            display: flex;
+            align-items: stretch;
+            justify-content: stretch;
+        }
+
+        .workshop-shell {
+            padding: 0 !important;
+            margin: 0 !important;
+            width: 100vw;
+            height: 100vh;
+            max-width: 100vw;
+            max-height: 100vh;
+            overflow: hidden;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .workshop-sheet {
+            width: 100%;
+            height: 100%;
+            max-width: 100% !important;
+            max-height: 100% !important;
+            border-radius: 0;
+            border: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            overflow: hidden;
+            transition: none;
+            margin: 0 !important;
+        }
+
+        .workshop-sheet:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .sheet-head {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            padding: 2rem 2.5rem;
+            position: relative;
+            border-bottom: 2px solid var(--ws-green);
+        }
+
+        .sheet-head::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--ws-green) 0%, #68d391 100%);
+        }
+
+        .sheet-head h2 {
+            font-size: 1.4rem;
+            color: #f8fafc;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 0;
+        }
+
+        .sheet-head h2 svg {
+            color: var(--ws-green);
+            width: 20px;
+            height: 20px;
+        }
+
+        .sheet-head p {
+            margin: 0.5rem 0 0 0;
+            color: #94a3b8;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .sheet-body {
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.75rem;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .workshop-input-group {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .workshop-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #475569;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .workshop-label-badge {
+            background: #e2e8f0;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            color: #475569;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .workshop-input {
+            width: 100%;
+            border: 2px solid #cbd5e1;
+            padding: 1rem 1.25rem;
+            font-size: 1.15rem;
+            border-radius: 10px;
+            transition: all 0.25s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+            color: #0f172a;
+        }
+
+        .workshop-input:focus {
+            border-color: var(--ws-green);
+            box-shadow: 0 0 0 4px rgba(58, 182, 92, 0.15), inset 0 2px 4px rgba(0, 0, 0, 0.01);
+            background: #fff;
+        }
+
+        /* Read-only / disabled state styling */
+        .workshop-input:disabled {
+            background-color: #f1f5f9;
+            border-color: #e2e8f0;
+            color: #64748b;
+            font-weight: 600;
+            cursor: not-allowed;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-icon-adornment {
+            position: absolute;
+            left: 1.25rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #94a3b8;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.15rem;
+        }
+
+        .input-with-icon .workshop-input {
+            padding-left: 2.5rem;
+        }
+
+        /* Keyboard Tip Box */
+        .info-tip-box {
+            background: rgba(58, 182, 92, 0.06);
+            border: 1px dashed rgba(58, 182, 92, 0.3);
+            border-radius: 10px;
+            padding: 1rem 1.25rem;
+            margin-top: 0.5rem;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .info-tip-box svg {
+            color: var(--ws-green);
+            flex-shrink: 0;
+            margin-top: 2px;
+            width: 16px;
+            height: 16px;
+        }
+
+        .info-tip-box p {
+            margin: 0;
+            font-size: 0.8rem;
+            line-height: 1.4;
+            color: #2e7d32;
+            font-weight: 500;
+        }
+
+        .info-tip-box kbd {
+            background: #fff;
+            border: 1px solid #c2e0c6;
+            border-radius: 4px;
+            box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+            color: #2e7d32;
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            line-height: 1;
+            padding: 2px 4px;
+            font-family: inherit;
+        }
+
+        .sheet-foot {
+            background: #f8fafc;
+            padding: 1.5rem 2.5rem;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.25rem;
+        }
+
+        .workshop-btn {
+            font-size: 0.95rem;
+            font-weight: 600;
+            padding: 0.85rem 1.75rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            text-transform: none;
+            letter-spacing: normal;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+
+        .workshop-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .workshop-btn.primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+            border: none;
+        }
+
+        .workshop-btn.primary:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        .workshop-btn.salir {
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            color: #4b5563;
+        }
+
+        .workshop-btn.salir:hover {
+            background: #f3f4f6;
+            color: #1f2937;
+            border-color: #9ca3af;
+            transform: translateY(-2px);
+        }
+
+        /* Animate in */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .workshop-sheet {
+            animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    </style>
 </head>
 <body class="rustic-fluid arreglarSaldo">
     <div class="workshop-shell">
-        <div class="workshop-sheet" style="margin-top: 2rem;">
+        <div class="workshop-sheet">
             <header class="sheet-head">
-                <h2>Utilidad de Sistema // Corrección de Saldo</h2>
+                <h2>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                    </svg>
+                    Corrección de Saldo
+                </h2>
+                <p>Utilidad de Sistema // Mantenimiento de cuentas de clientes</p>
             </header>
 
             <div class="sheet-body">
                 <div class="workshop-input-group">
-                    <label for="codigo" class="workshop-label">ID_CODIGO_CLIENTE</label>
-                    <input autofocus type="text" id="codigo" name="codigo" class="workshop-input">
-                </div>
-                <div class="workshop-input-group">
-                    <label for="nombre" class="workshop-label">RAZON_SOCIAL</label>
-                    <input type="text" name="nombre" disabled id="nombre" class="workshop-input">
+                    <label for="codigo" class="workshop-label">
+                        Código de Cliente
+                        
+                    </label>
+                    <input autofocus type="text" id="codigo" name="codigo" class="workshop-input" placeholder="Ingrese código y presione Enter">
                 </div>
                 
                 <div class="workshop-input-group">
-                    <label for="saldo" class="workshop-label">NUEVO_SALDO_OPERATIVO ($)</label>
-                    <input type="number" name="saldo" id="saldo" class="workshop-input">
+                    <label for="nombre" class="workshop-label">
+                        Razón Social
+                        
+                    </label>
+                    <input type="text" name="nombre" disabled id="nombre" class="workshop-input" placeholder="Nombre o Razón Social del cliente">
+                </div>
+                
+                <div class="workshop-input-group">
+                    <label for="saldo" class="workshop-label">
+                        Nuevo Saldo Operativo
+                        
+                    </label>
+                    <div class="input-with-icon">
+                        <span class="input-icon-adornment">$</span>
+                        <input type="number" name="saldo" id="saldo" class="workshop-input" placeholder="0.00">
+                    </div>
                 </div>
                 
                 <div class="workshop-input-group saldo_P none">
-                    <label for="saldo_P" class="workshop-label">SALDO_P_DIFERIDO ($)</label>
-                    <input type="number" name="saldo_P" id="saldo_P" class="workshop-input">
+                    <label for="saldo_P" class="workshop-label">
+                        Saldo Pendiente / Diferido
+                        <span class="workshop-label-badge">SALDO_P_DIFERIDO ($)</span>
+                    </label>
+                    <div class="input-with-icon">
+                        <span class="input-icon-adornment">$</span>
+                        <input type="number" name="saldo_P" id="saldo_P" class="workshop-input" placeholder="0.00">
+                    </div>
                 </div>
+
+                
             </div>
 
-            <footer class="sheet-foot flex-gap-buttons">
-                <button class="workshop-btn primary guardar">
-                    GUARDAR CAMBIOS
-                </button>
+            <footer class="sheet-foot">
                 <button class="workshop-btn salir">
-                    SALIR <span class="mono" style="opacity: 0.5; font-size: 0.8rem;">[ESC]</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" />
+                    </svg>
+                    Salir <span class="mono" style="opacity: 0.6; font-size: 0.75rem; margin-left: 4px;">[ESC]</span>
+                </button>
+                <button class="workshop-btn primary guardar">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                    Guardar Cambios
                 </button>
             </footer>
         </div>

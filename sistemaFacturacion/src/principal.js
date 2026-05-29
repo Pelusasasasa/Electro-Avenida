@@ -1,5 +1,4 @@
 const { ipcRenderer } = require('electron');
-const puppetter = require('puppeteer');
 const sweet = require('sweetalert2');
 
 const axios = require('axios');
@@ -8,42 +7,46 @@ const URL = process.env.URL;
 
 ipcRenderer.send('abrir-menu');
 
-let vendedores = [];
 let vendedor;
 let acceso;
 let empresa;
 
-const { verEstadoServidorAfip, configAxios, verificarUsuarios, ponerNotificaciones } = require('./funciones');
-
-const notificaciones = require('node-notifier');
+const { configAxios, verificarUsuarios, ponerNotificaciones } = require('./funciones');
 
 document.addEventListener('DOMContentLoaded', async () => {
-  vendedores = (await axios.get(`${URL}usuarios`, configAxios)).data;
   obtenerDolar();
 });
 
 const avisarDolar = async () => {
+  const puppetter = require('puppeteer');
   const browser = await puppetter.launch({ headless: true });
   const page = await browser.newPage();
-  await page.goto('https://www.bna.com.ar/Personas');
-  const selector = '.cotizacion';
-  const dolares = await page.evaluate(() => {
-    const tr = document.querySelector('.cotizacion tbody tr ');
-    return tr.children[2].innerText;
-  });
+  try {
+    await page.goto('https://www.bna.com.ar/Personas');
+    const dolares = await page.evaluate(() => {
+      const tr = document.querySelector('.cotizacion tbody tr ');
+      return tr.children[2].innerText;
+    });
 
-  return dolares;
+    return dolares;
+  } finally {
+    await browser.close();
+  }
 };
 
 const obtenerDolar = async () => {
   setTimeout(async () => {
-    const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`, configAxios)).data.dolar);
-    const dolarBNA = parseFloat((await avisarDolar()).replace(',', '.')) + 1;
+    try {
+      const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`, configAxios)).data.dolar);
+      const dolarBNA = parseFloat((await avisarDolar()).replace(',', '.')) + 1;
 
-    if (dolarBNA !== dolarSistema) {
-      ponerNotificaciones(`El dolar del sistema: ${dolarSistema} es distinto al dolar de el BNA: ${dolarBNA}`);
+      if (dolarBNA !== dolarSistema) {
+        ponerNotificaciones(`El dolar del sistema: ${dolarSistema} es distinto al dolar de el BNA: ${dolarBNA}`);
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }, 0);
+  }, 5000);
 };
 
 const body = document.querySelector('body');
