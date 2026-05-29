@@ -87,9 +87,7 @@ const ponerClientes = (clientes) => {
     btnEdit.title = 'Modificar';
     btnEdit.onclick = (e) => {
       e.stopPropagation();
-      // El evento click del TR ya selecciona la fila,
-      // así que aquí solo disparamos la ventana de modificación
-      modificar.click();
+      modificarCliente()
     };
 
     const btnDelete = document.createElement('button');
@@ -98,7 +96,7 @@ const ponerClientes = (clientes) => {
     btnDelete.title = 'Eliminar';
     btnDelete.onclick = (e) => {
       e.stopPropagation();
-      eliminar.click();
+      eliminarCliente()
     };
 
     tdAcciones.appendChild(btnEdit);
@@ -179,20 +177,26 @@ agregar.addEventListener('click', (e) => {
   ipcRenderer.send('abrir-ventana-agregar-cliente', vendedor);
 });
 
-modificar.addEventListener('click', async () => {
-  seleccionado = document.querySelector('.seleccionado');
-  if (seleccionado) {
-    ipcRenderer.send('abrir-ventana-modificar-cliente', [seleccionado.id, acceso, vendedor]);
-  } else {
-    await sweet.fire({
-      title: 'Cliente no Seleccionado',
-      returnFocus: false,
-    });
-    buscarCliente.focus();
-  }
+salir.addEventListener('click', (e) => {
+  location.href = '../index.html';
 });
 
-eliminar.addEventListener('click', async (e) => {
+document.addEventListener('keyup', async (e) => {
+  if (e.key === 'Escape') {
+    location.href = '../index.html';
+  }
+  subSeleccionado = await recorrerFlechas(e);
+  seleccionado = subSeleccionado && subSeleccionado.parentNode;
+  subSeleccionado &&
+    subSeleccionado.scrollIntoView({
+      block: 'center',
+      inline: 'center',
+      behavior: 'smooth',
+    });
+});
+
+
+const eliminarCliente = async() => {
   const clienteEliminar = document.querySelector('.seleccionado');
   if (clienteEliminar) {
     const cliente = clienteEliminar.children[1].innerHTML;
@@ -227,22 +231,17 @@ eliminar.addEventListener('click', async (e) => {
     buscarCliente.select();
     buscarCliente.focus();
   }
-});
+}
 
-salir.addEventListener('click', (e) => {
-  location.href = '../index.html';
-});
-
-document.addEventListener('keyup', async (e) => {
-  if (e.key === 'Escape') {
-    location.href = '../index.html';
-  }
-  subSeleccionado = await recorrerFlechas(e);
-  seleccionado = subSeleccionado && subSeleccionado.parentNode;
-  subSeleccionado &&
-    subSeleccionado.scrollIntoView({
-      block: 'center',
-      inline: 'center',
-      behavior: 'smooth',
+const modificarCliente = async() => {
+  seleccionado = document.querySelector('.seleccionado');
+  if (seleccionado) {
+    ipcRenderer.send('abrir-ventana-modificar-cliente', [seleccionado.id, acceso, vendedor]);
+  } else {
+    await sweet.fire({
+      title: 'Cliente no Seleccionado',
+      returnFocus: false,
     });
-});
+    buscarCliente.focus();
+  }
+}

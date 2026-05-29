@@ -2,28 +2,28 @@
 
 :root {
   /* Green & White Industrial Palette */
-  --ws-bg: #f5f7f9;          /* Light Workspace Background */
+  --ws-bg: #f4f6f8;          /* Light Workspace Background for high contrast layout */
   --ws-surface: #ffffff;     /* White List/Surface */
-  --ws-elevated: #f1f3f5;
+  --ws-elevated: #f8f9fa;
   
-  --ws-green: #3ab65c;       /* Classic System Green */
-  --ws-green-dim: #2e914a;
-  --ws-green-low: rgba(58, 182, 92, 0.1);
+  --ws-green: #2e914a;       /* Darker System Green for contrast */
+  --ws-green-dim: #1e6b33;
+  --ws-green-low: rgba(46, 145, 74, 0.12);
   
-  --ws-steel: #455a64;       /* Industrial Steel Gray */
-  --ws-steel-low: rgba(69, 90, 100, 0.05);
+  --ws-steel: #37474f;       /* Darker Steel Gray */
+  --ws-steel-low: rgba(55, 71, 79, 0.08);
   
-  --ws-text: #2d3436;        /* Darker text for readability */
-  --ws-text-muted: #636e72;
+  --ws-text: #000000;        /* Pure black text for maximum readability */
+  --ws-text-muted: #424242;  /* Darker muted text */
   
-  --ws-border: rgba(0, 0, 0, 0.08);
-  --ws-border-heavy: rgba(0, 0, 0, 0.15);
+  --ws-border: #000000;      /* Strong solid black border for tr/td */
+  --ws-border-heavy: #000000;/* Strong solid black border heavy */
   
-  --ws-radius: 10px;
-  --ws-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  --ws-shadow-heavy: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --ws-radius: 8px;
+  --ws-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  --ws-shadow-heavy: 0 10px 30px rgba(0, 0, 0, 0.12);
   
-  --ws-transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --ws-transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .rustic-fluid {
@@ -47,6 +47,13 @@
   height: 100vh;
   padding: 1.5rem;
   box-sizing: border-box;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.agregarCliente .workshop-shell,
+.modificarCliente .workshop-shell {
+  padding: 0;
 }
 
 .workshop-header {
@@ -151,10 +158,10 @@
 
 .workshop-table td {
   padding: 1.4rem 1rem;     /* Increased cell padding */
-  border-bottom: 1px solid var(--ws-border);
+  border-bottom: 2px solid var(--ws-border);
   font-size: 1.15rem;       /* Enlarged text for table cells */
   color: var(--ws-text);
-  font-weight: 500;
+  font-weight: 600;         /* Slightly bolder text for better contrast */
 }
 
 .workshop-table th {
@@ -168,7 +175,7 @@
   top: 0;
   z-index: 10;
   letter-spacing: 0.08em;
-  border-bottom: 3px solid var(--ws-border);
+  border-bottom: 4px solid var(--ws-border);
 }
 
 .workshop-table tr.seleccionado td {
@@ -227,12 +234,16 @@
 
 .workshop-sheet {
   background: var(--ws-surface);
-  border: 1px solid var(--ws-border-heavy);
-  border-radius: var(--ws-radius);
+  border: none;
+  border-radius: 0;
   width: 100%;
-  max-width: 850px;
-  margin: 0 auto;
-  box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+  max-width: 100%;
+  height: 100vh;
+  max-height: 100vh;
+  margin: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -261,4 +272,43 @@
   text-transform: uppercase;
   margin-bottom: 0.3rem;
   display: block;
+}
+
+.mt-6 {
+  margin-top: 3rem !important;
+}
+
+/* --- Form Layout (Grid) --- */
+.sheet-body {
+  padding: 2.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 2rem;
+  overflow-y: auto;
+  flex: 1;
+  background-color: #d8deda; /* Highly visible sage-grey background for clear input contrast */
+}
+
+.workshop-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.workshop-input-group.span-all {
+  grid-column: span 2;
+}
+
+.workshop-input-group input,
+.workshop-input-group select {
+  width: 100%;
+}
+
+.sheet-foot {
+  padding: 1.5rem 2.5rem;
+  background: var(--ws-elevated);
+  border-top: 2px solid var(--ws-border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
 }
