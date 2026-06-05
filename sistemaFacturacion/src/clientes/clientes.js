@@ -60,7 +60,8 @@ const ponerClientes = (clientes) => {
 
     const tdCodigo = document.createElement('td');
     tdCodigo.className = 'mono';
-    tdCodigo.style.color = 'var(--ws-green)';
+    tdCodigo.style.color = '#1a6e31';  /* Dark green — high contrast on white */
+    tdCodigo.style.fontWeight = '700';
 
     const tdNombre = document.createElement('td');
     tdNombre.style.fontWeight = '700';
@@ -76,7 +77,9 @@ const ponerClientes = (clientes) => {
     const tdSaldo = document.createElement('td');
     tdSaldo.style.textAlign = 'right';
     tdSaldo.style.fontWeight = '800';
-    tdSaldo.style.color = 'var(--ws-green-dim)';
+    tdSaldo.style.fontSize = '1.4rem';  /* Extra large for money amount */
+    tdSaldo.style.color = '#1a4e2f';    /* Very dark green — excellent contrast */
+    tdSaldo.style.letterSpacing = '0.02em';
 
     const tdAcciones = document.createElement('td');
     tdAcciones.className = 'action-cell';

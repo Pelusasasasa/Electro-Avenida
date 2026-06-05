@@ -68,15 +68,15 @@
 }
 
 .workshop-header .title {
-  font-weight: 700;
-  font-size: 1.4rem;        /* Enlarged title */
+  font-weight: 800;
+  font-size: 1.7rem;        /* Large title for easy reading */
   color: #ffffff;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .workshop-header .title span {
-  color: var(--ws-green);
+  color: #6ddb8a;           /* Brighter green for contrast on dark header */
 }
 
 /* --- Improved Buttons (Tactile & Premium) --- */
@@ -137,17 +137,24 @@
 }
 
 .workshop-header .workshop-input {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.14);
+  border: 2px solid rgba(255, 255, 255, 0.5); /* More visible border */
   color: #ffffff;
   width: 100%;
+  font-size: 1.3rem;        /* Larger search text */
+  font-weight: 600;
+  letter-spacing: 0.03em;
 }
 
-/* --- Table (White Background & Larger Text) --- */
+.workshop-header .workshop-input::placeholder {
+  color: rgba(255, 255, 255, 0.65); /* Visible placeholder */
+}
+
+/* --- Table (White Background & High-Contrast for Elderly Users) --- */
 
 .workshop-table-card {
   background: var(--ws-surface);
-  border: 1px solid var(--ws-border-heavy);
+  border: 2px solid var(--ws-border-heavy);
   border-radius: var(--ws-radius);
   flex: 1;
   overflow: hidden;
@@ -157,32 +164,38 @@
 }
 
 .workshop-table td {
-  padding: 1.4rem 1rem;     /* Increased cell padding */
-  border-bottom: 2px solid var(--ws-border);
-  font-size: 1.15rem;       /* Enlarged text for table cells */
-  color: var(--ws-text);
-  font-weight: 600;         /* Slightly bolder text for better contrast */
+  padding: 1.6rem 1.2rem;   /* Taller rows for easier reading */
+  border-bottom: 2px solid #000000;
+  font-size: 1.35rem;       /* Bigger text for elderly users */
+  color: #111111;           /* Near-black for maximum contrast */
+  font-weight: 600;
 }
 
 .workshop-table th {
-  background: var(--ws-elevated);
-  padding: 1.5rem 1rem;
-  font-size: 0.85rem;
+  background: #1e2124;      /* Dark header for maximum contrast */
+  padding: 1.6rem 1.2rem;
+  font-size: 1rem;          /* Larger header labels */
   font-weight: 800;
-  color: var(--ws-text-muted);
+  color: #ffffff;           /* Pure white on dark = excellent contrast */
   text-transform: uppercase;
   position: sticky;
   top: 0;
   z-index: 10;
-  letter-spacing: 0.08em;
-  border-bottom: 4px solid var(--ws-border);
+  letter-spacing: 0.06em;
+  border-bottom: 4px solid #000000;
+}
+
+.workshop-table tr:hover td {
+  background: #e8f5e9;      /* Soft green tint on hover */
+  color: #000000;
 }
 
 .workshop-table tr.seleccionado td {
-  background: var(--ws-green-low);
+  background: #c8e6c9;      /* Clearly visible green selection */
   border-bottom-color: var(--ws-green);
-  color: var(--ws-green-dim);
-  font-weight: 700;          /* Bold selected text */
+  color: #1b5e20;           /* Deep dark green text — high contrast */
+  font-weight: 800;
+  font-size: 1.4rem;        /* Slightly larger when selected */
 }
 
 /* --- Spacing --- */
