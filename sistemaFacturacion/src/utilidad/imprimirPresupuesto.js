@@ -2,7 +2,7 @@ const { ipcRenderer } = require('electron');
 const axios = require('axios');
 const { configAxios } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const puntoVenta = document.querySelector('#puntoVenta');
 const numero = document.querySelector('#numero');
@@ -19,20 +19,20 @@ aceptar.addEventListener('click', async (e) => {
   let cliente;
   if (punto === '0001' || punto === '0002' || punto === '0003') {
     tipoVenta = 'Presupuesto';
-    venta = (await axios.get(`${URL}presupuesto/${comprobante}`)).data;
-    cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`)).data;
+    venta = (await axios.get(`${apiUrl}presupuesto/${comprobante}`)).data;
+    cliente = (await axios.get(`${apiUrl}clientes/id/${venta.cliente}`)).data;
   } else if (punto === '0004') {
     tipoVenta = 'Recibos_P';
-    venta = (await axios.get(`${URL}recibos/forNro_comp/${comprobante}`)).data;
-    cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`)).data;
+    venta = (await axios.get(`${apiUrl}recibos/forNro_comp/${comprobante}`)).data;
+    cliente = (await axios.get(`${apiUrl}clientes/id/${venta.codigo}`)).data;
   } else if (punto === '0007') {
     tipoVenta = 'Prestamo';
-    venta = (await axios.get(`${URL}prestamos/forNumber/${comprobante}`)).data;
-    cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`)).data;
+    venta = (await axios.get(`${apiUrl}prestamos/forNumber/${comprobante}`)).data;
+    cliente = (await axios.get(`${apiUrl}clientes/id/${venta.codigo}`)).data;
   } else if (punto === '0006') {
     tipoVenta = 'Remito';
-    venta = (await axios.get(`${URL}remitos/forNumber/${comprobante}`)).data;
-    cliente = (await axios.get(`${URL}clientes/id/${venta.idCliente}`)).data;
+    venta = (await axios.get(`${apiUrl}remitos/forNumber/${comprobante}`)).data;
+    cliente = (await axios.get(`${apiUrl}clientes/id/${venta.idCliente}`)).data;
   }
 
   if (cliente._id === '9999') {
@@ -43,7 +43,7 @@ aceptar.addEventListener('click', async (e) => {
     cliente.cuit = venta.dnicuit;
   }
 
-  const movimientos = venta.tipo_comp === 'Recibos_P' || venta.tipo_comp === 'recibos' ? venta.comprobantes : (await axios.get(`${URL}movProductos/${comprobante}/${tipoVenta}`)).data;
+  const movimientos = venta.tipo_comp === 'Recibos_P' || venta.tipo_comp === 'recibos' ? venta.comprobantes : (await axios.get(`${apiUrl}movProductos/${comprobante}/${tipoVenta}`)).data;
 
   if (venta.tipo_comp === 'Recibos_P' || venta.tipo_comp === 'recibos') {
     ipcRenderer.send('imprimir-recibo', [venta, cliente, movimientos, venta.tipo_comp]);

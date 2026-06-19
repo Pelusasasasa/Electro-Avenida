@@ -2,7 +2,7 @@ const XLSX = require('xlsx');
 const axios = require('axios');
 const { configAxios, redondear } = require('../funciones');
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const sweet = require('sweetalert2');
 
@@ -17,9 +17,9 @@ const confirmar = document.getElementById('confirmar');
 let productosAGuardar = [];
 
 window.addEventListener('load', async (e) => {
-  const marcas = (await axios.get(`${URL}productos`, configAxios)).data;
-  const provedores = (await axios.get(`${URL}productos/provedores`, configAxios)).data;
-  dolar.value = (await axios.get(`${URL}tipoVenta`, configAxios)).data.dolar;
+  const marcas = (await axios.get(`${apiUrl}productos`, configAxios)).data;
+  const provedores = (await axios.get(`${apiUrl}productos/provedores`, configAxios)).data;
+  dolar.value = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data.dolar;
 
   marcas.sort((a, b) => {
     if (a < b) {
@@ -84,7 +84,7 @@ const rellenarStock = async (lista, lista2) => {
   }
 
   for await (let elem of lista2) {
-    if (elem === 'GOMEZ' || elem === 'LANUS' || elem === 'PAGLIAROLI' || elem === 'HAEDO' || elem === 'FGP' || elem === 'CENTILUX') {
+    if (elem === 'GOMEZ' || elem === 'LANUS' || elem === 'PAGLIAROLI' || elem === 'HAEDO' || elem === 'FGP' || elem === 'CENTILUX' || elem === 'ARNET') {
       const option = document.createElement('option');
       option.value = elem;
       option.classList.add('provedor');
@@ -106,9 +106,9 @@ archivo.addEventListener('change', (e) => {
     let productos = [];
 
     if (select.options[select.selectedIndex].classList.contains('provedor')) {
-      productos = (await axios.get(`${URL}productos/provedores/${select.value}`, configAxios)).data;
+      productos = (await axios.get(`${apiUrl}productos/provedores/${select.value}`, configAxios)).data;
     } else {
-      productos = (await axios.get(`${URL}productos/marcas/${select.value}`, configAxios)).data;
+      productos = (await axios.get(`${apiUrl}productos/marcas/${select.value}`, configAxios)).data;
     }
     await llenarLista(productos);
     if (select.value === 'SAN JUSTO') {
@@ -127,7 +127,7 @@ archivo.addEventListener('change', (e) => {
       let datos = XLSX.utils.sheet_to_json(woorbook.Sheets['Lista']);
       cambiarPrecioMB(datos, productos);
     } else if (select.value === 'GOMEZ') {
-      let datos = XLSX.utils.sheet_to_json(woorbook.Sheets['Hoja1']);
+      let datos = XLSX.utils.sheet_to_json(woorbook.Sheets['Lista']);
       console.log(datos);
       cambiarPrecioGomez(datos, productos);
     } else if (select.value === 'LANUS') {
@@ -159,6 +159,10 @@ archivo.addEventListener('change', (e) => {
       let datos = XLSX.utils.sheet_to_json(woorbook.Sheets['Lista']);
       console.log(datos);
       cambiarPrecioJeluz(datos, productos);
+    } else if (select.value === 'ARNET') {
+      let datos = XLSX.utils.sheet_to_json(woorbook.Sheets['Lista']);
+      console.log(datos);
+      cambiarPrecioArnet(datos, productos);
     }
   };
   fileReader.readAsBinaryString(selectedFile);
@@ -230,6 +234,31 @@ const llenarListaNueva = async (lista) => {
   }
 };
 
+async function cambiarPrecioArnet(datos, productos) {
+  console.log(datos[0]);
+  for await (let elem of productos) {
+    let tasaIva = elem.iva === 'R' ? 15 : 26;
+    let producto = datos.find((n) => n.Codigo == elem.cod_fabrica);
+    console.log(producto)
+    if (producto) {
+      if (elem.costodolar !== 0) {
+        elem.costodolar = parseFloat(redondear(producto.Precio / parseFloat(dolar.value), 2));
+        elem.impuestos = parseFloat(redondear((elem.costodolar * tasaIva) / 100, 2));
+        const costoIva = (elem.costodolar + elem.impuestos) * parseFloat(dolar.value);
+        const utilidad = (costoIva * parseFloat(elem.utilidad)) / 100;
+        elem.precio_venta = parseFloat(Math.round(costoIva + utilidad).toFixed(2));
+      } else {
+        elem.costo = parseFloat(producto.Precio.toFixed(2));
+        elem.impuestos = parseFloat(redondear((elem.costo * tasaIva) / 100, 2));
+        const costoIva = elem.costo + elem.impuestos;
+        const utilidad = (costoIva * parseFloat(elem.utilidad)) / 100;
+        elem.precio_venta = parseFloat(Math.round(costoIva + utilidad).toFixed(2));
+      }
+    }
+  }
+  llenarListaNueva(productos);
+};
+
 async function cambiarPrecioJeluz(datos, productos) {
   console.log(datos[0]);
   for await (let elem of productos) {
@@ -252,12 +281,12 @@ async function cambiarPrecioJeluz(datos, productos) {
     }
   }
   llenarListaNueva(productos);
-}
+};
 
 async function cambiarPrecioPagliaroli(datos, productos) {
   for await (let elem of productos) {
     let tasaIva = elem.iva === 'R' ? 15 : 26;
-    let producto = datos.find((n) => n.Código == elem.cod_fabrica);
+    let producto = datos.find((n) => n.Codigo == elem.cod_fabrica);
     if (producto) {
       if (elem.costodolar !== 0) {
         elem.costodolar = parseFloat(redondear(producto.Precio / parseFloat(dolar.value), 2));
@@ -280,7 +309,7 @@ async function cambiarPrecioPagliaroli(datos, productos) {
 async function cambiarPrecioCandil(datos, productos) {
   for await (let elem of productos) {
     let tasaIva = elem.iva === 'R' ? 15 : 26;
-    let producto = datos.find((n) => n.Id == elem.cod_fabrica);
+    let producto = datos.find((n) => n.Codigo == elem.cod_fabrica);
     console.log(producto);
     if (producto) {
       if (elem.costodolar !== 0) {
@@ -322,7 +351,7 @@ async function cambiarPrecioFerrolux(datos, productos) {
 
 async function cambiarPrecioHaedo(datos, productos) {
   for await (let elem of productos) {
-    const producto = datos.find((dato) => dato.Artículo.slice(2) == elem.cod_fabrica);
+    const producto = datos.find((dato) => dato.Codigo.slice(2) == elem.cod_fabrica);
     const tasaIva = elem.iva === 'R' ? 15 : 26;
     if (producto) {
       if (elem.costodolar !== 0) {
@@ -353,7 +382,7 @@ async function cambiarPrecioHaedo(datos, productos) {
 async function cambiarPreciosSanJusto(nuevos, productos) {
   for await (let elem of productos) {
     const tasaIva = elem.iva === 'R' ? 15 : 26;
-    const producto = nuevos.find((n) => n.CODIGO == elem.cod_fabrica);
+    const producto = nuevos.find((n) => n.Codigo == elem.cod_fabrica);
     if (producto) {
       console.log(producto);
       if (elem.costodolar !== 0) {
@@ -374,7 +403,7 @@ async function cambiarPreciosSanJusto(nuevos, productos) {
 async function cambiarPrecioBremen(datos, productos) {
   for await (let elem of productos) {
     const tasaIva = elem.iva === 'R' ? 15 : 26;
-    const producto = datos.find((n) => n['Código'] == elem.cod_fabrica);
+    const producto = datos.find((n) => n['Codigo'] == elem.cod_fabrica);
 
     if (producto) {
       if (elem.costodolar !== 0) {
@@ -396,7 +425,7 @@ async function cambiarPrecioInterelec(datos, productos) {
   console.log(datos);
   for await (let elem of productos) {
     const tasaIva = elem.iva === 'R' ? 15 : 26;
-    const producto = datos.find((dato) => dato.Código == elem.cod_fabrica);
+    const producto = datos.find((dato) => dato.Codigo == elem.cod_fabrica);
     if (producto) {
       if (elem.costodolar !== 0) {
         elem.costodolar = parseFloat(producto.Precio.toFixed(2));
@@ -442,7 +471,7 @@ async function cambiarPrecioMB(datos, productos) {
 async function cambiarPrecioGomez(datos, productos) {
   for await (let elem of productos) {
     const tasaIva = elem.iva === 'R' ? 15 : 26;
-    const producto = datos.find((dato) => dato.Articulo == elem.cod_fabrica);
+    const producto = datos.find((dato) => dato.Codigo == elem.cod_fabrica);
     if (producto) {
       if (elem.costodolar !== 0) {
         elem.costodolar = parseFloat((producto.Precio / parseFloat(dolar.value)).toFixed(2));
@@ -469,10 +498,10 @@ async function cambiarPrecioGomez(datos, productos) {
 async function cambiarPrecioLanus(datos, productos) {
   for await (let elem of productos) {
     const tasaIva = elem.iva === 'R' ? 15 : 26;
-    const producto = datos.find((dato) => dato.CODIGO?.trim() == elem.cod_fabrica.trim());
+    const producto = datos.find((dato) => dato.Codigo?.trim() == elem.cod_fabrica.trim());
 
     if (producto) {
-      if (producto.CODIGO === ' 722010') {
+      if (producto.Codigo === ' 722010') {
         console.log(producto);
       }
       // producto.Precio = (producto.Precio.split(',',2)[0]).replace(/\./g, '');
@@ -529,11 +558,11 @@ async function cambiarPrecioFGP(datos, productos) {
 async function cambiarPrecioCentilux(datos, productos) {
   console.log(datos);
   for (let elem of productos) {
-    const producto = datos.find((n) => n.Código == elem.cod_fabrica);
+    const producto = datos.find((n) => n.Codigo == elem.cod_fabrica);
     const tasaIva = elem.iva === 'R' ? 15 : 26;
 
     if (producto) {
-      if (producto.Código == '905') {
+      if (producto.Codigo == '905') {
         console.log(producto);
       }
 
@@ -594,7 +623,7 @@ async function cambiarPrecioElece(datos, productos) {
 
 confirmar.addEventListener('click', async (e) => {
   for await (let producto of productosAGuardar) {
-    await axios.put(`${URL}productos/${producto._id}`, producto, configAxios);
+    await axios.put(`${apiUrl}productos/${producto._id}`, producto, configAxios);
   }
   await sweet.fire({
     title: 'Productos Modificados',

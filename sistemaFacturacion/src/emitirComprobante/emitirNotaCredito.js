@@ -2,7 +2,7 @@ require('dotenv').config;
 const { ipcRenderer } = require('electron');
 const sweet = require('sweetalert2');
 const axios = require('axios');
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const Afip = require('@afipsdk/afip.js');
 const afip = new Afip({ CUIT: 27165767433 });
@@ -83,14 +83,14 @@ const actualizarNroCom = async (comprobante, codigo) => {
   }
   numero = comprobante.split('-')[1];
   numero = (parseFloat(numero) + 1).toString().padStart(8, 0);
-  let numeros = (await axios.get(`${URL}tipoVenta`, configAxios)).data;
+  let numeros = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data;
   numeros[tipoFactura] = `0005-${numero}`;
-  await axios.put(`${URL}tipoventa`, numeros, configAxios);
+  await axios.put(`${apiUrl}tipoventa`, numeros, configAxios);
 };
 
 //Agregamos el stock nuevo
 const agregarStock = async (codigo, cantidad) => {
-  let producto = (await axios.get(`${URL}productos/${codigo}`, configAxios)).data;
+  let producto = (await axios.get(`${apiUrl}productos/${codigo}`, configAxios)).data;
   const descontar = parseFloat(producto.stock) + parseFloat(cantidad);
   producto.stock = descontar.toFixed(2);
   arregloProductosDescontarStock.push(producto);
@@ -232,7 +232,7 @@ const ponerEnCuentaCorrienteCompensada = async (venta, valorizado) => {
   cuenta.importe = valorizado ? parseFloat(venta.precioFinal) : 0.1;
   cuenta.saldo = valorizado ? parseFloat(venta.precioFinal) : 0.1;
   cuenta.observaciones = venta.observaciones;
-  await axios.post(`${URL}cuentaComp`, cuenta, configAxios);
+  await axios.post(`${apiUrl}cuentaComp`, cuenta, configAxios);
 };
 
 //inicio historica
@@ -244,7 +244,7 @@ const ponerEnCuentaCorrienteHistorica = async (venta, valorizado, saldo) => {
   cuenta.nro_comp = venta.nro_comp;
   cuenta.haber = valorizado ? parseFloat(venta.precioFinal) : 0.1;
   cuenta.saldo = parseFloat(saldo) - cuenta.haber;
-  await axios.post(`${URL}cuentaHisto`, cuenta, configAxios);
+  await axios.post(`${apiUrl}cuentaHisto`, cuenta, configAxios);
 };
 
 const subirAAfip = async (venta, ventaAsociada) => {
@@ -344,10 +344,10 @@ const subirAAfip = async (venta, ventaAsociada) => {
 
 //Sumamos el saldo al cluente si la venta  es Cuenta Corriente
 const sumarSaldo = async (precio, id) => {
-  const cliente = (await axios.get(`${URL}clientes/id/${id}`, configAxios)).data;
+  const cliente = (await axios.get(`${apiUrl}clientes/id/${id}`, configAxios)).data;
   saldoNuevo = parseFloat(cliente.saldo) - parseFloat(precio);
   cliente.saldo = saldoNuevo.toFixed(2);
-  await axios.put(`${URL}clientes/${id}`, cliente, configAxios);
+  await axios.put(`${apiUrl}clientes/${id}`, cliente, configAxios);
 };
 
 //ver si hay un descuento
@@ -370,7 +370,7 @@ const verTipoPago = async () => {
 const traerNumeroComprobante = async (codigo) => {
   let retornar;
   const tipo = codigo === '008' ? 'Ultima N Credito B' : 'Ultima N Credito A';
-  let numeros = (await axios.get(`${URL}tipoVenta`, configAxios)).data;
+  let numeros = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data;
   retornar = `${numeros[tipo]}`;
   return retornar;
 };
@@ -378,7 +378,7 @@ const traerNumeroComprobante = async (codigo) => {
 codigoC.addEventListener('keypress', async (e) => {
   if (e.key === 'Enter') {
     if (codigoC.value !== '') {
-      let cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`, configAxios)).data;
+      let cliente = (await axios.get(`${apiUrl}clientes/id/${codigoC.value.toUpperCase()}`, configAxios)).data;
       if (cliente === '') {
         await sweet.fire({ title: 'Cliente no encontrado' });
         codigoC.value = '';
@@ -394,7 +394,7 @@ codigoC.addEventListener('keypress', async (e) => {
 });
 
 ipcRenderer.on('mando-el-cliente', async (e, args) => {
-  cliente = (await axios.get(`${URL}clientes/id/${args}`, configAxios)).data;
+  cliente = (await axios.get(`${apiUrl}clientes/id/${args}`, configAxios)).data;
   ponerInputsClientes(cliente);
 });
 
@@ -422,7 +422,7 @@ codigo.addEventListener('keypress', async (e) => {
       precioAgregar.classList.remove('none');
       descripcionAgregar.children[0].focus();
     } else if (e.target.value !== '') {
-      let producto = (await axios.get(`${URL}productos/${e.target.value}`, configAxios)).data;
+      let producto = (await axios.get(`${apiUrl}productos/${e.target.value}`, configAxios)).data;
       if (producto.length === 0) {
         await sweet.fire({ title: 'No existe ese Producto' });
         codigo.value = '';
@@ -510,7 +510,7 @@ precioAgregar.addEventListener('keypress', (e) => {
 
 ipcRenderer.on('mando-el-producto', async (e, args) => {
   const { id, cantidad } = JSON.parse(args);
-  const producto = (await axios.get(`${URL}productos/${id}`, configAxios)).data;
+  const producto = (await axios.get(`${apiUrl}productos/${id}`, configAxios)).data;
   await mostrarVentas(producto, cantidad);
 });
 
@@ -604,7 +604,7 @@ factura.addEventListener('click', async (e) => {
         //Traemos la venta relacionada con la nota de credito
         const tipo = conIva.value === 'Inscripto' || conIva.value === 'Monotributista' ? 'Factura A' : 'Factura B';
 
-        let ventaRelacionada = (await axios.get(`${URL}ventas/factura/${venta.numeroAsociado}/${tipo}/${venta.condIva}`)).data;
+        let ventaRelacionada = (await axios.get(`${apiUrl}ventas/factura/${venta.numeroAsociado}/${tipo}/${venta.condIva}`)).data;
         //subimos a la afip la factura electronica
         let afip = await subirAAfip(venta, ventaRelacionada);
 
@@ -623,7 +623,7 @@ factura.addEventListener('click', async (e) => {
         venta.tipo_pago === 'CD' && (await verTipoPago());
 
         //mandamos la venta
-        nuevaVenta = await axios.post(`${URL}ventas`, venta, configAxios);
+        nuevaVenta = await axios.post(`${apiUrl}ventas`, venta, configAxios);
 
         //mandamos el movimiento de caja
         venta.tipo_pago === 'CD' &&
@@ -654,15 +654,15 @@ factura.addEventListener('click', async (e) => {
             await movimientoProducto(producto.objeto, producto.cantidad, venta);
           }
 
-          await axios.put(`${URL}productos`, arregloProductosDescontarStock);
-          await axios.post(`${URL}movProductos`, arregloMovimiento);
+          await axios.put(`${apiUrl}productos`, arregloProductosDescontarStock);
+          await axios.post(`${apiUrl}movProductos`, arregloMovimiento);
 
           arregloMovimiento = [];
           arregloProductosDescontarStock = [];
         }
         //creamos el pdf
         alerta.children[1].innerHTML = 'Guardando nota de credito como pdf';
-        await axios.post(`${URL}crearPdf`, [venta, cliente, afip]);
+        await axios.post(`${apiUrl}crearPdf`, [venta, cliente, afip]);
         //reiniciamos la pagina
         location.href = '../index.html';
       }

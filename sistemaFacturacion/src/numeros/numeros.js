@@ -9,7 +9,7 @@ const cancelar = document.querySelector('#cancelar');
 const axios = require('axios');
 const { ultimasFacturas, redondear, configAxios, cerrarVentana, verNombrePc } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 let dolarAux;
 
@@ -57,13 +57,13 @@ async function guardarDatos() {
     dolar: dolar.value,
   };
   parseFloat(dolarAux) !== parseFloat(dolar.value) && cambiarPrecios(parseFloat(dolar.value));
-  await axios.put(`${URL}tipoVenta`, numeros, configAxios);
+  await axios.put(`${apiUrl}tipoVenta`, numeros, configAxios);
 
   // location.reload();
 }
 
 window.addEventListener('load', async (e) => {
-  let numeros = await axios.get(`${URL}tipoVenta`, configAxios);
+  let numeros = await axios.get(`${apiUrl}tipoVenta`, configAxios);
   numeros = numeros.data;
   ponerInpusnumero(numeros);
 });
@@ -94,7 +94,7 @@ cancelar.addEventListener('click', () => {
 async function cambiarPrecios(dolar) {
   dolarAux = dolar;
   //cambiamos el precio de los productos con dolares
-  let productos = (await axios.get(`${URL}productos/buscarProducto/textoVacio/dolar`, configAxios)).data;
+  let productos = (await axios.get(`${apiUrl}productos/buscarProducto/textoVacio/dolar`, configAxios)).data;
   productos.sort((a, b) => {
     if (a.descripcion > b.descripcion) {
       return 1;
@@ -113,7 +113,7 @@ async function cambiarPrecios(dolar) {
     producto.precio_venta = Math.round(costoTotal + (parseFloat(producto.utilidad) * costoTotal) / 100).toFixed(2);
     producto.maquina = verNombrePc();
     producto.vendedor = 'ELBIO';
-    await axios.put(`${URL}productos/${producto._id}`, producto, configAxios);
+    await axios.put(`${apiUrl}productos/${producto._id}`, producto, configAxios);
   }
   alerta.classList.add('none');
 }

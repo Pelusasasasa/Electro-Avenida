@@ -1,6 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 let seleccionado;
 let subSeleccionado;
@@ -16,7 +16,7 @@ tbody.addEventListener('click', seleccionar);
 modificar.addEventListener('click', modificarStock);
 
 async function cargarPagina() {
-  const productos = (await axios.get(`${URL}productos/stockCero`)).data;
+  const productos = (await axios.get(`${apiUrl}productos/stockCero`)).data;
 
   for await (let producto of productos) {
     const tr = document.createElement('tr');
@@ -64,9 +64,9 @@ async function modificarStock() {
   });
 
   if (isConfirmed) {
-    const producto = (await axios.get(`${URL}productos/${seleccionado.id}`)).data;
+    const producto = (await axios.get(`${apiUrl}productos/${seleccionado.id}`)).data;
     producto.stock = value;
-    const res = (await axios.put(`${URL}productos/stockCero`, producto)).data;
+    const res = (await axios.put(`${apiUrl}productos/stockCero`, producto)).data;
     if (res) {
       await sweet.fire({
         icon: 'success',

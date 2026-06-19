@@ -10,7 +10,7 @@ const templateMenu = require('./menu');
 const { mostrarMenu } = require('./menuSecundario/menuSecundario');
 
 
-let URL
+let apiUrl
 require('dotenv').config();
 
 if (process.env.NODE_ENV === 'desarrollo') {
@@ -355,7 +355,7 @@ const abrirVentanaImprimir = async (texto, width, height, reinicio, show = false
 async function descargas(nombreFuncion, ventasTraidas, path) {
     const [pedidos, ventas, comprobantes] = require('./descargas/descargas');
     if (nombreFuncion === "Pedidos") {
-        pedidos((await axios.get(`${URL}pedidos`, configAxios)).data, path)
+        pedidos((await axios.get(`${apiUrl}pedidos`, configAxios)).data, path)
     } else if (nombreFuncion === "Ventas") {
         ventas(ventasTraidas, path);
     } else if (nombreFuncion === "PorComprobante") {

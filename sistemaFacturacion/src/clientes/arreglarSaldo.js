@@ -4,7 +4,7 @@ const sweet = require('sweetalert2');
 const { cerrarVentana, botonesSalir, verificarUsuarios, configAxios, verNombrePc } = require('../funciones');
 
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const codigo = document.querySelector('#codigo');
 const saldo = document.querySelector('#saldo');
@@ -43,7 +43,7 @@ window.addEventListener('load', async (e) => {
 
 codigo.addEventListener('keypress', async (e) => {
   if (e.key === 'Enter') {
-    cliente = (await axios.get(`${URL}clientes/id/${codigo.value.toUpperCase()}`, configAxios)).data;
+    cliente = (await axios.get(`${apiUrl}clientes/id/${codigo.value.toUpperCase()}`, configAxios)).data;
     if (cliente !== '') {
       listarCliente(cliente);
       saldo.focus();
@@ -108,6 +108,6 @@ guardar.addEventListener('click', async (e) => {
   cliente.saldo_p = saldo_P.value;
   cliente.vendedor = vendedor.nombre;
   cliente.maquina = verNombrePc();
-  await axios.put(`${URL}clientes/${cliente._id}`, cliente, configAxios);
+  await axios.put(`${apiUrl}clientes/${cliente._id}`, cliente, configAxios);
   window.close();
 });

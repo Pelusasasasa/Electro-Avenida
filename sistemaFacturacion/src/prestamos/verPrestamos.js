@@ -3,7 +3,7 @@ const sweet = require('sweetalert2');
 const { ipcRenderer } = require('electron');
 const { configAxios } = require('../funciones');
 require('dotenv');
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const table = document.querySelector('.table');
 const tbody = document.querySelector('tbody');
@@ -20,7 +20,7 @@ let subSeleccionado = '';
 
 window.addEventListener('load', async (e) => {
   const hoy = new Date();
-  const { data: prestamos } = await axios.get(`${URL}prestamos/noAnulados`);
+  const { data: prestamos } = await axios.get(`${apiUrl}prestamos/noAnulados`);
 
   prestamos.sort((a, b) => {
     if (a.observaciones > b.observaciones) {
@@ -97,7 +97,7 @@ async function mostrarDetalleProducto(e) {
     behavior: 'smooth',
   });
 
-  /*Traer movimientos*/ const movimientos = (await axios.get(`${URL}movProductos/${seleccionado.id}/Prestamo`, configAxios)).data;
+  /*Traer movimientos*/ const movimientos = (await axios.get(`${apiUrl}movProductos/${seleccionado.id}/Prestamo`, configAxios)).data;
   listarMovimientos(movimientos);
 }
 
@@ -172,14 +172,14 @@ function clickDerecho(e) {
 }
 
 async function imprimirPrestamo() {
-  const venta = (await axios.get(`${URL}prestamos/forNumber/${seleccionado.id}`, configAxios)).data;
-  const cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`, configAxios)).data;
-  const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`, configAxios)).data;
+  const venta = (await axios.get(`${apiUrl}prestamos/forNumber/${seleccionado.id}`, configAxios)).data;
+  const cliente = (await axios.get(`${apiUrl}clientes/id/${venta.codigo}`, configAxios)).data;
+  const movimientos = (await axios.get(`${apiUrl}movProductos/${venta.nro_comp}/${venta.tipo_comp}`, configAxios)).data;
   ipcRenderer.send('imprimir-venta', [venta, cliente, false, 1, 'imprimir-comprobante', 'valorizado', movimientos]);
 }
 
 async function cambiarObservacion() {
-  const prestamo = (await axios.get(`${URL}prestamos/forNumber/${seleccionado.id}`, configAxios)).data;
+  const prestamo = (await axios.get(`${apiUrl}prestamos/forNumber/${seleccionado.id}`, configAxios)).data;
   const { value, isConfirmed } = await sweet.fire({
     title: 'Cambiar Observacion',
     input: 'text',
@@ -188,7 +188,7 @@ async function cambiarObservacion() {
   });
   if (isConfirmed) {
     prestamo.observaciones = value.toUpperCase();
-    await axios.put(`${URL}prestamos/forNumber/${prestamo.nro_comp}`, prestamo, configAxios);
+    await axios.put(`${apiUrl}prestamos/forNumber/${prestamo.nro_comp}`, prestamo, configAxios);
     seleccionado.children[4].innerText = value.toUpperCase();
   }
 }
@@ -209,7 +209,7 @@ document.addEventListener('keyup', (e) => {
 });
 
 ordenarFecha.addEventListener('click', async () => {
-  const { data: prestamos } = await axios.get(`${URL}prestamos/noAnulados`);
+  const { data: prestamos } = await axios.get(`${apiUrl}prestamos/noAnulados`);
   prestamos.sort((a, b) => {
     if (a.fecha > b.fecha) return 1;
     if (a.fecha < b.fecha) return -1;

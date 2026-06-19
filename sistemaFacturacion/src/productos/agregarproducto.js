@@ -4,7 +4,7 @@ const { redondear, configAxios, verNombrePc } = require('../funciones');
 const { ipcRenderer } = require('electron');
 
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 let data = new FormData();
 
 let info = [];
@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 //Traer el dolar
 window.addEventListener('load', async (e) => {
-  let numeros = (await axios.get(`${URL}tipoVenta`, configAxios)).data;
-  let rubros = (await axios.get(`${URL}rubros`, configAxios)).data;
+  let numeros = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data;
+  let rubros = (await axios.get(`${apiUrl}rubros`, configAxios)).data;
   listarRubros(rubros);
   dolar = numeros.dolar;
 });
@@ -100,7 +100,7 @@ const listarRubros = async (rubros) => {
 //Vemos si el codigo que se puso ya esta utilizado o no
 codigo.addEventListener('blur', async (e) => {
   if (codigo.value !== '') {
-    let producto = (await axios.get(`${URL}productos/${codigo.value}`, configAxios)).data;
+    let producto = (await axios.get(`${apiUrl}productos/${codigo.value}`, configAxios)).data;
     if (producto !== '') {
       sweet.fire({
         title: 'El codigo ya es utilizador por ' + producto.descripcion,
@@ -112,7 +112,7 @@ codigo.addEventListener('blur', async (e) => {
 });
 
 select.addEventListener('change', async (e) => {
-  const rubro = (await axios.get(`${URL}rubros/${e.target.value}`, configAxios)).data;
+  const rubro = (await axios.get(`${apiUrl}rubros/${e.target.value}`, configAxios)).data;
   subRubros.innerHTML = '<option value="">---Seleccionar---</option>';
   listarSubRubros(rubro.subRubros);
 });
@@ -190,7 +190,7 @@ agregar.addEventListener('click', async (e) => {
     };
 
     //Enviamos el producto al servidor
-    await axios.post(`${URL}productos`, producto, configAxios);
+    await axios.post(`${apiUrl}productos`, producto, configAxios);
     //enviamos la imagen si es que tiene
     if (imagen.files[0]) {
       //Gaurdamos la imgane en la carpeta

@@ -2,7 +2,7 @@ const { ipcRenderer } = require('electron');
 const axios = require('axios');
 const { configAxios } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const desde = document.querySelector('#desde');
 const hasta = document.querySelector('#hasta');
@@ -33,9 +33,9 @@ aceptar.addEventListener('click', async (e) => {
   const path = await ipcRenderer.invoke('elegirPath');
 
   let desdefecha = new Date(desde.value);
-  const tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hasta.value}`, configAxios)).data;
-  const presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hasta.value}`, configAxios)).data;
-  const recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hasta.value}`, configAxios)).data;
+  const tickets = (await axios.get(`${apiUrl}ventas/${desdefecha}/${hasta.value}`, configAxios)).data;
+  const presupuesto = (await axios.get(`${apiUrl}presupuesto/${desdefecha}/${hasta.value}`, configAxios)).data;
+  const recibos = (await axios.get(`${apiUrl}recibos/getbetweenDates/${desdefecha}/${hasta.value}`, configAxios)).data;
 
   let arreglo = [];
 
@@ -97,7 +97,7 @@ async function porComprobante(arreglo) {
   let arregloFinal = [];
 
   for await (let venta of arreglo) {
-    const movimientos = (await axios.get(`${URL}movProductos/${venta.nro_comp}/${venta.tipo_comp}`)).data;
+    const movimientos = (await axios.get(`${apiUrl}movProductos/${venta.nro_comp}/${venta.tipo_comp}`)).data;
     arregloFinal.push(venta, ...movimientos);
   }
 

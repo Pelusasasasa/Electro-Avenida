@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { redondear, configAxios } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const hasta = document.querySelector('#hasta');
 const desde = document.querySelector('#desde');
@@ -41,7 +41,7 @@ hasta.addEventListener('keypress', (e) => {
 
 const main = async () => {
   const desdeFecha = new Date(desde.value);
-  let ventasCanceladas = (await axios.get(`${URL}cancelados/${desdeFecha}/${hasta.value}`, configAxios)).data;
+  let ventasCanceladas = (await axios.get(`${apiUrl}cancelados/${desdeFecha}/${hasta.value}`, configAxios)).data;
   for await (let venta of ventasCanceladas) {
     listarVentasCanceladas(venta);
   }
@@ -51,7 +51,7 @@ main();
 
 buscar.addEventListener('click', async (e) => {
   const desdeFecha = new Date(desde.value);
-  let ventasCanceladas = (await axios.get(`${URL}cancelados/${desdeFecha}/${hasta.value}`, configAxios)).data;
+  let ventasCanceladas = (await axios.get(`${apiUrl}cancelados/${desdeFecha}/${hasta.value}`, configAxios)).data;
   tbody.innerHTML = '';
   ventasCanceladas.forEach((venta) => {
     listarVentasCanceladas(venta);

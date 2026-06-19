@@ -2,7 +2,7 @@ const axios = require('axios');
 
 const { cerrarVentana, configAxios } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const desde = document.querySelector('#desde');
 const hasta = document.querySelector('#hasta');
@@ -21,12 +21,12 @@ month = month < 10 ? `0${month}` : month;
 window.addEventListener('load', async (e) => {
   cerrarVentana();
 
-  const rubros = (await axios.get(`${URL}rubros`, configAxios)).data;
+  const rubros = (await axios.get(`${apiUrl}rubros`, configAxios)).data;
   listarRubros(rubros);
   desde.value = `${year}-${month}-${'01'}`;
   hasta.value = `${year}-${month}-${day}`;
 
-  const movimientos = (await axios.get(`${URL}movProductos/${desde.value}/${hasta.value}/${select.value}`, configAxios)).data;
+  const movimientos = (await axios.get(`${apiUrl}movProductos/${desde.value}/${hasta.value}/${select.value}`, configAxios)).data;
   const movimientosSinPP = movimientos.filter((movimiento) => movimiento.tipo_pago !== 'PP');
   listarMovimientos(movimientosSinPP);
 });
@@ -110,7 +110,7 @@ hasta.addEventListener('keypress', async (e) => {
     let nextDay = new Date(hasta.value);
     let hoy = parseInt(hasta.value.split('-', 3)[2]);
     nextDay.setDate(hoy + 1);
-    const movimientos = (await axios.get(`${URL}movProductos/${desde.value}/${nextDay}/${select.value}`)).data;
+    const movimientos = (await axios.get(`${apiUrl}movProductos/${desde.value}/${nextDay}/${select.value}`)).data;
     const movimientosSinPP = movimientos.filter((movimiento) => movimiento.tipo_pago !== 'PP');
     listarMovimientos(movimientosSinPP);
   }

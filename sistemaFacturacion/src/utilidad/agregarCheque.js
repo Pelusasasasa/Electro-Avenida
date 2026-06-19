@@ -2,7 +2,7 @@ const sweet = require('sweetalert2');
 const axios = require('axios');
 const { ipcRenderer } = require('electron');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const { cerrarVentana, botonesSalir, verificarUsuarios, configAxios } = require('../funciones');
 
@@ -126,7 +126,7 @@ agregar.addEventListener('click', async (e) => {
   cheque.dom = domicilio.value;
   cheque.tel = telefono.value;
   console.log(cheque);
-  await axios.post(`${URL}cheques`, cheque, configAxios);
+  await axios.post(`${apiUrl}cheques`, cheque, configAxios);
   await sweet
     .fire({
       title: 'Otro Cheque?',

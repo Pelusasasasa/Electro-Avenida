@@ -2,7 +2,7 @@ const { ipcRenderer } = require('electron');
 const axios = require('axios');
 const { copiar, recorrerFlechas, configAxios } = require('../funciones');
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const body = document.querySelector('body');
 const buscarCliente = document.querySelector('#buscarCliente');
@@ -14,7 +14,7 @@ let seleccionado;
 let subSeleccionado;
 
 window.addEventListener('load', async (e) => {
-  clientes = (await axios.get(`${URL}clientes`, configAxios)).data;
+  clientes = (await axios.get(`${apiUrl}clientes`, configAxios)).data;
   listarClientes(clientes, '');
 
   copiar();

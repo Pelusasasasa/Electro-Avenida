@@ -4,7 +4,7 @@ const { ipcRenderer } = require('electron');
 const axios = require('axios');
 const { copiar, recorrerFlechas, configAxios } = require('../funciones');
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const resultado = document.querySelector('#resultado');
 const select = document.querySelector('#seleccion');
@@ -63,9 +63,9 @@ async function filtrar() {
   if (texto !== '') {
     let condicion = select.value;
     condicion === 'codigo' && (condicion = '_id');
-    productos = (await axios.get(`${URL}productos/buscarProducto/${texto}/${condicion}`, configAxios)).data;
+    productos = (await axios.get(`${apiUrl}productos/buscarProducto/${texto}/${condicion}`, configAxios)).data;
   } else {
-    productos = (await axios.get(`${URL}productos/buscarProducto/textoVacio/descripcion`, configAxios)).data;
+    productos = (await axios.get(`${apiUrl}productos/buscarProducto/textoVacio/descripcion`, configAxios)).data;
   }
 
   for (let producto of productos) {

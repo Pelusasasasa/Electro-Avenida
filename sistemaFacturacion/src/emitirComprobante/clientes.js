@@ -3,7 +3,7 @@ const sweet = require('sweetalert2');
 const axios = require('axios');
 const { copiar, recorrerFlechas, configAxios } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const buscarCliente = document.querySelector('#buscarCliente');
 const resultado = document.querySelector('#resultado');
@@ -30,7 +30,7 @@ body.addEventListener('keypress', (e) => {
 const listar = async (texto) => {
   //traemos a los clientes
   texto === '' && (texto = 'A Consumidor Final');
-  let clientes = (await axios.get(`${URL}clientes/${texto}`, configAxios)).data;
+  let clientes = (await axios.get(`${apiUrl}clientes/${texto}`, configAxios)).data;
 
   //ordenamos el arreglo de clientes
   clientes = clientes.sort(function (a, b) {

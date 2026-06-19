@@ -3,7 +3,7 @@ const { dialog, ipcRenderer, ipcMain } = require('electron');
 
 const axios = require('axios');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 //menu de la aplciacion
 const templateMenu = [
@@ -16,7 +16,7 @@ const templateMenu = [
         async click() {
           const path = (await dialog.showSaveDialog()).filePath;
           const [pedidos] = require('./descargas/descargas');
-          pedidos((await axios.get(`${URL}pedidos`, configAxios)).data, path);
+          pedidos((await axios.get(`${apiUrl}pedidos`, configAxios)).data, path);
         },
       },
       {

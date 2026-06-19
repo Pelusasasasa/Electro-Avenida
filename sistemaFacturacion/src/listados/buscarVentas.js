@@ -2,7 +2,7 @@ const sweet = require('sweetalert2');
 const axios = require('axios');
 const { configAxios, fechaUTC } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const seleccion = document.querySelectorAll('input[name="seleccionar"]');
 const seleccionar = document.querySelector('.seleccionar');
@@ -38,8 +38,8 @@ let cliente;
 
 const buscarVentaPorRazon = async (razon) => {
   try {
-    const { data: ventas } = await axios.get(`${URL}ventas/forRazon/${razon}/${desde.value}/${hasta.value}`);
-    const { data: presupuestos } = await axios.get(`${URL}presupuesto/forRazon/${razon}/${desde.value}/${hasta.value}`);
+    const { data: ventas } = await axios.get(`${apiUrl}ventas/forRazon/${razon}/${desde.value}/${hasta.value}`);
+    const { data: presupuestos } = await axios.get(`${apiUrl}presupuesto/forRazon/${razon}/${desde.value}/${hasta.value}`);
     listarVentas([...ventas.ventas, ...presupuestos.presupuestos]);
   } catch (error) {
     console.log(error);
@@ -48,8 +48,8 @@ const buscarVentaPorRazon = async (razon) => {
 
 const traerVentasPorNumero = async () => {
   const numero = `${primerNumero.value.padStart(4, '0')}-${segundoNumero.value.padStart(8, '0')}`;
-  const { data: ventas } = await axios.get(`${URL}ventas/${numero}`);
-  console.log(URL);
+  const { data: ventas } = await axios.get(`${apiUrl}ventas/${numero}`);
+  console.log(apiUrl);
   console.log(ventas);
   // listarVentas([...ventas])
 };
@@ -103,7 +103,7 @@ const listarVentas = async (ventas) => {
 
     tbody.appendChild(trCliente);
 
-    const { data: movimientos } = await axios.get(`${URL}movProductos/${elem.nro_comp}/${elem.tipo_comp}`);
+    const { data: movimientos } = await axios.get(`${apiUrl}movProductos/${elem.nro_comp}/${elem.tipo_comp}`);
 
     for (let mov of movimientos) {
       const tr = document.createElement('tr');

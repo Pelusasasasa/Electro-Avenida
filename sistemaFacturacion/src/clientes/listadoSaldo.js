@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 
 const axios = require('axios');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 let situacion = 'blanco';
 let Clientes = {};
@@ -59,7 +59,7 @@ const mostrarNegro = () => {
 };
 
 const traerSaldo = async () => {
-  Clientes = (await axios.get(`${URL}clientes`, configAxios)).data;
+  Clientes = (await axios.get(`${apiUrl}clientes`, configAxios)).data;
   Clientes.sort((a, b) => {
     if (a.cliente < b.cliente) {
       return -1;

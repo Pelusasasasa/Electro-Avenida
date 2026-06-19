@@ -3,7 +3,7 @@ const { default: cuitValidator } = require('cuit-validator');
 
 const axios = require('axios');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const { cerrarVentana, botonesSalir, configAxios, verNombrePc } = require('../funciones');
 const { ipcRenderer } = require('electron');
@@ -150,10 +150,10 @@ botonEnviar.addEventListener('click', async (e) => {
     vendedor,
   };
   const inicial = nombre.value[0].toUpperCase();
-  let numero = (await axios.get(`${URL}clientes/crearCliente/${inicial}`, configAxios)).data;
+  let numero = (await axios.get(`${apiUrl}clientes/crearCliente/${inicial}`, configAxios)).data;
   cliente._id = numero;
   try {
-    await axios.post(`${URL}clientes`, cliente, configAxios);
+    await axios.post(`${apiUrl}clientes`, cliente, configAxios);
     window.close();
   } catch (error) {
     sweet.fire({

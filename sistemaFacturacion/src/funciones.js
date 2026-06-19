@@ -5,7 +5,7 @@ const { clipboard } = require('electron/common');
 
 const axios = require('axios');
 require('dotenv').process;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 const sweet = require('sweetalert2');
 
 const prueba = btoa(`electroAvenida:Elbio935`);
@@ -506,7 +506,7 @@ const verificarUsuarios = async () => {
     })
     .then(async ({ isConfirmed, value }) => {
       if (isConfirmed) {
-        vendedor = (await axios.get(`${URL}usuarios/${value}`, configAxios)).data;
+        vendedor = (await axios.get(`${apiUrl}usuarios/${value}`, configAxios)).data;
       }
     });
   return vendedor;
@@ -525,7 +525,7 @@ const ponerEnCuentaCorrienteCompensada = async (codigo, cliente, tipo_comp, nro_
   cuenta.maquina = maquina;
   console.log(cuenta);
 
-  await axios.post(`${URL}cuentaComp`, cuenta, configAxios);
+  await axios.post(`${apiUrl}cuentaComp`, cuenta, configAxios);
 };
 
 const generarMovimientoCaja = async (fecha, tMov, nro_comp, cuenta, idCuenta, imp, desc, codigo, cliente, vendedor, maquina) => {
@@ -541,7 +541,7 @@ const generarMovimientoCaja = async (fecha, tMov, nro_comp, cuenta, idCuenta, im
   movimiento.vendedor = vendedor;
   movimiento.maquina = maquina;
   try {
-    await axios.post(`${URL}movCajas`, movimiento, configAxios);
+    await axios.post(`${apiUrl}movCajas`, movimiento, configAxios);
   } catch (error) {
     console.log(errero);
     await sweet.fire({

@@ -16,7 +16,7 @@ const enviar = document.querySelector('#enviar');
 const axios = require('axios');
 const { verificarUsuarios, configAxios } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 enviar.addEventListener('click', async (e) => {
   const Usuario = {
@@ -25,7 +25,7 @@ enviar.addEventListener('click', async (e) => {
     acceso: acceso.value,
     empresa: empresa.value,
   };
-  await axios.post(`${URL}usuarios`, Usuario, configAxios);
+  await axios.post(`${apiUrl}usuarios`, Usuario, configAxios);
   location.reload();
 });
 
@@ -45,7 +45,7 @@ window.addEventListener('load', async (e) => {
     window.close();
   }
 
-  usuarios = (await axios.get(`${URL}usuarios`, configAxios)).data;
+  usuarios = (await axios.get(`${apiUrl}usuarios`, configAxios)).data;
   listar(usuarios);
 });
 
@@ -115,12 +115,12 @@ guardar.addEventListener('click', async (e) => {
     acceso: acceso.value,
     empresa: empresa.value,
   };
-  await axios.put(`${URL}usuarios/${nuevoUsuario._id}`, nuevoUsuario, configAxios);
+  await axios.put(`${apiUrl}usuarios/${nuevoUsuario._id}`, nuevoUsuario, configAxios);
   location.reload();
 });
 
 eliminar.addEventListener('click', async (e) => {
-  await axios.delete(`${URL}usuarios/${idSeleccionado}`, configAxios);
+  await axios.delete(`${apiUrl}usuarios/${idSeleccionado}`, configAxios);
   location.reload();
 });
 

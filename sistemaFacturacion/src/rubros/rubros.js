@@ -1,6 +1,6 @@
 const axios = require('axios');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const sweet = require('sweetalert2');
 const { copiar, configAxios } = require('../funciones');
@@ -73,7 +73,7 @@ const eliminarSubrubro = async (e) => {
 
   const rubroModificar = rubros.find((rubro) => rubro._id === seleccionado.id);
   rubroModificar.subRubros = rubroModificar.subRubros.filter((subRubro) => subRubro !== e.target.parentNode.parentNode.id);
-  await axios.put(`${URL}rubros/${rubroModificar._id}`, rubroModificar, configAxios);
+  await axios.put(`${apiUrl}rubros/${rubroModificar._id}`, rubroModificar, configAxios);
 };
 
 const listarSubRubros = (id) => {
@@ -112,7 +112,7 @@ guardar.addEventListener('click', async (e) => {
   rubro.nombre = nombre.value.toUpperCase();
 
   try {
-    await axios.post(`${URL}rubros`, rubro, configAxios);
+    await axios.post(`${apiUrl}rubros`, rubro, configAxios);
     location.reload();
   } catch (error) {
     console.log(error);
@@ -124,8 +124,8 @@ guardar.addEventListener('click', async (e) => {
 
 window.addEventListener('load', async (e) => {
   copiar();
-  const id = (await axios.get(`${URL}rubros/codigo`, configAxios)).data;
-  rubros = (await axios.get(`${URL}rubros`, configAxios)).data;
+  const id = (await axios.get(`${apiUrl}rubros/codigo`, configAxios)).data;
+  rubros = (await axios.get(`${apiUrl}rubros`, configAxios)).data;
   listar(rubros);
   codigo.value = id.toString().padStart(4, '0');
 });
@@ -136,7 +136,7 @@ agregar.addEventListener('click', async (e) => {
   if (!rubroModificado.subRubros.find((elem) => elem === nombreSubRubro.value.toUpperCase().trim())) {
     agregarASubRubro();
     rubroModificado.subRubros.push(nombreSubRubro.value.toUpperCase());
-    await axios.put(`${URL}rubros/${rubroModificado._id}`, rubroModificado, configAxios);
+    await axios.put(`${apiUrl}rubros/${rubroModificado._id}`, rubroModificado, configAxios);
   }
 
   nombreSubRubro.value = '';
@@ -176,7 +176,7 @@ tbody.addEventListener('dblclick', (e) => {
           .then(async ({ isConfirmed: confirmado }) => {
             if (confirmado) {
               try {
-                await axios.delete(`${URL}rubros/${rubro._id}`, configAxios);
+                await axios.delete(`${apiUrl}rubros/${rubro._id}`, configAxios);
                 location.reload();
               } catch (error) {
                 console.log(error);

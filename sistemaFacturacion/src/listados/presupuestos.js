@@ -3,7 +3,7 @@ const { configAxios, clickderecho, verificarUsuarios } = require('../funciones')
 const { ipcRenderer } = require('electron');
 require('dotenv').config;
 
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 desde.value = new Date().toISOString().slice(0, 10);
 hasta.value = new Date().toISOString().slice(0, 10);
@@ -15,8 +15,8 @@ let seleccionado = '';
 
 window.addEventListener('load', async (e) => {
   const desdeFecha = new Date(desde.value);
-  let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hasta.value}`, configAxios)).data;
-  let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hasta.value}`, configAxios)).data;
+  let ventas = (await axios.get(`${apiUrl}ventas/${desdeFecha}/${hasta.value}`, configAxios)).data;
+  let presupuesto = (await axios.get(`${apiUrl}presupuesto/${desdeFecha}/${hasta.value}`, configAxios)).data;
   const ventasPresupuestos = ventas.filter((venta) => venta.tipo_pago === 'PP');
   const presupuestoPresupuestos = presupuesto.filter((venta) => venta.tipo_pago === 'PP');
   listarVentas([...ventasPresupuestos, ...presupuestoPresupuestos], tbody);
@@ -32,8 +32,8 @@ hasta.addEventListener('keypress', async (e) => {
   if (e.key === 'Enter') {
     const desdeFecha = new Date(desde.value);
 
-    let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hasta.value}`, configAxios)).data;
-    let presupuesto = (await axios.get(`${URL}presupuesto/${desdeFecha}/${hasta.value}`, configAxios)).data;
+    let ventas = (await axios.get(`${apiUrl}ventas/${desdeFecha}/${hasta.value}`, configAxios)).data;
+    let presupuesto = (await axios.get(`${apiUrl}presupuesto/${desdeFecha}/${hasta.value}`, configAxios)).data;
     const ventasPresupuestos = ventas.filter((venta) => venta.tipo_pago === 'PP');
     const presupuestoPresupuestos = presupuesto.filter((venta) => venta.tipo_pago === 'PP');
     listarVentas([...ventasPresupuestos, ...presupuestoPresupuestos], tbody);
@@ -83,7 +83,7 @@ async function listarVentas(lista, bodyelegido) {
     let hours = hora[0];
     let minuts = hora[1];
     let seconds = hora[2];
-    const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
+    const movimientos = (await axios.get(`${apiUrl}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
     for await (let mov of movimientos) {
       const tr = document.createElement('tr');
       tr.id = mov.nro_comp;

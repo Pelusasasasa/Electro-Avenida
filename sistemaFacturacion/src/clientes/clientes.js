@@ -2,7 +2,7 @@ const { ipcRenderer } = require('electron');
 
 const axios = require('axios');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const sweet = require('sweetalert2');
 const { copiar, recorrerFlechas, configAxios, verNombrePc } = require('../funciones');
@@ -145,7 +145,7 @@ const filtrar = async () => {
   resultado.innerHTML = '';
   texto = buscarCliente.value.toLowerCase();
   texto = texto === '' ? 'a consumidor final' : texto;
-  let clientes = await axios.get(`${URL}clientes/${texto}`, configAxios);
+  let clientes = await axios.get(`${apiUrl}clientes/${texto}`, configAxios);
   clientes = clientes.data;
   ponerClientes(clientes);
 };
@@ -212,7 +212,7 @@ const eliminarCliente = async() => {
       .then(async ({ isConfirmed }) => {
         if (isConfirmed) {
           await axios.delete(
-            `${URL}clientes/${clienteEliminar.id}`,
+            `${apiUrl}clientes/${clienteEliminar.id}`,
             {
               data: {
                 vendedor,

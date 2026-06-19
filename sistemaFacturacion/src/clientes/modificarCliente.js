@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron');
 const axios = require('axios');
 const { configAxios, verNombrePc } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const nombre = document.querySelector('#nombre');
 const localidad = document.querySelector('#localidad');
@@ -29,7 +29,7 @@ let situacion = 'blanco';
 let vendedor = '';
 
 ipcRenderer.on('datos-clientes', async (e, args) => {
-  cliente = (await axios.get(`${URL}clientes/id/${JSON.parse(args)[0]}`, configAxios)).data;
+  cliente = (await axios.get(`${apiUrl}clientes/id/${JSON.parse(args)[0]}`, configAxios)).data;
   acceso = JSON.parse(args)[1];
 
   for (let i of moroso) {
@@ -113,7 +113,7 @@ guardar.addEventListener('click', async (e) => {
   nuevoCliente.maquina = verNombrePc();
   console.log(vendedor);
   nuevoCliente.vendedor = vendedor;
-  await axios.put(`${URL}clientes/${nuevoCliente._id}`, nuevoCliente, configAxios);
+  await axios.put(`${apiUrl}clientes/${nuevoCliente._id}`, nuevoCliente, configAxios);
   window.close();
 });
 

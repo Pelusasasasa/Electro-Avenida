@@ -2,7 +2,7 @@ const axios = require('axios');
 const { ipcRenderer } = require('electron');
 const { cerrarVentana, botonesSalir, configAxios } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 let ventas;
 
@@ -34,9 +34,9 @@ window.addEventListener('load', async (e) => {
   desde.value = `${year}-${month}-${day}`;
   hasta.value = `${year}-${month}-${day}`;
 
-  recibos = (await axios.get(`${URL}recibos/recibosBetweenDates/${desde.value}/${hasta.value}`)).data;
-  ventas = (await axios.get(`${URL}ventas/${desde.value}/${hasta.value}`)).data;
-  presupuestos = (await axios.get(`${URL}presupuesto/${desde.value}/${hasta.value}`)).data;
+  recibos = (await axios.get(`${apiUrl}recibos/recibosBetweenDates/${desde.value}/${hasta.value}`)).data;
+  ventas = (await axios.get(`${apiUrl}ventas/${desde.value}/${hasta.value}`)).data;
+  presupuestos = (await axios.get(`${apiUrl}presupuesto/${desde.value}/${hasta.value}`)).data;
   // alerta.classList.remove('none');
   listar(
     ventas,
@@ -54,9 +54,9 @@ desde.addEventListener('keypress', (e) => {
 hasta.addEventListener('keypress', async (e) => {
   if (e.keyCode === 13) {
     await alerta.classList.remove('none');
-    ventas = (await axios.get(`${URL}ventas/${desde.value}/${hasta.value}`, configAxios)).data;
-    recibos = (await axios.get(`${URL}recibos/recibosBetweenDates/${desde.value}/${hasta.value}`)).data;
-    presupuestos = (await axios.get(`${URL}presupuesto/${desde.value}/${hasta.value}`)).data;
+    ventas = (await axios.get(`${apiUrl}ventas/${desde.value}/${hasta.value}`, configAxios)).data;
+    recibos = (await axios.get(`${apiUrl}recibos/recibosBetweenDates/${desde.value}/${hasta.value}`)).data;
+    presupuestos = (await axios.get(`${apiUrl}presupuesto/${desde.value}/${hasta.value}`)).data;
     listar(ventas, recibos, presupuestos);
   }
 });
@@ -73,17 +73,17 @@ tbody.addEventListener('click', async (e) => {
   if (e.target.nodeName === 'BUTTON') {
     if (seleccionado.children[2].innerText === 'Recibos') {
       const recibo = recibos.find((elem) => elem.nro_comp === seleccionado.id);
-      const cliente = (await axios.get(`${URL}clientes/${recibo.cliente}`, configAxios)).data[0];
+      const cliente = (await axios.get(`${apiUrl}clientes/${recibo.cliente}`, configAxios)).data[0];
       ipcRenderer.send('imprimir-recibo', [recibo, cliente, recibo.comprobantes, 'Recibos']);
     } else if (seleccionado.children[2].innerText === 'Presupuesto') {
       const presupuesto = presupuestos.find((elem) => elem.nro_comp === seleccionado.id);
-      const cliente = (await axios.get(`${URL}clientes/id/${presupuesto.cliente}`)).data;
-      const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${presupuesto.nro_comp}/${presupuesto.tipo_comp}/${presupuesto.cliente}`)).data;
+      const cliente = (await axios.get(`${apiUrl}clientes/id/${presupuesto.cliente}`)).data;
+      const movimientos = (await axios.get(`${apiUrl}movProductos/movimientosPorCliente/${presupuesto.nro_comp}/${presupuesto.tipo_comp}/${presupuesto.cliente}`)).data;
       ipcRenderer.send('imprimir-venta', [presupuesto, cliente, false, 1, 'Ticket Factura', , movimientos, true]);
     } else {
       const venta = ventas.find((elem) => elem.nro_comp === seleccionado.id);
       console.log(venta);
-      const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
+      const movimientos = (await axios.get(`${apiUrl}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
 
       const afip = {
         QR: venta.qr ? JSON.parse(venta.qr) : '',

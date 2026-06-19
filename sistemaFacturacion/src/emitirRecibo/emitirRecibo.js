@@ -11,7 +11,7 @@ const { ipcRenderer } = require('electron');
 
 const axios = require('axios');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const { copiar, verCodComp, redondear, generarMovimientoCaja, configAxios, verNombrePc, ponerEnCuentaCorrienteCompensada, validarRecibo } = require('../funciones');
 
@@ -130,7 +130,7 @@ const mostrarNegro = () => {
 codigo.addEventListener('keypress', async (e) => {
   if (e.key === 'Enter') {
     if (codigo.value !== '') {
-      cliente = (await axios.get(`${URL}clientes/id/${codigo.value.toUpperCase()}`, configAxios)).data;
+      cliente = (await axios.get(`${apiUrl}clientes/id/${codigo.value.toUpperCase()}`, configAxios)).data;
       if (cliente === '') {
         await sweet.fire({
           title: 'Cliente no encontrado',
@@ -149,7 +149,7 @@ codigo.addEventListener('keypress', async (e) => {
 
 //traemos el cliente de otra ventana
 ipcRenderer.on('mando-el-cliente', async (e, args) => {
-  cliente = (await axios.get(`${URL}clientes/id/${args}`, configAxios)).data;
+  cliente = (await axios.get(`${apiUrl}clientes/id/${args}`, configAxios)).data;
   inputsCliente(cliente);
 });
 
@@ -194,7 +194,7 @@ const inputsCliente = async (cliente) => {
     }
   }
 
-  let conpensada = (await axios.get(`${URL}cuentaComp/cliente/${cliente._id}`, configAxios)).data; //traemos las compensadas
+  let conpensada = (await axios.get(`${apiUrl}cuentaComp/cliente/${cliente._id}`, configAxios)).data; //traemos las compensadas
   nuevaLista = conpensada;
   listarLista(conpensada, situacion);
 
@@ -407,7 +407,7 @@ const hacerRecibo = async () => {
   const saldoNuevo = redondear(parseFloat(cliente[aux]) - parseFloat(subTotal.value), 2);
 
   //Tomamos el cliente y modificamos su saldo
-  let clienteTraido = (await axios.get(`${URL}clientes/id/${recibo.codigo}`, configAxios)).data;
+  let clienteTraido = (await axios.get(`${apiUrl}clientes/id/${recibo.codigo}`, configAxios)).data;
   clienteTraido[aux] = parseFloat(saldoNuevo);
   clienteTraido.vendedor = Vendedor;
   clienteTraido.maquina = maquina;
@@ -434,8 +434,8 @@ const hacerRecibo = async () => {
     parseFloat(saldoAfavor.value) !== 0 &&
       (await ponerEnCuentaCorrienteCompensada(recibo.codigo, recibo.cliente, recibo.tipo_comp, recibo.nro_comp, parseFloat(saldoAfavor.value), parseFloat(saldoAfavor.value), Vendedor, maquina));
 
-    await axios.put(`${URL}clientes/${recibo.codigo}`, clienteTraido);
-    await axios.post(`${URL}recibos`, recibo);
+    await axios.put(`${apiUrl}clientes/${recibo.codigo}`, clienteTraido);
+    await axios.post(`${apiUrl}recibos`, recibo);
 
     await generarMovimientoCaja(recibo.fecha, 'I', recibo.nro_comp, recibo.tipo_comp, 'RC', recibo.precioFinal, recibo.cliente, recibo.codigo, recibo.cliente, recibo.vendedor, maquina);
     //Hacemos que los productos sean las cuentas conpensadas
@@ -448,7 +448,7 @@ const hacerRecibo = async () => {
 
     //Mandar Recibo para que se guarde como pdf
     recibo.tipo_comp === 'Recibos' && (alerta.children[1].children[0].innerHTML = 'Guardando Recibo Como PDF');
-    recibo.tipo_comp === 'Recibos' && (await axios.post(`${URL}crearPdf`, [recibo, cliente, {}], configAxios));
+    recibo.tipo_comp === 'Recibos' && (await axios.post(`${apiUrl}crearPdf`, [recibo, cliente, {}], configAxios));
     location.href = '../index.html';
   } else {
     alerta.classList.add('none');
@@ -459,16 +459,16 @@ const hacerRecibo = async () => {
 };
 
 const traerUltimoNroRecibo = async () => {
-  let numero = await axios.get(`${URL}tipoVenta`, configAxios);
+  let numero = await axios.get(`${apiUrl}tipoVenta`, configAxios);
   numero = numero.data['Ultimo Recibo'];
   return numero;
 };
 
 const modifcarNroRecibo = async (numero, tipo_comp, iva) => {
-  let numeros = (await axios.get(`${URL}tipoVenta`, configAxios)).data;
+  let numeros = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data;
   numeros['Ultimo Recibo'] = `0004-${(numero + 1).toString().padStart(8, '0')}`;
   try {
-    await axios.put(`${URL}tipoventa`, numeros, configAxios);
+    await axios.put(`${apiUrl}tipoventa`, numeros, configAxios);
   } catch (error) {
     await sweet.fire({
       title: 'No se pudo modifcar el numero de recibo en las variales de numeros, pero si se modifico las cuentas compensadas',
@@ -486,7 +486,7 @@ const modificarVentasConpensadas = async (lista) => {
         venta.pagado = venta.tipo_comp === 'Nota Credito' ? parseFloat(redondear(venta.pagado * -1, 2)) : venta.pagado;
         venta.saldo = venta.tipo_comp === 'Nota Credito' ? parseFloat(tr.children[6].innerHTML) * -1 : parseFloat(tr.children[6].innerHTML);
         try {
-          await axios.put(`${URL}cuentaComp/numeroYCliente/${venta.nro_comp}/${venta.codigo}`, venta, configAxios);
+          await axios.put(`${apiUrl}cuentaComp/numeroYCliente/${venta.nro_comp}/${venta.codigo}`, venta, configAxios);
         } catch (error) {
           await sweet.fire({
             title: `No se pudo modifcar la cuenta compensada ${venta.nro_comp}, Anotalo!!`,
@@ -508,7 +508,7 @@ const ponerEnCuentaCorrienteHistorica = async (recibo, vendedor, maquina) => {
   cuenta.vendedor = vendedor;
   cuenta.maquina = maquina;
   try {
-    await axios.post(`${URL}cuentaHisto`, cuenta);
+    await axios.post(`${apiUrl}cuentaHisto`, cuenta);
   } catch (error) {
     await sweet.fire({
       title: 'No se pudo poner en historica el recibo, Anotalo!!',
@@ -530,7 +530,7 @@ const ponerDescuentoEnHistorica = async (recibo, saldo, vendedor, maquina) => {
   cuenta.maquina = maquina;
 
   try {
-    await axios.post(`${URL}cuentaHisto`, cuenta);
+    await axios.post(`${apiUrl}cuentaHisto`, cuenta);
   } catch (error) {
     await sweet.fire({
       title: 'No se pudo poner en historica el descuento, Anotalo!!',

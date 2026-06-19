@@ -27,9 +27,9 @@ const { ipcRenderer } = require('electron');
 
 const axios = require('axios');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
-//Es lo que viene en la URL
+//Es lo que viene en la apiUrl
 let vendedor = getParameterByName('vendedor');
 let empresa = getParameterByName('empresa');
 let botones = getParameterByName('botones') === 'false' ? false : true;
@@ -116,7 +116,7 @@ const calcularPrecioProducto = async ({ costo, costodolar, impuestos, iva, utili
   let precio = 0;
 
   if (costodolar !== 0) {
-    const { data } = await axios.get(`${URL}tipoVenta`);
+    const { data } = await axios.get(`${apiUrl}tipoVenta`);
     const dolar = parseFloat(data.dolar);
 
     let costoIva = (costodolar + parseFloat(impuestos)) * dolar;
@@ -175,7 +175,7 @@ codigoC.addEventListener('keypress', async (e) => {
     //si apreta enter
     if (codigoC.value !== '') {
       //Si hay algo escrito en el input entonces buscamos el cliente directamente
-      let cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`, configAxios)).data;
+      let cliente = (await axios.get(`${apiUrl}clientes/id/${codigoC.value.toUpperCase()}`, configAxios)).data;
       if (cliente === '') {
         //si no se encontro nada poenemos un cartel
         sweet.fire({ title: 'Cliente no encontrado' });
@@ -192,7 +192,7 @@ codigoC.addEventListener('keypress', async (e) => {
 
 //recibimos el cliente
 ipcRenderer.on('mando-el-cliente', async (e, args) => {
-  cliente = (await axios.get(`${URL}clientes/id/${args}`, configAxios)).data;
+  cliente = (await axios.get(`${apiUrl}clientes/id/${args}`, configAxios)).data;
   await ponerInputsClientes(cliente); //ponemos en los inputs los valores del cliente
   codigoC.value === '9999' ? buscarCliente.focus() : observaciones.focus();
 });
@@ -280,7 +280,7 @@ codigo.addEventListener('keypress', async (e) => {
         porcentaje.placeholder = 'Porcentaje';
         porcentaje.focus();
       } else {
-        let producto = (await axios.get(`${URL}productos/${e.target.value}`, configAxios)).data;
+        let producto = (await axios.get(`${apiUrl}productos/${e.target.value}`, configAxios)).data;
         if (producto.length === 0) {
           sweet.fire({ title: 'No existe ese Producto' });
           codigo.value = '';
@@ -351,7 +351,7 @@ ipcRenderer.on('mando-el-producto', async (e, args) => {
 
     porcentaje.children[0].addEventListener('keypress', (e) => ponerFinanciacionBancoEntreRios(e, descripcion, porcentaje));
   } else {
-    const producto = (await axios.get(`${URL}productos/${id}`, configAxios)).data;
+    const producto = (await axios.get(`${apiUrl}productos/${id}`, configAxios)).data;
     mostrarVentas(producto, parseFloat(cantidad));
   }
 });
@@ -525,23 +525,23 @@ async function traerUltimoNroComprobante(tipoCom, codigoComprobante, tipo_pago) 
   //ver que venta es retorna el atributo del bojeto guardado en la BD
   if (tipoCom === 'Ticket Factura' || tipoCom === 'Factura A' || tipoCom === 'Factura B') {
     const numeroFactura = verQueVentaEs(tipoCom, codigoComprobante);
-    let tipoVenta = (await axios.get(`${URL}tipoVenta`, configAxios)).data[numeroFactura];
+    let tipoVenta = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data[numeroFactura];
     return tipoVenta;
   } else if ((tipoCom === 'Presupuesto') & (tipo_pago === 'CD')) {
     const numeroFactura = verQueVentaEs('Contado');
-    const tipoVenta = (await axios.get(`${URL}tipoVenta`, configAxios)).data[numeroFactura];
+    const tipoVenta = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data[numeroFactura];
     return tipoVenta;
   } else if ((tipoCom === 'Presupuesto') & (tipo_pago === 'CC')) {
     const numeroFactura = verQueVentaEs('Cuenta Corriente');
-    const tipoVenta = (await axios.get(`${URL}tipoVenta`, configAxios)).data[numeroFactura];
+    const tipoVenta = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data[numeroFactura];
     return tipoVenta;
   } else if ((tipoCom === 'Presupuesto') & (tipo_pago === 'PP')) {
     const numeroFactura = verQueVentaEs('Presupuesto');
-    const tipoVenta = (await axios.get(`${URL}tipoVenta`, configAxios)).data[numeroFactura];
+    const tipoVenta = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data[numeroFactura];
     return tipoVenta;
   } else if (tipoCom === 'Remito') {
     const numeroFactura = verQueVentaEs('Remito');
-    const tipoVenta = (await axios.get(`${URL}tipoVenta`, configAxios)).data[numeroFactura];
+    const tipoVenta = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data[numeroFactura];
     return tipoVenta;
   }
 }
@@ -558,7 +558,7 @@ function codDoc(dniocuit) {
 
 //Vamos a descontar el stock
 async function sacarStock(cantidad, objeto) {
-  let producto = (await axios.get(`${URL}productos/${objeto._id}`, configAxios)).data;
+  let producto = (await axios.get(`${apiUrl}productos/${objeto._id}`, configAxios)).data;
   const descontar = parseInt(producto.stock) - parseFloat(cantidad);
   producto.stock = descontar.toFixed(2);
   arregloProductosDescontarStock.push(producto);
@@ -601,7 +601,7 @@ function verNumero(condicion) {
 numeroDeFactura.addEventListener('click', async () => {
   const mostrar = document.querySelector('#numeroFactura');
   texto = verNumero(conIva.value);
-  mostrar.value = (await axios.get(`${URL}tipoVenta`, configAxios)).data[texto];
+  mostrar.value = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data[texto];
 });
 
 async function actualizarNumeroComprobante(comprobante, tipo_pago, codigoComp) {
@@ -626,35 +626,35 @@ async function actualizarNumeroComprobante(comprobante, tipo_pago, codigoComp) {
   } else {
     tipoFactura = verQueVentaEs('Ticket Factura', codigoComp);
   }
-  let numeros = (await axios.get(`${URL}tipoVenta`, configAxios)).data;
+  let numeros = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data;
   numeros[tipoFactura] = numero;
 
-  await axios.put(`${URL}tipoventa`, numeros, configAxios);
+  await axios.put(`${apiUrl}tipoventa`, numeros, configAxios);
 }
 
 //pasamos el saldo en negro
 async function sumarSaldoAlClienteEnNegro(precio, codigo, valorizado, venta) {
   !valorizado ? (precio = '0.1') : precio;
 
-  let cliente = (await axios.get(`${URL}clientes/id/${codigo}`, configAxios)).data;
+  let cliente = (await axios.get(`${apiUrl}clientes/id/${codigo}`, configAxios)).data;
   let saldo_p = (parseFloat(precio) + parseFloat(cliente.saldo_p)).toFixed(2);
 
   cliente.saldo_p = saldo_p;
   cliente.maquina = maquina;
   cliente.vendedor = vendedor;
 
-  await axios.put(`${URL}clientes/${codigo}`, cliente, configAxios);
+  await axios.put(`${apiUrl}clientes/${codigo}`, cliente, configAxios);
 }
 
 async function sumarSaldoAlCliente(precio, codigo, venta) {
-  let cliente = (await axios.get(`${URL}clientes/id/${codigo}`, configAxios)).data;
+  let cliente = (await axios.get(`${apiUrl}clientes/id/${codigo}`, configAxios)).data;
   let saldo = (parseFloat(precio) + parseFloat(cliente.saldo)).toFixed(2);
 
   cliente.saldo = saldo;
   cliente.vendedor = vendedor;
   cliente.maquina = maquina;
 
-  await axios.put(`${URL}clientes/${codigo}`, cliente, configAxios);
+  await axios.put(`${apiUrl}clientes/${codigo}`, cliente, configAxios);
 }
 
 //Aca mandamos la venta en presupuesto
@@ -732,7 +732,7 @@ presupuesto.addEventListener('click', async (e) => {
       }
     }
 
-    const { data } = await axios.post(`${URL}presupuesto`, venta);
+    const { data } = await axios.post(`${apiUrl}presupuesto`, venta);
 
     venta.tipo_pago === 'CD' &&
       (await generarMovimientoCaja(venta.fecha, 'I', venta.nro_comp, 'Presupuesto', 'PP', venta.precioFinal, venta.nombreCliente, venta.cliente, venta.nombreCliente, venta.vendedor, maquina));
@@ -754,13 +754,13 @@ presupuesto.addEventListener('click', async (e) => {
     }
 
     if (venta.tipo_pago !== 'PP' && !facturarPrestamo) {
-      await axios.put(`${URL}productos`, arregloProductosDescontarStock);
+      await axios.put(`${apiUrl}productos`, arregloProductosDescontarStock);
     }
 
     if (facturarPrestamo && venta.tipo_pago === 'PP') {
-      await axios.post(`${URL}movProductos`, arregloMovimiento, configAxios);
+      await axios.post(`${apiUrl}movProductos`, arregloMovimiento, configAxios);
     } else if (!facturarPrestamo) {
-      await axios.post(`${URL}movProductos`, arregloMovimiento, configAxios);
+      await axios.post(`${apiUrl}movProductos`, arregloMovimiento, configAxios);
     }
 
     if (impresion.checked) {
@@ -790,11 +790,11 @@ presupuesto.addEventListener('click', async (e) => {
       });
 
       //Lo que hacemos es modificar los movimientos que estan como prestamos a el tipo de venta
-      venta.tipo_pago !== 'PP' && (await axios.put(`${URL}movProductos`, movimientos, configAxios));
+      venta.tipo_pago !== 'PP' && (await axios.put(`${apiUrl}movProductos`, movimientos, configAxios));
 
       //Anulamos el prestamo anterior
       let lista = JSON.parse(getParameterByName('arregloPrestamo'));
-      venta.tipo_pago !== 'PP' && (await axios.put(`${URL}prestamos/anularVarios/${venta.nro_comp}`, lista));
+      venta.tipo_pago !== 'PP' && (await axios.put(`${apiUrl}prestamos/anularVarios/${venta.nro_comp}`, lista));
     }
 
     arregloMovimiento = [];
@@ -825,27 +825,27 @@ prestamo.addEventListener('click', async (e) => {
   prestamo.precioFinal = '0.00';
   prestamo.vendedor = vendedor;
   prestamo.observaciones = observaciones.value.toUpperCase();
-  let numeros = (await axios.get(`${URL}tipoVenta`, configAxios)).data;
+  let numeros = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data;
   let ultimoNumeroPrestamo = parseInt(numeros['Ultimo Prestamo'].split('-', 2)[1]) + 1;
   prestamo.nro_comp = '0007-' + ultimoNumeroPrestamo.toString().padStart(8, '0');
   numeros['Ultimo Prestamo'] = prestamo.nro_comp;
   //Actualizamos el ultimo prestamo
-  await axios.put(`${URL}tipoventa`, numeros, configAxios);
+  await axios.put(`${apiUrl}tipoventa`, numeros, configAxios);
 
   //Moviento de producto
   for (let { cantidad, objeto } of listaProductos) {
     movimientoProducto(cantidad, objeto, prestamo.codigo, prestamo.cliente, 'PR', prestamo.tipo_comp, prestamo.nro_comp, prestamo.vendedor);
     objeto._id !== '999-999' && (await sacarStock(cantidad, objeto));
   }
-  await axios.post(`${URL}movProductos`, arregloMovimiento, configAxios);
+  await axios.post(`${apiUrl}movProductos`, arregloMovimiento, configAxios);
   //Fin Moviento de Producto
 
   //Descontar Stock
-  await axios.put(`${URL}productos`, arregloProductosDescontarStock, configAxios);
+  await axios.put(`${apiUrl}productos`, arregloProductosDescontarStock, configAxios);
   //Fin Descontar Stock
 
   //Guardamos el prestamo
-  await axios.post(`${URL}prestamos`, prestamo, configAxios);
+  await axios.post(`${apiUrl}prestamos`, prestamo, configAxios);
 
   //Listamos un cliente para la impreison del prestamo
   cliente.cliente = nombre.value;
@@ -880,13 +880,13 @@ remito.addEventListener('click', async (e) => {
     await movimientoProducto(producto.cantidad, producto.objeto, codigoC.value, nombre.value, 'RT', venta.tipo_comp, venta.nro_comp, venta.vendedor);
   }
 
-  await axios.post(`${URL}movProductos`, arregloMovimiento, configAxios);
+  await axios.post(`${apiUrl}movProductos`, arregloMovimiento, configAxios);
 
-  let cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`, configAxios)).data;
+  let cliente = (await axios.get(`${apiUrl}clientes/id/${codigoC.value.toUpperCase()}`, configAxios)).data;
 
   let valorizadoImpresion = 'no valorizado';
 
-  await axios.post(`${URL}remitos`, venta, configAxios);
+  await axios.post(`${apiUrl}remitos`, venta, configAxios);
   await actualizarNumeroComprobante(venta.nro_comp, venta.tipo_pago, venta.cod_comp);
   ipcRenderer.send('imprimir-venta', [venta, cliente, false, 1, 'imprimir-comprobante', valorizadoImpresion, arregloMovimiento]);
 
@@ -1010,9 +1010,9 @@ ticketFactura.addEventListener('click', async (e) => {
             );
 
           await actualizarNumeroComprobante(venta.nro_comp, venta.tipo_pago, venta.cod_comp);
-          nuevaVenta = await axios.post(`${URL}ventas`, venta, configAxios);
+          nuevaVenta = await axios.post(`${apiUrl}ventas`, venta, configAxios);
 
-          const cliente = (await axios.get(`${URL}clientes/id/${codigoC.value.toUpperCase()}`, configAxios)).data;
+          const cliente = (await axios.get(`${apiUrl}clientes/id/${codigoC.value.toUpperCase()}`, configAxios)).data;
 
           alerta.children[1].children[0].innerHTML = 'Imprimiendo Venta'; //cartel de que se esta imprimiendo la venta
 
@@ -1020,7 +1020,7 @@ ticketFactura.addEventListener('click', async (e) => {
           ipcRenderer.send('imprimir-venta', [venta, afip, true, 1, 'Ticket Factura']);
 
           //Le mandamos al servidor que cree un pdf con los datos
-          await axios.post(`${URL}crearPdf`, [venta, cliente, afip], configAxios);
+          await axios.post(`${apiUrl}crearPdf`, [venta, cliente, afip], configAxios);
 
           if (!borraNegro && !variasFacturas) {
             for (let producto of venta.productos) {
@@ -1030,21 +1030,21 @@ ticketFactura.addEventListener('click', async (e) => {
               await movimientoProducto(producto.cantidad, producto.objeto, venta.cliente, venta.nombreCliente, venta.tipo_pago, venta.tipo_comp, venta.nro_comp, venta.vendedor);
             }
             if (venta.tipo !== 'PP') {
-              await axios.put(`${URL}productos`, arregloProductosDescontarStock, configAxios);
+              await axios.put(`${apiUrl}productos`, arregloProductosDescontarStock, configAxios);
             }
-            await axios.post(`${URL}movProductos`, arregloMovimiento, configAxios);
+            await axios.post(`${apiUrl}movProductos`, arregloMovimiento, configAxios);
             arregloMovimiento = [];
             arregloProductosDescontarStock = [];
           }
 
           if (borraNegro) {
             //traemos los movimientos de productos de la venta anterior y lo modificamos a la nueva venta
-            const movimientosViejos = (await axios.get(`${URL}movProductos/${ventaAnterior.nro_comp}/Presupuesto`, configAxios)).data;
+            const movimientosViejos = (await axios.get(`${apiUrl}movProductos/${ventaAnterior.nro_comp}/Presupuesto`, configAxios)).data;
             for await (let mov of movimientosViejos) {
               mov.nro_comp = venta.nro_comp;
               mov.tipo_comp = venta.tipo_comp;
             }
-            await axios.put(`${URL}movProductos`, movimientosViejos);
+            await axios.put(`${apiUrl}movProductos`, movimientosViejos);
 
             //borramos la cuenta compensada
             await borrrarCuentaCompensada(ventaDeCtaCte);
@@ -1055,12 +1055,12 @@ ticketFactura.addEventListener('click', async (e) => {
           } else if (variasFacturas) {
             for await (let numero of listaNumeros) {
               //traemos los movimientos de productos de la venta anterior y lo modificamos a la nueva venta
-              const movimientosViejos = (await axios.get(`${URL}movProductos/${numero}/Presupuesto`, configAxios)).data;
+              const movimientosViejos = (await axios.get(`${apiUrl}movProductos/${numero}/Presupuesto`, configAxios)).data;
               for await (let mov of movimientosViejos) {
                 mov.nro_comp = venta.nro_comp;
                 mov.tipo_comp = venta.tipo_comp;
               }
-              await axios.put(`${URL}movProductos`, movimientosViejos, configAxios);
+              await axios.put(`${apiUrl}movProductos`, movimientosViejos, configAxios);
               await borrrarCuentaCompensada(numero);
               await borrarCuentaHistorica(numero, codigoC.value, 'Presupuesto');
               await borrarVenta(numero);
@@ -1170,7 +1170,7 @@ cancelar.addEventListener('click', async (e) => {
           ventaCancelada.productos = listaProductos;
           ventaCancelada._id = await tamanioCancelados();
           ventaCancelada.vendedor = vendedor;
-          await axios.post(`${URL}cancelados`, ventaCancelada, configAxios);
+          await axios.post(`${apiUrl}cancelados`, ventaCancelada, configAxios);
         }
         window.location = '../index.html';
       }
@@ -1179,7 +1179,7 @@ cancelar.addEventListener('click', async (e) => {
 
 // Vemos el tamanio de los Cancelados
 const tamanioCancelados = async () => {
-  let tamanio = (await axios.get(`${URL}cancelados/tamanio`, configAxios)).data;
+  let tamanio = (await axios.get(`${apiUrl}cancelados/tamanio`, configAxios)).data;
   return `${tamanio + 1}`;
 };
 
@@ -1231,8 +1231,8 @@ ipcRenderer.once('venta', async (e, args) => {
   inputEmpresa.value = empresa;
   ventaDeCtaCte = numero;
   textoUsuario.innerHTML = usuario;
-  ventaAnterior = (await axios.get(`${URL}presupuesto/${numero}`, configAxios)).data;
-  let cliente = (await axios.get(`${URL}clientes/id/${ventaAnterior.cliente}`, configAxios)).data;
+  ventaAnterior = (await axios.get(`${apiUrl}presupuesto/${numero}`, configAxios)).data;
+  let cliente = (await axios.get(`${apiUrl}clientes/id/${ventaAnterior.cliente}`, configAxios)).data;
   await ponerInputsClientes(cliente);
   ventaAnterior.productos.forEach((producto) => {
     const { objeto, cantidad } = producto;
@@ -1248,14 +1248,14 @@ ipcRenderer.on('informacion', async (e, args) => {
   vendedor = usuario;
   listaNumeros = numeros;
 
-  let cliente = (await axios.get(`${URL}clientes/id/${codigoCliente}`, configAxios)).data;
+  let cliente = (await axios.get(`${apiUrl}clientes/id/${codigoCliente}`, configAxios)).data;
   ponerInputsClientes(cliente);
 
   observaciones.value = numeros.join(', ');
 
   let ventas = [];
   for await (let numero of numeros) {
-    ventas.push((await axios.get(`${URL}presupuesto/${numero}`, configAxios)).data);
+    ventas.push((await axios.get(`${apiUrl}presupuesto/${numero}`, configAxios)).data);
   }
 
   for await (let venta of ventas) {
@@ -1272,11 +1272,11 @@ ipcRenderer.on('editarPresupuesto', async (e, { nro_comp, usuario: usr }) => {
     title: 'Se edita el presupuesto pero se crea uno nuevo, el anterior sigue estando',
   });
 
-  const presupuesto = nro_comp.slice(0, 4) === '0005' ? (await axios.get(`${URL}ventas/${nro_comp}`)).data[0] : (await axios.get(`${URL}presupuesto/${nro_comp}`)).data;
+  const presupuesto = nro_comp.slice(0, 4) === '0005' ? (await axios.get(`${apiUrl}ventas/${nro_comp}`)).data[0] : (await axios.get(`${apiUrl}presupuesto/${nro_comp}`)).data;
 
   inputEmpresa.value = presupuesto.empresa;
-  const cliente = (await axios.get(`${URL}clientes/id/${presupuesto.cliente}`, configAxios)).data;
-  const movimientos = (await axios.get(`${URL}movProductos/${nro_comp}/${presupuesto.tipo_comp}`)).data;
+  const cliente = (await axios.get(`${apiUrl}clientes/id/${presupuesto.cliente}`, configAxios)).data;
+  const movimientos = (await axios.get(`${apiUrl}movProductos/${nro_comp}/${presupuesto.tipo_comp}`)).data;
 
   ponerInputsClientes(cliente);
 
@@ -1289,7 +1289,7 @@ ipcRenderer.on('editarPresupuesto', async (e, { nro_comp, usuario: usr }) => {
       producto.precio_venta = mov.precio_unitario;
       producto.marca = mov.marca ? mov.marca : '';
     } else {
-      producto = (await axios.get(`${URL}productos/${mov.codProd}`, configAxios)).data;
+      producto = (await axios.get(`${apiUrl}productos/${mov.codProd}`, configAxios)).data;
     }
     await mostrarVentas(producto, mov.egreso);
   }
@@ -1297,10 +1297,10 @@ ipcRenderer.on('editarPresupuesto', async (e, { nro_comp, usuario: usr }) => {
 
 //descontamos el saldo del cliente
 const descontarSaldo = async (codigo, precio, numero = '', venta = '') => {
-  const cliente = (await axios.get(`${URL}clientes/id/${codigo}`, configAxios)).data;
+  const cliente = (await axios.get(`${apiUrl}clientes/id/${codigo}`, configAxios)).data;
   cliente.saldo_p = parseFloat(cliente.saldo_p) - precio;
   try {
-    await axios.put(`${URL}clientes/${codigo}`, cliente, configAxios);
+    await axios.put(`${apiUrl}clientes/${codigo}`, cliente, configAxios);
   } catch (error) {
     console.log(error);
     await sweet.fire({
@@ -1310,23 +1310,23 @@ const descontarSaldo = async (codigo, precio, numero = '', venta = '') => {
 };
 
 const borrrarCuentaCompensada = async (numero) => {
-  await axios.delete(`${URL}cuentaComp/id/${numero}`);
+  await axios.delete(`${apiUrl}cuentaComp/id/${numero}`);
 };
 
 const borrarCuentaHistorica = async (numero, cliente, tipoComp) => {
-  const eliminada = (await axios.delete(`${URL}cuentaHisto/id/${numero}`, configAxios)).data;
+  const eliminada = (await axios.delete(`${apiUrl}cuentaHisto/id/${numero}`, configAxios)).data;
   const importeEliminado = eliminada.debe;
-  const historicas = (await axios.get(`${URL}cuentaHisto/cliente/${cliente}`, configAxios)).data;
+  const historicas = (await axios.get(`${apiUrl}cuentaHisto/cliente/${cliente}`, configAxios)).data;
   let cuentaHistoricas = historicas.filter((historica) => historica.tipo_comp === tipoComp);
   cuentaHistoricas = cuentaHistoricas.filter((historica) => historica.fecha > eliminada.fecha);
   cuentaHistoricas.forEach(async (cuenta) => {
     cuenta.saldo = cuenta.saldo - importeEliminado;
-    await axios.put(`${URL}cuentaHisto/id/${cuenta.nro_comp}`, cuenta, configAxios);
+    await axios.put(`${apiUrl}cuentaHisto/id/${cuenta.nro_comp}`, cuenta, configAxios);
   });
 };
 
 const borrarVenta = async (numero) => {
-  await axios.delete(`${URL}presupuesto/${numero}`, configAxios);
+  await axios.delete(`${apiUrl}presupuesto/${numero}`, configAxios);
 };
 
 //Inicio Compensada
@@ -1342,7 +1342,7 @@ const ponerEnCuentaCorrienteCompensada = async (venta, valorizado) => {
   cuenta.observaciones = venta.observaciones;
   cuenta.maquina = maquina;
   cuenta.vendedor = vendedor;
-  await axios.post(`${URL}cuentaComp`, cuenta, configAxios);
+  await axios.post(`${apiUrl}cuentaComp`, cuenta, configAxios);
 };
 
 //inicio historica
@@ -1358,7 +1358,7 @@ const ponerEnCuentaCorrienteHistorica = async (venta, valorizado, saldo) => {
   cuenta.observaciones = venta.observaciones;
   cuenta.vendedor = vendedor;
   cuenta.maquina = maquina;
-  await axios.post(`${URL}cuentaHisto`, cuenta, configAxios);
+  await axios.post(`${apiUrl}cuentaHisto`, cuenta, configAxios);
 };
 
 //Musetra las cosas en negro
@@ -1443,7 +1443,7 @@ async function listarClientePrestamo(movimiento) {
 async function traerMovimientosPrestamo(arreglo) {
   let moviminetosPrestamos = [];
   for (let elem of arreglo) {
-    const movimientos = (await axios.get(`${URL}movProductos/${elem}/Prestamo`, configAxios)).data;
+    const movimientos = (await axios.get(`${apiUrl}movProductos/${elem}/Prestamo`, configAxios)).data;
     moviminetosPrestamos.push(...movimientos);
   }
   return moviminetosPrestamos;
@@ -1452,7 +1452,7 @@ async function traerMovimientosPrestamo(arreglo) {
 async function traerProductosPrestamo(arreglo) {
   let listaProductos = [];
   for await (let { codProd } of arreglo) {
-    const producto = (await axios.get(`${URL}productos/${codProd}`, configAxios)).data;
+    const producto = (await axios.get(`${apiUrl}productos/${codProd}`, configAxios)).data;
     listaProductos.push(producto);
   }
   return listaProductos;
@@ -1462,7 +1462,7 @@ async function traerProductosPrestamo(arreglo) {
 
 //funcion que busca en la afip a una persona
 buscarAfip.addEventListener('click', async (e) => {
-  let cliente = (await axios.get(`${URL}clientes/cuit/${dnicuit.value}`)).data;
+  let cliente = (await axios.get(`${apiUrl}clientes/cuit/${dnicuit.value}`)).data;
   if (cliente !== '') {
     await ponerInputsClientes(cliente);
   } else {

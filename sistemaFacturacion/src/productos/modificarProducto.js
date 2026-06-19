@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 const axios = require('axios');
 
 const { redondear, configAxios, verNombrePc } = require('../funciones');
@@ -57,7 +57,7 @@ let vendedor;
 
 //Traer el dolar
 window.addEventListener('load', async (e) => {
-  let numeros = (await axios.get(`${URL}tipoVenta`, configAxios)).data;
+  let numeros = (await axios.get(`${apiUrl}tipoVenta`, configAxios)).data;
   dolar = numeros.dolar;
   dolarInput.value = dolar;
 });
@@ -74,7 +74,7 @@ const listarRubros = async (lista) => {
 };
 
 const listarSubRubros = async (rubro) => {
-  const subRubrosLista = (await axios.get(`${URL}rubros/${rubro}`, configAxios)).data.subRubros;
+  const subRubrosLista = (await axios.get(`${apiUrl}rubros/${rubro}`, configAxios)).data.subRubros;
   if (subRubrosLista) {
     for (let rubro of subRubrosLista) {
       const option = document.createElement('option');
@@ -87,8 +87,8 @@ const listarSubRubros = async (rubro) => {
 };
 
 ipcRenderer.on('id-producto', async (e, args) => {
-  let rubros = (await axios.get(`${URL}rubros`, configAxios)).data;
-  producto = (await axios.get(`${URL}productos/${args}`, configAxios)).data;
+  let rubros = (await axios.get(`${apiUrl}rubros`, configAxios)).data;
+  producto = (await axios.get(`${apiUrl}productos/${args}`, configAxios)).data;
   await listarRubros(rubros);
   producto.rubro && (await listarSubRubros(producto.rubro));
   await asignarCampos(producto);
@@ -241,7 +241,7 @@ guardar.addEventListener('click', async (e) => {
   producto.datos = info;
   producto.maquina = verNombrePc();
 
-  await axios.put(`${URL}productos/${producto._id}`, producto, configAxios);
+  await axios.put(`${apiUrl}productos/${producto._id}`, producto, configAxios);
 
   if (imagen.files[0]) {
     //Gaurdamos la imgane en la carpeta

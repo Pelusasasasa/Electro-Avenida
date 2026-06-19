@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { copiar, botonesSalir, redondear, cerrarVentana, configAxios } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const sweet = require('sweetalert2');
 
@@ -40,7 +40,7 @@ puntoVenta.addEventListener('keypress', (e) => {
 
 numero.addEventListener('change', async (e) => {
   const nro_comp = puntoVenta.value.padStart(4, '0') + '-' + numero.value.padStart(8, '0');
-  compensada = (await axios.get(`${URL}cuentaComp/numeroYCliente/${nro_comp}/${codigo.value.toUpperCase()}`, configAxios)).data;
+  compensada = (await axios.get(`${apiUrl}cuentaComp/numeroYCliente/${nro_comp}/${codigo.value.toUpperCase()}`, configAxios)).data;
   if (compensada) {
     await llenarInputsCuentas(compensada);
     tipoComp.focus();
@@ -56,7 +56,7 @@ numero.addEventListener('change', async (e) => {
 modificar.addEventListener('click', modificarCompensada);
 
 async function traerCliente(e) {
-  const clienteTraido = (await axios.get(`${URL}clientes/id/${codigo.value.toUpperCase()}`, configAxios)).data;
+  const clienteTraido = (await axios.get(`${apiUrl}clientes/id/${codigo.value.toUpperCase()}`, configAxios)).data;
   if (clienteTraido) {
     cliente.value = clienteTraido.cliente;
     puntoVenta.focus();
@@ -94,7 +94,7 @@ async function modificarCompensada() {
     showCancelButton: true,
   });
   if (isConfirmed) {
-    await axios.put(`${URL}cuentaComp/numeroYCliente/${compensada.nro_comp}/${codigo.value.toUpperCase()}`, compensada, configAxios);
+    await axios.put(`${apiUrl}cuentaComp/numeroYCliente/${compensada.nro_comp}/${codigo.value.toUpperCase()}`, compensada, configAxios);
     await sweet.fire({
       title: 'Cuenta Modificada',
       icon: 'success',

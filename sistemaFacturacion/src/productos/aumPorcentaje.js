@@ -7,7 +7,7 @@ const axios = require('axios');
 const { cerrarVentana, configAxios, verNombrePc } = require('../funciones');
 const { ipcRenderer } = require('electron');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 let marcas;
 let dolar;
@@ -15,8 +15,8 @@ let vendedor = '';
 
 window.addEventListener('load', async (e) => {
   cerrarVentana();
-  dolar = parseFloat((await axios.get(`${URL}tipoVenta`, configAxios)).data.dolar);
-  marcas = await axios(`${URL}productos`, configAxios);
+  dolar = parseFloat((await axios.get(`${apiUrl}tipoVenta`, configAxios)).data.dolar);
+  marcas = await axios(`${apiUrl}productos`, configAxios);
   marcas = marcas.data;
   marcas.sort();
   marcas.forEach((marca) => {
@@ -34,7 +34,7 @@ ipcRenderer.on('vendedor', (e, args) => {
 modificar.addEventListener('click', async (e) => {
   let marca = select.value;
   let porcentaje = parseFloat(porcentajeInput.value);
-  let productos = await axios.get(`${URL}productos/marcas/${marca}`, configAxios);
+  let productos = await axios.get(`${apiUrl}productos/marcas/${marca}`, configAxios);
   productos = productos.data;
   await productos.forEach(async (producto) => {
     if (producto.costodolar === 0) {
@@ -53,7 +53,7 @@ modificar.addEventListener('click', async (e) => {
     producto.vendedor = vendedor.nombre;
     producto.maquina = verNombrePc();
 
-    await axios.put(`${URL}productos/${producto._id}`, producto, configAxios);
+    await axios.put(`${apiUrl}productos/${producto._id}`, producto, configAxios);
     sweet.fire({ title: `Se Modifico el precio de los productos ${select.value}` }).then(() => {
       location.reload();
     });

@@ -4,7 +4,7 @@ const sweet = require('sweetalert2');
 const axios = require('axios');
 const { copiar, recorrerFlechas, configAxios, verNombrePc, ponerNotificaciones } = require('../funciones');
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 function getParameterByName(name) {
   name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -288,9 +288,9 @@ seleccionarTBody.addEventListener('click', (e) => {
 });
 
 async function mostrarImagen(id) {
-  const producto = (await axios.get(`${URL}productos/${id}`)).data;
+  const producto = (await axios.get(`${apiUrl}productos/${id}`)).data;
   if (producto) {
-    const path = `${URL}productos/${producto._id}/image`;
+    const path = `${apiUrl}productos/${producto._id}/image`;
     imagen.innerHTML = `<img id=${path} class="imagenProducto" src=${path}>`;
   }
 }
@@ -340,13 +340,13 @@ async function filtrar() {
     let nuevoTexto = texto.replace('/', 'ALT47');
     let condicion = select.value;
     condicion === 'codigo' && (condicion = '_id');
-    productos = await axios.get(`${URL}productos/buscarProducto/${nuevoTexto}/${condicion}`, configAxios);
+    productos = await axios.get(`${apiUrl}productos/buscarProducto/${nuevoTexto}/${condicion}`, configAxios);
   } else if (texto !== '') {
     let condicion = select.value;
     condicion === 'codigo' && (condicion = '_id');
-    productos = await axios.get(`${URL}productos/buscarProducto/${texto}/${condicion}`, configAxios);
+    productos = await axios.get(`${apiUrl}productos/buscarProducto/${texto}/${condicion}`, configAxios);
   } else {
-    productos = await axios.get(`${URL}productos/buscarProducto/textoVacio/descripcion`, configAxios);
+    productos = await axios.get(`${apiUrl}productos/buscarProducto/textoVacio/descripcion`, configAxios);
   }
   productos = productos.data;
 
@@ -424,7 +424,7 @@ eliminar.addEventListener('click', async (e) => {
       .then(async ({ isConfirmed }) => {
         if (isConfirmed) {
           await axios.delete(
-            `${URL}productos/${seleccionado.id}`,
+            `${apiUrl}productos/${seleccionado.id}`,
             {
               data: {
                 vendedor,

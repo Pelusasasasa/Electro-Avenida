@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { configAxios } = require('../funciones');
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const desde = document.getElementById('desde');
 const hasta = document.getElementById('hasta');
@@ -13,7 +13,7 @@ window.addEventListener('load', async (e) => {
   desde.value = date.toISOString().slice(0, 10);
   hasta.value = date.toISOString().slice(0, 10);
 
-  remitos = (await axios.get(`${URL}remitos/betweenDates/${desde.value}/${hasta.value}`, configAxios)).data;
+  remitos = (await axios.get(`${apiUrl}remitos/betweenDates/${desde.value}/${hasta.value}`, configAxios)).data;
   listarRemitos(remitos);
 });
 
@@ -25,7 +25,7 @@ desde.addEventListener('keypress', (e) => {
 
 const listarRemitos = async (lista) => {
   for await (let remito of remitos) {
-    const movimientos = (await axios.get(`${URL}movProductos/${remito.nro_comp}/Remito`, configAxios)).data;
+    const movimientos = (await axios.get(`${apiUrl}movProductos/${remito.nro_comp}/Remito`, configAxios)).data;
 
     for await (let movimiento of movimientos) {
       const tr = document.createElement('tr');

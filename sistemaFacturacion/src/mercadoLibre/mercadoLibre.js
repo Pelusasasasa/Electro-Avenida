@@ -21,7 +21,7 @@ const {
   obtenerAccessToken,
 } = require('./helpers');
 const { ipcRenderer } = require('electron');
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const client_id = '8351426981367452';
 const aux = 'https://api.mercadolibre.com/';
@@ -78,7 +78,7 @@ const calcularPrecioSujerido = (product, dolar) => {
 };
 
 const cargarPagina = async () => {
-  const numeros = (await axios.get(`${URL}tipoVenta`)).data;
+  const numeros = (await axios.get(`${apiUrl}tipoVenta`)).data;
   autorizacion = numeros.autorizacionML;
 
   const res = await obtenerInformacionUsuario(autorizacion);
@@ -86,10 +86,10 @@ const cargarPagina = async () => {
   if (!res) {
     numeros.autorizacionML = await obtenerAccessToken();
     autorizacion = numeros.autorizacionML;
-    await axios.put(`${URL}tipoVenta`, numeros);
+    await axios.put(`${apiUrl}tipoVenta`, numeros);
   }
 
-  publicaciones = (await axios.get(`${URL}mercadoLibre`)).data;
+  publicaciones = (await axios.get(`${apiUrl}mercadoLibre`)).data;
   console.log(publicaciones);
   listarProductos(publicaciones.filter((elem) => elem.esCatalogo));
 };
@@ -109,7 +109,7 @@ const clickEnTBody = (e) => {
 
 const deleteProduct = async (e) => {
   if (seleccionado) {
-    const res = (await axios.delete(`${URL}mercadoLibre/forCodigo/${seleccionado.id}`)).data;
+    const res = (await axios.delete(`${apiUrl}mercadoLibre/forCodigo/${seleccionado.id}`)).data;
     tbody.removeChild(seleccionado);
     seleccionado = '';
   }
@@ -154,8 +154,8 @@ const listarProductos = async (lista) => {
     const tdPrecioML = document.createElement('td');
     const tdStockML = document.createElement('td');
 
-    const dolar = (await axios.get(`${URL}tipoVenta`)).data.dolar;
-    const pro = (await axios.get(`${URL}productos/${elem.codProd}`)).data;
+    const dolar = (await axios.get(`${apiUrl}tipoVenta`)).data.dolar;
+    const pro = (await axios.get(`${apiUrl}productos/${elem.codProd}`)).data;
     const costoIva = pro.costodolar === 0 ? parseFloat(pro.costo) + parseFloat(pro.impuestos) : (pro.costodolar + (pro.costodolar * parseFloat(pro.impuestos)) / 100) * dolar;
     const precio = calcularPrecioSujerido(pro, dolar);
     tdPrecio.innerText = precio;

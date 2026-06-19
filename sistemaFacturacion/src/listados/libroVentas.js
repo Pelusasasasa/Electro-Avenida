@@ -4,7 +4,7 @@ const axios = require('axios');
 const XLSX = require('xlsx');
 const { configAxios } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const fecha = new Date();
 let dia = fecha.getDate();
@@ -64,7 +64,7 @@ buscar.addEventListener('click', async (e) => {
   totalGlobalIva105Factura = 0;
   totalGlobalFactura = 0;
   const desdeFecha = new Date(desde.value);
-  let ventas = (await axios.get(`${URL}ventas/${desdeFecha}/${hasta.value}`, configAxios)).data;
+  let ventas = (await axios.get(`${apiUrl}ventas/${desdeFecha}/${hasta.value}`, configAxios)).data;
   ventas = ventas.filter((venta) => venta.tipo_comp !== 'Recibos');
   ventas = ventas.filter((venta) => venta.tipo_comp !== 'Recibos_P');
   ventasExportar = ventas;
@@ -205,7 +205,7 @@ const listar = async (ventas, diaVentaAnterior) => {
     month = month < 10 ? `0${month}` : month;
     let year = fecha.getFullYear();
 
-    let cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`, configAxios)).data;
+    let cliente = (await axios.get(`${apiUrl}clientes/id/${venta.cliente}`, configAxios)).data;
     cond_iva = cliente.cond_iva ? cliente.cond_iva : 'Consumidor Final';
     gravado105 = venta.gravado105;
     gravado21 = venta.gravado21;

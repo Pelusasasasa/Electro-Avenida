@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { ipcRenderer } = require('electron');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const XLSX = require('xlsx');
 const { configAxios } = require('../funciones');
@@ -34,7 +34,7 @@ hasta.addEventListener('keypress', (e) => {
 });
 
 buscar.addEventListener('click', async (e) => {
-  productos = await axios.get(`${URL}productos/productosEntreRangos/${desde.value}/${hasta.value}`, configAxios);
+  productos = await axios.get(`${apiUrl}productos/productosEntreRangos/${desde.value}/${hasta.value}`, configAxios);
   productos = productos.data;
   console.log(productos);
   listarProductos();

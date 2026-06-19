@@ -3,7 +3,7 @@ const sweet = require('sweetalert2');
 
 const axios = require('axios');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 ipcRenderer.send('abrir-menu');
 
@@ -37,7 +37,7 @@ const avisarDolar = async () => {
 const obtenerDolar = async () => {
   setTimeout(async () => {
     try {
-      const dolarSistema = parseFloat((await axios.get(`${URL}tipoVenta`, configAxios)).data.dolar);
+      const dolarSistema = parseFloat((await axios.get(`${apiUrl}tipoVenta`, configAxios)).data.dolar);
       const dolarBNA = parseFloat((await avisarDolar()).replace(',', '.')) + 1;
 
       if (dolarBNA !== dolarSistema) {
@@ -159,7 +159,7 @@ async function validacionUsuario(texto, botones = true) {
       if (value === '' || value === undefined) {
         location.reload();
       } else {
-        const vendedorTraido = (await axios.get(`${URL}usuarios/${value}`, configAxios)).data;
+        const vendedorTraido = (await axios.get(`${apiUrl}usuarios/${value}`, configAxios)).data;
         value === vendedorTraido._id && (vendedor = vendedorTraido.nombre);
         value === vendedorTraido._id && (acceso = vendedorTraido.acceso);
         value === vendedorTraido._id && (empresa = vendedorTraido.empresa);
@@ -190,7 +190,7 @@ ipcRenderer.on('validarUsuario', (e, args) => {
     })
     .then(async ({ isConfirmed, value }) => {
       if (isConfirmed && value !== '') {
-        const usuario = (await axios.get(`${URL}usuarios/${value}`, configAxios)).data;
+        const usuario = (await axios.get(`${apiUrl}usuarios/${value}`, configAxios)).data;
         let vendedor;
         let acceso;
         if (usuario !== '') {

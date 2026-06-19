@@ -4,7 +4,7 @@ const sweet = require('sweetalert2');
 const axios = require('axios');
 const { configAxios, verCodComp, verNombrePc } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 function getParameterByName(name) {
   name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -35,7 +35,7 @@ codigo.addEventListener('keypress', async (e) => {
       descripcionMain.classList.remove('none');
       descripcion.focus();
     } else {
-      let producto = (await axios.get(`${URL}productos/${codigo.value}`, configAxios)).data;
+      let producto = (await axios.get(`${apiUrl}productos/${codigo.value}`, configAxios)).data;
       if (producto !== '') {
         sweet
           .fire({
@@ -88,7 +88,7 @@ cantidad.addEventListener('keypress', (e) => {
 
 ipcRenderer.on('mando-el-producto', async (e, args) => {
   const { id, cantidad } = JSON.parse(args);
-  const producto = (await axios.get(`${URL}productos/${id}`, configAxios)).data;
+  const producto = (await axios.get(`${apiUrl}productos/${id}`, configAxios)).data;
   mostrarVentas(producto, cantidad);
 });
 
@@ -135,7 +135,7 @@ grabar.addEventListener('click', async (e) => {
     Pedido.vendedor = vendedor;
     Pedido.maquina = verNombrePc();
 
-    let pedidoNuevo = (await axios.post(`${URL}pedidos`, Pedido, configAxios)).data;
+    let pedidoNuevo = (await axios.post(`${apiUrl}pedidos`, Pedido, configAxios)).data;
     pedidos.push(pedidoNuevo);
   }
 

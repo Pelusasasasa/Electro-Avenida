@@ -1,5 +1,5 @@
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 const URLML = 'https://api.mercadolibre.com/';
 
 const axios = require('axios');
@@ -31,7 +31,7 @@ ipcRenderer.on('informacion', async (e, args) => {
   } else {
     agregar.classList.add('none');
 
-    const ml = (await axios.get(`${URL}mercadoLibre/forCodigo/${args}`)).data;
+    const ml = (await axios.get(`${apiUrl}mercadoLibre/forCodigo/${args}`)).data;
     codigoML.value = ml.codigoML;
     codigoInterno.value = ml.codProd;
     descripcion.value = ml.descripcion;
@@ -49,7 +49,7 @@ const agregarML = async () => {
   elem.precioML = precioML.value;
   elem.stockML = stockML.value;
 
-  const res = (await axios.post(`${URL}mercadoLibre`, elem)).data;
+  const res = (await axios.post(`${apiUrl}mercadoLibre`, elem)).data;
 
   window.close();
 };
@@ -67,7 +67,7 @@ const modificarML = async () => {
   producto.precioML = precioML.value;
   producto.stockML = stockML.value;
 
-  let autherizacion = (await axios.get(`${URL}tipoVenta`)).data.autorizacionML;
+  let autherizacion = (await axios.get(`${apiUrl}tipoVenta`)).data.autorizacionML;
   const productoML = await buscarinfoProductoPorId(autherizacion, codigoML.value);
 
   if (productoML.variations.length !== 0) {
@@ -80,7 +80,7 @@ const modificarML = async () => {
   }
   await modificarPrecioYStockPorIdDeProducto(autherizacion, b.variations[0].user_product_id, precioML.value, stockML.value);
 
-  await axios.put(`${URL}mercadoLibre/forCodigo/${codigoML.value}`, producto);
+  await axios.put(`${apiUrl}mercadoLibre/forCodigo/${codigoML.value}`, producto);
 };
 
 agregar.addEventListener('click', agregarML);
@@ -95,7 +95,7 @@ codigoML.addEventListener('keypress', (e) => {
 
 codigoInterno.addEventListener('keypress', async (e) => {
   if (e.keyCode === 13) {
-    producto = (await axios.get(`${URL}productos/${codigoInterno.value}`)).data;
+    producto = (await axios.get(`${apiUrl}productos/${codigoInterno.value}`)).data;
     listarProducto(producto);
 
     descripcion.focus();

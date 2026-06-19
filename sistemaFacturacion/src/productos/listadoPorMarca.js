@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron');
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 const axios = require('axios');
 const { cerrarVentana, configAxios } = require('../funciones');
 
@@ -10,7 +10,7 @@ const tbody = document.querySelector('tbody');
 
 window.addEventListener('load', async (e) => {
   cerrarVentana();
-  const marcas = (await axios.get(`${URL}productos`, configAxios)).data;
+  const marcas = (await axios.get(`${apiUrl}productos`, configAxios)).data;
   marcas.sort((a, b) => {
     if (a > b) {
       return 1;
@@ -40,7 +40,7 @@ select.addEventListener('click', async (e) => {
 });
 
 const listar = async () => {
-  const productos = (await axios.get(`${URL}productos/buscarProducto/${select.value}/marca`, configAxios)).data;
+  const productos = (await axios.get(`${apiUrl}productos/buscarProducto/${select.value}/marca`, configAxios)).data;
   for await (let { descripcion, cod_fabrica, _id, stock, precio_venta, observacion } of productos) {
     tbody.innerHTML += `
             <tr>

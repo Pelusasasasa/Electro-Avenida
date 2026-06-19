@@ -1,5 +1,5 @@
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 const axios = require('axios');
 
 const desde = document.getElementById('desde');
@@ -8,7 +8,7 @@ const hasta = document.getElementById('hasta');
 let movs = [];
 
 const getMovs = async () => {
-  movs = (await axios.get(`${URL}movProductos/forDate/${desde.value}/${hasta.value}`)).data;
+  movs = (await axios.get(`${apiUrl}movProductos/forDate/${desde.value}/${hasta.value}`)).data;
   listarMovs(movs);
 };
 

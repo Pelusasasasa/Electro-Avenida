@@ -1,6 +1,6 @@
 const axios = require('axios');
 require('dotenv').config();
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const { ipcRenderer } = require('electron');
 const qrcode = require('qrcode');
@@ -48,9 +48,9 @@ ipcRenderer.on('info-para-imprimir', async (e, args) => {
   let cliente;
 
   if (venta.tipo_comp === 'Recibos') {
-    cliente = (await axios.get(`${URL}clientes/id/${venta.codigo}`, configAxios)).data;
+    cliente = (await axios.get(`${apiUrl}clientes/id/${venta.codigo}`, configAxios)).data;
   } else {
-    cliente = (await axios.get(`${URL}clientes/id/${venta.cliente}`, configAxios)).data;
+    cliente = (await axios.get(`${apiUrl}clientes/id/${venta.cliente}`, configAxios)).data;
     cliente._id = venta.cliente;
     cliente.cliente = venta.nombreCliente;
     cliente.direccion = venta.direccion ? venta.direccion : cliente.direccion;

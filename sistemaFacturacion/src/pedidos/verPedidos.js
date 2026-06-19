@@ -8,7 +8,7 @@ function getParameterByName(name) {
 const sweet = require('sweetalert2');
 const axios = require('axios');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const { copiar, recorrerFlechas, redondear, botonesSalir, configAxios, verNombrePc } = require('../funciones');
 
@@ -41,7 +41,7 @@ const cambiarEstadoPedido = async (nuevoEstado) => {
   pedidoIdentificado.vendedorQueModifico = vendedor;
 
   try {
-    const { data } = await axios.patch(`${URL}pedidos/forId/${pedidoIdentificado._id}`, pedidoIdentificado);
+    const { data } = await axios.patch(`${apiUrl}pedidos/forId/${pedidoIdentificado._id}`, pedidoIdentificado);
 
     arregloAux = arregloAux.map((elem) => {
       if (elem._id === data._id) {
@@ -83,7 +83,7 @@ async function eliminarVariosPedidos() {
     .then(async ({ isConfirmed }) => {
       if (isConfirmed) {
         for await (let elem of pedidosAEliminar) {
-          await axios.delete(`${URL}pedidos/${elem.id}`, {
+          await axios.delete(`${apiUrl}pedidos/${elem.id}`, {
             data: {
               vendedor,
               maquina: verNombrePc(),
@@ -310,7 +310,7 @@ eliminarPedido.addEventListener('click', async (e) => {
       .then(async ({ isConfirmed }) => {
         if (isConfirmed) {
           await axios.delete(
-            `${URL}pedidos/${seleccionado.id}`,
+            `${apiUrl}pedidos/${seleccionado.id}`,
             {
               data: {
                 vendedor,
@@ -363,13 +363,13 @@ tbody.addEventListener('dblclick', async (e) => {
         seleccionado.children[4].innerText = document.getElementById('cliente').value.toUpperCase();
         seleccionado.children[5].innerText = document.getElementById('numero').value;
 
-        const pedido = (await axios.get(`${URL}pedidos/${seleccionado.id}`)).data;
+        const pedido = (await axios.get(`${apiUrl}pedidos/${seleccionado.id}`)).data;
         pedido.cliente = seleccionado.children[4].innerText;
         pedido.telefono = seleccionado.children[5].innerText;
         pedido.maquina = verNombrePc();
         pedido.vendedorQueModifico = vendedor;
 
-        await axios.put(`${URL}pedidos/${seleccionado.id}`, pedido);
+        await axios.put(`${apiUrl}pedidos/${seleccionado.id}`, pedido);
       }
     });
 });
@@ -384,7 +384,7 @@ salir.addEventListener('click', (e) => {
 window.addEventListener('load', async (e) => {
   copiar();
 
-  pedidos = (await axios.get(`${URL}pedidos`, configAxios)).data;
+  pedidos = (await axios.get(`${apiUrl}pedidos`, configAxios)).data;
 
   for (let elem of pedidos) {
     if (!elem.codigo) {
@@ -439,11 +439,11 @@ ipcRenderer.on('cambiarObservacion', async () => {
   });
 
   if (isConfirmed) {
-    const pedido = (await axios.get(`${URL}pedidos/${seleccionado.id}`)).data;
+    const pedido = (await axios.get(`${apiUrl}pedidos/${seleccionado.id}`)).data;
 
     pedido.observacion = value.toUpperCase().trim();
     seleccionado.children[10].innerText = value.toUpperCase().trim();
 
-    await axios.put(`${URL}pedidos/${seleccionado.id}`, pedido);
+    await axios.put(`${apiUrl}pedidos/${seleccionado.id}`, pedido);
   }
 });

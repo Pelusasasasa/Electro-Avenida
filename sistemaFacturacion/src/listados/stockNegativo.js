@@ -9,7 +9,7 @@ const impirmir = document.querySelector('.imprimirBoton');
 const axios = require('axios');
 const { verificarUsuarios, configAxios, verNombrePc } = require('../funciones');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 let seleccionado;
 let subSeleccionado;
@@ -33,7 +33,7 @@ window.addEventListener('load', async (e) => {
     window.close();
   }
 
-  let productos = (await axios(`${URL}productos/stockNegativo`, configAxios)).data;
+  let productos = (await axios(`${apiUrl}productos/stockNegativo`, configAxios)).data;
   listarStockNegativo(productos);
 });
 
@@ -88,12 +88,12 @@ cambiar.addEventListener('click', async (e) => {
     })
     .then(async ({ isConfirmed, value }) => {
       if (isConfirmed && value !== '') {
-        let producto = (await axios.get(`${URL}productos/${seleccionado.id}`, configAxios)).data;
+        let producto = (await axios.get(`${apiUrl}productos/${seleccionado.id}`, configAxios)).data;
         await crearMovimiento(producto, value);
         producto.stock = value;
         producto.vendedor = vendedor.nombre;
         producto.maquina = verNombrePc();
-        await axios.put(`${URL}productos/${seleccionado.id}`, producto, configAxios);
+        await axios.put(`${apiUrl}productos/${seleccionado.id}`, producto, configAxios);
         if (parseFloat(producto.stock) > 0) {
           tbody.removeChild(seleccionado);
         } else {
@@ -114,7 +114,7 @@ const crearMovimiento = async (producto, stock) => {
   movimiento.maquina = verNombrePc();
   movimiento.tipo_comp = '+';
   movimiento.precio_unitario = producto.precio_venta;
-  await axios.post(`${URL}movProductos`, [movimiento], configAxios);
+  await axios.post(`${apiUrl}movProductos`, [movimiento], configAxios);
 };
 
 impirmir.addEventListener('click', (e) => {

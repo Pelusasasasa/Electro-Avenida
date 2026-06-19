@@ -2,7 +2,7 @@ const axios = require('axios');
 const { configAxios } = require('../funciones');
 const { ipcRenderer } = require('electron');
 require('dotenv').config;
-const URL = process.env.URL;
+const apiUrl = process.env.URL;
 
 const divAlerta = document.querySelector('.alerta');
 
@@ -33,9 +33,9 @@ window.addEventListener('load', async (e) => {
   contado.classList.add('seleccionado');
 
   const desdefecha = new Date(desde.value);
-  let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hasta.value}`)).data;
-  let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hasta.value}`)).data;
-  let recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hasta.value}`)).data;
+  let tickets = (await axios.get(`${apiUrl}ventas/${desdefecha}/${hasta.value}`)).data;
+  let presupuesto = (await axios.get(`${apiUrl}presupuesto/${desdefecha}/${hasta.value}`)).data;
+  let recibos = (await axios.get(`${apiUrl}recibos/getbetweenDates/${desdefecha}/${hasta.value}`)).data;
   ventas = [...tickets, ...presupuesto, ...recibos];
   const ventasContado = ventas.filter((venta) => venta.tipo_pago == 'CD');
 
@@ -51,9 +51,9 @@ desde.addEventListener('keypress', (e) => {
 hasta.addEventListener('keypress', async (e) => {
   if (e.key === 'Enter') {
     const desdefecha = new Date(desde.value);
-    let tickets = (await axios.get(`${URL}ventas/${desdefecha}/${hasta.value}`, configAxios)).data;
-    let presupuesto = (await axios.get(`${URL}presupuesto/${desdefecha}/${hasta.value}`, configAxios)).data;
-    let recibos = (await axios.get(`${URL}recibos/getbetweenDates/${desdefecha}/${hasta.value}`, configAxios)).data;
+    let tickets = (await axios.get(`${apiUrl}ventas/${desdefecha}/${hasta.value}`, configAxios)).data;
+    let presupuesto = (await axios.get(`${apiUrl}presupuesto/${desdefecha}/${hasta.value}`, configAxios)).data;
+    let recibos = (await axios.get(`${apiUrl}recibos/getbetweenDates/${desdefecha}/${hasta.value}`, configAxios)).data;
     ventas = [...tickets, ...presupuesto, ...recibos];
     contado.focus();
   }
@@ -113,7 +113,7 @@ async function listarVentas(lista) {
     let seconds = hora[2];
     let anio = fecha[0];
 
-    const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
+    const movimientos = (await axios.get(`${apiUrl}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
 
     for await (let mov of movimientos) {
       const tr = document.createElement('tr');
@@ -262,7 +262,7 @@ async function imprimirVentas() {
   };
 
   for await (let venta of ventas) {
-    const movimientos = (await axios.get(`${URL}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
+    const movimientos = (await axios.get(`${apiUrl}movProductos/movimientosPorCliente/${venta.nro_comp}/${venta.tipo_comp}/${venta.cliente}`)).data;
     movimientosAExportar = [...movimientosAExportar, ...movimientos];
   }
 
