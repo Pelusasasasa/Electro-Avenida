@@ -4,13 +4,15 @@ const tbody = document.querySelector('.tbody');
 const body = document.querySelector('body');
 const salir = document.querySelector('.salirBoton');
 const cambiar = document.querySelector('.cambiarBoton');
-const impirmir = document.querySelector('.imprimirBoton');
+const exportar = document.getElementById('exportar');
 
 const axios = require('axios');
 const { verificarUsuarios, configAxios, verNombrePc } = require('../funciones');
+const { ipcRenderer } = require('electron');
 require('dotenv').config;
 const apiUrl = process.env.URL;
 
+let productos = [];
 let seleccionado;
 let subSeleccionado;
 let vendedor;
@@ -33,7 +35,7 @@ window.addEventListener('load', async (e) => {
     window.close();
   }
 
-  let productos = (await axios(`${apiUrl}productos/stockNegativo`, configAxios)).data;
+  productos = (await axios(`${apiUrl}productos/stockNegativo`, configAxios)).data;
   listarStockNegativo(productos);
 });
 
@@ -117,17 +119,40 @@ const crearMovimiento = async (producto, stock) => {
   await axios.post(`${apiUrl}movProductos`, [movimiento], configAxios);
 };
 
-impirmir.addEventListener('click', (e) => {
-  printPage();
+exportar.addEventListener('click', async(e) => {
+  const XLSX = require('xlsx');
+  let path = await ipcRenderer.invoke('elegirPath')
+
+  let wb = XLSX.utils.book_new();
+  wb.props = {
+    title: 'Listado de Stock Negativo',
+    subject: 'test',
+    Author: 'Electro Avenida'
+  };
+
+
+
+  const datosAExportar = productos.map(producto => ({
+    codigo: producto._id,
+    descripcion: producto.descripcion,
+    marca: producto.marca,
+    stock: producto.stock
+  }))
+
+    let newWS = XLSX.utils.json_to_sheet(datosAExportar, {
+    header: ['codigo', 'descripcion', 'marca', 'stock']
+  });
+
+  XLSX.utils.book_append_sheet(wb, newWS, 'Stock Negativo');
+  XLSX.writeFile(wb, path + '.' + 'xlsx');
+
+  sweet.fire({
+    title: 'Stock Negativo',
+    text: 'Stock Negativo Exportado',
+    icon: 'success',
+  })
 });
 
 salir.addEventListener('click', () => {
   window.close();
 });
-
-function printPage() {
-  const botones = document.querySelector('.botones');
-  botones.classList.add('disable');
-  window.print();
-  botones.classList.remove('disable');
-}

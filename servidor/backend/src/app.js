@@ -50,7 +50,7 @@ app.use('/api/movProductos', require('./routes/movProductos'))
 //Pedidos
 app.use('/api/pedidos', require('./routes/pedidos.routes'));
 //Prestamos
-app.use('/api/prestamos', require('./routes/prestamo'));
+app.use('/api/prestamos', require('./routes/prestamo.route'));
 //Presupuesto
 app.use('/api/presupuesto', require('./routes/presupuesto.routes'))
 //Productos

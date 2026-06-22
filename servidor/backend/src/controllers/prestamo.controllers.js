@@ -1,6 +1,7 @@
 const prestamoCTRL = {};
 
 const Prestamo = require('../models/Prestamo');
+const movProducto = require('../models/movProducto');
 
 prestamoCTRL.post = async(req,res)=>{
     const now = new Date();
@@ -55,6 +56,27 @@ prestamoCTRL.getAnuladosBetweenDate = async(req,res)=>{
         ]
     });
     res.send(prestamos)
+}
+
+prestamoCTRL.getConMovimientos = async(req, res) => {
+    try {
+        const prestamos = await Prestamo.find({anulado: false});
+        const movimientos = await movProducto.find({ tipo_comp: 'Prestamo' });
+
+        const prestamosConMovimientos = prestamos.map(p => {
+            const prestamoObj = p.toObject();
+            prestamoObj.movimientos = movimientos.filter(m => m.nro_comp === p.nro_comp);
+            return prestamoObj;
+        });
+
+        res.status(200).json(prestamosConMovimientos);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error del servidor al enviar prestamos con movimientos'
+        })
+    }
 }
 
 module.exports = prestamoCTRL;

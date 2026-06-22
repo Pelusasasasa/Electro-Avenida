@@ -8,6 +8,7 @@ const apiUrl = process.env.URL;
 const table = document.querySelector('.table');
 const tbody = document.querySelector('tbody');
 const detallesProducto = document.querySelector('.detallesProducto');
+const buscar = document.getElementById('buscar');
 const detalle = document.getElementById('detalle');
 
 const ordenarFecha = document.getElementById('ordenarFecha');
@@ -34,8 +35,80 @@ window.addEventListener('load', async (e) => {
   listarPrestamos(prestamos);
 });
 
+buscar.addEventListener('change', filtrarPrestamos);
 tbody.addEventListener('click', mostrarDetalleProducto);
+exportar.addEventListener('click', exportarPrestamos);
 botonFacturar.addEventListener('click', facturarPrestamos);
+
+async function filtrarPrestamos(){
+  const {data: prestamos} = await axios.get(`${apiUrl}prestamos/noAnulados`);
+  
+  const prestamosFiltrados = prestamos.filter((elem) => {
+    return elem.observaciones.includes(buscar.value.toUpperCase()) || elem.nro_comp.toString().includes(buscar.value);
+  });
+
+  listarPrestamos(prestamosFiltrados);
+}
+
+async function exportarPrestamos() {
+  const {data: prestamos} = await axios.get(`${apiUrl}prestamos/con-movimientos`);
+
+
+  const XLSX = require('xlsx');
+  let path = await ipcRenderer.invoke('elegirPath');
+  
+  const wb = XLSX.utils.book_new();
+  wb.props = {
+    title: "Listado de Prestamos",
+    subject: "test",
+    Author: "Electro Avenida"
+  };
+
+  const datosAExportar = prestamos.map(prestamo => ({
+    fecha: prestamo.fecha.slice(0, 10).split('-', 3),
+    cliente: prestamo.cliente,
+    nro_comp: prestamo.nro_comp,
+    observaciones: prestamo.observaciones
+  }));
+
+  const movimientosAExportar = prestamos.flatMap(prestamo => 
+    prestamo.movimientos.map(movimiento => ({
+      fecha: prestamo.fecha.slice(0, 10).split('-', 3),
+      cliente: prestamo.cliente,
+      nro_comp: prestamo.nro_comp,
+      observaciones: prestamo.observaciones,
+      codigo_producto: movimiento.codProd,
+      descripcion: movimiento.descripcion,
+      cantidad: movimiento.egreso,
+      precio_unitario: movimiento.precio_unitario
+    }))
+  );
+
+  const datosFinales = [...datosAExportar, ...movimientosAExportar];
+
+  datosFinales.sort((a, b) => {
+    if(a.nro_comp > b.nro_comp) return 1;
+    if(a.nro_comp < b.nro_comp) return -1;
+    return 0;
+  });
+
+  let newWS = XLSX.utils.json_to_sheet(datosFinales, {
+    header: ['fecha', 'cliente', 'nro_comp', 'observaciones']
+  });
+
+  XLSX.utils.book_append_sheet(wb, newWS, 'Prestamos');
+  XLSX.writeFile(wb, path + '.' + 'xlsx');
+
+  sweet.fire({
+    title: 'Prestamos',
+    text: 'Prestamos Exportados',
+    icon: 'success'
+  })
+  
+
+  
+  
+}
 
 //Listamos los prestamos traidos
 async function listarPrestamos(lista) {
@@ -97,7 +170,8 @@ async function mostrarDetalleProducto(e) {
     behavior: 'smooth',
   });
 
-  /*Traer movimientos*/ const movimientos = (await axios.get(`${apiUrl}movProductos/${seleccionado.id}/Prestamo`, configAxios)).data;
+  /*Traer movimientos*/ 
+  const movimientos = (await axios.get(`${apiUrl}movProductos/${seleccionado.id}/Prestamo`, configAxios)).data;
   listarMovimientos(movimientos);
 }
 
