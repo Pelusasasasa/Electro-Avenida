@@ -163,6 +163,11 @@
   box-shadow: var(--ws-shadow-heavy);
 }
 
+.workshop-table-container {
+  overflow-y: auto;
+  flex: 1;
+}
+
 .workshop-table td {
   padding: 1.6rem 1.2rem;   /* Taller rows for easier reading */
   border-bottom: 2px solid #000000;

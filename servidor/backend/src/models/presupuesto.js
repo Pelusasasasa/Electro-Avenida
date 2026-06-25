@@ -8,7 +8,7 @@ const Presupuesto = new Schema({
     },
     cliente:{
         type: String,
-        default: "9999"
+        require: true
     },
     nombreCliente:{
         type: String,

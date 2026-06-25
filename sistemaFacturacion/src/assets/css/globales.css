@@ -276,6 +276,14 @@ select {
   flex-direction: column;
 }
 
+.flex-1 {
+  flex: 1 1 0%;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
 .justify-around {
   justify-content: space-around;
 }
@@ -285,6 +293,10 @@ select {
 }
 
 .item-center {
+  align-items: center;
+}
+
+.items-center {
   align-items: center;
 }
 
@@ -422,6 +434,10 @@ select {
 
 .mb-2 {
   margin-bottom: 20px;
+}
+
+.mb-6 {
+  margin-bottom: 24px;
 }
 
 .ml-auto {
