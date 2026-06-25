@@ -695,11 +695,11 @@ presupuesto.addEventListener('click', async (e) => {
 
   if (!isConfirmed) return;
 
-  if (listaProductos.length > 11) {
+  if (listaProductos.length > 12) {
     await sweet.fire('Necesita Una Hoja Grande para imprimir');
   }
 
-  venta.tipo_pago = await verElTipoDeVenta(tiposVentas); //vemos si es CD,CC o PP en el input[radio]
+  venta.tipo_pago = await verElTipoDeVenta(tiposVentas); //vemos si es CD, CC o PP en el input[radio]
   venta.productos = listaProductos;
   try {
     alerta.classList.remove('none');
@@ -731,9 +731,22 @@ presupuesto.addEventListener('click', async (e) => {
         producto.objeto.precio_venta = producto.objeto.precio_venta.toFixed(2);
       }
     }
+    try {
+      await axios.post(`${apiUrl}presupuesto`, venta);
+    } catch (error) {
+      console.log(error.response.data);
 
-    const { data } = await axios.post(`${apiUrl}presupuesto`, venta);
+      await sweet.fire({
+        title: 'Error al cargar presupuesto',
+        icon: 'error',
+        text: error.response.data.mensaje,
+        confirmButtonText: 'Aceptar',
+      });
 
+      return;
+    }
+
+    
     venta.tipo_pago === 'CD' &&
       (await generarMovimientoCaja(venta.fecha, 'I', venta.nro_comp, 'Presupuesto', 'PP', venta.precioFinal, venta.nombreCliente, venta.cliente, venta.nombreCliente, venta.vendedor, maquina));
     await actualizarNumeroComprobante(venta.nro_comp, venta.tipo_pago, venta.cod_comp);

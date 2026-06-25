@@ -6,6 +6,11 @@ const Presupuesto = require("../models/presupuesto");
 PresupuestoCTRL.cargarPresupuesto = async(req,res)=>{
     const now = new Date();
     req.body.fecha = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString();
+    if(!req.body.cliente) return res.status(400).json({
+        ok: false,
+        mensaje: 'No existe cliente id'
+    });
+
     const presupuesto = new Presupuesto(req.body);
     let id = (await Presupuesto.find().sort({$natural:-1}).limit(1))[0];
     presupuesto._id = id ? id._id + 1 : 1;
