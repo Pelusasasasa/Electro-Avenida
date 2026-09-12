@@ -90,6 +90,16 @@ const ponerClientes = (clientes) => {
     btnEdit.title = 'Modificar';
     btnEdit.onclick = (e) => {
       e.stopPropagation();
+      if (e.target.classList.contains('edit')) {
+        seleccionado.classList.remove('seleccionado')
+        subSeleccionado.classList.remove('subSeleccionado')
+
+        seleccionado = e.target.parentNode.parentNode
+        subSeleccionado = e.target.parentNode
+
+        seleccionado.classList.add('seleccionado')
+        subSeleccionado.classList.add('subSeleccionado')
+      }
       modificarCliente()
     };
 
