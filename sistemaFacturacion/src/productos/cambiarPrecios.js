@@ -74,6 +74,7 @@ const rellenarStock = async (lista, lista2) => {
       elem === 'SPOTSLINE' ||
       elem === 'ELECE' ||
       elem === 'JELUZ' ||
+      elem === 'ARTELUM' ||
       elem === 'FERROLUX'
     ) {
       const option = document.createElement('option');
@@ -163,6 +164,9 @@ archivo.addEventListener('change', (e) => {
       let datos = XLSX.utils.sheet_to_json(woorbook.Sheets['Lista']);
       console.log(datos);
       cambiarPrecioArnet(datos, productos);
+    } else if (select.value === 'ARTELUM') {
+      let datos = XLSX.utils.sheet_to_json(woorbook.Sheets['Lista']);
+      cambiarPrecioArtelum(datos, productos);
     }
   };
   fileReader.readAsBinaryString(selectedFile);
@@ -619,7 +623,28 @@ async function cambiarPrecioElece(datos, productos) {
     }
   }
   llenarListaNueva(productos);
-}
+};
+
+async function cambiarPrecioArtelum(datos, productos) {
+  for (let elem of productos) {
+    let producto = datos.find((n) => n.Codigo == elem.cod_fabrica);
+    console.log(producto);
+    if (producto) {
+      const tasaIva = elem.iva === 'R' ? 15 : 26;
+      if (elem.costodolar !== 0) {
+      } else {
+        elem.costo = parseFloat(producto.Precio.toFixed(2));
+        elem.impuestos = parseFloat(redondear((elem.costo * tasaIva) / 100, 2));
+
+        const costoIva = elem.costo + elem.impuestos;
+        const utilidad = (costoIva * parseFloat(elem.utilidad)) / 100;
+
+        elem.precio_venta = Math.round(costoIva + utilidad);
+      }
+    }
+  }
+  llenarListaNueva(productos);
+};
 
 confirmar.addEventListener('click', async (e) => {
   for await (let producto of productosAGuardar) {
