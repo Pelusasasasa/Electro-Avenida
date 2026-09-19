@@ -36,7 +36,6 @@ hasta.addEventListener('keypress', (e) => {
 buscar.addEventListener('click', async (e) => {
   productos = await axios.get(`${apiUrl}productos/productosEntreRangos/${desde.value}/${hasta.value}`, configAxios);
   productos = productos.data;
-  console.log(productos);
   listarProductos();
 });
 
@@ -57,7 +56,7 @@ async function listarProductos() {
     tdId.innerText = _id;
     tdDescripcion.innerText = descripcion;
     tdCodFabrica.innerText = cod_fabrica;
-    tdStock.innerText = parseFloat(stock).toFixed(2);
+    tdStock.innerText = Number(Number(stock || 0).toFixed(2));
     tdMarca.innerText = marca;
     tdObservaciones.innerText = observacion.slice(0, 15);
 
@@ -89,7 +88,7 @@ excel.addEventListener('click', (e) => {
     let objeto = {};
     objeto.codigo = _id;
     objeto.descripcion = descripcion;
-    objeto.stock = stock;
+    objeto.stock = Number(stock) || 0;
     objeto.provedor = provedor;
     objeto.fabrica = cod_fabrica;
     objeto.marca = marca;
@@ -101,10 +100,16 @@ excel.addEventListener('click', (e) => {
 });
 
 const listadoStock = async (listado) => {
-  let path = await ipcRenderer.invoke('elegirPath');
+  let path = await ipcRenderer.invoke('elegirPath', 'Listado_Stock.xlsx');
+  if(!path) return;
+
   let extencion = 'xlsx';
-  extencion = path.split('.')[1] ? path.split('.')[1] : extencion;
-  path = path.split('.')[0];
+
+  if(path.includes('.')){
+    extencion = path.split('.').pop();
+    path = path.substring(0, path.lastIndexOf('.'));
+  }
+
   let wb = XLSX.utils.book_new();
 
   wb.props = {

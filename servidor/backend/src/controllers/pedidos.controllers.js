@@ -53,7 +53,7 @@ pedidosCTRL.putPedido = async (req, res) => {
     const { id } = req.params;
     const {} = req.body;
 
-    const pedidoUpdate = await Pedido.findByIdAndUpdate(id, req.body, { new: true });
+    const pedidoUpdate = await Pedidos.findByIdAndUpdate(id, req.body, { new: true });
 
     res.status(200).json({
       ok: true,

@@ -791,7 +791,7 @@ presupuesto.addEventListener('click', async (e) => {
       } else if (venta.tipo_pago === 'CD') {
         await ipcRenderer.send('imprimir-venta', [venta, , true, 1, 'Ticket Factura', valorizadoImpresion, arregloMovimiento]);
       } else {
-        await ipcRenderer.send('imprimir-venta', [data, cliente, false, 1, venta.tipo_comp, valorizadoImpresion, arregloMovimiento]);
+        await ipcRenderer.send('imprimir-venta', [venta, cliente, false, 1, venta.tipo_comp, valorizadoImpresion, arregloMovimiento]);
       }
     }
 
@@ -969,8 +969,8 @@ ticketFactura.addEventListener('click', async (e) => {
       venta.vendedor = vendedor;
       venta.maquina = maquina;
 
-      if (venta.precioFinal >= 95812 && (buscarCliente.value === 'A CONSUMIDOR FINAL' || dnicuit.value === '00000000')) {
-        sweet.fire({ title: 'Factura mayor a 95812, poner datos cliente' });
+      if (venta.precioFinal >= 10000000 && (buscarCliente.value === 'A CONSUMIDOR FINAL' || dnicuit.value === '00000000')) {
+        sweet.fire({ title: 'Factura mayor a 10000000, poner datos cliente' });
         alerta.classList.add('none');
       } else {
         try {

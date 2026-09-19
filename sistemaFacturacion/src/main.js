@@ -56,8 +56,9 @@ function verificarActualizaciones() {
     }
 }
 
-ipcMain.handle('elegirPath', async e => {
-    const path = (await dialog.showSaveDialog()).filePath;
+ipcMain.handle('elegirPath', async (e, args) => {
+    const options = args ? { defaultPath: args } : {};
+    const path = (await dialog.showSaveDialog(options)).filePath;
     return path;
 });
 
