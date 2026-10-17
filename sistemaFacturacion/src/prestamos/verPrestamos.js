@@ -64,8 +64,12 @@ async function exportarPrestamos() {
     Author: "Electro Avenida"
   };
 
+  const formatearFecha = (fecha) => fecha.slice(0, 10).split('-', 3).reverse().join('/');
+  const formatearHora = (fecha) => fecha.slice(11, 19);
+
   const datosAExportar = prestamos.map(prestamo => ({
-    fecha: prestamo.fecha.slice(0, 10).split('-', 3),
+    fecha: formatearFecha(prestamo.fecha),
+    hora: formatearHora(prestamo.fecha),
     cliente: prestamo.cliente,
     nro_comp: prestamo.nro_comp,
     observaciones: prestamo.observaciones
@@ -73,7 +77,8 @@ async function exportarPrestamos() {
 
   const movimientosAExportar = prestamos.flatMap(prestamo => 
     prestamo.movimientos.map(movimiento => ({
-      fecha: prestamo.fecha.slice(0, 10).split('-', 3),
+      fecha: formatearFecha(prestamo.fecha),
+      hora: formatearHora(prestamo.fecha),
       cliente: prestamo.cliente,
       nro_comp: prestamo.nro_comp,
       observaciones: prestamo.observaciones,
@@ -93,7 +98,7 @@ async function exportarPrestamos() {
   });
 
   let newWS = XLSX.utils.json_to_sheet(datosFinales, {
-    header: ['fecha', 'cliente', 'nro_comp', 'observaciones']
+    header: ['fecha', 'hora', 'cliente', 'nro_comp', 'observaciones']
   });
 
   XLSX.utils.book_append_sheet(wb, newWS, 'Prestamos');
