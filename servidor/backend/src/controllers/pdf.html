@@ -12,15 +12,20 @@
             zoom: 0.8;
         }
 
+        body {
+            margin: 0;
+        }
+
         header {
             border: .2rem solid black;
             display: -webkit-box;
             -webkit-box-pack: justify;
-            padding: 1.5rem;
+            padding: .8rem 1.5rem;
         }
 
         header p {
             font-weight: bold;
+            margin: .3rem 0;
         }
 
         header span {
@@ -56,7 +61,7 @@
             margin-right: 6rem;
             margin-top: 0;
             margin-bottom: 0;
-            padding: .5rem;
+            padding: .3rem .5rem;
         }
 
         .cliente section span {
@@ -91,7 +96,7 @@
             border: .2rem solid black;
             display: -webkit-box;
             -webkit-box-pack: justify;
-            padding: 2rem;
+            padding: 1rem 2rem;
         }
 
         .totales p {
@@ -111,8 +116,9 @@
             font-weight: bold;
         }
 
-        img {
-            width: 60%;
+        .qrImagen svg {
+            width: 6.5rem;
+            height: 6.5rem;
         }
 
         .none {
@@ -122,6 +128,7 @@
 </head>
 
 <body>
+<!--HEADER-->
     <header>
         <div class="izquierdo">
             <p>GIANOVI MARINA ISABEL</p>
@@ -158,6 +165,7 @@
             <p>Localidad: <span>{{localidad}}</span></p>
         </section>
     </main>
+<!--/HEADER-->
     <main class="productos">
         <table>
             <thead>
@@ -177,9 +185,10 @@
             </tbody>
         </table>
     </main>
+<!--FOOTER-->
     <main class="totales">
         <div>
-            <img src="{{image}}" alt="" />
+            <div class="qrImagen">{{image}}</div>
         </div>
 
         <div class="cae">
@@ -197,6 +206,7 @@
             <p class='importeTotal'>Importe Total: $ <span>{{precioFinal}}</span></p>
         </div>
     </main>
+<!--/FOOTER-->
 </body>
 <script src="../views/pdf.js"></script>
 

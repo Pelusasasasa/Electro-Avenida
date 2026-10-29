@@ -44,7 +44,7 @@
     border: .1rem solid black;
 }
 
-.imprimir{
+.imprimir,.regenerar{
     font-size: 1.2rem;
     border: .1rem solid black;
     width: 100%;
@@ -52,7 +52,7 @@
     padding: .5rem;
 }
 
-.imprimir:hover{
+.imprimir:hover,.regenerar:hover{
     transform: scale(1);
 }
 

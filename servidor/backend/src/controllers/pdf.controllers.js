@@ -57,7 +57,8 @@ pdfCTRL.crearPdf = async (req, res) => {
 
     const a = await generarQR(texto);
 
-    const img = (await qrcode.toDataURL(a));
+    // SVG en linea: PhantomJS no dibuja imagenes data: dentro del footer
+    const img = await qrcode.toString(a, { type: 'svg', margin: 0 });
 
     //Generamos el qr
     async function generarQR(texto) {
@@ -139,9 +140,26 @@ pdfCTRL.crearPdf = async (req, res) => {
     html = html.replace('{{descuento}}', venta.tipo_comp === "Recibos" ? "0.00" : parseFloat(venta.descuento));
     html = html.replace('{{precioFinal}}', venta.precioFinal);
 
+    // html-pdf repite el header y el footer en cada hoja, pero los toma aparte del cuerpo
+    const estilos = html.slice(html.indexOf('<style>'), html.indexOf('</style>') + 8);
+
+    const extraer = (marca) => {
+        const inicio = html.indexOf(`<!--${marca}-->`);
+        const fin = html.indexOf(`<!--/${marca}-->`) + `<!--/${marca}-->`.length;
+        const bloque = html.slice(inicio, fin);
+        html = html.replace(bloque, '');                       // lo saco del cuerpo
+        return estilos + `<div style="zoom: 0.65">${bloque}</div>`;
+    };
+
+    const encabezado = extraer('HEADER');
+    const pie = extraer('FOOTER');
+
     const config = {
-         "height": "10.5in", "width": "8in",  "format" : "A4", "type": "pdf", "zoomFactor": "0.65",    
-        };
+        height: "10.5in", width: "8in", type: "pdf", zoomFactor: "0.65",
+        border: { top: "5mm", right: "5mm", bottom: "5mm", left: "5mm" },
+        header: { height: "68mm", contents: encabezado },
+        footer: { height: "42mm", contents: pie },
+    };
         pdf.create(html,config).toFile(`pdfs/${venta.nro_comp}--${venta.tipo_comp === "Recibos" ? venta.cliente : venta.nombreCliente}--${venta.tipo_comp}.pdf`,(err,res)=>{
             if (err) {
                 console.log(err);
